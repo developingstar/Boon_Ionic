@@ -213,7 +213,6 @@ described below.
 1. Make sure that tests and static analysis pass.
 1. Make sure that your branch is up-to-date with the base one (use `git rebase` if not and resolve conflicts if necessary).
 1. If you have used WIP, FIXUPs or any other „dirty” commits, make sure to rebase them and add a proper message to each.
-1. Follow [guidelines for writing commit messages](https://gist.github.com/smt116/df307ad726f69b40f205b0ac68badc96).
 
 ### After submitting merge request
 
