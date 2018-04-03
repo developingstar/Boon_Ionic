@@ -1,0 +1,51 @@
+@import 'theme/mixins';
+@import 'theme/style-guide';
+@import 'theme/shared-classes/forms';
+
+.boon-table {
+  @include border-radius($radius-size);
+
+  background-color: #fff;
+  border: 1px $color-border solid;
+  padding: 8px;
+
+  @include md {
+    padding: 32px;
+  }
+
+  ion-row {
+    &.header {
+      ion-col {
+        color: $color-text-secondary;
+        font-size: $font-size-primary;
+        font-weight: $font-weight-light;
+        text-transform: uppercase;
+      }
+    }
+
+    @include md {
+      padding: 8px 0;
+    }
+
+    &:not(.header) {
+      border-bottom: 1px $color-border solid;
+      color: $color-text-secondary;
+      padding: 4px 0;
+
+      &:last-of-type {
+        border-bottom: initial;
+      }
+
+      ion-col:first-of-type {
+        color: $color-text-primary;
+        font-weight: $font-weight-headers;
+      }
+    }
+
+    &.footer {
+      button {
+        @extend .boon-button;
+      }
+    }
+  }
+}

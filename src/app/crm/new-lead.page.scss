@@ -1,0 +1,78 @@
+@import 'theme/shared-classes';
+@import 'theme/style-guide';
+
+.new-lead-page-popover {
+  .popover-viewport {
+    display: block;
+    height: 100%;
+  }
+
+  .popover-content {
+    background-color: $color-content-background;
+    border-radius: 14px;
+    height: 75%;
+    padding: 34px;
+    width: 75%;
+  }
+}
+
+new-lead-page {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  h2 {
+    color: #232d3b;
+    flex-grow: 0;
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 42px;
+    margin-top: 0;
+  }
+
+  .form {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+  }
+
+  .base-fields {
+    flex-grow: 0;
+    margin-bottom: 6px;
+  }
+
+  hr {
+    border-top: 1px solid #d2d6e4;
+    flex-grow: 0;
+    margin-bottom: 32px;
+    margin-top: 0;
+    width: 100%;
+  }
+
+  .custom-fields {
+    flex-grow: 1;
+    overflow: auto;
+  }
+
+  .buttons {
+    button {
+      @extend .boon-button;
+
+      margin-right: 12px;
+      width: 115px;
+    }
+
+    .cancel {
+      background-color: #a5acc7;
+      color: #fff;
+    }
+  }
+
+  field {
+    display: inline-block;
+    margin-bottom: 24px;
+    margin-right: 40px;
+    vertical-align: top;
+    width: 195px;
+  }
+}

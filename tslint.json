@@ -1,0 +1,42 @@
+{
+  "defaultSeverity": "error",
+  "extends": ["tslint:latest", "tslint-immutable"],
+  "rules": {
+    "max-line-length": [120],
+    "member-access": ["check-accessor"],
+    "no-duplicate-variable": true,
+    "no-implicit-dependencies": false,
+    "no-parameter-reassignment": true,
+    "no-submodule-imports": [
+      true,
+      "@angular/cdk/portal",
+      "@angular/common/http",
+      "@angular/core",
+      "@angular/core/testing",
+      "@angular/platform-browser"
+    ],
+    "no-unused-variable": true,
+    "no-var-keyword": true,
+    "object-literal-shorthand": [true, "never"],
+    "quotemark": [true, "single", "avoid-escape"],
+    "semicolon": [true, "never"],
+    "trailing-comma": [false],
+    "typedef": [true, "call-signature"],
+    // Tslint-immutable rules
+    "no-delete": true,
+    "no-let": true,
+    "no-method-signature": true,
+    // Workaround for initialization of readonly fields
+    // https://github.com/jonaskello/tslint-immutable/issues/59
+    "no-object-mutation": [
+      true,
+      {
+        "ignore-prefix": ["this."]
+      }
+    ],
+    "readonly-array": true,
+    "readonly-keyword": true,
+    "variable-name": ["allow-snake-case"]
+  },
+  "rulesDirectory": ["node_modules/tslint-eslint-rules/dist/rules"]
+}

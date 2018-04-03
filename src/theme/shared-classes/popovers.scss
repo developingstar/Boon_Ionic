@@ -1,0 +1,26 @@
+@import 'theme/mixins';
+@import 'theme/style-guide';
+
+.boon-popover {
+  &.popover-md {
+    @extend .popover-ios;
+
+    .popover-viewport {
+      opacity: initial;
+      transition-delay: initial;
+    }
+  }
+
+  .popover-arrow {
+    z-index: $z-index-overlay-wrapper + 1;
+  }
+
+  &.popover-ios,
+  &.popover-md {
+    .popover-content {
+      background-color: #ffffff;
+      border: 1px solid #e0e8eb;
+      box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.1);
+    }
+  }
+}

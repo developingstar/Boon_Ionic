@@ -1,0 +1,20 @@
+h2 New Contact
+
+.form(*ngIf="formGroup | async; let form", [formGroup]="form")
+  .base-fields
+    field(type="input", [form]="form", formField="email", label="Email")
+    field(type="input", [form]="form", formField="phone_number", label="Phone Number")
+    field(type="select", [form]="form", formField="owner_id", label="Owner", [options]="owners | async")
+
+  hr
+
+  .custom-fields
+    field(*ngFor="let field of (fields | async)",
+          type="input",
+          [form]="form",
+          [formField]="field.id",
+          [label]="field.name")
+
+  .buttons
+    button(ion-button, (click)="create(form.value)", [disabled]="!form.valid") Create
+    button.cancel(ion-button, outline, (click)="cancel()") Cancel

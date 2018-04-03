@@ -1,0 +1,16 @@
+*.log
+*.tmp
+npm-debug.log*
+package-lock.json
+
+.sourcemaps/
+.sass-cache/
+.versions/
+coverage/
+dist/
+node_modules/
+tmp/
+platforms/
+plugins/
+www/
+src/app/**/*.html

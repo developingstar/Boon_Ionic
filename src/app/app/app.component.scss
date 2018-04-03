@@ -1,0 +1,24 @@
+@import 'theme/style-guide';
+@import 'theme/variables';
+
+app {
+  &.app-root {
+    .ion-page {
+      contain: initial;
+      top: $nav-height-mobile;
+
+      @include md {
+        top: $nav-height-large;
+      }
+    }
+
+    .content .fixed-content,
+    .content .scroll-content {
+      padding: 8px;
+
+      @include md {
+        padding: $content-padding 64px;
+      }
+    }
+  }
+}

@@ -1,0 +1,39 @@
+nav-content
+  nav-icons(right, currentPage="LeadPage")
+
+ion-header.nav-pipelines
+  ion-grid
+    ion-row
+      ion-col(col-auto)
+        span([ngClass]="{'active': (areAllContactsVisible | async)}", (click)="onPipelineChange(undefined)") All Contacts
+      ion-col(col-auto, *ngFor="let pipeline of (pipelines | async)")
+        span([ngClass]="{'active': (activePipelineId | async) == pipeline.id}", (click)="onPipelineChange(pipeline.id)") {{pipeline.name}}
+
+ion-content(padding)
+  button.new-contact(ion-button, (click)="newLead()") New Contact
+
+  div.nav-stages([hidden]="areAllContactsVisible | async")
+    pipeline([stages]="stagesForActivePipeline | async", type="select", (select)="onStageChange($event)")
+
+  ion-grid.table
+    ion-row.header
+      ion-col Name
+      ion-col Email
+      ion-col(*ngIf="isStageColumnVisible | async") Stage
+      ion-col Phone number
+      ion-col Contact owner
+    ion-row.lead(*ngFor="let lead of (leads | async)", (click)="showLead(lead)")
+      ion-col {{lead.name || "-"}}
+      ion-col {{lead.email || "-"}}
+      ion-col(*ngIf="isStageColumnVisible | async") {{(stageForLead(lead) | async)?.name}}
+      ion-col {{lead.phone_number || "-"}}
+      ion-col {{lead.owner?.name || "-"}}
+    ion-row.footer
+      ion-col
+      ion-col(col-auto)
+        button(ion-button, small, (click)="loadPrevPage()", [disabled]="isPrevPageButtonDisabled | async")
+          ion-icon(name="ios-arrow-back-outline")
+          span Prev
+        button(ion-button, small, (click)="loadNextPage()", [disabled]="isNextPageButtonDisabled | async")
+          span Next
+          ion-icon(name="ios-arrow-forward-outline")

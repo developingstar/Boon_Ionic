@@ -1,0 +1,83 @@
+@import 'theme/shared-classes';
+@import 'theme/style-guide';
+
+lead-page {
+  &,
+  .content {
+    background-color: $color-content-background;
+  }
+
+  #back-button {
+    margin-left: -15px;
+  }
+
+  h1 {
+    color: #1a173b;
+    line-height: 30px;
+    font-size: 25px;
+    font-weight: bold;
+    margin-bottom: 18px;
+  }
+
+  pipeline {
+    margin-bottom: 28px;
+  }
+
+  .lead {
+    @include border-radius($radius-size);
+
+    background-color: #fff;
+    border: 1px $color-border solid;
+    padding: 8px;
+
+    button {
+      @extend .boon-button;
+    }
+
+    .base-fields,
+    .custom-fields {
+      margin: 30px 50px;
+    }
+
+    .base-fields {
+      display: flex;
+      justify-content: space-between;
+
+      button {
+        display: inline-block;
+        margin-left: 6px;
+        width: 124px;
+      }
+    }
+
+    hr {
+      border-top: 1px $color-border solid;
+      height: 0;
+      margin: 0 -8px;
+    }
+
+    .custom-fields {
+      margin-bottom: 0px;
+
+      h2 {
+        color: #000000;
+        font-size: 12px;
+        font-weight: bold;
+        margin-bottom: 5px;
+        text-transform: uppercase;
+      }
+
+      field {
+        margin-top: 15px;
+        margin-bottom: 30px;
+      }
+    }
+
+    field {
+      display: inline-block;
+      margin-right: 40px;
+      vertical-align: top;
+      width: 195px;
+    }
+  }
+}

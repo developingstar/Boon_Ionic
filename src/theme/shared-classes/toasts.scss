@@ -1,0 +1,21 @@
+@import 'theme/mixins';
+@import 'theme/style-guide';
+
+.boon-toast {
+  .toast-wrapper {
+    @include border-radius($radius-size);
+
+    margin: $margin-size auto;
+  }
+
+  &.boon-toast-warning {
+    .toast-wrapper {
+      background-color: $color-invalid-primary-lt;
+
+      .toast-message,
+      .toast-button {
+        color: $color-invalid-primary;
+      }
+    }
+  }
+}

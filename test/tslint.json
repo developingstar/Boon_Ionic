@@ -1,0 +1,14 @@
+{
+  "extends": [
+    "../tslint.json"
+  ],
+  // Relax certain rules during testing.
+  "rules": {
+    // 'Let' is useful during test setup.
+    "no-let": false,
+    // Object mutation is the easiest way to test components in isolation.
+    "no-object-mutation": false,
+    // Needed to define certain test helpers that interface with angular.
+    "readonly-array": false
+  }
+}

@@ -1,0 +1,13 @@
+div.item-container(*ngIf="type == 'select'",
+                   class="{{viewAllContainerClass | async}}",
+                   (click)="onViewAllClick()")
+  .box
+    ion-icon(name="checkmark")
+    .name View All
+
+div.item-container(*ngFor="let stage of (stageData | async)",
+                   class="stage-container-{{stage.state}}",
+                   (click)="onClick(stage)")
+  .box
+    ion-icon(name="checkmark")
+    .name {{stage.name}}

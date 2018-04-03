@@ -1,0 +1,22 @@
+nav-content
+  nav-icons(right, [currentPage]="'JourneysPage'")
+
+ion-grid.journey
+  ion-row
+    ion-col.sidebar(col-auto, align-self-stretch)
+      .triggers
+        | Triggers
+
+        .sidebar-box
+        .sidebar-box
+      .actions
+        | Actions
+
+        .sidebar-box
+        .sidebar-box
+    ion-col.content(*ngIf="journey | async; let j")
+      ion-input.journey-name([value]="j.name")
+      .publish-box
+        button.boon-button(*ngIf="j.state == 'inactive'" ion-button (click)="publishJourney()") Publish journey
+        button.boon-button(*ngIf="j.state == 'active'" ion-button (click)="stopJourney()") Stop journey
+        span(*ngIf="j.published_at") Published: {{j.published_at | date}}
