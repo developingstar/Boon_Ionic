@@ -2,4 +2,39 @@ nav-content
   nav-icons(right, currentPage="PipelinesPage")
 
 settings-page-with-menu(currentPage="PipelinesPage")
-  div TODO content
+  ion-grid(*ngIf="showList | async")
+    ion-row(align-items-end).pipelines-header
+      ion-col
+        h2 Pipelines
+      ion-col(col-auto)
+        button(ion-button, (click)="newPipeline()") Add Pipeline
+    ion-row
+      ion-col
+        ion-list
+          button.button-with-arrow(ion-item *ngFor="let pipeline of (pipelines | async)", (click)="editPipeline(pipeline)")
+            | {{ pipeline.name }}
+
+  ion-grid(*ngIf="showForm | async")
+    ion-row.pipelines-header
+      ion-col
+        a.back-link((click)="goBackToList()") < Back
+        h2 {{ mode | async }} Pipeline
+      ion-col(col-auto)
+        button(*ngIf="(mode | async) === 'new'", ion-button, [disabled]="formInvalid | async", (click)="createPipeline()") Save Pipeline
+        button(*ngIf="(mode | async) === 'edit'", ion-button, [disabled]="formInvalid | async", (click)="updatePipeline()") Save Pipeline
+    ion-row
+      ion-col
+        form(autocomplete="off")
+          ion-label(stacked) Pipeline Name
+          ion-input(name="name", type="text", [formControl]="currentPipelineNameInput | async")
+    ion-row(align-items-end).stages-header
+      ion-col
+        h3 Stages
+        span.description Add stages to pipeline. Drag to change order.
+      ion-col(col-auto)
+        button(ion-button, (click)="addStage()") Add Stage
+    ion-row
+      ion-col
+        ion-list
+          button(ion-item *ngFor="let stage of currentPipelineStages | async", (click)="editStage(stage)")
+            | {{ stage.name }}

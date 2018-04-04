@@ -28,7 +28,7 @@ export class SettingsPageWithMenuComponent {
     {
       children: [
         { label: 'Pipelines', link: 'PipelinesPage' },
-        { label: 'Custom Fields' }
+        { label: 'Custom Fields', link: 'CustomFieldsPage' }
       ],
       label: 'CMS Settings'
     }

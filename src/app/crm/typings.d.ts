@@ -29,6 +29,14 @@ declare namespace Crm {
       readonly name: string
     }
 
+    interface IFieldDefinitionCreate {
+      readonly name: string
+    }
+
+    interface IFieldDefinitionUpdate {
+      readonly name?: string
+    }
+
     interface IField {
       readonly id: number
       readonly name: string
@@ -69,6 +77,24 @@ declare namespace Crm {
     interface ILeadFieldUpdate {
       readonly id: number
       readonly value: string
+    }
+
+    interface IPipelineCreate {
+      readonly name: string
+      readonly stage_order?: ReadonlyArray<number>
+    }
+
+    interface IPipelineUpdate {
+      readonly name?: string
+      readonly stage_order?: ReadonlyArray<number>
+    }
+
+    interface IStageCreate {
+      readonly name: string
+    }
+
+    interface IStageUpdate {
+      readonly name?: string
     }
   }
 }

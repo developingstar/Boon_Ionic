@@ -9,6 +9,5 @@ ion-grid
             ul
               li(*ngFor="let child of entry.children", [ngClass]="{'active': isActive(child)}", (click)="goTo(child.link)")
                 | {{child.label}}
-    ion-col
-      ion-content(padding)
-        ng-content
+    ion-col.content
+      ng-content

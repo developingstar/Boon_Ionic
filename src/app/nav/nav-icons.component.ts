@@ -19,7 +19,7 @@ export class NavIconsComponent {
   readonly pageGroups: ReadonlyArray<IPageGroup> = [
     { icon: 'crm.svg', pages: ['CrmPage', 'LeadPage'] },
     { icon: 'automation.svg', pages: ['JourneysPage', 'JourneyPage'] },
-    { icon: 'settings.svg', pages: ['PipelinesPage'] }
+    { icon: 'settings.svg', pages: ['PipelinesPage', 'CustomFieldsPage'] }
   ]
 
   constructor(private readonly nav: NavController) {}

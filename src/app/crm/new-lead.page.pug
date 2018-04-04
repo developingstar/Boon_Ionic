@@ -8,12 +8,13 @@ h2 New Contact
 
   hr
 
-  .custom-fields
-    field(*ngFor="let field of (fields | async)",
-          type="input",
-          [form]="form",
-          [formField]="field.id",
-          [label]="field.name")
+  ion-scroll(scrollY="true", zoom="false")
+    .custom-fields
+      field(*ngFor="let field of (fields | async)",
+            type="input",
+            [form]="form",
+            [formField]="field.id",
+            [label]="field.name")
 
   .buttons
     button(ion-button, (click)="create(form.value)", [disabled]="!form.valid") Create

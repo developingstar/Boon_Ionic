@@ -81,6 +81,31 @@ export class SalesService {
       )
   }
 
+  public createField(
+    field: Crm.API.IFieldDefinitionCreate
+  ): Observable<FieldDefinition> {
+    return this.http
+      .post(`/api/fields`, JSON.stringify({ field: field }))
+      .map(
+        (response: {
+          readonly data: { readonly field: Crm.API.IFieldDefinition }
+        }) => new FieldDefinition(response.data.field)
+      )
+  }
+
+  public updateField(
+    id: number,
+    field: Crm.API.IFieldDefinitionUpdate
+  ): Observable<FieldDefinition> {
+    return this.http
+      .patch(`/api/fields/${id}`, JSON.stringify({ field: field }))
+      .map(
+        (response: {
+          readonly data: { readonly field: Crm.API.IFieldDefinition }
+        }) => new FieldDefinition(response.data.field)
+      )
+  }
+
   public stage(id: number): Observable<Stage> {
     return this.http.get(`/api/stages/${id}`).map(
       (response: {
@@ -106,6 +131,68 @@ export class SalesService {
       .get('/api/pipelines')
       .map((response: Crm.API.IPipelinesResponse) =>
         response.data.pipelines.map((item) => new Pipeline(item))
+      )
+  }
+
+  public createPipeline(
+    pipelineData: Crm.API.IPipelineCreate
+  ): Observable<Pipeline> {
+    return this.http
+      .post('/api/pipelines', JSON.stringify({ pipeline: pipelineData }))
+      .map(
+        (response: {
+          readonly data: {
+            readonly pipeline: Crm.API.IPipeline
+          }
+        }) => new Pipeline(response.data.pipeline)
+      )
+  }
+
+  public updatePipeline(
+    id: number,
+    pipelineData: Crm.API.IPipelineUpdate
+  ): Observable<Pipeline> {
+    return this.http
+      .patch(`/api/pipelines/${id}`, JSON.stringify({ pipeline: pipelineData }))
+      .map(
+        (response: {
+          readonly data: {
+            readonly pipeline: Crm.API.IPipeline
+          }
+        }) => new Pipeline(response.data.pipeline)
+      )
+  }
+
+  public createStage(
+    pipelineId: number,
+    stageData: Crm.API.IStageCreate
+  ): Observable<Stage> {
+    return this.http
+      .post(this.urlForStages(pipelineId), JSON.stringify({ stage: stageData }))
+      .map(
+        (response: {
+          readonly data: {
+            readonly stage: Crm.API.IStage
+          }
+        }) => new Stage(response.data.stage)
+      )
+  }
+
+  public updateStage(
+    id: number,
+    stageData: Crm.API.IStageUpdate
+  ): Observable<Stage> {
+    return this.http
+      .patch(
+        `${this.urlForStages(null)}/${id}`,
+        JSON.stringify({ stage: stageData })
+      )
+      .map(
+        (response: {
+          readonly data: {
+            readonly stage: Crm.API.IStage
+          }
+        }) => new Stage(response.data.stage)
       )
   }
 

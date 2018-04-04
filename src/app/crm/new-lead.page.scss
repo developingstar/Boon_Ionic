@@ -1,25 +1,30 @@
 @import 'theme/shared-classes';
 @import 'theme/style-guide';
 
-.new-lead-page-popover {
-  .popover-viewport {
-    display: block;
-    height: 100%;
-  }
+.new-lead-page-modal {
+  @extend .boon-modal;
 
-  .popover-content {
-    background-color: $color-content-background;
-    border-radius: 14px;
-    height: 75%;
-    padding: 34px;
-    width: 75%;
+  display: flex;
+  justify-content: center;
+
+  .modal-wrapper {
+    height: 100%;
+    width: 100%;
+
+    @include md {
+      height: 500px;
+      width: 75%;
+      left: initial;
+    }
   }
 }
 
 new-lead-page {
+  background-color: $color-content-background;
   display: flex;
   flex-direction: column;
   height: 100%;
+  padding: 34px;
 
   h2 {
     color: #232d3b;
@@ -34,6 +39,11 @@ new-lead-page {
     display: flex;
     flex-direction: column;
     flex-grow: 1;
+    height: 90%;
+
+    @include md {
+      height: 360px;
+    }
   }
 
   .base-fields {
@@ -51,7 +61,6 @@ new-lead-page {
 
   .custom-fields {
     flex-grow: 1;
-    overflow: auto;
   }
 
   .buttons {
@@ -74,5 +83,10 @@ new-lead-page {
     margin-right: 40px;
     vertical-align: top;
     width: 195px;
+  }
+
+  ion-scroll {
+    height: 100%;
+    margin-bottom: 10px;
   }
 }

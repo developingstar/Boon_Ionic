@@ -4,6 +4,7 @@ settings-page-with-menu {
   .settings-menu {
     border-right: 1px solid $color-border;
     font-weight: 500;
+    height: 100%;
     margin-top: -10px;
     padding-left: 0;
     padding-top: 37px;
@@ -42,5 +43,11 @@ settings-page-with-menu {
         color: $color-light-dark;
       }
     }
+  }
+
+  .content {
+    max-width: 760px;
+    padding-left: 30px;
+    padding-top: 10px;
   }
 }

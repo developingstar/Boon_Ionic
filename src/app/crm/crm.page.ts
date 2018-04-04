@@ -1,6 +1,6 @@
 import { HttpParams } from '@angular/common/http'
 import { Component, OnInit } from '@angular/core'
-import { IonicPage, NavController, PopoverController } from 'ionic-angular'
+import { IonicPage, ModalController, NavController } from 'ionic-angular'
 import { Observable, Subject } from 'rxjs'
 
 import { IHttpRequestOptions } from './../api/http-request-options'
@@ -32,13 +32,13 @@ export class CrmPage implements OnInit {
 
   constructor(
     private readonly salesService: SalesService,
-    private readonly navController: NavController,
-    private readonly popoverController: PopoverController
+    private readonly modalController: ModalController,
+    private readonly navController: NavController
   ) {
     this.state = this.uiActions
       .mergeScan((state: IState, action: UserAction) => {
         if (action === 'newLead') {
-          this.showNewLeadPopover(state.stageId)
+          this.showNewLeadModal(state.stageId)
           return Observable.of(state)
         } else {
           const newRequestOptions = this.actionToRequestOptions(state, action)
@@ -234,14 +234,14 @@ export class CrmPage implements OnInit {
     }
   }
 
-  private showNewLeadPopover(stageId: string | undefined): void {
-    const popover = this.popoverController.create(
+  private showNewLeadModal(stageId: string | undefined): void {
+    const modal = this.modalController.create(
       'NewLeadPage',
       { stageId: stageId ? +stageId : undefined },
       {
-        cssClass: 'new-lead-page-popover'
+        cssClass: 'new-lead-page-modal'
       }
     )
-    popover.present()
+    modal.present()
   }
 }

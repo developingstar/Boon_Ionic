@@ -1,25 +1,10 @@
 @import 'theme/shared-classes';
 @import 'theme/style-guide';
-@import 'mixins';
+@import 'mixins.scss';
 
-pipelines-page {
-  .pipelines-header,
-  .stages-header {
+custom-fields-page {
+  .header {
     @include settings-page-header;
-  }
-
-  .stages-header {
-    margin-top: 35px;
-
-    h3 {
-      color: $color-header;
-      font-size: 18px;
-      font-weight: 600;
-    }
-
-    span.description {
-      color: $color-light-dark;
-    }
   }
 
   ion-list {
@@ -27,12 +12,23 @@ pipelines-page {
   }
 
   form {
-    ion-input input.text-input {
-      @extend .boon-input;
+    ion-input {
+      &.ng-invalid {
+        input.text-input {
+          border: 1px solid red;
+        }
+      }
+
+      input.text-input {
+        @extend .boon-input;
+      }
     }
 
     .label {
-      @extend .boon-uppercase-label;
+      @extend .boon-label;
+
+      text-transform: uppercase;
+      letter-spacing: 1px;
     }
   }
 
