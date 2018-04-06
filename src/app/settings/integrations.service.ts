@@ -13,17 +13,11 @@ import { Service } from './service.model'
 export class IntegrationsService {
   constructor(private readonly http: HttpClient) {}
 
-  public services(
-    options: IHttpRequestOptions = blankHttpRequestOptions
-  ): Observable<ReadonlyArray<Service>> {
+  public services(): Observable<ReadonlyArray<Service>> {
     return this.http
-      .get(`/api/services`)
-      .map(
-        (response: {
-          readonly data: {
-            readonly services: ReadonlyArray<API.IService>
-          }
-        }) => response.data.services.map((service) => new Service(service))
+      .get('/api/services')
+      .map((response: API.IServicesResponse) =>
+        response.data.services.map((item) => new Service(item.service))
       )
   }
 

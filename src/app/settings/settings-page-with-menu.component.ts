@@ -13,7 +13,6 @@ interface IMenuEntry {
 })
 export class SettingsPageWithMenuComponent {
   @Input() readonly currentPage: string
-
   readonly menu: ReadonlyArray<IMenuEntry> = [
     { label: 'Account Settings', link: 'AccountSettingsPage' },
     { label: 'Billing Settings' },
@@ -22,8 +21,12 @@ export class SettingsPageWithMenuComponent {
       label: 'Team Settings'
     },
     {
-      children: [{ label: 'Twilio' }, { label: 'Zapier' }],
-      label: 'Integrations'
+      children: [
+        { label: 'Twilio', link: 'IntegrationsPage' },
+        { label: 'Zapier' }
+      ],
+      label: 'Integrations',
+      link: 'IntegrationsPage'
     },
     {
       children: [
@@ -34,7 +37,8 @@ export class SettingsPageWithMenuComponent {
     }
   ]
 
-  constructor(private readonly nav: NavController) {}
+  constructor(private readonly nav: NavController
+  ) {}
 
   goTo(page: string | undefined): void {
     if (page) {

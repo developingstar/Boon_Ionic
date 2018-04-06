@@ -1,0 +1,20 @@
+nav-content
+  nav-icons(right, currentPage="IntegrationsPage")
+
+settings-page-with-menu(currentPage="IntegrationsPage")
+  ion-row.integration-header
+      ion-col
+        h2 Integration Header
+  form(#integrationForm="ngForm", (ngSubmit)="update()", autocomplete="off")        
+    ion-row
+      ion-col
+        ion-label(stacked) TOKEN
+        ion-input(name="token", type="text", [(ngModel)]="tokenModel", required, #token)
+    ion-row
+      ion-col
+        ion-label(stacked) SECRET
+        ion-input(name="secret", type="text", [(ngModel)]="secretModel", required, #secret)
+    ion-row
+      ion-col(col-4)
+        button(ion-button, full, type="submit", [disabled]="!integrationForm.form.valid")
+          | Update Info

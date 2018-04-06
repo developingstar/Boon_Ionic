@@ -1,3 +1,9 @@
+export interface IServicesResponse {
+  readonly data: {
+    readonly services: ReadonlyArray<IServiceData>
+  }
+}
+
 export interface IServiceResponse {
   readonly data: IServiceData
 }
