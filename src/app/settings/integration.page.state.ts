@@ -1,23 +1,23 @@
 import { Service } from './service.model'
 
-interface IAction<T extends string> {
-  readonly name: T
-}
-
-interface IInitAction extends IAction<'init'> {}
-
-interface IUpdateAction extends IAction<'update_service'> {}
-
 export type UserAction =
-  | IInitAction
-  | IUpdateAction
+  | { readonly name: 'edit' }
+  | { readonly name: 'update_service' }
+  | { readonly name: 'list' }
+
+export type State =
+  | { readonly name: 'list'; readonly services: ReadonlyArray<Service> }
+  | { readonly name: 'edit'; readonly service: Service }
 
 export interface IState {
-  readonly isLoading: boolean
   readonly service?: Service
 }
 
 export const initialState: IState = {
-  isLoading: false,
   service: undefined
+}
+
+export const initialListState: State = {
+  name: 'list',
+  services: []
 }

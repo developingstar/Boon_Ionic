@@ -1,4 +1,4 @@
-import * as API from './integrations.api.model'
+import * as API from './integration.api.model'
 
 export class Service {
   readonly id: number
