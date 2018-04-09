@@ -6,6 +6,12 @@ declare namespace Crm {
       readonly stage_order: ReadonlyArray<number>
     }
 
+    interface IPipelineResponse {
+      readonly data: {
+        readonly pipeline: IPipeline
+      }
+    }
+
     interface IPipelinesResponse {
       readonly data: {
         readonly pipelines: ReadonlyArray<IPipeline>

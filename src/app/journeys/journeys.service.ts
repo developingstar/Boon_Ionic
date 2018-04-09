@@ -50,7 +50,7 @@ export class JourneysService {
     })
   }
 
-  private updateJourney(
+  updateJourney(
     id: number,
     requestData: API.IJourneyUpdateRequest
   ): Observable<Journey> {

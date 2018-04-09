@@ -1,0 +1,151 @@
+@import 'theme/shared-classes';
+@import 'theme/style-guide';
+
+.event-modal {
+  @extend .boon-modal;
+
+  .modal-wrapper {
+    @include md {
+      height: 240px;
+      width: 600px;
+
+      .ion-page {
+        position: initial;
+      }
+    }
+
+    .ion-page {
+      padding: 20px 30px;
+
+      .modal-header {
+        event {
+          align-items: center;
+          flex-direction: row;
+          height: auto;
+          width: 100%;
+          margin: 0;
+
+          .icon {
+            margin: 0 20px 0 0;
+          }
+
+          span {
+            color: #000;
+            font-size: 20px;
+            font-weight: 500;
+            margin-right: auto;
+          }
+        }
+      }
+
+      .modal-body {
+        &,
+        label,
+        select,
+        input {
+          margin: 10px 0;
+        }
+
+        label {
+          color: $color-text-secondary;
+          font-size: 11px;
+          letter-spacing: 1px;
+          text-transform: uppercase;
+        }
+
+        select {
+          @extend .boon-select;
+
+          &.ng-invalid.ng-touched {
+            @extend .boon-invalid-select;
+          }
+        }
+
+        input {
+          @extend .boon-input;
+
+          &.ng-invalid.ng-touched {
+            @extend .boon-invalid-input;
+          }
+
+          &[type='checkbox'] {
+            width: 25px;
+          }
+        }
+
+        .input-with-select {
+          display: flex;
+
+          input {
+            margin-right: 15px;
+            width: 70px;
+          }
+        }
+      }
+
+      .modal-footer {
+        button {
+          width: 100px;
+
+          & + button {
+            margin-left: 10px;
+          }
+        }
+      }
+    }
+  }
+}
+
+.assign-lead-owner-modal-component {
+  @extend .event-modal;
+}
+
+.assign-stage-modal-component {
+  @extend .event-modal;
+
+  .modal-wrapper {
+    @include md {
+      height: 312px;
+    }
+  }
+}
+
+.send-email-modal-component {
+  @extend .event-modal;
+
+  .modal-wrapper {
+    @include md {
+      height: 266px;
+    }
+  }
+}
+
+.send-text-modal-component {
+  @extend .send-email-modal-component;
+}
+
+.update-field-modal-component {
+  @extend .event-modal;
+
+  .modal-wrapper {
+    @include md {
+      height: 312px;
+    }
+  }
+}
+
+.wait-modal-component {
+  @extend .event-modal;
+}
+
+.field-updated-modal-component {
+  @extend .update-field-modal-component;
+}
+
+.pipeline-assigned-modal-component {
+  @extend .event-modal;
+}
+
+.stage-assigned-modal-component {
+  @extend .assign-stage-modal-component;
+}

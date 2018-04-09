@@ -69,6 +69,16 @@ export class SalesService {
       )
   }
 
+  public field(id: number): Observable<FieldDefinition | undefined> {
+    return this.http.get(`/api/fields/${id}`).map(
+      (response: {
+        readonly data: {
+          readonly field: Crm.API.IFieldDefinition
+        }
+      }) => new FieldDefinition(response.data.field)
+    )
+  }
+
   public fields(): Observable<ReadonlyArray<FieldDefinition>> {
     return this.http
       .get(`/api/fields`)
@@ -123,6 +133,15 @@ export class SalesService {
       .get(this.urlForStages(pipeline_id))
       .map((response: Crm.API.IStagesResponse) =>
         response.data.stages.map((item) => new Stage(item))
+      )
+  }
+
+  public pipeline(id: number): Observable<Pipeline | undefined> {
+    return this.http
+      .get(`/api/pipelines/${id}`)
+      .map(
+        (response: Crm.API.IPipelineResponse) =>
+          new Pipeline(response.data.pipeline)
       )
   }
 

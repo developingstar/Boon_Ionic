@@ -10,11 +10,11 @@ import { Observable } from 'rxjs'
 
 import { CurrentUserService } from '../auth/current-user.service'
 import { User } from '../auth/user.model'
-import { UserService } from '../auth/user.service'
 import { emailValidator, phoneNumberValidator } from '../utils/form-validators'
 import { FieldDefinition } from './field-definition.model'
 import { ISelectOption } from './field.component'
 import { SalesService } from './sales.service'
+import { UsersService } from './users.service'
 
 const UnassignedUserId = ''
 
@@ -35,7 +35,7 @@ export class NewLeadPage {
     private readonly navParams: NavParams,
     formBuilder: FormBuilder,
     currentUserService: CurrentUserService,
-    userService: UserService
+    usersService: UsersService
   ) {
     this.fields = salesService.fields()
 
@@ -44,7 +44,7 @@ export class NewLeadPage {
         (user) =>
           user
             ? user.role === 'admin'
-              ? userService.users()
+              ? usersService.users()
               : Observable.of([user])
             : Observable.of([])
       )

@@ -1,0 +1,12 @@
+.modal-header
+  event(type="action", kind="wait")
+.modal-body
+  form.form
+    label set delay
+    .input-with-select
+      input(name="for", [formControl]="forValue", type="number", min="0")
+      select(name="unit", [formControl]="unitSelect")
+        option(*ngFor="let option of unitOptions", [value]="option.value") {{option.label}}
+.modal-footer
+    button.boon-button(ion-button, (click)="save()", [disabled]="isSaveDisabled") Save
+    button.boon-button-grey(ion-button, (click)="cancel()") Cancel

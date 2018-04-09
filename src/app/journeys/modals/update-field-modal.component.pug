@@ -1,0 +1,12 @@
+.modal-header
+  event(type="action", kind="update_field")
+.modal-body
+  form.form
+    label select field
+    select(name="field_id", [formControl]="fieldSelect")
+      option(*ngFor="let option of (fieldOptions | async)", [value]="option.value") {{option.label}}
+    label update to
+    input(name="value", [formControl]="fieldValue")
+.modal-footer
+    button.boon-button(ion-button, (click)="save()", [disabled]="!fieldValue.valid") Save
+    button.boon-button-grey(ion-button, (click)="cancel()") Cancel

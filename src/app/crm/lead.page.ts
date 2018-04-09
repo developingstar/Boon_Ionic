@@ -9,13 +9,13 @@ import {
 import { Observable, Subject } from 'rxjs'
 
 import { CurrentUserService } from '../auth/current-user.service'
-import { UserService } from '../auth/user.service'
 import { emailValidator, phoneNumberValidator } from '../utils/form-validators'
 import { ISelectOption } from './field.component'
 import { Lead } from './lead.model'
 import { initialState, IPageData, State, UserAction } from './lead.page.state'
 import { SalesService } from './sales.service'
 import { Stage } from './stage.model'
+import { UsersService } from './users.service'
 
 const UnassignedUserId = ''
 
@@ -41,7 +41,7 @@ export class LeadPage implements OnInit {
     salesService: SalesService,
     navParams: NavParams,
     currentUserService: CurrentUserService,
-    userService: UserService
+    usersService: UsersService
   ) {
     this.fields = salesService.fields()
 
@@ -53,7 +53,7 @@ export class LeadPage implements OnInit {
           ? currentUserService.details.map(
               (details) => (details ? [details] : [])
             )
-          : userService.users()
+          : usersService.users()
       })
       .map((users) => {
         const unassigned = { label: 'not assigned', value: UnassignedUserId }

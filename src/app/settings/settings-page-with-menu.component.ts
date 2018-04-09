@@ -1,18 +1,10 @@
 import { Component, Input } from '@angular/core'
-import { IonicPage, NavController } from 'ionic-angular'
-import { Observable } from 'rxjs'
-import { ReactivePage } from '../utils/reactive-page'
-import {
-  State
-} from './integrations.page.state'
-import { IntegrationsService } from './integrations.service'
-import { Service } from './service.model'
+import { NavController } from 'ionic-angular'
 
 interface IMenuEntry {
   readonly children?: ReadonlyArray<IMenuEntry>
   readonly label: string
   readonly link?: string
-  readonly id?: number
 }
 
 @Component({
@@ -21,6 +13,7 @@ interface IMenuEntry {
 })
 export class SettingsPageWithMenuComponent {
   @Input() readonly currentPage: string
+
   readonly menu: ReadonlyArray<IMenuEntry> = [
     { label: 'Account Settings', link: 'AccountSettingsPage' },
     { label: 'Billing Settings' },
@@ -29,14 +22,8 @@ export class SettingsPageWithMenuComponent {
       label: 'Team Settings'
     },
     {
-      children: [
-        { label: 'Twilio', link: 'IntegrationsPage', id: 1 },
-        { label: 'Sendgrid', link: 'IntegrationsPage', id: 2 },
-        { label: 'Zapier', link: 'IntegrationsPage', id: 3 },
-      ],
-      id: 1,
-      label: 'Integrations',
-      link: 'IntegrationsPage',
+      children: [{ label: 'Twilio' }, { label: 'Zapier' }],
+      label: 'Integrations'
     },
     {
       children: [
@@ -46,34 +33,12 @@ export class SettingsPageWithMenuComponent {
       label: 'CMS Settings'
     }
   ]
-  constructor(
-    private readonly nav: NavController,
-    private readonly integrationsService: IntegrationsService
-  ) {}
 
-  ngOnInit(): void {
-    this.getIntegrationsList()
-  }
+  constructor(private readonly nav: NavController) {}
 
-  getIntegrationsList(): void {
-    const listServices = this.integrationsService
-      .services()
-      .map<ReadonlyArray<Service>, State>((services) => ({
-        mode: 'list',
-        services: services
-      }))
-    // listServices.subscribe({
-    //   next: (services) => {}
-    // })
-  }
-
-  goTo(page: string | undefined, id: number | undefined): void {
+  goTo(page: string | undefined): void {
     if (page) {
-      if (id) {
-        this.nav.setRoot(page, { id: id })
-      } else {
-        this.nav.setRoot(page)
-      }
+      this.nav.setRoot(page)
     }
   }
 

@@ -11,6 +11,7 @@ import { AppComponent } from './app/app.component'
 import { AuthModule } from './auth.module'
 import { CrmModule } from './crm.module'
 import { JourneysModule } from './journeys.module'
+import { MessagesModule } from './messages.module'
 import { NavModule } from './nav.module'
 import { NavService } from './nav/nav.service'
 
@@ -25,6 +26,7 @@ import { NavService } from './nav/nav.service'
     CrmModule,
     HttpClientModule,
     JourneysModule,
+    MessagesModule,
     IonicModule.forRoot(AppComponent, {
       popoverEnter: 'popover-pop-in',
       popoverLeave: 'popover-pop-out'

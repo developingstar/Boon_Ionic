@@ -1,0 +1,13 @@
+.modal-header
+  event(type="trigger", kind="stage_assigned")
+.modal-body
+  form.form
+    label select pipeline
+    select(name="pipeline_id", [formControl]="pipelineSelect")
+      option(*ngFor="let option of (pipelineOptions | async)", [value]="option.value") {{option.label}}
+    label select stage
+    select(name="stage_id", [formControl]="stageSelect")
+      option(*ngFor="let option of (stageOptions | async)", [value]="option.value") {{option.label}}
+.modal-footer
+    button.boon-button(ion-button, (click)="save()", [disabled]="!stageSelect.valid") Save
+    button.boon-button-grey(ion-button, (click)="cancel()") Cancel

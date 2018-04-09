@@ -1,10 +1,10 @@
 import * as API from './journeys.api.model'
 
 export class Action {
-  readonly id: number
+  readonly id: number | undefined
   readonly type: API.ActionType
-  readonly data: API.IActionData
-  readonly position: number
+  readonly data: API.ActionData
+  readonly position: number | undefined
   readonly journey_id: number
 
   constructor(data: API.IAction) {

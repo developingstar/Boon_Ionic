@@ -1,10 +1,10 @@
 import * as API from './journeys.api.model'
 
 export class Trigger {
-  readonly id: number
+  readonly id: number | undefined
   readonly type: API.TriggerType
   readonly journey_id: number
-  readonly data: API.ITriggerData
+  readonly data: API.TriggerData
 
   constructor(data: API.ITrigger) {
     this.id = data.id

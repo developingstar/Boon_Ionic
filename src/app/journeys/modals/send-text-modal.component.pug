@@ -1,0 +1,13 @@
+.modal-header
+  event(type="action", kind="send_text")
+.modal-body
+  form.form
+    label select template
+    select(name="template_id", [formControl]="templateSelect")
+      option(*ngFor="let option of (templateOptions | async)", [value]="option.value") {{option.label}}
+    label
+      input(name="send_from_owner", type="checkbox", [formControl]="sendFromOwnerCheckbox")
+      | send from owners phone number
+.modal-footer
+    button.boon-button(ion-button (click)="save()", [disabled]="!templateSelect.valid") Save
+    button.boon-button-grey(ion-button (click)="cancel()") Cancel

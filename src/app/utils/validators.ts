@@ -1,3 +1,5 @@
+import { emailRegExp, phoneNumberRegExp } from './form-validators'
+
 export function ensureNonEmptyString(data: any): string {
   if (typeof data === 'string' && data.length > 0) {
     return data
@@ -6,11 +8,27 @@ export function ensureNonEmptyString(data: any): string {
   }
 }
 
+export function ensureEmail(data: any): string {
+  if (typeof data === 'string' && emailRegExp.test(data)) {
+    return data
+  } else {
+    throw new Error(`Expected ${data} to be an e-mail`)
+  }
+}
+
 export function ensureNumber(data: any): number {
   if (typeof data === 'number') {
     return data
   } else {
     throw new Error(`Expected ${data} to be a number`)
+  }
+}
+
+export function ensurePhoneNumber(data: any): string {
+  if (typeof data === 'string' && phoneNumberRegExp.test(data)) {
+    return data
+  } else {
+    throw new Error(`Expected ${data} to be a phone number`)
   }
 }
 

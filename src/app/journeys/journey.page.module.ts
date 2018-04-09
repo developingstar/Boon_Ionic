@@ -3,11 +3,18 @@ import { IonicPageModule } from 'ionic-angular'
 import { InlineSVGModule } from 'ng-inline-svg'
 
 import { NavModule } from '../nav.module'
+import { EventModule } from './events/../boxes/event.module'
 import { JourneyPage } from './journey.page'
 
 @NgModule({
   declarations: [JourneyPage],
   entryComponents: [JourneyPage],
-  imports: [InlineSVGModule, IonicPageModule.forChild(JourneyPage), NavModule]
+  exports: [],
+  imports: [
+    EventModule,
+    InlineSVGModule,
+    IonicPageModule.forChild(JourneyPage),
+    NavModule
+  ]
 })
 export class JourneyPageModule {}

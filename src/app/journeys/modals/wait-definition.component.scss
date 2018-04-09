@@ -1,0 +1,20 @@
+wait-modal {
+  .modal-body {
+    form {
+      .input-with-select {
+        label {
+          clear: right;
+        }
+
+        input,
+        select {
+          display: inline;
+        }
+
+        input.short-input {
+          width: 60px;
+        }
+      }
+    }
+  }
+}
