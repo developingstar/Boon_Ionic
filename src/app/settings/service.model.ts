@@ -6,8 +6,10 @@ export class Service {
   readonly name: string
 
   constructor(data: API.IService) {
-    this.id = data.id
-    this.token = data.token
-    this.name = data.name
+    if (data) {
+      this.id = data.id
+      this.token = data.token
+      this.name = data.name
+    }
   }
 }

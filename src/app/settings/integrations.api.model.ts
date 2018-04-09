@@ -1,6 +1,6 @@
 export interface IServicesResponse {
   readonly data: {
-    readonly services: ReadonlyArray<IServiceData>
+    readonly services: ReadonlyArray<IService>
   }
 }
 

@@ -1,10 +1,18 @@
 import { Component, Input } from '@angular/core'
-import { NavController } from 'ionic-angular'
+import { IonicPage, NavController } from 'ionic-angular'
+import { Observable } from 'rxjs'
+import { ReactivePage } from '../utils/reactive-page'
+import {
+  State
+} from './integrations.page.state'
+import { IntegrationsService } from './integrations.service'
+import { Service } from './service.model'
 
 interface IMenuEntry {
   readonly children?: ReadonlyArray<IMenuEntry>
   readonly label: string
   readonly link?: string
+  readonly id?: number
 }
 
 @Component({
@@ -22,11 +30,13 @@ export class SettingsPageWithMenuComponent {
     },
     {
       children: [
-        { label: 'Twilio', link: 'IntegrationsPage' },
-        { label: 'Zapier' }
+        { label: 'Twilio', link: 'IntegrationsPage', id: 1 },
+        { label: 'Sendgrid', link: 'IntegrationsPage', id: 2 },
+        { label: 'Zapier', link: 'IntegrationsPage', id: 3 },
       ],
+      id: 1,
       label: 'Integrations',
-      link: 'IntegrationsPage'
+      link: 'IntegrationsPage',
     },
     {
       children: [
@@ -36,13 +46,34 @@ export class SettingsPageWithMenuComponent {
       label: 'CMS Settings'
     }
   ]
-
-  constructor(private readonly nav: NavController
+  constructor(
+    private readonly nav: NavController,
+    private readonly integrationsService: IntegrationsService
   ) {}
 
-  goTo(page: string | undefined): void {
+  ngOnInit(): void {
+    this.getIntegrationsList()
+  }
+
+  getIntegrationsList(): void {
+    const listServices = this.integrationsService
+      .services()
+      .map<ReadonlyArray<Service>, State>((services) => ({
+        mode: 'list',
+        services: services
+      }))
+    // listServices.subscribe({
+    //   next: (services) => {}
+    // })
+  }
+
+  goTo(page: string | undefined, id: number | undefined): void {
     if (page) {
-      this.nav.setRoot(page)
+      if (id) {
+        this.nav.setRoot(page, { id: id })
+      } else {
+        this.nav.setRoot(page)
+      }
     }
   }
 
