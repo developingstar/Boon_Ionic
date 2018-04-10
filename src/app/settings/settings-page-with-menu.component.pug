@@ -2,12 +2,12 @@ ion-grid
   ion-row
     ion-col(col-2)
       ul.settings-menu
-        div(*ngFor="let entry of menu")
-          li([ngClass]="{'active': isActive(entry)}", (click)="goTo(entry.link)")
+        div(*ngFor="let entry of (menu | async)")
+          li([ngClass]="{'active': isActive(entry, entry.id)}", (click)="goTo(entry.link, entry.id)")
             | {{entry.label}}
           li(*ngIf="isActive(entry) && entry.children")
             ul
-              li(*ngFor="let child of entry.children", [ngClass]="{'active': isActive(child)}", (click)="goTo(child.link)")
+              li(*ngFor="let child of entry.children", [ngClass]="{'active': isActive(child, child.id)}", (click)="goTo(child.link, child.id)")
                 | {{child.label}}
     ion-col.content
       ng-content

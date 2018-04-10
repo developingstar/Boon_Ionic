@@ -20,6 +20,8 @@ settings-page-with-menu {
       margin-bottom: 15px;
       cursor: pointer;
 
+      text-transform: capitalize;
+      
       &.active {
         color: $color-primary;
       }
