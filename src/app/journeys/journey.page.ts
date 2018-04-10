@@ -1,5 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core'
-import { IonicPage, Modal, ModalController, NavParams } from 'ionic-angular'
+import {
+  IonicPage,
+  Modal,
+  ModalController,
+  NavParams,
+  ToastController
+} from 'ionic-angular'
 import { Observable, Subject, Subscription } from 'rxjs'
 
 import { Action } from './action.model'
@@ -43,7 +49,8 @@ export class JourneyPage implements OnInit, OnDestroy {
   constructor(
     navParams: NavParams,
     private journeysService: JourneysService,
-    private modalController: ModalController
+    private modalController: ModalController,
+    private toastController: ToastController
   ) {
     this.journeyID = Number(navParams.get('id'))
     this.state = this.uiActions
@@ -295,6 +302,21 @@ export class JourneyPage implements OnInit, OnDestroy {
             isLoading: false,
             journey: journey
           }))
+          .catch((error) => {
+            if (error.status === 422) {
+              this.toastController
+                .create({
+                  cssClass: 'boon-toast-warning',
+                  dismissOnPageChange: true,
+                  message: 'Failed to update the journey.',
+                  position: 'top',
+                  showCloseButton: true
+                })
+                .present()
+            }
+
+            return this.loadJourneyState(state)
+          })
       )
     }
   }
