@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" viewBox="0 0 35 35">
+    <defs>
+        <style>
+            .svg-icon-journey-action-wait-1{fill:#fff8e5;}.svg-icon-journey-action-wait-1,.svg-icon-journey-action-wait-2,.svg-icon-journey-action-wait-3{stroke:#fcc52d;}.svg-icon-journey-action-wait-2,.svg-icon-journey-action-wait-3{fill:none;}.svg-icon-journey-action-wait-3{stroke-linecap:square;}
+        </style>
+    </defs>
+    <g id="Group-4">
+        <g id="Group-12">
+            <circle id="Oval-2" cx="17.5" cy="17.5" r="16.5" class="svg-icon-journey-action-wait-1"/>
+            <circle id="Oval" cx="17.5" cy="17.5" r="8.5" class="svg-icon-journey-action-wait-2"/>
+            <path id="Line-3" d="M17.5,17.5v-5" class="svg-icon-journey-action-wait-3"/>
+            <path id="Line-4" d="M17.5,17.5h3" class="svg-icon-journey-action-wait-3"/>
+        </g>
+    </g>
+</svg>

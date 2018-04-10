@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" viewBox="0 0 34 34">
+    <defs>
+        <style>
+            .svg-icon-journey-trigger-field-updated-1 { fill:#bedcfe; } .svg-icon-journey-trigger-field-updated-1, .svg-icon-journey-trigger-field-updated-2, .svg-icon-journey-trigger-field-updated-3 { stroke:#07f; } .svg-icon-journey-trigger-field-updated-2, .svg-icon-journey-trigger-field-updated-3 { fill:none; } .svg-icon-journey-trigger-field-updated-2 { stroke-miterlimit:10; }
+        </style>
+    </defs>
+    <g id="Page-1">
+        <g id="Automation">
+            <g id="Group-14">
+                <circle id="Oval-2" cx="17" cy="17" r="16.5" class="svg-icon-journey-trigger-field-updated-1"/>
+            </g>
+        </g>
+    </g>
+    <rect width="21" height="8.37" x="7.08" y="12.63" class="svg-icon-journey-trigger-field-updated-2"/>
+    <circle cx="20.48" cy="12.62" r="4.56" class="svg-icon-journey-trigger-field-updated-1"/>
+    <polyline points="18.21 12.88 19.71 14.38 23.19 10.9" class="svg-icon-journey-trigger-field-updated-3"/>
+</svg>

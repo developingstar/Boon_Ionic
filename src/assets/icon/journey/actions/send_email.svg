@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" viewBox="0 0 34 34">
+    <defs>
+        <style>
+            .svg-icon-journey-action-send-email-1{fill:#ffd5e1;}.svg-icon-journey-action-send-email-1,.svg-icon-journey-action-send-email-2{stroke:#ff0a53;}.svg-icon-journey-action-send-email-2{fill:none;}
+        </style>
+    </defs>
+    <g id="Page-1">
+        <g id="Automation">
+            <g id="Trigger-object-Copy-10">
+                <g id="Group-13">
+                    <circle id="Oval-2" cx="17" cy="17" r="16.5" class="svg-icon-journey-action-send-email-1"/>
+                </g>
+            </g>
+        </g>
+    </g>
+    <path d="M12.46,24l.61-5.22L5.64,16.32a.09.09,0,0,1,0-.18l19.56-5.31a.1.1,0,0,1,.12.14L18,25.44a.1.1,0,0,1-.17,0L15.42,22l-2.81,2.1A.1.1,0,0,1,12.46,24Z" class="svg-icon-journey-action-send-email-2"/>
+    <line x1="13.07" x2="25.43" y1="18.78" y2="10.77" class="svg-icon-journey-action-send-email-2"/>
+    <line x1="15.42" x2="13.19" y1="21.99" y2="18.7" class="svg-icon-journey-action-send-email-2"/>
+</svg>

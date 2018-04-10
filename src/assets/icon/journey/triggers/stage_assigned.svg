@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" viewBox="0 0 34 34">
+    <defs>
+        <style>
+            .svg-icon-journey-trigger-stage-assigned-1,.svg-icon-journey-trigger-stage-assigned-2{fill:#bedcfe;}.svg-icon-journey-trigger-stage-assigned-1,.svg-icon-journey-trigger-stage-assigned-3{stroke:#07f;}.svg-icon-journey-trigger-stage-assigned-3{fill:none;}
+        </style>
+    </defs>
+    <g id="Page-1">
+        <g id="Automation">
+            <g id="Group-6">
+                <g id="Group-10">
+                    <circle id="Oval-2" cx="17" cy="17" r="16.5" class="svg-icon-journey-trigger-stage-assigned-1"/>
+                    <g id="Rectangle-2-Copy-2">
+                        <rect id="path-1" width="13" height="16" x="12.5" y="10.5" class="svg-icon-journey-trigger-stage-assigned-2" rx="2" ry="2"/>
+                        <rect width="12.25" height="15.25" x="12.88" y="10.88" class="svg-icon-journey-trigger-stage-assigned-3" rx="2" ry="2"/>
+                    </g>
+                    <g id="Rectangle-2-Copy-3">
+                        <rect id="path-2" width="13" height="16" x="7.5" y="7.5" class="svg-icon-journey-trigger-stage-assigned-2" rx="2" ry="2"/>
+                        <rect width="12.25" height="15.25" x="7.88" y="7.88" class="svg-icon-journey-trigger-stage-assigned-3" rx="2" ry="2"/>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+    <polyline points="11.51 15.74 13.01 17.24 16.49 13.76" class="svg-icon-journey-trigger-stage-assigned-3"/>
+</svg>

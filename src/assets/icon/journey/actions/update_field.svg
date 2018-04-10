@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" viewBox="0 0 34 34">
+    <defs>
+        <style>
+            .svg-icon-journey-action-update-field-1{fill:#bedcfe;}.svg-icon-journey-action-update-field-1,.svg-icon-journey-action-update-field-2,.svg-icon-journey-action-update-field-3{stroke:#07f;}.svg-icon-journey-action-update-field-2,.svg-icon-journey-action-update-field-3{fill:none;}.svg-icon-journey-action-update-field-2{stroke-miterlimit:10;}.svg-icon-journey-action-update-field-4{fill:#07f;}
+        </style>
+    </defs>
+    <g id="Page-1">
+        <g id="Automation">
+            <g id="Group-14">
+                <circle id="Oval-2" cx="17" cy="17" r="16.5" class="svg-icon-journey-action-update-field-1"/>
+            </g>
+        </g>
+    </g>
+    <rect width="21" height="8.37" x="7.08" y="12.63" class="svg-icon-journey-action-update-field-2"/>
+    <circle cx="20.48" cy="12.62" r="4.56" class="svg-icon-journey-action-update-field-1"/>
+    <line x1="18.95" x2="21.81" y1="14.18" y2="11.33" class="svg-icon-journey-action-update-field-3"/>
+    <line x1="22.11" x2="22.86" y1="11.02" y2="10.27" class="svg-icon-journey-action-update-field-3"/>
+    <polygon points="19.02 14.92 18.15 14.05 18.09 14.98 19.02 14.92" class="svg-icon-journey-action-update-field-4"/>
+</svg>
