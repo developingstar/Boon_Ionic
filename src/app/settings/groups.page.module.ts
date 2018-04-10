@@ -5,16 +5,16 @@ import { InlineSVGModule } from 'ng-inline-svg'
 import { SettingsModule } from '../settings.module'
 
 import { NavModule } from '../nav.module'
-import { IntegrationsPage } from './integrations.page'
+import { GroupsPage } from './groups.page'
 
 @NgModule({
-  declarations: [IntegrationsPage],
-  entryComponents: [IntegrationsPage],
+  declarations: [GroupsPage],
+  entryComponents: [GroupsPage],
   imports: [
     InlineSVGModule,
-    IonicPageModule.forChild(IntegrationsPage),
+    IonicPageModule.forChild(GroupsPage),
     NavModule,
     SettingsModule
   ]
 })
-export class IntegrationsPageModule {}
+export class PipelinesPageModule {}

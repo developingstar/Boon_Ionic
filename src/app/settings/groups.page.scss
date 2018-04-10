@@ -1,0 +1,33 @@
+@import 'theme/shared-classes';
+@import 'theme/style-guide';
+@import 'mixins';
+
+groups-page {
+  .groups-header {
+    @include settings-page-header;
+  }
+  
+  ion-list {
+    @include settings-page-item-list;
+  }
+
+  form {
+    ion-input input.text-input {
+      @extend .boon-input;
+    }
+
+    .label {
+      @extend .boon-uppercase-label;
+    }
+  }
+
+  settings-page-with-menu ion-content.content.content-md {
+    .fixed-content,
+    .scroll-content {
+      @include md {
+        padding-left: 30px;
+        padding-right: 30px;
+      }
+    }
+  }
+}

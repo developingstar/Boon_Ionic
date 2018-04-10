@@ -1,0 +1,15 @@
+nav-content
+  nav-icons(right, currentPage="GroupsPage")
+
+settings-page-with-menu(currentPage="GroupsPage")
+  ion-grid(*ngIf="showList | async")
+    ion-row(align-items-end).groups-header
+      ion-col
+        h2 Groups
+      ion-col(col-auto)
+        button(ion-button, (click)="newGroup()") Create Group
+    ion-row
+      ion-col
+        ion-list
+          button.button-with-arrow(ion-item *ngFor="let group of (groups | async)", (click)="editGroup(group)")
+            | {{ group.name }}
