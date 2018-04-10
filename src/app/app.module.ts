@@ -14,6 +14,7 @@ import { JourneysModule } from './journeys.module'
 import { MessagesModule } from './messages.module'
 import { NavModule } from './nav.module'
 import { NavService } from './nav/nav.service'
+import { TemplatesModule } from './templates.module'
 
 @NgModule({
   bootstrap: [IonicApp],
@@ -32,6 +33,7 @@ import { NavService } from './nav/nav.service'
       popoverLeave: 'popover-pop-out'
     }),
     NavModule,
+    TemplatesModule,
     ReactiveFormsModule
   ],
   providers: [
