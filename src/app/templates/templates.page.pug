@@ -1,2 +1,19 @@
 nav-content
   nav-icons(right, [currentPage]="'TemplatesPage'")
+
+ion-content(padding)
+  ion-grid.table
+    ion-row.header
+      ion-col(col-6) Name
+      ion-col Created By
+      ion-col Edited
+      ion-col Published
+      ion-col(col-auto)
+        span.actions
+    ion-row.template(*ngFor="let template of (templates | async)")
+      ion-col(col-6, (click)="showTemplate(template)") {{template.name || "-"}}
+      ion-col((click)="showJourney(template)") {{template.name || "-"}}
+      ion-col((click)="showJourney(template)") {{template.name || "-"}}
+      ion-col((click)="showJourney(template)") {{template.name || "-"}}
+      ion-col(col-auto)
+        span.actions    

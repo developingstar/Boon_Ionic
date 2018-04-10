@@ -23,9 +23,39 @@ export class TemplatesPage implements OnInit, OnDestroy {
     private templatesService: TemplatesService,
     private popoverController: PopoverController,
     private readonly navController: NavController
-  ) {}
+  ) {
+    this.state = this.uiActions
+      .mergeScan((state, action) => this.reduce(state, action), initialState)
+      .shareReplay()
+    this.stateSubscription = this.state.subscribe()
+  }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.uiActions.next({ name: 'list' })
+  }
 
-  ngOnDestroy(): void {}
+  ngOnDestroy(): void {
+    if (this.stateSubscription) {
+      this.stateSubscription.unsubscribe()
+    }
+  }
+
+  get templates(): Observable<ReadonlyArray<Template>> {
+    return this.state.map((state) => state.templates)
+  }
+
+  private reduce(state: IState, action: UserAction): Observable<IState> {
+    switch (action.name) {
+      case 'list':
+        return this.getTemplates()
+      default:
+        return Observable.of(state)
+    }
+  }
+
+  private getTemplates(): Observable<IState> {
+    return this.templatesService.templates().map((templates) => ({
+      templates: templates
+    }))
+  }
 }
