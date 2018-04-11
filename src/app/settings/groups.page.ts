@@ -13,6 +13,12 @@ import {
 } from './groups.page.state'
 import { GroupsService } from './groups.service'
 
+type DistributionType = 'equal' | 'custom'
+interface IDistributionType {
+  readonly label: string
+  readonly type: DistributionType
+}
+
 @IonicPage({
   segment: 'settings/team/groups'
 })
@@ -21,6 +27,13 @@ import { GroupsService } from './groups.service'
   templateUrl: 'groups.page.html'
 })
 export class GroupsPage extends ReactivePage<State, UserAction> {
+
+  readonly distributions: ReadonlyArray<IDistributionType> = [
+    { label: 'Equal', type: 'equal' },
+    { label: 'Custom', type: 'custom' }
+  ]
+  public readonly distributionType: string = 'distribution_type'
+
   constructor(
     private readonly groupsService: GroupsService
   ) {

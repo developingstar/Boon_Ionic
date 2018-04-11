@@ -38,6 +38,44 @@ groups-page {
     }
   }   
 
+  .field-value {
+    background-color: #fbfbfb;
+    border: 1px solid #d0d0d0;
+    border-radius: 3px;
+    color: #354052;
+    font-size: 14px;
+    height: 40px;
+    padding: 0 12px;
+    width: 100%;
+    margin-top: 13px;
+    
+    &:disabled {
+      background-color: transparent;
+      border: 0;
+      color: #354052;
+      height: 16px;
+      padding: 0;
+    }
+
+    &.ng-invalid {
+      border: 1px solid red;
+    }
+  }
+
+  select.field-value:disabled {
+    // Remove the dropdown arrow
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    text-indent: 0px;
+    text-overflow: '';
+
+    // IE10
+    &::-ms-expand {
+      display: none;
+    }
+  }
+  
   form {
     ion-input input.text-input {
       @extend .boon-input;
@@ -63,7 +101,7 @@ groups-page {
     align-items: center;
     height: 50px;
     border-bottom: 1px solid #F2F4F5;
-
+    
     .distribution {
       padding: 10px 15px;
       border: 1px solid #D2D6E4;	
