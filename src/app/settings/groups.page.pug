@@ -22,8 +22,8 @@ settings-page-with-menu(currentPage="GroupsPage")
         a.back-link((click)="goBackToList()") < Back
         h2 {{ name | async }} Sales Group
       ion-col(col-auto)
-        button(*ngIf="(name | async) === 'new'", ion-button, [disabled]="formInvalid | async", (click)="createPipeline()") Create Group
-        button(*ngIf="(name | async) === 'edit'", ion-button, [disabled]="formInvalid | async", (click)="updatePipeline()") Edit Group
+        button(*ngIf="(name | async) === 'new'", ion-button, [disabled]="formInvalid | async", (click)="updateGroup()") Create Group
+        button(*ngIf="(name | async) === 'edit'", ion-button, [disabled]="formInvalid | async", (click)="updateGroup()") Edit Group
     ion-row
       ion-col(col-6)
         form(autocomplete="off")
@@ -32,8 +32,8 @@ settings-page-with-menu(currentPage="GroupsPage")
       ion-col(col-6)
          form(autocomplete="off")
             ion-label(stacked) Distribution Type
-            select.field-value
-              option(*ngFor="let distribution of distributions", [value]="distribution.value") {{distribution.label}}
+            select.field-value([(ngModel)]="distributionType", [ngModelOptions]="{standalone: true}")
+              option(*ngFor="let distribution of distributions", [value]="distribution.type") {{distribution.label}}
     ion-row
       ion-col
         form(autocomplete="off")
@@ -48,6 +48,6 @@ settings-page-with-menu(currentPage="GroupsPage")
       ion-col
         | {{user.name}}
       ion-col(col-auto)
-        button.distribution Equal
+        button.distribution {{btnLabel}}
         
         

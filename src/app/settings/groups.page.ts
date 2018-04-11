@@ -32,7 +32,7 @@ export class GroupsPage extends ReactivePage<State, UserAction> {
     { label: 'Equal', type: 'equal' },
     { label: 'Custom', type: 'custom' }
   ]
-  public readonly distributionType: string = 'distribution_type'
+  public readonly distributionType: DistributionType = 'equal'
 
   constructor(
     private readonly groupsService: GroupsService
@@ -56,8 +56,12 @@ export class GroupsPage extends ReactivePage<State, UserAction> {
     this.uiActions.next({ name: 'create' })
   }
 
-  updatePipeline(): void {
+  updateGroup(): void {
     this.uiActions.next({ name: 'update' })
+  }
+
+  get btnLabel(): string {
+    return this.distributionType === 'equal' ? 'Equal' : '10%'
   }
 
   get currentGroupNameInput(): Observable<FormControl | undefined> {
