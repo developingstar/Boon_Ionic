@@ -2,10 +2,7 @@ import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import { Observable } from 'rxjs'
 
-import {
-  blankHttpRequestOptions,
-  IHttpRequestOptions
-} from './../api/http-request-options'
+import { User } from '../auth/user.model'
 import { Group } from './group.model'
 import * as API from './groups.api.model'
 
@@ -28,5 +25,16 @@ export class GroupsService {
       .map((response: API.IGroupsResponse) =>
         response.data.groups.map((item) => new Group(item))
       )
+  }
+
+  public users(group_id: number | null = null): Observable<ReadonlyArray<User>> {
+    return this.http
+      .get(`/api/groups/${group_id}/users`)
+      .map((response: {
+        readonly data: {
+          readonly users: ReadonlyArray<Auth.API.IUser>
+        }
+      }) => response.data.users.map((user) => new User(user))
+    )
   }
 }

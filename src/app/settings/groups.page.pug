@@ -5,11 +5,48 @@ settings-page-with-menu(currentPage="GroupsPage")
   ion-grid(*ngIf="showList | async")
     ion-row(align-items-end).groups-header
       ion-col
-        h2 Groups
+        h2 Sales Groups
       ion-col(col-auto)
-        button(ion-button, (click)="newGroup()") Create Group
+        button.boon-button(ion-button, (click)="newGroup()") Create Group
+    ion-row.groups-list
+      ion-col(col-6, ion-item *ngFor="let group of (groups | async)", (click)="editGroup(group)")
+        div.group
+          div
+            div.group-title
+              | {{group.name}}
+            div.group-members 3 team members              
+          div([inlineSVG]="'assets/icon/settings/arrow.svg'")
+  ion-grid(*ngIf="showForm | async")
+    ion-row.groups-header
+      ion-col
+        a.back-link((click)="goBackToList()") < Back
+        h2 {{ name | async }} Sales Group
+      ion-col(col-auto)
+        button(*ngIf="(name | async) === 'new'", ion-button, [disabled]="formInvalid | async", (click)="createPipeline()") Create Group
+        button(*ngIf="(name | async) === 'edit'", ion-button, [disabled]="formInvalid | async", (click)="updatePipeline()") Edit Group
+    ion-row
+      ion-col(col-6)
+        form(autocomplete="off")
+          ion-label(stacked) Group Name
+          ion-input(name="name", type="text", [formControl]="currentGroupNameInput | async")
+      ion-col(col-6)
+         form(autocomplete="off")
+            ion-label(stacked) Distribution Type
+            ion-input(name="distribution", type="text")
     ion-row
       ion-col
-        ion-list
-          button.button-with-arrow(ion-item *ngFor="let group of (groups | async)", (click)="editGroup(group)")
-            | {{ group.name }}
+        form(autocomplete="off")
+            ion-label(stacked) Add Team Members
+            ion-input(name="members", type="text")        
+    ion-row(align-items-end).users-header
+      ion-col
+        span.description Name
+      ion-col(col-auto)
+        span.description Percent Distribution
+    ion-row.user-row(*ngFor="let user of currentGroupUsers | async")
+      ion-col
+        | {{user.name}}
+      ion-col(col-auto)
+        | Equal
+        
+        

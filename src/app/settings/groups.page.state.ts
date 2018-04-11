@@ -1,5 +1,6 @@
 import { FormControl } from '@angular/forms'
 
+import { User } from '../auth/user.model'
 import { Group } from './group.model'
 
 export type UserAction =
@@ -14,7 +15,7 @@ export type State =
   | {
       readonly name: 'edit'
       readonly nameInput: FormControl
-      readonly pipeline: Group
+      readonly users: ReadonlyArray<User>
     }
   | {
       readonly name: 'new'

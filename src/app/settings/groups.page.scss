@@ -6,10 +6,36 @@ groups-page {
   .groups-header {
     @include settings-page-header;
   }
-  
-  ion-list {
-    @include settings-page-item-list;
-  }
+
+  .groups-list {
+    .item-md.item-block {
+      .item-inner {
+        border-bottom: 0;
+      }
+    }
+
+    .group {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 10px;
+      height: 70px;
+      border: 1px solid #D2D6E4;
+      border-radius: 8px;
+      background-color: #FCFCFD;
+      padding: 15px 20px;
+      font-size: 14px;
+      
+      .group-title {
+        color: #354052;
+      }
+
+      .group-members {
+        color: #B4BAC6;
+        margin-top: 5px;
+      }
+    }
+  }   
 
   form {
     ion-input input.text-input {
@@ -20,8 +46,25 @@ groups-page {
       @extend .boon-uppercase-label;
     }
   }
+  
+  .users-header {
+    margin-top: 10px;
+    font-size: 12px;
+    
+    span.description {
+      color: $color-light-dark;
+      text-transform: uppercase;
+    }
+  }
 
-  settings-page-with-menu ion-content.content.content-md {
+  .user-row {
+    display: flex;
+    align-items: center;
+    height: 50px;
+    border-bottom: 1px solid #F2F4F5;
+  }
+
+  settings-page-with-menu ion-content.content.content-md {    
     .fixed-content,
     .scroll-content {
       @include md {

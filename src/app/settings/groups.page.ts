@@ -1,8 +1,9 @@
 import { Component } from '@angular/core'
 import { FormControl, Validators } from '@angular/forms'
-import { IonicPage, ModalController } from 'ionic-angular'
+import { IonicPage } from 'ionic-angular'
 import { Observable } from 'rxjs'
 
+import { User } from '../auth/user.model'
 import { ReactivePage } from '../utils/reactive-page'
 import { Group } from './group.model'
 import {
@@ -21,7 +22,6 @@ import { GroupsService } from './groups.service'
 })
 export class GroupsPage extends ReactivePage<State, UserAction> {
   constructor(
-    private readonly modalCtrl: ModalController,
     private readonly groupsService: GroupsService
   ) {
     super(initialState)
@@ -35,11 +35,11 @@ export class GroupsPage extends ReactivePage<State, UserAction> {
     this.uiActions.next({ name: 'list' })
   }
 
-  newPipeline(): void {
+  newGroup(): void {
     this.uiActions.next({ name: 'new' })
   }
 
-  createPipeline(): void {
+  createGroup(): void {
     this.uiActions.next({ name: 'create' })
   }
 
@@ -47,7 +47,7 @@ export class GroupsPage extends ReactivePage<State, UserAction> {
     this.uiActions.next({ name: 'update' })
   }
 
-  get currentPipelineNameInput(): Observable<FormControl | undefined> {
+  get currentGroupNameInput(): Observable<FormControl | undefined> {
     return this.state.map(
       (state) =>
         state.name === 'edit' || state.name === 'new'
@@ -78,6 +78,16 @@ export class GroupsPage extends ReactivePage<State, UserAction> {
     })
   }
 
+  get currentGroupUsers(): Observable<ReadonlyArray<User>> {
+    return this.state.map((state) => {
+      if (state.name === 'edit') {
+        return state.users
+      } else {
+        return []
+      }
+    })
+  }
+
   get showList(): Observable<boolean> {
     return this.name.map((name) => name === 'list')
   }
@@ -100,6 +110,19 @@ export class GroupsPage extends ReactivePage<State, UserAction> {
 
     if (action.name === 'list') {
       return listGroups
+    } else if (action.name === 'new') {
+      return Observable.of<State>({
+        name: 'new',
+        nameInput: new FormControl('', Validators.required)
+      })
+    } else if (action.name === 'edit') {
+      return this.groupsService
+        .users(action.group.id)
+        .map<ReadonlyArray<User>, State>((users) => ({
+          name: 'edit',
+          nameInput: new FormControl('', Validators.required),
+          users: users
+        }))
     } else {
       return Observable.of(state)
     }
