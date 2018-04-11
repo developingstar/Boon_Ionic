@@ -5,11 +5,9 @@ export interface IServicesResponse {
 }
 
 export interface IServiceResponse {
-  readonly data: IServiceData
-}
-
-export interface IServiceData {
-  readonly service: IService
+  readonly data: {
+    readonly service: IService
+  }
 }
 
 export interface IService {
