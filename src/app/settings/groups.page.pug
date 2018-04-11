@@ -38,7 +38,8 @@ settings-page-with-menu(currentPage="GroupsPage")
       ion-col
         form(autocomplete="off")
             ion-label(stacked) Add Team Members
-            ion-input(name="members", type="text")        
+            select.field-value([(ngModel)]="selectedUser", [ngModelOptions]="{standalone: true}")
+              option(*ngFor="let user of usersList | async", [value]="user") {{user.name}}
     ion-row(align-items-end).users-header
       ion-col
         span.description Name

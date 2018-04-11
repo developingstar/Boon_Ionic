@@ -1,9 +1,10 @@
 import { Component } from '@angular/core'
 import { FormControl, Validators } from '@angular/forms'
 import { IonicPage } from 'ionic-angular'
-import { Observable } from 'rxjs'
+import { Observable, Subscription } from 'rxjs'
 
 import { User } from '../auth/user.model'
+import { UsersService } from '../crm/users.service'
 import { ReactivePage } from '../utils/reactive-page'
 import { Group } from './group.model'
 import {
@@ -33,11 +34,27 @@ export class GroupsPage extends ReactivePage<State, UserAction> {
     { label: 'Custom', type: 'custom' }
   ]
   public readonly distributionType: DistributionType = 'equal'
+  public readonly selectedUser: User
+  private readonly users: Observable<ReadonlyArray<User>>
+  private readonly userSubscription: Subscription
 
   constructor(
-    private readonly groupsService: GroupsService
+    private readonly groupsService: GroupsService,
+    private readonly usersService: UsersService
   ) {
     super(initialState)
+
+    this.users = this.usersService
+      .users()
+      .map((users: ReadonlyArray<User>) => (users))
+      .shareReplay(1)
+    this.userSubscription = this.users.subscribe()
+  }
+
+  ngOnDestroy(): void {
+    if (this.userSubscription) {
+      this.userSubscription.unsubscribe()
+    }
   }
 
   editGroup(group: Group): void {
@@ -62,6 +79,10 @@ export class GroupsPage extends ReactivePage<State, UserAction> {
 
   get btnLabel(): string {
     return this.distributionType === 'equal' ? 'Equal' : '10%'
+  }
+
+  get usersList(): Observable<ReadonlyArray<User>> {
+    return this.users.map((user) => (user))
   }
 
   get currentGroupNameInput(): Observable<FormControl | undefined> {
