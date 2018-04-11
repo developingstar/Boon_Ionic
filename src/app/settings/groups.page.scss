@@ -25,7 +25,8 @@ groups-page {
       background-color: #FCFCFD;
       padding: 15px 20px;
       font-size: 14px;
-      
+      cursor: pointer;
+
       .group-title {
         color: #354052;
       }
@@ -62,6 +63,16 @@ groups-page {
     align-items: center;
     height: 50px;
     border-bottom: 1px solid #F2F4F5;
+
+    .distribution {
+      padding: 10px 15px;
+      border: 1px solid #D2D6E4;	
+      border-radius: 3px;	
+      background-color: #FCFCFD;
+      font-size: 14px;
+      font-weight: 500;
+      color: #B4BAC6;
+    }
   }
 
   settings-page-with-menu ion-content.content.content-md {    
