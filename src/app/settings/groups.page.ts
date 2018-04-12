@@ -77,6 +77,10 @@ export class GroupsPage extends ReactivePage<State, UserAction> {
     this.uiActions.next({ name: 'update' })
   }
 
+  deleteUser(user: User): void {
+    this.uiActions.next({ name: 'delete_user', user: user})
+  }
+
   get btnLabel(): string {
     return this.distributionType === 'equal' ? 'Equal' : '10%'
   }
@@ -157,10 +161,22 @@ export class GroupsPage extends ReactivePage<State, UserAction> {
       return this.groupsService
         .users(action.group.id)
         .map<ReadonlyArray<User>, State>((users) => ({
+          group_id: action.group.id,
           name: 'edit',
           nameInput: new FormControl('', Validators.required),
           users: users
         }))
+    } else if (action.name === 'delete_user' && state.name === 'edit') {
+      const index = state.users.indexOf(action.user)
+      return this.groupsService
+        .deleteUser(state.group_id, action.user.id)
+        .map<{
+          readonly data: {
+            readonly message: string
+          }}, State>((response) => ({
+            ...state,
+            users: state.users.filter((user, ind) => ind !== index)
+          }))
     } else {
       return Observable.of(state)
     }

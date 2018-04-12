@@ -46,4 +46,17 @@ export class GroupsService {
       })
     )
   }
+
+  public deleteUser(group_id: number, user_id: number): Observable<{
+    readonly data: {
+      readonly message: string
+    }}> {
+    return this.http
+      .delete(`/api/groups/${group_id}/users/${user_id}`)
+      .map((response: {
+          readonly data: {
+            readonly message: string
+          }}) => {
+            return response})
+  }
 }

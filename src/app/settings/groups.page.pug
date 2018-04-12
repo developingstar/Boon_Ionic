@@ -47,7 +47,7 @@ settings-page-with-menu(currentPage="GroupsPage")
         span.description Percent Distribution         
     ion-row.user-row(*ngFor="let user of currentGroupUsers | async")              
       ion-col.center-y
-        div.remove-user((click)='modalRef.hide()',aria-label='Remove User')
+        div.remove-user((click)='deleteUser(user)',aria-label='Remove User')
           span(aria-hidden='true')
             | &times;
         img.avatar-image([src]="user.avatar_url")        

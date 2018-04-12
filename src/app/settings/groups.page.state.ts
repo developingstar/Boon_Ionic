@@ -9,11 +9,13 @@ export type UserAction =
   | { readonly name: 'new' }
   | { readonly name: 'update' }
   | { readonly name: 'edit'; readonly group: Group }
+  | { readonly name: 'delete_user'; readonly user: User }
 
 export type State =
   | { readonly name: 'list'; readonly groups: ReadonlyArray<Group> }
   | {
       readonly name: 'edit'
+      readonly group_id: number
       readonly nameInput: FormControl
       readonly users: ReadonlyArray<User>
     }
