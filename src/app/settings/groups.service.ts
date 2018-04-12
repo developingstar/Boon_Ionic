@@ -34,16 +34,7 @@ export class GroupsService {
         readonly data: {
           readonly users: ReadonlyArray<Auth.API.IUser>
         }
-      }) => response.data.users.map((user) => {
-        const imgURL = user.avatar_url === null ? 'https://cdn2.iconfinder.com/data/icons/avatar-2/512/oscar_boy-512.png' : user.avatar_url
-        return {
-          avatar_url: imgURL,
-          email: user.email,
-          id: user.id,
-          name: user.name,
-          role: user.role
-        }
-      })
+      }) => response.data.users.map((user) => user)
     )
   }
 

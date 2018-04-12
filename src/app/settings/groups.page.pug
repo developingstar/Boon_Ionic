@@ -50,7 +50,7 @@ settings-page-with-menu(currentPage="GroupsPage")
         div.remove-user((click)='deleteUser(user)',aria-label='Remove User')
           span(aria-hidden='true')
             | &times;
-        img.avatar-image([src]="user.avatar_url")        
+        img.avatar-image([src]="user.avatar_url || 'https://cdn2.iconfinder.com/data/icons/avatar-2/512/oscar_boy-512.png'")        
         span {{user.name}}
       ion-col(col-auto)
         button.distribution {{btnLabel}}
