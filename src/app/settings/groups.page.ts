@@ -163,7 +163,7 @@ export class GroupsPage extends ReactivePage<State, UserAction> {
         .map<ReadonlyArray<User>, State>((users) => ({
           group_id: action.group.id,
           name: 'edit',
-          nameInput: new FormControl('', Validators.required),
+          nameInput: new FormControl(action.group.name, Validators.required),
           users: users
         }))
     } else if (action.name === 'delete_user' && state.name === 'edit') {
