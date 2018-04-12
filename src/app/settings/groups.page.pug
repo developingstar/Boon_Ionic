@@ -45,9 +45,12 @@ settings-page-with-menu(currentPage="GroupsPage")
         span.description Name
       ion-col(col-auto)
         span.description Percent Distribution
-    ion-row.user-row(*ngFor="let user of currentGroupUsers | async")
-      ion-col
-        | {{user.name}}
+    ion-row.user-row(*ngFor="let user of currentGroupUsers | async")              
+      ion-col.center-y
+        div.remove-user((click)='modalRef.hide()',aria-label='Remove User')
+          span(aria-hidden='true')
+            | &times;        
+        span {{user.name}}
       ion-col(col-auto)
         button.distribution {{btnLabel}}
         

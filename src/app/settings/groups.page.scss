@@ -15,9 +15,8 @@ groups-page {
     }
 
     .group {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      @extend .center-y;     
+      @extend .space-between;     
       margin-top: 10px;
       height: 70px;
       border: 1px solid #D2D6E4;
@@ -97,8 +96,7 @@ groups-page {
   }
 
   .user-row {
-    display: flex;
-    align-items: center;
+    @extend .center-y;
     height: 50px;
     border-bottom: 1px solid #F2F4F5;
     
@@ -110,6 +108,24 @@ groups-page {
       font-size: 14px;
       font-weight: 500;
       color: #B4BAC6;
+    }
+
+    .remove-user {
+      @extend .center;
+      cursor: pointer;
+      background: #0077FF;
+      width: 21px;
+      height: 21px;
+      border-radius: 21px;      
+      margin-right: 15px;
+      &:hover {
+        background: #96bce8;
+      }
+
+      span {
+        font-size: 20px;
+        color: #FFF;
+      }
     }
   }
 
