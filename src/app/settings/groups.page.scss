@@ -116,8 +116,9 @@ groups-page {
       background: #0077FF;
       width: 21px;
       height: 21px;
-      border-radius: 21px;      
+      border-radius: 50%;      
       margin-right: 15px;
+
       &:hover {
         background: #96bce8;
       }
@@ -126,6 +127,12 @@ groups-page {
         font-size: 20px;
         color: #FFF;
       }
+    }
+
+    .avatar-image {
+      width: 30px;
+      border-radius: 50%;
+      margin-right: 15px;
     }
   }
 
