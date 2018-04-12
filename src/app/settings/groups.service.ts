@@ -27,6 +27,18 @@ export class GroupsService {
       )
   }
 
+  public updateGroup(id: number, name: string): Observable<Group> {
+    return this.http
+      .patch(`/api/groups/${id}`, JSON.stringify({ group: { name: name } }))
+      .map(
+        (response: {
+          readonly data: {
+            readonly group: Group
+          }
+        }) => new Group(response.data.group)
+      )
+  }
+
   public users(group_id: number | null = null): Observable<ReadonlyArray<User>> {
     return this.http
       .get(`/api/groups/${group_id}/users`)

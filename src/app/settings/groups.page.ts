@@ -74,7 +74,7 @@ export class GroupsPage extends ReactivePage<State, UserAction> {
   }
 
   addUser(user: User): void {
-    this.uiActions.next({ name: 'delete_user', user: user})
+    // this.uiActions.next({ name: 'add_user', user: user})
   }
 
   deleteUser(user: User): void {
@@ -166,6 +166,9 @@ export class GroupsPage extends ReactivePage<State, UserAction> {
           nameInput: new FormControl(action.group.name, Validators.required),
           users: users
         }))
+    } else if (action.name === 'update' && state.name === 'edit') {
+      return this.groupsService.updateGroup(state.group_id, state.nameInput.value)
+        .map<Group, State>((group) => state)
     } else if (action.name === 'delete_user' && state.name === 'edit') {
       const index = state.users.indexOf(action.user)
       return this.groupsService
