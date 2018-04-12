@@ -22,7 +22,7 @@ settings-page-with-menu(currentPage="GroupsPage")
         a.back-link((click)="goBackToList()") < Back
         h2 {{ name | async }} Sales Group
       ion-col(col-auto)
-        button(*ngIf="(name | async) === 'new'", ion-button, [disabled]="formInvalid | async", (click)="updateGroup()") Create Group
+        button(*ngIf="(name | async) === 'new'", ion-button, [disabled]="formInvalid | async", (click)="createGroup()") Create Group
         button(*ngIf="(name | async) === 'edit'", ion-button, [disabled]="formInvalid | async", (click)="updateGroup()") Edit Group
     ion-row
       ion-col(col-6)
@@ -38,8 +38,8 @@ settings-page-with-menu(currentPage="GroupsPage")
       ion-col
         form(autocomplete="off")
             ion-label(stacked) Add Team Members
-            select.field-value([(ngModel)]="selectedUser", [ngModelOptions]="{standalone: true}")
-              option(*ngFor="let user of usersList | async", [value]="user") {{user.name}}
+            select.field-value((change)="addUser($event.target.value)")
+              option(*ngFor="let user of usersList | async", [value]="user.id") {{user.name}}
     ion-row.users-header(align-items-end, *ngIf="(name | async) !== 'new'")
       ion-col
         span.description Name

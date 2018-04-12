@@ -62,6 +62,19 @@ export class GroupsService {
     )
   }
 
+  public addUser(group_id: number, user_id: number): Observable<{
+    readonly data: {
+      readonly message: string
+    }}> {
+    return this.http
+      .post(`/api/groups/${group_id}/users/${user_id}`, JSON.stringify({ }))
+      .map((response: {
+          readonly data: {
+            readonly message: string
+          }}) => {
+            return response})
+  }
+
   public deleteUser(group_id: number, user_id: number): Observable<{
     readonly data: {
       readonly message: string

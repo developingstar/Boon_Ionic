@@ -33,8 +33,7 @@ export class GroupsPage extends ReactivePage<State, UserAction> {
     { label: 'Equal', type: 'equal' },
     { label: 'Custom', type: 'custom' }
   ]
-  public readonly distributionType: DistributionType = 'equal'
-  public readonly selectedUser: User
+  private readonly distributionType: DistributionType = 'equal'
   private readonly users: Observable<ReadonlyArray<User>>
   private readonly userSubscription: Subscription
 
@@ -77,8 +76,13 @@ export class GroupsPage extends ReactivePage<State, UserAction> {
     this.uiActions.next({ name: 'update' })
   }
 
-  addUser(user: User): void {
-    // this.uiActions.next({ name: 'add_user', user: user})
+  addUser(user_id: number): void {
+    this.users.subscribe((users) => {
+      const newUser = users.find((user) => user.id === Number(user_id))
+      if (newUser) {
+        this.uiActions.next({ name: 'add_user', user: newUser})
+      }
+    })
   }
 
   deleteUser(user: User): void {
@@ -90,7 +94,7 @@ export class GroupsPage extends ReactivePage<State, UserAction> {
   }
 
   get usersList(): Observable<ReadonlyArray<User>> {
-    return this.users.map((user) => (user))
+    return this.users.map((users) => (users))
   }
 
   get currentGroupNameInput(): Observable<FormControl | undefined> {
@@ -127,7 +131,7 @@ export class GroupsPage extends ReactivePage<State, UserAction> {
   get currentGroupUsers(): Observable<ReadonlyArray<User>> {
     return this.state.map((state) => {
       if (state.name === 'edit') {
-        return state.users
+        return state.group_users
       } else {
         return []
       }
@@ -170,16 +174,31 @@ export class GroupsPage extends ReactivePage<State, UserAction> {
         .users(action.group.id)
         .map<ReadonlyArray<User>, State>((users) => ({
           group_id: action.group.id,
+          group_users: users,
           name: 'edit',
-          nameInput: new FormControl(action.group.name, Validators.required),
-          users: users
+          nameInput: new FormControl(action.group.name, Validators.required)
         }))
     } else if (action.name === 'update' && state.name === 'edit') {
       return this.groupsService
         .updateGroup(state.group_id, state.nameInput.value)
         .map<Group, State>((group) => state)
+    } else if (action.name === 'add_user' && state.name === 'edit') {
+      const group_user = state.group_users.find((user) => user.id === Number(action.user.id))
+      if (group_user) {
+        return Observable.of(state)
+      } else {
+        return this.groupsService
+          .addUser(state.group_id, action.user.id)
+          .map<{
+            readonly data: {
+              readonly message: string
+            }}, State>((response) => ({
+              ...state,
+              group_users: state.group_users.concat(action.user)
+            }))
+      }
     } else if (action.name === 'delete_user' && state.name === 'edit') {
-      const index = state.users.indexOf(action.user)
+      const index = state.group_users.indexOf(action.user)
       return this.groupsService
         .deleteUser(state.group_id, action.user.id)
         .map<{
@@ -187,7 +206,7 @@ export class GroupsPage extends ReactivePage<State, UserAction> {
             readonly message: string
           }}, State>((response) => ({
             ...state,
-            users: state.users.filter((user, ind) => ind !== index)
+            group_users: state.group_users.filter((user, ind) => ind !== index)
           }))
     } else {
       return Observable.of(state)
