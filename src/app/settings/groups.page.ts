@@ -57,6 +57,10 @@ export class GroupsPage extends ReactivePage<State, UserAction> {
     }
   }
 
+  newGroup(): void {
+    this.uiActions.next({ name: 'new' })
+  }
+
   editGroup(group: Group): void {
     this.uiActions.next({ name: 'edit', group: group })
   }
@@ -65,8 +69,8 @@ export class GroupsPage extends ReactivePage<State, UserAction> {
     this.uiActions.next({ name: 'list' })
   }
 
-  newGroup(): void {
-    this.uiActions.next({ name: 'new' })
+  createGroup(): void {
+    this.uiActions.next({ name: 'create' })
   }
 
   updateGroup(): void {
@@ -157,6 +161,10 @@ export class GroupsPage extends ReactivePage<State, UserAction> {
         name: 'new',
         nameInput: new FormControl('', Validators.required)
       })
+    } else if (action.name === 'create' && state.name === 'new') {
+      return this.groupsService
+        .createGroup(state.nameInput.value)
+        .concatMap(() => listGroups)
     } else if (action.name === 'edit') {
       return this.groupsService
         .users(action.group.id)
@@ -167,7 +175,8 @@ export class GroupsPage extends ReactivePage<State, UserAction> {
           users: users
         }))
     } else if (action.name === 'update' && state.name === 'edit') {
-      return this.groupsService.updateGroup(state.group_id, state.nameInput.value)
+      return this.groupsService
+        .updateGroup(state.group_id, state.nameInput.value)
         .map<Group, State>((group) => state)
     } else if (action.name === 'delete_user' && state.name === 'edit') {
       const index = state.users.indexOf(action.user)
