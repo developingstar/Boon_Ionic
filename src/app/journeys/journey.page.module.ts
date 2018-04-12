@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core'
+import { SortablejsModule } from 'angular-sortablejs'
 import { IonicPageModule } from 'ionic-angular'
 import { InlineSVGModule } from 'ng-inline-svg'
 
@@ -14,7 +15,8 @@ import { JourneyPage } from './journey.page'
     EventModule,
     InlineSVGModule,
     IonicPageModule.forChild(JourneyPage),
-    NavModule
+    NavModule,
+    SortablejsModule
   ]
 })
 export class JourneyPageModule {}

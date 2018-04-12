@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core'
+import { SortablejsOptions } from 'angular-sortablejs'
 import {
   IonicPage,
   Modal,
@@ -32,6 +33,11 @@ import { SendTextModalComponent } from './modals/send-text-modal.component'
 import { UpdateFieldModalComponent } from './modals/update-field-modal.component'
 import { WaitModalComponent } from './modals/wait-modal.component'
 
+interface IOnUpdateEvent extends Event {
+  readonly newIndex: number
+  readonly oldIndex: number
+}
+
 @IonicPage({
   defaultHistory: ['JourneysPage'],
   segment: 'journey/:id'
@@ -41,6 +47,25 @@ import { WaitModalComponent } from './modals/wait-modal.component'
   templateUrl: 'journey.page.html'
 })
 export class JourneyPage implements OnInit, OnDestroy {
+  // `isSorting` flag cannot be inside the state because emitting a new value,
+  // on sorting, would break the interface
+  public readonly isSorting: Subject<boolean> = new Subject()
+  public readonly sortableOptions: SortablejsOptions = {
+    onEnd: (event: Event) => {
+      this.isSorting.next(false)
+    },
+    onStart: (event: Event) => {
+      this.isSorting.next(true)
+    },
+    onUpdate: (event: IOnUpdateEvent) => {
+      this.uiActions.next({
+        name: 'reorder_actions',
+        newPosition: event.newIndex,
+        oldPosition: event.oldIndex
+      })
+    }
+  }
+
   private readonly state: Observable<IState>
   private readonly uiActions: Subject<UserAction> = new Subject()
   private readonly journeyID: number
@@ -178,6 +203,13 @@ export class JourneyPage implements OnInit, OnDestroy {
     )
   }
 
+  get actionIds(): Observable<ReadonlyArray<number>> {
+    return this.state.map(
+      (state) =>
+        state.journey ? state.journey.actions.map((action) => action.id!) : []
+    )
+  }
+
   private reduce(state: IState, action: UserAction): Observable<IState> {
     switch (action.name) {
       case 'init':
@@ -236,6 +268,20 @@ export class JourneyPage implements OnInit, OnDestroy {
             journey: {
               actions: state.journey.actions.filter(
                 (a) => a.id !== action.action.id
+              )
+            }
+          })
+        }
+      case 'reorder_actions':
+        if (state.journey === undefined) {
+          return this.loadJourneyState(state)
+        } else {
+          return this.updateJourneyState(state, {
+            journey: {
+              actions: this.reorderActions(
+                state.journey.actions,
+                action.oldPosition,
+                action.newPosition
               )
             }
           })
@@ -365,5 +411,22 @@ export class JourneyPage implements OnInit, OnDestroy {
     return this.modalController.create(name, params, {
       cssClass: this.componentToCssClass(name)
     })
+  }
+
+  private reorderActions(
+    actions: ReadonlyArray<Action>,
+    oldIndex: number,
+    newIndex: number
+  ): ReadonlyArray<Action> {
+    const withoutAction: ReadonlyArray<Action> = [
+      ...actions.slice(0, oldIndex),
+      ...actions.slice(oldIndex + 1)
+    ]
+
+    return [
+      ...withoutAction.slice(0, newIndex),
+      actions[oldIndex],
+      ...withoutAction.slice(newIndex)
+    ]
   }
 }

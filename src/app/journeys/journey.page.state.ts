@@ -36,6 +36,11 @@ interface IDeleteTriggerAction extends IAction<'delete_trigger'> {
   readonly trigger: Trigger
 }
 
+interface IReorderActionsAction extends IAction<'reorder_actions'> {
+  readonly oldPosition: number
+  readonly newPosition: number
+}
+
 export type UserAction =
   | IInitAction
   | IStopJourneyAction
@@ -43,6 +48,7 @@ export type UserAction =
   | IAddActionAction
   | IUpdateActionAction
   | IDeleteActionAction
+  | IReorderActionsAction
   | IAddTriggerAction
   | IUpdateTriggerAction
   | IDeleteTriggerAction
