@@ -4,11 +4,11 @@ import { User } from '../auth/user.model'
 import { Group } from './group.model'
 
 export type UserAction =
-  | { readonly name: 'create' }
   | { readonly name: 'list' }
+  | { readonly name: 'edit'; readonly group: Group }
   | { readonly name: 'new' }
   | { readonly name: 'update' }
-  | { readonly name: 'edit'; readonly group: Group }
+  | { readonly name: 'add_user'; readonly user: User }
   | { readonly name: 'delete_user'; readonly user: User }
 
 export type State =

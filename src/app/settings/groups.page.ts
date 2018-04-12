@@ -69,12 +69,12 @@ export class GroupsPage extends ReactivePage<State, UserAction> {
     this.uiActions.next({ name: 'new' })
   }
 
-  createGroup(): void {
-    this.uiActions.next({ name: 'create' })
-  }
-
   updateGroup(): void {
     this.uiActions.next({ name: 'update' })
+  }
+
+  addUser(user: User): void {
+    this.uiActions.next({ name: 'delete_user', user: user})
   }
 
   deleteUser(user: User): void {
