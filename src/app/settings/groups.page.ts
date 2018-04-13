@@ -94,7 +94,7 @@ export class GroupsPage extends ReactivePage<State, UserAction> {
   }
 
   get usersList(): Observable<ReadonlyArray<User>> {
-    return this.users.map((users) => (users))
+    return this.users
   }
 
   get currentGroupNameInput(): Observable<FormControl | undefined> {
