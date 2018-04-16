@@ -1,3 +1,7 @@
+import {
+  ensureNonEmptyString,
+  ensureNumber
+} from '../utils/validators'
 import * as API from './integration.api.model'
 
 export class Service {
@@ -6,10 +10,8 @@ export class Service {
   readonly name: string
 
   constructor(data: API.IService) {
-    if (data) {
-      this.id = data.id
-      this.token = data.token
-      this.name = data.name
-    }
+    this.id = ensureNumber(data.id)
+    this.token = ensureNonEmptyString(data.token)
+    this.name = ensureNonEmptyString(data.name)
   }
 }

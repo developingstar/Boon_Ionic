@@ -59,10 +59,10 @@ export class SettingsPageWithMenuComponent {
   }
 
   isActive(entry: IMenuEntry): boolean {
-    const serviceID = Number(this.navParams.get('id'))
+    const pageSubId = Number(this.navParams.get('id'))
     return (
       (this.currentPage === entry.link &&
-        (entry.params === undefined || entry.params.id === serviceID)) ||
+        (entry.params === undefined || entry.params.id === pageSubId)) ||
       (entry.children !== undefined &&
         entry.children.some((child) => this.isActive(child)))
     )
