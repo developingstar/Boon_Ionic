@@ -99,16 +99,6 @@ groups-page {
     @extend .center-y;
     height: 50px;
     border-bottom: 1px solid #F2F4F5;
-    
-    .distribution {
-      padding: 10px 15px;
-      border: 1px solid #D2D6E4;	
-      border-radius: 3px;	
-      background-color: #FCFCFD;
-      font-size: 14px;
-      font-weight: 500;
-      color: #B4BAC6;
-    }
 
     .remove-user {
       @extend .center;
@@ -132,6 +122,11 @@ groups-page {
     .avatar-image {
       width: 30px;
       border-radius: 50%;
+      margin-right: 15px;
+    }
+
+    .default-avatar {
+      font-size: 32px;
       margin-right: 15px;
     }
   }
