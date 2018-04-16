@@ -1,13 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core'
-import { FormControl, Validators } from '@angular/forms'
 import { IonicPage, NavParams } from 'ionic-angular'
 import { Observable, Subject, Subscription } from 'rxjs'
 
-import {
-  initialState,
-  IState,
-  UserAction
-} from './integration.page.state'
+import { initialState, IState, UserAction } from './integration.page.state'
 import { IntegrationsService } from './integrations.service'
 import { Service } from './service.model'
 
@@ -62,11 +57,11 @@ export class IntegrationPage implements OnInit, OnDestroy {
         return this.getService()
       case 'update_service':
         return this.integrationsService
-            .updateService(this.serviceID, state.service)
-            .map((service) => ({
-              ...state,
-              service: service
-            }))
+          .updateService(this.serviceID, state.service)
+          .map((service) => ({
+            ...state,
+            service: service
+          }))
       default:
         return Observable.of(state)
     }

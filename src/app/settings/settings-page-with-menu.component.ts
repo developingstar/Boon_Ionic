@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy } from '@angular/core'
+import { Component, Input } from '@angular/core'
 import { NavController, NavParams } from 'ionic-angular'
 import { Observable, Subscription } from 'rxjs'
 
@@ -56,13 +56,13 @@ export class SettingsPageWithMenuComponent {
     }
   }
 
-  isActive(entry: IMenuEntry, id: number | undefined): boolean {
+  isActive(entry: IMenuEntry): boolean {
     const serviceID = Number(this.navParams.get('id'))
     return (
       (this.currentPage === entry.link &&
-        (id === undefined || id === serviceID)) ||
+        (entry.id === undefined || entry.id === serviceID)) ||
       (entry.children !== undefined &&
-        entry.children.some((child) => this.isActive(child, child.id)))
+        entry.children.some((child) => this.isActive(child)))
     )
   }
 
