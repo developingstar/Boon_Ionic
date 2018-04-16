@@ -9,7 +9,9 @@ interface IMenuEntry {
   readonly children?: ReadonlyArray<IMenuEntry>
   readonly label: string
   readonly link?: string
-  readonly id?: number
+  readonly params?: {
+    readonly id: number
+  }
 }
 
 @Component({
@@ -31,9 +33,9 @@ export class SettingsPageWithMenuComponent {
       .services()
       .map((services: ReadonlyArray<Service>) => {
         return services.map((service) => ({
-          id: service.id,
           label: service.name,
-          link: 'IntegrationPage'
+          link: 'IntegrationPage',
+          params: { id: service.id }
         }))
       })
       .shareReplay(1)
@@ -46,10 +48,10 @@ export class SettingsPageWithMenuComponent {
     }
   }
 
-  goTo(page: string | undefined, id: number | undefined): void {
+  goTo(page: string | undefined, params: { readonly id: number } | undefined): void {
     if (page) {
-      if (id) {
-        this.nav.setRoot(page, { id: id })
+      if (params) {
+        this.nav.setRoot(page, { id: params.id })
       } else {
         this.nav.setRoot(page)
       }
@@ -60,7 +62,7 @@ export class SettingsPageWithMenuComponent {
     const serviceID = Number(this.navParams.get('id'))
     return (
       (this.currentPage === entry.link &&
-        (entry.id === undefined || entry.id === serviceID)) ||
+        (entry.params === undefined || entry.params.id === serviceID)) ||
       (entry.children !== undefined &&
         entry.children.some((child) => this.isActive(child)))
     )
@@ -76,16 +78,19 @@ export class SettingsPageWithMenuComponent {
       },
       {
         children: integrationsChildren,
-        id: integrationsChildren[0].id,
         label: 'Integrations',
-        link: 'IntegrationPage'
+        link: 'IntegrationPage',
+        params: {
+          id: 1,
+        },
       },
       {
         children: [
           { label: 'Pipelines', link: 'PipelinesPage' },
           { label: 'Custom Fields', link: 'CustomFieldsPage' }
         ],
-        label: 'CMS Settings'
+        label: 'CMS Settings',
+        link: 'PipelinesPage',
       }
     ])
   }
