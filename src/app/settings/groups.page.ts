@@ -138,6 +138,14 @@ export class GroupsPage extends ReactivePage<State, UserAction> {
     })
   }
 
+  get isNewAction(): Observable<boolean> {
+    return this.name.map((name) => name === 'new')
+  }
+
+  get isEditAction(): Observable<boolean> {
+    return this.name.map((name) => name === 'edit')
+  }
+
   get showList(): Observable<boolean> {
     return this.name.map((name) => name === 'list')
   }
