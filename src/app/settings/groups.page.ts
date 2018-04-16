@@ -14,12 +14,6 @@ import {
 } from './groups.page.state'
 import { GroupsService } from './groups.service'
 
-type DistributionType = 'equal' | 'custom'
-interface IDistributionType {
-  readonly label: string
-  readonly type: DistributionType
-}
-
 @IonicPage({
   segment: 'settings/team/groups'
 })
@@ -29,11 +23,6 @@ interface IDistributionType {
 })
 export class GroupsPage extends ReactivePage<State, UserAction> {
 
-  readonly distributions: ReadonlyArray<IDistributionType> = [
-    { label: 'Equal', type: 'equal' },
-    { label: 'Custom', type: 'custom' }
-  ]
-  private readonly distributionType: DistributionType = 'equal'
   private readonly users: Observable<ReadonlyArray<User>>
   private readonly userSubscription: Subscription
 
@@ -87,10 +76,6 @@ export class GroupsPage extends ReactivePage<State, UserAction> {
 
   deleteUser(user: User): void {
     this.uiActions.next({ name: 'delete_user', user: user})
-  }
-
-  get btnLabel(): string {
-    return this.distributionType === 'equal' ? 'Equal' : '10%'
   }
 
   get usersList(): Observable<ReadonlyArray<User>> {
