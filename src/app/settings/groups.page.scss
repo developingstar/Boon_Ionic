@@ -15,13 +15,13 @@ groups-page {
     }
 
     .group {
-      @extend .center-y;     
-      @extend .space-between;     
+      @extend .center-y;
+      @extend .space-between;
       margin-top: 10px;
       height: 70px;
-      border: 1px solid #D2D6E4;
+      border: 1px solid #d2d6e4;
       border-radius: 8px;
-      background-color: #FCFCFD;
+      background-color: #fcfcfd;
       padding: 15px 20px;
       font-size: 14px;
       cursor: pointer;
@@ -31,11 +31,11 @@ groups-page {
       }
 
       .group-members {
-        color: #B4BAC6;
+        color: #b4bac6;
         margin-top: 5px;
       }
     }
-  }   
+  }
 
   .field-value {
     background-color: #fbfbfb;
@@ -47,7 +47,7 @@ groups-page {
     padding: 0 12px;
     width: 100%;
     margin-top: 13px;
-    
+
     &:disabled {
       background-color: transparent;
       border: 0;
@@ -74,7 +74,7 @@ groups-page {
       display: none;
     }
   }
-  
+
   form {
     ion-input input.text-input {
       @extend .boon-input;
@@ -84,11 +84,11 @@ groups-page {
       @extend .boon-uppercase-label;
     }
   }
-  
+
   .users-header {
     margin-top: 10px;
     font-size: 12px;
-    
+
     span.description {
       color: $color-light-dark;
       text-transform: uppercase;
@@ -98,15 +98,15 @@ groups-page {
   .user-row {
     @extend .center-y;
     height: 50px;
-    border-bottom: 1px solid #F2F4F5;
+    border-bottom: 1px solid #f2f4f5;
 
     .remove-user {
       @extend .center;
       cursor: pointer;
-      background: #0077FF;
+      background: #0077ff;
       width: 21px;
       height: 21px;
-      border-radius: 50%;      
+      border-radius: 50%;
       margin-right: 15px;
 
       &:hover {
@@ -115,7 +115,7 @@ groups-page {
 
       span {
         font-size: 20px;
-        color: #FFF;
+        color: #fff;
       }
     }
 
@@ -131,7 +131,7 @@ groups-page {
     }
   }
 
-  settings-page-with-menu ion-content.content.content-md {    
+  settings-page-with-menu ion-content.content.content-md {
     .fixed-content,
     .scroll-content {
       @include md {

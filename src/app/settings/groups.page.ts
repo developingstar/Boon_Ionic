@@ -23,7 +23,6 @@ import { GroupsService } from './groups.service'
   templateUrl: 'groups.page.html'
 })
 export class GroupsPage extends ReactivePage<State, UserAction> {
-
   constructor(
     private readonly groupsService: GroupsService,
     private readonly usersService: UsersService
@@ -52,11 +51,11 @@ export class GroupsPage extends ReactivePage<State, UserAction> {
   }
 
   addUser(user_id: number): void {
-    this.uiActions.next({ name: 'add_user', user_id: user_id})
+    this.uiActions.next({ name: 'add_user', user_id: user_id })
   }
 
   deleteUser(user: User): void {
-    this.uiActions.next({ name: 'delete_user', user: user})
+    this.uiActions.next({ name: 'delete_user', user: user })
   }
 
   get usersList(): Observable<ReadonlyArray<User>> {
@@ -156,48 +155,57 @@ export class GroupsPage extends ReactivePage<State, UserAction> {
         (groupUsers, users) => ({
           groupUsers: groupUsers,
           users: users
-        }))
+        })
+      )
 
       return newC.map<IGroupData, State>((groupData: IGroupData) => ({
-          groupUsers: groupData.groupUsers,
-          group_id: action.group.id,
-          name: 'edit',
-          nameInput: new FormControl(action.group.name, Validators.required),
-          users: groupData.users
+        groupUsers: groupData.groupUsers,
+        group_id: action.group.id,
+        name: 'edit',
+        nameInput: new FormControl(action.group.name, Validators.required),
+        users: groupData.users
       }))
     } else if (action.name === 'update' && state.name === 'edit') {
       return this.groupsService
         .updateGroup(state.group_id, state.nameInput.value)
         .map<Group, State>((group) => state)
     } else if (action.name === 'add_user' && state.name === 'edit') {
-      const group_user = state.groupUsers.find((user) => user.id === Number(action.user_id))
-      const added_user = state.users.find((user) => user.id === Number(action.user_id))
+      const group_user = state.groupUsers.find(
+        (user) => user.id === Number(action.user_id)
+      )
+      const added_user = state.users.find(
+        (user) => user.id === Number(action.user_id)
+      )
       if (group_user) {
         return Observable.of(state)
       } else if (added_user) {
-        return this.groupsService
-          .addUser(state.group_id, action.user_id)
-          .map<{
+        return this.groupsService.addUser(state.group_id, action.user_id).map<
+          {
             readonly data: {
               readonly message: string
-            }}, State>((response) => ({
-              ...state,
-              groupUsers: state.groupUsers.concat(added_user)
-            }))
+            }
+          },
+          State
+        >((response) => ({
+          ...state,
+          groupUsers: state.groupUsers.concat(added_user)
+        }))
       } else {
         return Observable.of(state)
       }
     } else if (action.name === 'delete_user' && state.name === 'edit') {
       const index = state.groupUsers.indexOf(action.user)
-      return this.groupsService
-        .deleteUser(state.group_id, action.user.id)
-        .map<{
+      return this.groupsService.deleteUser(state.group_id, action.user.id).map<
+        {
           readonly data: {
             readonly message: string
-          }}, State>((response) => ({
-            ...state,
-            groupUsers: state.groupUsers.filter((user, ind) => ind !== index)
-          }))
+          }
+        },
+        State
+      >((response) => ({
+        ...state,
+        groupUsers: state.groupUsers.filter((user, ind) => ind !== index)
+      }))
     } else {
       return Observable.of(state)
     }

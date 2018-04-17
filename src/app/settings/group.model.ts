@@ -1,7 +1,4 @@
-import {
-  ensureNonEmptyString,
-  ensureNumber
-} from '../utils/validators'
+import { ensureNonEmptyString, ensureNumber } from '../utils/validators'
 import * as API from './groups.api.model'
 
 export class Group {

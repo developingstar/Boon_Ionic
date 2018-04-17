@@ -13,10 +13,7 @@ export class GroupsService {
   public group(id: number): Observable<Group | undefined> {
     return this.http
       .get(`/api/groups/${id}`)
-      .map(
-        (response: API.IGroupResponse) =>
-          new Group(response.data.group)
-      )
+      .map((response: API.IGroupResponse) => new Group(response.data.group))
   }
 
   public groups(): Observable<ReadonlyArray<Group>> {
@@ -51,40 +48,47 @@ export class GroupsService {
       )
   }
 
-  public groupUsers(group_id: number | null = null): Observable<ReadonlyArray<User>> {
+  public groupUsers(
+    group_id: number | null = null
+  ): Observable<ReadonlyArray<User>> {
     return this.http
       .get(`/api/groups/${group_id}/users`)
-      .map((response: {
-        readonly data: {
-          readonly users: ReadonlyArray<Auth.API.IUser>
-        }
-      }) => response.data.users.map((user) => user)
-    )
-  }
-
-  public addUser(group_id: number, user_id: number): Observable<{
-    readonly data: {
-      readonly message: string
-    }}> {
-    return this.http
-      .post(`/api/groups/${group_id}/users/${user_id}`, JSON.stringify({ }))
-      .map((response: {
+      .map(
+        (response: {
           readonly data: {
-            readonly message: string
-          }}) => {
-            return response})
+            readonly users: ReadonlyArray<Auth.API.IUser>
+          }
+        }) => response.data.users.map((user) => user)
+      )
   }
 
-  public deleteUser(group_id: number, user_id: number): Observable<{
+  public addUser(
+    group_id: number,
+    user_id: number
+  ): Observable<{
     readonly data: {
       readonly message: string
-    }}> {
+    }
+  }> {
+    return this.http
+      .post(`/api/groups/${group_id}/users/${user_id}`, JSON.stringify({}))
+      .map((response: { readonly data: { readonly message: string } }) => {
+        return response
+      })
+  }
+
+  public deleteUser(
+    group_id: number,
+    user_id: number
+  ): Observable<{
+    readonly data: {
+      readonly message: string
+    }
+  }> {
     return this.http
       .delete(`/api/groups/${group_id}/users/${user_id}`)
-      .map((response: {
-          readonly data: {
-            readonly message: string
-          }}) => {
-            return response})
+      .map((response: { readonly data: { readonly message: string } }) => {
+        return response
+      })
   }
 }
