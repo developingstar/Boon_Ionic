@@ -9,7 +9,7 @@ export type UserAction =
   | { readonly name: 'create' }
   | { readonly name: 'edit'; readonly group: Group }
   | { readonly name: 'update' }
-  | { readonly name: 'add_user'; readonly user: User }
+  | { readonly name: 'add_user'; readonly user_id: number }
   | { readonly name: 'delete_user'; readonly user: User }
 
 export type State =
