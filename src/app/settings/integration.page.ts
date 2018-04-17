@@ -1,7 +1,8 @@
-import { Component, OnDestroy, OnInit } from '@angular/core'
+import { Component } from '@angular/core'
 import { IonicPage, NavParams } from 'ionic-angular'
-import { Observable, Subject, Subscription } from 'rxjs'
+import { Observable } from 'rxjs'
 
+import { ReactivePage } from '../utils/reactive-page'
 import { initialState, IState, UserAction } from './integration.page.state'
 import { IntegrationsService } from './integrations.service'
 import { Service } from './service.model'
@@ -13,31 +14,12 @@ import { Service } from './service.model'
   selector: 'integration-page',
   templateUrl: 'integration.page.html'
 })
-export class IntegrationPage implements OnInit, OnDestroy {
-  private readonly state: Observable<IState>
-  private readonly uiActions: Subject<UserAction> = new Subject()
-  private readonly serviceID: number
-  private readonly stateSubscription: Subscription
-
+export class IntegrationPage extends ReactivePage<IState, UserAction> {
   constructor(
-    navParams: NavParams,
+    public navParams: NavParams,
     private readonly integrationsService: IntegrationsService
   ) {
-    this.serviceID = Number(navParams.get('id'))
-    this.state = this.uiActions
-      .mergeScan((state, action) => this.reduce(state, action), initialState)
-      .shareReplay()
-    this.stateSubscription = this.state.subscribe()
-  }
-
-  ngOnInit(): void {
-    this.uiActions.next({ name: 'edit' })
-  }
-
-  ngOnDestroy(): void {
-    if (this.stateSubscription) {
-      this.stateSubscription.unsubscribe()
-    }
+    super(initialState)
   }
 
   public updateService(): void {
@@ -51,13 +33,24 @@ export class IntegrationPage implements OnInit, OnDestroy {
     )
   }
 
-  private reduce(state: IState, action: UserAction): Observable<IState> {
+  protected initialAction(): UserAction {
+    return { name: 'edit' }
+  }
+
+  protected reduce(state: IState, action: UserAction): Observable<IState> {
+    const serviceID = Number(this.navParams.get('id'))
+    const selectedService = this.integrationsService
+      .service(serviceID)
+      .map((service) => ({
+        name: 'edit',
+        service: service
+      }))
     switch (action.name) {
       case 'edit':
-        return this.getService()
+        return selectedService
       case 'update_service':
         return this.integrationsService
-          .updateService(this.serviceID, state.service)
+          .updateService(serviceID, state.service)
           .map((service) => ({
             ...state,
             service: service
@@ -65,11 +58,5 @@ export class IntegrationPage implements OnInit, OnDestroy {
       default:
         return Observable.of(state)
     }
-  }
-
-  private getService(): Observable<IState> {
-    return this.integrationsService.service(this.serviceID).map((service) => ({
-      service: service
-    }))
   }
 }
