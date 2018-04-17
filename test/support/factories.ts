@@ -6,9 +6,12 @@ import * as JourneysAPI from '../../src/app/journeys/journeys.api.model'
 import { FieldDefinition } from './../../src/app/crm/field-definition.model'
 import { Field } from './../../src/app/crm/field.model'
 import { Pipeline } from './../../src/app/crm/pipeline.model'
+import { EmailTemplate } from './../../src/app/messages/email-template.model'
+import { TextTemplate } from './../../src/app/messages/text-template.model'
 
 export function sampleUser(values: { readonly [key: string]: any } = {}): User {
   return new User({
+    avatar_url: '',
     email: 'john@example.com',
     id: 1,
     name: 'John Boon',
@@ -72,6 +75,32 @@ export function sampleFieldDefinition(
   return new FieldDefinition({
     id: 1,
     name: 'First Name',
+    ...values
+  })
+}
+
+export function sampleTextTemplate(
+  values: { readonly [key: string]: any } = {}
+): TextTemplate {
+  return new TextTemplate({
+    content: 'Hello',
+    default_sender: '+999600100200',
+    id: 1,
+    name: 'Introduction text message',
+    ...values
+  })
+}
+
+export function sampleEmailTemplate(
+  values: { readonly [key: string]: any } = {}
+): EmailTemplate {
+  return new EmailTemplate({
+    content: 'Hello',
+    default_sender: 'user@example.com',
+    default_sender_name: 'Support',
+    id: 1,
+    name: 'Introduction e-mail message',
+    subject: 'Introduction',
     ...values
   })
 }

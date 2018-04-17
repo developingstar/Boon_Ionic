@@ -10,6 +10,7 @@ import { Pipeline } from '../../../src/app/crm/pipeline.model'
 import { SalesService } from '../../../src/app/crm/sales.service'
 import { sampleLead, samplePipeline } from '../../support/factories'
 import { PaginatedCollection } from './../../../src/app/api/paginated-collection'
+import { FieldDefinition } from './../../../src/app/crm/field-definition.model'
 
 describe('SalesService', () => {
   let httpMock: HttpTestingController
@@ -109,6 +110,34 @@ describe('SalesService', () => {
     )
   })
 
+  describe('pipeline', () => {
+    it(
+      'returns a pipeline',
+      async(() => {
+        const convertedPipeline = samplePipeline({
+          id: 1,
+          name: 'Converted',
+          stage_order: [1, 2, 3]
+        })
+
+        service.pipeline(1).subscribe((result: Pipeline) => {
+          expect(result).toEqual(convertedPipeline)
+        })
+
+        const req = httpMock.expectOne('/api/pipelines/1')
+        expect(req.request.method).toBe('GET')
+
+        req.flush({
+          data: {
+            pipeline: JSON.parse(JSON.stringify(convertedPipeline))
+          }
+        })
+
+        httpMock.verify()
+      })
+    )
+  })
+
   describe('pipelines', () => {
     it(
       'returns an array',
@@ -138,6 +167,122 @@ describe('SalesService', () => {
               JSON.parse(JSON.stringify(convertedPipeline)),
               JSON.parse(JSON.stringify(withoutResponsePipeline))
             ]
+          }
+        })
+
+        httpMock.verify()
+      })
+    )
+  })
+
+  describe('createPipeline', () => {
+    it(
+      'returns a new pipeline',
+      async(() => {
+        service.createPipeline({ name: 'Converted' }).subscribe((pipeline) => {
+          expect(pipeline.id).toEqual(1)
+          expect(pipeline.name).toEqual('Converted')
+          expect(pipeline.stage_order).toEqual([])
+        })
+
+        const req = httpMock.expectOne('/api/pipelines')
+        expect(req.request.method).toBe('POST')
+
+        req.flush({
+          data: {
+            pipeline: {
+              id: 1,
+              name: 'Converted',
+              stage_order: []
+            }
+          }
+        })
+
+        httpMock.verify()
+      })
+    )
+  })
+
+  describe('updatePipeline', () => {
+    it(
+      'returns the updated pipeline',
+      async(() => {
+        service
+          .updatePipeline(1, { stage_order: [1, 2, 3] })
+          .subscribe((pipeline) => {
+            expect(pipeline.id).toEqual(1)
+            expect(pipeline.name).toEqual('Converted')
+            expect(pipeline.stage_order).toEqual([1, 2, 3])
+          })
+
+        const req = httpMock.expectOne('/api/pipelines/1')
+        expect(req.request.method).toBe('PATCH')
+
+        req.flush({
+          data: {
+            pipeline: {
+              id: 1,
+              name: 'Converted',
+              stage_order: [1, 2, 3]
+            }
+          }
+        })
+
+        httpMock.verify()
+      })
+    )
+  })
+
+  describe('createStage', () => {
+    it(
+      'returns a new stage',
+      async(() => {
+        service
+          .createStage(123, { name: 'Closed - Won' })
+          .subscribe((stage) => {
+            expect(stage.id).toEqual(1)
+            expect(stage.pipeline_id).toEqual(123)
+            expect(stage.name).toEqual('Closed - Won')
+          })
+
+        const req = httpMock.expectOne('/api/pipelines/123/stages')
+        expect(req.request.method).toBe('POST')
+
+        req.flush({
+          data: {
+            stage: {
+              id: 1,
+              name: 'Closed - Won',
+              pipeline_id: 123
+            }
+          }
+        })
+
+        httpMock.verify()
+      })
+    )
+  })
+
+  describe('updateStage', () => {
+    it(
+      'returns the updated stage',
+      async(() => {
+        service.updateStage(1, { name: 'Closed - Won' }).subscribe((stage) => {
+          expect(stage.id).toEqual(1)
+          expect(stage.pipeline_id).toEqual(123)
+          expect(stage.name).toEqual('Closed - Won')
+        })
+
+        const req = httpMock.expectOne('/api/stages/1')
+        expect(req.request.method).toBe('PATCH')
+
+        req.flush({
+          data: {
+            stage: {
+              id: 1,
+              name: 'Closed - Won',
+              pipeline_id: 123
+            }
           }
         })
 
@@ -251,7 +396,7 @@ describe('SalesService', () => {
       'returns an updated lead',
       async(() => {
         service.updateLead(2, {}).subscribe((lead) => {
-          expect(lead.id).toEqual(1)
+          expect(lead.id).toEqual(2)
           expect(lead.email).toEqual('lead@example.com')
           expect(lead.phone_number).toEqual('+999100200300')
           expect(lead.stage_id).toEqual(14)
@@ -278,7 +423,7 @@ describe('SalesService', () => {
               created_by_user_id: 101,
               email: 'lead@example.com',
               fields: [{ id: 300, name: 'website', value: 'example.com' }],
-              id: 1,
+              id: 2,
               owner: {
                 email: 'john@example.com',
                 id: 100,
@@ -404,6 +549,32 @@ describe('SalesService', () => {
     })
   })
 
+  describe('field', () => {
+    it(
+      'returns a field',
+      async(() => {
+        service.field(1).subscribe((field: FieldDefinition) => {
+          expect(field.id).toEqual(1)
+          expect(field.name).toEqual('First Name')
+        })
+
+        const req = httpMock.expectOne('/api/fields/1')
+        expect(req.request.method).toBe('GET')
+
+        req.flush({
+          data: {
+            field: {
+              id: 1,
+              name: 'First Name'
+            }
+          }
+        })
+
+        httpMock.verify()
+      })
+    )
+  })
+
   describe('fields', () => {
     it(
       'returns all fields',
@@ -431,6 +602,66 @@ describe('SalesService', () => {
                 name: 'Last Name'
               }
             ]
+          }
+        })
+
+        httpMock.verify()
+      })
+    )
+  })
+
+  describe('createField', () => {
+    it(
+      'creates a new field',
+      async(() => {
+        const fieldCreate = {
+          name: 'New Field'
+        }
+
+        service.createField(fieldCreate).subscribe((field) => {
+          expect(field.id).toEqual(11)
+          expect(field.name).toEqual('New Field')
+        })
+
+        const req = httpMock.expectOne('/api/fields')
+        expect(req.request.method).toBe('POST')
+
+        req.flush({
+          data: {
+            field: {
+              id: 11,
+              name: fieldCreate.name
+            }
+          }
+        })
+
+        httpMock.verify()
+      })
+    )
+  })
+
+  describe('updateField', () => {
+    it(
+      'updates an existing field',
+      async(() => {
+        const fieldUpdate = {
+          name: 'Updated Field'
+        }
+
+        service.updateField(11, fieldUpdate).subscribe((field) => {
+          expect(field.id).toEqual(11)
+          expect(field.name).toEqual('Updated Field')
+        })
+
+        const req = httpMock.expectOne('/api/fields/11')
+        expect(req.request.method).toBe('PATCH')
+
+        req.flush({
+          data: {
+            field: {
+              id: 11,
+              name: fieldUpdate.name
+            }
           }
         })
 

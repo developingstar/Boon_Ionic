@@ -9,13 +9,13 @@ import { LeadPageObject } from './lead.page.po'
 
 import { CurrentUserService } from '../../../src/app/auth/current-user.service'
 import { User } from '../../../src/app/auth/user.model'
-import { UserService } from '../../../src/app/auth/user.service'
 import { FieldDefinition } from '../../../src/app/crm/field-definition.model'
 import { Lead } from '../../../src/app/crm/lead.model'
 import { LeadPage } from '../../../src/app/crm/lead.page'
 import { LeadPageModule } from '../../../src/app/crm/lead.page.module'
 import { SalesService } from '../../../src/app/crm/sales.service'
 import { Stage } from '../../../src/app/crm/stage.model'
+import { UsersService } from '../../../src/app/crm/users.service'
 import { NavService } from '../../../src/app/nav/nav.service'
 
 describe('LeadPage', () => {
@@ -34,12 +34,14 @@ describe('LeadPage', () => {
     async(() => {
       users = [
         {
+          avatar_url: '',
           email: 'john@example.com',
           id: 100,
           name: 'John Boon',
           role: 'admin'
         },
         {
+          avatar_url: '',
           email: 'mark@example.com',
           id: 101,
           name: 'Mark Boon',
@@ -84,6 +86,7 @@ describe('LeadPage', () => {
         ],
         id: 1,
         owner: {
+          avatar_url: '',
           email: 'john@example.com',
           id: 100,
           name: 'John Boon',
@@ -115,7 +118,7 @@ describe('LeadPage', () => {
         role: () => userRole
       }
 
-      const userServiceStub = {
+      const usersServiceStub = {
         users: () => Observable.of(users)
       }
 
@@ -135,7 +138,7 @@ describe('LeadPage', () => {
           { provide: NavController, useValue: navControllerStub },
           { provide: SalesService, useValue: salesServiceStub },
           { provide: CurrentUserService, useValue: currentUserServiceStub },
-          { provide: UserService, useValue: userServiceStub }
+          { provide: UsersService, useValue: usersServiceStub }
         ]
       })
 

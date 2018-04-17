@@ -6,6 +6,7 @@ import { User } from '../../../src/app/auth/user.model'
 describe('CurrentUserService', () => {
   let service: CurrentUserService
   const userDetails: User = {
+    avatar_url: '',
     email: 'john@example.com',
     id: 1,
     name: 'John',

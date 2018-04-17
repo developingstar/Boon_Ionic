@@ -8,11 +8,11 @@ import { NewLeadPageObject } from './new-lead.page.po'
 
 import { CurrentUserService } from '../../../src/app/auth/current-user.service'
 import { User } from '../../../src/app/auth/user.model'
-import { UserService } from '../../../src/app/auth/user.service'
 import { FieldDefinition } from '../../../src/app/crm/field-definition.model'
 import { NewLeadPage } from '../../../src/app/crm/new-lead.page'
 import { NewLeadPageModule } from '../../../src/app/crm/new-lead.page.module'
 import { SalesService } from '../../../src/app/crm/sales.service'
+import { UsersService } from '../../../src/app/crm/users.service'
 
 describe('NewLeadPage', () => {
   const stageId = 5
@@ -30,12 +30,14 @@ describe('NewLeadPage', () => {
     async(() => {
       users = [
         {
+          avatar_url: '',
           email: 'john@example.com',
           id: 100,
           name: 'John Boon',
           role: 'admin'
         },
         {
+          avatar_url: '',
           email: 'mark@example.com',
           id: 101,
           name: 'Mark Boon',
@@ -65,7 +67,7 @@ describe('NewLeadPage', () => {
         details: currentUser
       }
 
-      const userServiceStub = {
+      const usersServiceStub = {
         users: () => Observable.of(users)
       }
 
@@ -86,7 +88,7 @@ describe('NewLeadPage', () => {
         providers: [
           { provide: CurrentUserService, useValue: currentUserServiceStub },
           { provide: SalesService, useValue: salesServiceStub },
-          { provide: UserService, useValue: userServiceStub },
+          { provide: UsersService, useValue: usersServiceStub },
           { provide: ViewController, useValue: viewControllerStub },
           { provide: NavParams, useValue: navParamsStub }
         ]

@@ -20,8 +20,24 @@ export class PageObject<T> {
       element.click()
     } else {
       // button: 0 stands for left click
-      element.triggerEventHandler('click', { button: 0 })
+      element.triggerEventHandler('click', {
+        button: 0,
+        stopPropagation: () => true
+      })
     }
+  }
+
+  elementVisible(tagName: string, label: string): boolean {
+    return this.findElementByTextContent(tagName, label) !== undefined
+  }
+
+  findElementByTextContent(
+    tagName: string,
+    label: string
+  ): HTMLElement | undefined {
+    return this.findAllByCss<HTMLElement>(tagName).find(
+      (b) => b.textContent === label
+    )
   }
 
   findPoByCss<t>(
@@ -54,6 +70,12 @@ export class PageObject<T> {
 
   findAllDebugByCss(selector: string): DebugElement[] {
     return this.debugElement.queryAll(By.css(selector))
+  }
+
+  inputEnabled(tagName: string, label: string): boolean {
+    const input = this.findElementByTextContent(tagName, label)
+    expect(input).toBeTruthy()
+    return !(input as HTMLButtonElement)!.disabled
   }
 
   setInput(input: HTMLInputElement, value: string): void {

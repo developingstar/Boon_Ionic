@@ -1,7 +1,7 @@
 import { HttpParams } from '@angular/common/http'
 import { HttpClientTestingModule } from '@angular/common/http/testing'
 import { async, ComponentFixture } from '@angular/core/testing'
-import { NavController, PopoverController } from 'ionic-angular'
+import { ModalController, NavController } from 'ionic-angular'
 import { BehaviorSubject, Observable } from 'rxjs'
 
 import { PaginatedCollection } from '../../../src/app/api/paginated-collection'
@@ -29,8 +29,8 @@ describe('CrmPage', () => {
   let page: CrmPageObject
   let salesServiceStub: any
   let navControllerStub: any
-  let popoverStub: any
-  let popoverControllerStub: any
+  let modalStub: any
+  let modalControllerStub: any
 
   beforeEach(
     async(() => {
@@ -92,19 +92,19 @@ describe('CrmPage', () => {
 
       spyOn(navControllerStub, 'setRoot').and.callThrough()
 
-      popoverStub = {
+      modalStub = {
         present: () => {
           return
         }
       }
 
-      spyOn(popoverStub, 'present').and.callThrough()
+      spyOn(modalStub, 'present').and.callThrough()
 
-      popoverControllerStub = {
-        create: () => popoverStub
+      modalControllerStub = {
+        create: () => modalStub
       }
 
-      spyOn(popoverControllerStub, 'create').and.callThrough()
+      spyOn(modalControllerStub, 'create').and.callThrough()
 
       fixture = initComponent(CrmPage, {
         imports: [CrmPageModule, HttpClientTestingModule],
@@ -114,7 +114,7 @@ describe('CrmPage', () => {
           { provide: CurrentUserService, useValue: currentUserServiceStub },
           { provide: NavController, useValue: navControllerStub },
           { provide: SalesService, useValue: salesServiceStub },
-          { provide: PopoverController, useValue: popoverControllerStub }
+          { provide: ModalController, useValue: modalControllerStub }
         ]
       })
 
@@ -346,16 +346,16 @@ describe('CrmPage', () => {
     })
   })
 
-  it('presents the new lead popover after clicking the new contact button', () => {
+  it('presents the new lead modal after clicking the new contact button', () => {
     page.selectPipeline(2)
     page.selectStage(3)
     page.clickNewContactButton()
 
-    expect(popoverControllerStub.create).toHaveBeenCalledWith(
+    expect(modalControllerStub.create).toHaveBeenCalledWith(
       'NewLeadPage',
       { stageId: 1 },
-      { cssClass: 'new-lead-page-popover' }
+      { cssClass: 'new-lead-page-modal' }
     )
-    expect(popoverStub.present).toHaveBeenCalled()
+    expect(modalStub.present).toHaveBeenCalled()
   })
 })

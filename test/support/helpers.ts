@@ -1,6 +1,12 @@
-import { Type } from '@angular/core'
+import { ErrorHandler, Type } from '@angular/core'
 import { ComponentFixture, TestBed } from '@angular/core/testing'
 import { IonicModule } from 'ionic-angular'
+
+class CustomErrorHandler {
+  handleError(error: any): void {
+    throw error
+  }
+}
 
 export function initComponent<T>(
   klass: Type<T>,
@@ -13,7 +19,9 @@ export function initComponent<T>(
   TestBed.configureTestingModule({
     declarations: opts.declarations || [],
     imports: [IonicModule.forRoot(klass)].concat(opts.imports || []),
-    providers: opts.providers || []
+    providers: [{ provide: ErrorHandler, useClass: CustomErrorHandler }].concat(
+      opts.providers || []
+    )
   }).compileComponents()
   return TestBed.createComponent(klass)
 }
