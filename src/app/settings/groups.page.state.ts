@@ -18,7 +18,8 @@ export type State =
       readonly name: 'edit'
       readonly group_id: number
       readonly nameInput: FormControl
-      readonly group_users: ReadonlyArray<User>
+      readonly groupUsers: ReadonlyArray<User>
+      readonly users: ReadonlyArray<User>
     }
   | {
       readonly name: 'new'
@@ -28,4 +29,9 @@ export type State =
 export const initialState: State = {
   groups: [],
   name: 'list'
+}
+
+export interface IGroupData {
+  readonly users: ReadonlyArray<User>
+  readonly groupUsers: ReadonlyArray<User>
 }

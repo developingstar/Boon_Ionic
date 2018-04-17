@@ -51,7 +51,7 @@ export class GroupsService {
       )
   }
 
-  public users(group_id: number | null = null): Observable<ReadonlyArray<User>> {
+  public groupUsers(group_id: number | null = null): Observable<ReadonlyArray<User>> {
     return this.http
       .get(`/api/groups/${group_id}/users`)
       .map((response: {
