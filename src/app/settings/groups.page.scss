@@ -57,7 +57,7 @@ groups-page {
     }
 
     &.ng-invalid {
-      border: 1px solid red;
+      border: 1px solid $color-invalid-primary;
     }
   }
 
@@ -120,7 +120,8 @@ groups-page {
     }
 
     .avatar-image {
-      width: 30px;
+      width: 24px;
+      height: 24px;
       border-radius: 50%;
       margin-right: 15px;
     }
