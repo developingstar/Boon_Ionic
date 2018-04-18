@@ -200,7 +200,9 @@ export class GroupsPage extends ReactivePage<State, UserAction> {
         State
       >((response) => ({
         ...state,
-        groupUsers: state.groupUsers.filter((user, index) => index !== userIndex)
+        groupUsers: state.groupUsers.filter(
+          (user, index) => index !== userIndex
+        )
       }))
     } else {
       return Observable.of(state)

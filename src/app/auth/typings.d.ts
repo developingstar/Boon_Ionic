@@ -7,6 +7,7 @@ declare namespace Auth {
       readonly id: number
       readonly name: string
       readonly role: Role
+      readonly avatar_url: string | null
     }
   }
 }

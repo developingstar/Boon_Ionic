@@ -36,7 +36,10 @@ export class GroupsService {
       )
   }
 
-  public updateGroup(id: number, groupData: API.IGroupUpdate): Observable<Group> {
+  public updateGroup(
+    id: number,
+    groupData: API.IGroupUpdate
+  ): Observable<Group> {
     return this.http
       .patch(`/api/groups/${id}`, JSON.stringify({ group: groupData }))
       .map(
