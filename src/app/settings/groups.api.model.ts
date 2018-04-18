@@ -14,3 +14,11 @@ export interface IGroupsResponse {
     readonly groups: ReadonlyArray<IGroup>
   }
 }
+
+export interface IGroupCreate {
+  readonly name: string
+}
+
+export interface IGroupUpdate {
+  readonly name: string
+}

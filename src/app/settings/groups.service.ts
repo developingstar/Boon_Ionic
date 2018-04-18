@@ -24,9 +24,9 @@ export class GroupsService {
       )
   }
 
-  public createGroup(name: string): Observable<Group> {
+  public createGroup(groupData: API.IGroupCreate): Observable<Group> {
     return this.http
-      .post(`/api/groups`, JSON.stringify({ group: { name: name } }))
+      .post(`/api/groups`, JSON.stringify({ group: groupData }))
       .map(
         (response: {
           readonly data: {
@@ -36,9 +36,9 @@ export class GroupsService {
       )
   }
 
-  public updateGroup(id: number, name: string): Observable<Group> {
+  public updateGroup(id: number, groupData: API.IGroupUpdate): Observable<Group> {
     return this.http
-      .patch(`/api/groups/${id}`, JSON.stringify({ group: { name: name } }))
+      .patch(`/api/groups/${id}`, JSON.stringify({ group: groupData }))
       .map(
         (response: {
           readonly data: {

@@ -117,7 +117,7 @@ export class GroupsPage extends ReactivePage<State, UserAction> {
     return this.name.map((name) => name === 'edit')
   }
 
-  get showList(): Observable<boolean> {
+  get isListAction(): Observable<boolean> {
     return this.name.map((name) => name === 'list')
   }
 
@@ -170,15 +170,13 @@ export class GroupsPage extends ReactivePage<State, UserAction> {
         .updateGroup(state.group_id, state.nameInput.value)
         .map<Group, State>((group) => state)
     } else if (action.name === 'add_user' && state.name === 'edit') {
-      const group_user = state.groupUsers.find(
-        (user) => user.id === Number(action.user_id)
-      )
-      const added_user = state.users.find(
-        (user) => user.id === Number(action.user_id)
-      )
-      if (group_user) {
+      const isAlreadyAdded =
+        state.groupUsers.find((u) => u.id === action.user_id) !== undefined
+      const user = state.users.find((u) => u.id === action.user_id)
+
+      if (isAlreadyAdded || user === undefined) {
         return Observable.of(state)
-      } else if (added_user) {
+      } else {
         return this.groupsService.addUser(state.group_id, action.user_id).map<
           {
             readonly data: {
@@ -188,13 +186,11 @@ export class GroupsPage extends ReactivePage<State, UserAction> {
           State
         >((response) => ({
           ...state,
-          groupUsers: state.groupUsers.concat(added_user)
+          groupUsers: state.groupUsers.concat(user)
         }))
-      } else {
-        return Observable.of(state)
       }
     } else if (action.name === 'delete_user' && state.name === 'edit') {
-      const index = state.groupUsers.indexOf(action.user)
+      const userIndex = state.groupUsers.indexOf(action.user)
       return this.groupsService.deleteUser(state.group_id, action.user.id).map<
         {
           readonly data: {
@@ -204,7 +200,7 @@ export class GroupsPage extends ReactivePage<State, UserAction> {
         State
       >((response) => ({
         ...state,
-        groupUsers: state.groupUsers.filter((user, ind) => ind !== index)
+        groupUsers: state.groupUsers.filter((user, index) => index !== userIndex)
       }))
     } else {
       return Observable.of(state)
