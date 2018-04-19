@@ -34,14 +34,14 @@ describe('LeadPage', () => {
     async(() => {
       users = [
         {
-          avatar_url: '',
+          avatar_url: null,
           email: 'john@example.com',
           id: 100,
           name: 'John Boon',
           role: 'admin'
         },
         {
-          avatar_url: '',
+          avatar_url: null,
           email: 'mark@example.com',
           id: 101,
           name: 'Mark Boon',
@@ -86,7 +86,7 @@ describe('LeadPage', () => {
         ],
         id: 1,
         owner: {
-          avatar_url: '',
+          avatar_url: null,
           email: 'john@example.com',
           id: 100,
           name: 'John Boon',
