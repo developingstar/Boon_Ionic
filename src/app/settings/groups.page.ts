@@ -61,7 +61,10 @@ export class GroupsPage extends ReactivePage<State, UserAction> {
   get usersList(): Observable<ReadonlyArray<User>> {
     return this.state.map((state) => {
       if (state.name === 'edit') {
-        return state.users
+        const users = state.users.filter((user) => {
+          return !(state.groupUsers.find((u) => u.id === user.id) !== undefined)
+        })
+        return users
       } else {
         return []
       }
