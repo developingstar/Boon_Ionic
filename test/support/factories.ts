@@ -157,8 +157,8 @@ export function sampleService(
 ): Service {
   return new Service({
     id: 1,
-    name: 'Service',
-    token: 'Token',
+    name: 'Twilio',
+    token: 'secret:token',
     ...values
   })
 }

@@ -28,11 +28,7 @@ describe('IntegrationsService', () => {
     it(
       'returns an array',
       async(() => {
-        const twilioService = sampleService({
-          id: 1,
-          name: 'Twilio',
-          token: 'secret:token'
-        })
+        const twilioService = sampleService()
 
         const sendgridService = sampleService({
           id: 2,
@@ -67,11 +63,7 @@ describe('IntegrationsService', () => {
     it(
       'returns a service',
       async(() => {
-        const twilioService = sampleService({
-          id: 1,
-          name: 'Twilio',
-          token: 'secret:token'
-        })
+        const twilioService = sampleService()
 
         integrationService.service(1).subscribe((service) => {
           expect(service.id).toEqual(1)
@@ -97,11 +89,7 @@ describe('IntegrationsService', () => {
     it(
       'returns the updated service',
       async(() => {
-        const twilioService = sampleService({
-          id: 1,
-          name: 'Twilio',
-          token: 'secret:token'
-        })
+        const twilioService = sampleService()
 
         integrationService
           .updateService(1, twilioService)
