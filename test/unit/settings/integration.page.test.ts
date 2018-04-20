@@ -74,7 +74,7 @@ describe('IntegrationPage', () => {
     })
 
     it('updates a service token after clicking the update button', () => {
-      page.setToken('updated token:secret')
+      page.setToken('updated-token:secret')
       fixture.detectChanges()
       page.clickUpdateButton()
       fixture.detectChanges()
@@ -85,7 +85,7 @@ describe('IntegrationPage', () => {
         token: 'updated-token:secret'
       })
       expect(page.header).toEqual('Twilio')
-      expect(page.token).toEqual('updated token:secret')
+      expect(page.token).toEqual('updated-token:secret')
     })
   })
 })
