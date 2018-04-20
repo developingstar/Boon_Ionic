@@ -1,10 +1,12 @@
 import { ComponentFixture } from '@angular/core/testing'
-import { NavController } from 'ionic-angular'
+import { NavController, NavParams } from 'ionic-angular'
 
 import { initComponent } from '../../support/helpers'
 import { NavControllerStub } from '../../support/stubs'
 
+import { Observable } from 'rxjs'
 import { SettingsModule } from '../../../src/app/settings.module'
+import { IntegrationsService } from '../../../src/app/settings/integrations.service'
 import { SettingsPageWithMenuComponent } from '../../../src/app/settings/settings-page-with-menu.component'
 
 describe('SettingsPageWithMenuComponent', () => {
@@ -16,9 +18,21 @@ describe('SettingsPageWithMenuComponent', () => {
   }
 
   beforeEach(() => {
+    const navParamsStub = {
+      get: (prop: string) => undefined
+    }
+
+    const integrationsServiceStub = {
+      services: () => Observable.of([])
+    }
+
     fixture = initComponent(SettingsPageWithMenuComponent, {
       imports: [SettingsModule],
-      providers: [{ provide: NavController, useValue: new NavControllerStub() }]
+      providers: [
+        { provide: NavController, useValue: new NavControllerStub() },
+        { provide: NavParams, useValue: navParamsStub },
+        { provide: IntegrationsService, useValue: integrationsServiceStub }
+      ]
     })
   })
 

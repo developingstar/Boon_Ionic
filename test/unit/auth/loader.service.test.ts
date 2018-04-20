@@ -8,30 +8,28 @@ describe('LoaderService', () => {
   let loadingInstance: any
   let service: LoaderService
 
-  beforeEach(
-    async(() => {
-      loadingInstance = jasmine.createSpyObj<Loading>('instance', {
-        dismiss: () => new Promise((resolve) => resolve(true)),
-        present: () => new Promise((resolve) => resolve(true))
-      })
-
-      loadingController = {
-        create: () => loadingInstance
-      }
-
-      spyOn(loadingController, 'create').and.callThrough()
-
-      TestBed.configureTestingModule({
-        imports: [],
-        providers: [
-          LoaderService,
-          { provide: LoadingController, useValue: loadingController }
-        ]
-      })
-
-      service = TestBed.get(LoaderService)
+  beforeEach(async(() => {
+    loadingInstance = jasmine.createSpyObj<Loading>('instance', {
+      dismiss: () => new Promise((resolve) => resolve(true)),
+      present: () => new Promise((resolve) => resolve(true))
     })
-  )
+
+    loadingController = {
+      create: () => loadingInstance
+    }
+
+    spyOn(loadingController, 'create').and.callThrough()
+
+    TestBed.configureTestingModule({
+      imports: [],
+      providers: [
+        LoaderService,
+        { provide: LoadingController, useValue: loadingController }
+      ]
+    })
+
+    service = TestBed.get(LoaderService)
+  }))
 
   describe('pending requests counter', () => {
     it('ensures that the loading message is presented when the counter is > 0', () => {

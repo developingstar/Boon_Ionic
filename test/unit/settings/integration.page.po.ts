@@ -2,8 +2,8 @@ import { IntegrationPage } from '../../../src/app/settings/integration.page'
 import { PageObject } from '../../support/page.po'
 
 export class IntegrationPageObject extends PageObject<IntegrationPage> {
-  get addPipelineButtonVisible(): boolean {
-    return this.elementVisible('button', 'Add Pipeline')
+  get updateServiceButtonVisible(): boolean {
+    return this.elementVisible('button', 'Update Info')
   }
 
   get savePipelineButtonEnabled(): boolean {
@@ -37,10 +37,9 @@ export class IntegrationPageObject extends PageObject<IntegrationPage> {
     return h2 ? h2.textContent || '' : ''
   }
 
-  get pipelines(): ReadonlyArray<string> {
-    return this.findAllByCss<HTMLSpanElement>('button.button-with-arrow').map(
-      (el) => el.textContent || ''
-    )
+  get token(): string {
+    const token = this.findByCss<HTMLInputElement>('input')
+    return token ? token.value || '' : ''
   }
 
   setName(name: string): void {

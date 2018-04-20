@@ -1,6 +1,6 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing'
 import { async, ComponentFixture } from '@angular/core/testing'
-import { NavController } from 'ionic-angular'
+import { NavController, NavParams } from 'ionic-angular'
 import { Observable } from 'rxjs'
 
 import { initComponent } from '../../support/helpers'
@@ -19,54 +19,57 @@ describe('PipelinesPage', () => {
   let pipelines: Pipeline[]
   let salesServiceStub: any
 
-  beforeEach(
-    async(() => {
-      pipelines = [
-        { id: 101, name: 'New', stage_order: [] },
-        { id: 102, name: 'Converted', stage_order: [] }
-      ]
+  beforeEach(async(() => {
+    pipelines = [
+      { id: 101, name: 'New', stage_order: [] },
+      { id: 102, name: 'Converted', stage_order: [] }
+    ]
 
-      salesServiceStub = {
-        createPipeline: (pipelineData: Crm.API.IPipelineCreate) => {
-          const newPipeline = new Pipeline({
-            id: 103,
-            name: pipelineData.name,
-            stage_order: []
-          })
-          pipelines.push(newPipeline)
-          return Observable.of(newPipeline)
-        },
-        pipelines: () => Observable.of(pipelines),
-        stages: () => Observable.of([]),
-        updatePipeline: (id: number, pipelineData: Crm.API.IPipelineUpdate) => {
-          for (let i = 0; i < pipelines.length; i++) {
-            const pipeline = pipelines[i]
-            if (pipeline.id === id) {
-              pipelines[i] = { ...pipeline, name: pipelineData.name! }
-              return Observable.of(pipeline)
-            }
+    salesServiceStub = {
+      createPipeline: (pipelineData: Crm.API.IPipelineCreate) => {
+        const newPipeline = new Pipeline({
+          id: 103,
+          name: pipelineData.name,
+          stage_order: []
+        })
+        pipelines.push(newPipeline)
+        return Observable.of(newPipeline)
+      },
+      pipelines: () => Observable.of(pipelines),
+      stages: () => Observable.of([]),
+      updatePipeline: (id: number, pipelineData: Crm.API.IPipelineUpdate) => {
+        for (let i = 0; i < pipelines.length; i++) {
+          const pipeline = pipelines[i]
+          if (pipeline.id === id) {
+            pipelines[i] = { ...pipeline, name: pipelineData.name! }
+            return Observable.of(pipeline)
           }
-          return Observable.of(undefined)
         }
+        return Observable.of(undefined)
       }
+    }
 
-      spyOn(salesServiceStub, 'createPipeline').and.callThrough()
-      spyOn(salesServiceStub, 'updatePipeline').and.callThrough()
+    spyOn(salesServiceStub, 'createPipeline').and.callThrough()
+    spyOn(salesServiceStub, 'updatePipeline').and.callThrough()
 
-      fixture = initComponent(PipelinesPage, {
-        imports: [PipelinesPageModule, HttpClientTestingModule],
-        providers: [
-          NavService,
-          { provide: NavController, useValue: new NavControllerStub() },
-          { provide: SalesService, useValue: salesServiceStub }
-        ]
-      })
+    const navParamsStub = {
+      get: (prop: string) => undefined
+    }
 
-      page = new PipelinesPageObject(fixture)
-
-      fixture.detectChanges()
+    fixture = initComponent(PipelinesPage, {
+      imports: [PipelinesPageModule, HttpClientTestingModule],
+      providers: [
+        NavService,
+        { provide: NavController, useValue: new NavControllerStub() },
+        { provide: NavParams, useValue: navParamsStub },
+        { provide: SalesService, useValue: salesServiceStub }
+      ]
     })
-  )
+
+    page = new PipelinesPageObject(fixture)
+
+    fixture.detectChanges()
+  }))
 
   describe('listing pipelines', () => {
     it('shows a list of pipelines', () => {

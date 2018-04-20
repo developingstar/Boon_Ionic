@@ -1,6 +1,6 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing'
 import { async, ComponentFixture } from '@angular/core/testing'
-import { NavController } from 'ionic-angular'
+import { NavController, NavParams } from 'ionic-angular'
 import { Observable } from 'rxjs'
 
 import { initComponent } from '../../support/helpers'
@@ -19,50 +19,53 @@ describe('CustomFieldsPage', () => {
   let fields: FieldDefinition[]
   let salesServiceStub: any
 
-  beforeEach(
-    async(() => {
-      fields = [{ id: 300, name: 'First Name' }, { id: 301, name: 'Last Name' }]
+  beforeEach(async(() => {
+    fields = [{ id: 300, name: 'First Name' }, { id: 301, name: 'Last Name' }]
 
-      salesServiceStub = {
-        createField: (fieldCreate: Crm.API.IFieldDefinitionCreate) => {
-          const field = new FieldDefinition({
-            id: 302,
-            name: fieldCreate.name
-          })
-          fields.push(field)
-          return Observable.of(field)
-        },
-        fields: () => Observable.of(fields),
-        updateField: (
-          id: number,
-          fieldUpdate: Crm.API.IFieldDefinitionUpdate
-        ) => {
-          const field = new FieldDefinition({
-            id: id,
-            name: fieldUpdate.name!
-          })
-          fields[0] = field
-          return Observable.of(field)
-        }
+    salesServiceStub = {
+      createField: (fieldCreate: Crm.API.IFieldDefinitionCreate) => {
+        const field = new FieldDefinition({
+          id: 302,
+          name: fieldCreate.name
+        })
+        fields.push(field)
+        return Observable.of(field)
+      },
+      fields: () => Observable.of(fields),
+      updateField: (
+        id: number,
+        fieldUpdate: Crm.API.IFieldDefinitionUpdate
+      ) => {
+        const field = new FieldDefinition({
+          id: id,
+          name: fieldUpdate.name!
+        })
+        fields[0] = field
+        return Observable.of(field)
       }
+    }
 
-      spyOn(salesServiceStub, 'createField').and.callThrough()
-      spyOn(salesServiceStub, 'updateField').and.callThrough()
+    spyOn(salesServiceStub, 'createField').and.callThrough()
+    spyOn(salesServiceStub, 'updateField').and.callThrough()
 
-      fixture = initComponent(CustomFieldsPage, {
-        imports: [CustomFieldsPageModule, HttpClientTestingModule],
-        providers: [
-          NavService,
-          { provide: NavController, useValue: new NavControllerStub() },
-          { provide: SalesService, useValue: salesServiceStub }
-        ]
-      })
+    const navParamsStub = {
+      get: (prop: string) => undefined
+    }
 
-      page = new CustomFieldsPageObject(fixture)
-
-      fixture.detectChanges()
+    fixture = initComponent(CustomFieldsPage, {
+      imports: [CustomFieldsPageModule, HttpClientTestingModule],
+      providers: [
+        NavService,
+        { provide: NavController, useValue: new NavControllerStub() },
+        { provide: NavParams, useValue: navParamsStub },
+        { provide: SalesService, useValue: salesServiceStub }
+      ]
     })
-  )
+
+    page = new CustomFieldsPageObject(fixture)
+
+    fixture.detectChanges()
+  }))
 
   describe('listing custom fields', () => {
     it('shows a list of custom fields', () => {

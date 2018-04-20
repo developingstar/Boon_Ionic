@@ -32,97 +32,95 @@ describe('CrmPage', () => {
   let modalStub: any
   let modalControllerStub: any
 
-  beforeEach(
-    async(() => {
-      const user: User = sampleUser({
-        name: 'Tom'
-      })
-
-      collection = {
-        items: [
-          sampleLead({
-            email: 'john@example.com',
-            firstName: 'John',
-            lastName: 'Boon',
-            phone_number: '+999111111',
-            stage_id: 2
-          }),
-          sampleLead({
-            email: 'susan@example.com',
-            firstName: 'Susan',
-            lastName: 'Boon',
-            phone_number: '+999222222',
-            stage_id: 2
-          }),
-          sampleLead({
-            email: null,
-            firstName: null,
-            lastName: null,
-            owner: user,
-            phone_number: '+999333333',
-            stage_id: 1
-          })
-        ],
-        nextPageLink: 'http://example.com/next',
-        prevPageLink: 'http://example.com/prev'
-      }
-
-      salesServiceStub = {
-        leads: () => Observable.of(collection),
-        pipelines: () =>
-          Observable.of([
-            samplePipeline({ id: 1, name: 'Converted', stage_order: [2, 1] }),
-            samplePipeline({ id: 2, name: 'Without response' })
-          ]),
-        stages: () =>
-          Observable.of([
-            sampleStage({ id: 1, name: 'Closed - Won', pipeline_id: 1 }),
-            sampleStage({ id: 2, name: 'Introduction', pipeline_id: 1 }),
-            sampleStage({ id: 3, name: 'Needs follow-up', pipeline_id: 2 })
-          ])
-      }
-
-      spyOn(salesServiceStub, 'leads').and.callThrough()
-
-      const currentUserServiceStub = {
-        details: new BehaviorSubject(user)
-      }
-
-      navControllerStub = new NavControllerStub()
-
-      spyOn(navControllerStub, 'setRoot').and.callThrough()
-
-      modalStub = {
-        present: () => {
-          return
-        }
-      }
-
-      spyOn(modalStub, 'present').and.callThrough()
-
-      modalControllerStub = {
-        create: () => modalStub
-      }
-
-      spyOn(modalControllerStub, 'create').and.callThrough()
-
-      fixture = initComponent(CrmPage, {
-        imports: [CrmPageModule, HttpClientTestingModule],
-        providers: [
-          NavService,
-          { provide: NavController, useValue: navControllerStub },
-          { provide: CurrentUserService, useValue: currentUserServiceStub },
-          { provide: NavController, useValue: navControllerStub },
-          { provide: SalesService, useValue: salesServiceStub },
-          { provide: ModalController, useValue: modalControllerStub }
-        ]
-      })
-
-      page = new CrmPageObject(fixture)
-
-      fixture.detectChanges()
+  beforeEach(async(() => {
+    const user: User = sampleUser({
+      name: 'Tom'
     })
-  )
+
+    collection = {
+      items: [
+        sampleLead({
+          email: 'john@example.com',
+          firstName: 'John',
+          lastName: 'Boon',
+          phone_number: '+999111111',
+          stage_id: 2
+        }),
+        sampleLead({
+          email: 'susan@example.com',
+          firstName: 'Susan',
+          lastName: 'Boon',
+          phone_number: '+999222222',
+          stage_id: 2
+        }),
+        sampleLead({
+          email: null,
+          firstName: null,
+          lastName: null,
+          owner: user,
+          phone_number: '+999333333',
+          stage_id: 1
+        })
+      ],
+      nextPageLink: 'http://example.com/next',
+      prevPageLink: 'http://example.com/prev'
+    }
+
+    salesServiceStub = {
+      leads: () => Observable.of(collection),
+      pipelines: () =>
+        Observable.of([
+          samplePipeline({ id: 1, name: 'Converted', stage_order: [2, 1] }),
+          samplePipeline({ id: 2, name: 'Without response' })
+        ]),
+      stages: () =>
+        Observable.of([
+          sampleStage({ id: 1, name: 'Closed - Won', pipeline_id: 1 }),
+          sampleStage({ id: 2, name: 'Introduction', pipeline_id: 1 }),
+          sampleStage({ id: 3, name: 'Needs follow-up', pipeline_id: 2 })
+        ])
+    }
+
+    spyOn(salesServiceStub, 'leads').and.callThrough()
+
+    const currentUserServiceStub = {
+      details: new BehaviorSubject(user)
+    }
+
+    navControllerStub = new NavControllerStub()
+
+    spyOn(navControllerStub, 'setRoot').and.callThrough()
+
+    modalStub = {
+      present: () => {
+        return
+      }
+    }
+
+    spyOn(modalStub, 'present').and.callThrough()
+
+    modalControllerStub = {
+      create: () => modalStub
+    }
+
+    spyOn(modalControllerStub, 'create').and.callThrough()
+
+    fixture = initComponent(CrmPage, {
+      imports: [CrmPageModule, HttpClientTestingModule],
+      providers: [
+        NavService,
+        { provide: NavController, useValue: navControllerStub },
+        { provide: CurrentUserService, useValue: currentUserServiceStub },
+        { provide: NavController, useValue: navControllerStub },
+        { provide: SalesService, useValue: salesServiceStub },
+        { provide: ModalController, useValue: modalControllerStub }
+      ]
+    })
+
+    page = new CrmPageObject(fixture)
+
+    fixture.detectChanges()
+  }))
 
   describe('table', () => {
     it('includes leads', () => {
