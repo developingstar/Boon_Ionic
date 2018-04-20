@@ -53,4 +53,69 @@ describe('GroupsService', () => {
       httpMock.verify()
     }))
   })
+
+  describe('group', () => {
+    it('returns a group', async(() => {
+      const group = sampleGroup()
+
+      groupsService.group(1).subscribe((result: Group | undefined) => {
+        expect(result).toEqual(group)
+      })
+
+      const req = httpMock.expectOne('/api/groups/1')
+      expect(req.request.method).toBe('GET')
+
+      req.flush({
+        data: {
+          group: group
+        }
+      })
+
+      httpMock.verify()
+    }))
+  })
+
+  describe('createGroup', () => {
+    it('returns the created group', async(() => {
+      groupsService.createGroup({ name: 'CreateGroup' }).subscribe((result) => {
+        expect(result.name).toEqual('CreateGroup')
+      })
+
+      const req = httpMock.expectOne('/api/groups')
+      expect(req.request.method).toBe('POST')
+
+      req.flush({
+        data: {
+          group: {
+            id: 1,
+            name: 'CreateGroup'
+          }
+        }
+      })
+
+      httpMock.verify()
+    }))
+  })
+
+  describe('updateGroup', () => {
+    it('returns the updated group', async(() => {
+      const group = sampleGroup()
+
+      groupsService.updateGroup(1, group).subscribe((result) => {
+        expect(result.id).toEqual(1)
+        expect(result.name).toEqual('Group Name')
+      })
+
+      const req = httpMock.expectOne('/api/groups/1')
+      expect(req.request.method).toBe('PATCH')
+
+      req.flush({
+        data: {
+          group: group
+        }
+      })
+
+      httpMock.verify()
+    }))
+  })
 })
