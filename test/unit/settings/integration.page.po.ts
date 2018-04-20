@@ -6,30 +6,12 @@ export class IntegrationPageObject extends PageObject<IntegrationPage> {
     return this.elementVisible('button', 'Update Info')
   }
 
-  get savePipelineButtonEnabled(): boolean {
-    return this.inputEnabled('button', 'Save Pipeline')
+  get updateServiceButtonEnabled(): boolean {
+    return this.inputEnabled('button', 'Update Info')
   }
 
-  clickAddPipelineButton(): void {
-    this.clickButton('Add Pipeline')
-  }
-
-  clickBack(): void {
-    const link = this.findDebugByCss('a.back-link')
-    expect(link).toBeTruthy()
-    this.click(link!)
-  }
-
-  clickPipeline(name: string): void {
-    const button = this.findAllDebugByCss('.button-with-arrow').find(
-      (b) => b.nativeElement.textContent === name
-    )
-    expect(button).toBeTruthy()
-    this.click(button!)
-  }
-
-  clickSavePipelineButton(): void {
-    this.clickButton('Save Pipeline')
+  clickUpdateButton(): void {
+    this.clickButton('Update Info')
   }
 
   get header(): string {
@@ -38,14 +20,14 @@ export class IntegrationPageObject extends PageObject<IntegrationPage> {
   }
 
   get token(): string {
-    const token = this.findByCss<HTMLInputElement>('input')
+    const token = this.findByCss<HTMLInputElement>('ion-input input')
     return token ? token.value || '' : ''
   }
 
-  setName(name: string): void {
+  setToken(token: string): void {
     const element = this.findByCss<HTMLInputElement>('ion-input input')
     expect(element).toBeTruthy()
-    this.setInput(element!, name)
+    this.setInput(element!, token)
   }
 
   private clickButton(label: string): void {

@@ -16,24 +16,29 @@ import { Service } from '../../../src/app/settings/service.model'
 describe('IntegrationPage', () => {
   let fixture: ComponentFixture<IntegrationPage>
   let page: IntegrationPageObject
-  let twilioService: Service
+  let services: Service[]
   let integrationsServiceStub: any
-
   beforeEach(async(() => {
+    services = [
+      { id: 1, name: 'Twilio', token: 'token:secret' },
+      { id: 2, name: 'Sendgrid', token: 'token' }
+    ]
+
     integrationsServiceStub = {
       service: (id: number) => {
-        twilioService = new Service({
-          id: 1,
-          name: 'Twilio',
-          token: 'secret:token'
-        })
-        return Observable.of(twilioService)
+        const service = services.find((s) => s.id === id)
+        return Observable.of(service)
       },
+      services: () => Observable.of(services),
       updateService: (id: number, service: Service) => {
-        if (twilioService.id === id) {
-          twilioService = { ...twilioService, token: service.token }
+        for (let i = 0; i < services.length; i++) {
+          const s = services[i]
+          if (s.id === id) {
+            services[i] = { ...s, token: service.token! }
+            return Observable.of(s)
+          }
         }
-        return Observable.of(twilioService)
+        return Observable.of(undefined)
       }
     }
 
@@ -41,7 +46,7 @@ describe('IntegrationPage', () => {
     spyOn(integrationsServiceStub, 'updateService').and.callThrough()
 
     const navParamsStub = {
-      get: (prop: string) => prop
+      get: (prop: string) => 1
     }
 
     fixture = initComponent(IntegrationPage, {
@@ -60,17 +65,27 @@ describe('IntegrationPage', () => {
   }))
 
   describe('show service', () => {
-    // it('shows a service token', () => {
-    //   expect(page.header).toEqual('Twilio')
-    //   expect(page.token).toEqual('secret:token')
-    // })
-    // it('shows the add pipeline button', () => {
-    //   expect(page.updateServiceButtonVisible).toBe(true)
-    // })
-    // it('shows the new pipeline form after clicking the add pipeline button', () => {
-    //   page.clickAddPipelineButton()
-    //   fixture.detectChanges()
-    //   expect(page.header).toEqual('new Pipeline') // it will be capitalized via CSS
-    // })
+    it('shows a service token', () => {
+      expect(page.header).toEqual('Twilio')
+      expect(page.token).toEqual('token:secret')
+    })
+    it('shows the update button', () => {
+      expect(page.updateServiceButtonVisible).toBe(true)
+    })
+
+    it('updates a service token after clicking the update button', () => {
+      page.setToken('updated token:secret')
+      fixture.detectChanges()
+      page.clickUpdateButton()
+      fixture.detectChanges()
+
+      expect(integrationsServiceStub.updateService).toHaveBeenCalledWith(1, {
+        id: 1,
+        name: 'Twilio',
+        token: 'updated-token:secret'
+      })
+      expect(page.header).toEqual('Twilio')
+      expect(page.token).toEqual('updated token:secret')
+    })
   })
 })
