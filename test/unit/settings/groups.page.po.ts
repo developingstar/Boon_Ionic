@@ -14,6 +14,18 @@ export class GroupsPageObject extends PageObject<GroupsPage> {
     this.clickButton('Create Group')
   }
 
+  get updateGroupButtonVisible(): boolean {
+    return this.elementVisible('button', 'Update Group')
+  }
+
+  get updateGroupButtonEnabled(): boolean {
+    return this.inputEnabled('button', 'Update Group')
+  }
+
+  clickUpdateGroupButton(): void {
+    this.clickButton('Update Group')
+  }
+
   get groupNameInputVisible(): boolean {
     const element = this.findByCss<HTMLInputElement>('ion-input input')
     return element ? true : false
@@ -25,16 +37,12 @@ export class GroupsPageObject extends PageObject<GroupsPage> {
     this.click(link!)
   }
 
-  clickPipeline(name: string): void {
-    const button = this.findAllDebugByCss('.button-with-arrow').find(
+  clickGroup(name: string): void {
+    const group = this.findAllDebugByCss('div.group-title').find(
       (b) => b.nativeElement.textContent === name
     )
-    expect(button).toBeTruthy()
-    this.click(button!)
-  }
-
-  clickSavePipelineButton(): void {
-    this.clickButton('Save Pipeline')
+    expect(group).toBeTruthy()
+    this.click(group!)
   }
 
   get header(): string {
@@ -43,12 +51,24 @@ export class GroupsPageObject extends PageObject<GroupsPage> {
   }
 
   get groups(): ReadonlyArray<string> {
-    return this.findAllByCss<HTMLSpanElement>('div.group-title').map(
+    return this.findAllByCss<HTMLDivElement>('div.group-title').map(
       (el) => el.textContent || ''
     )
   }
 
-  setName(name: string): void {
+  get groupUsers(): ReadonlyArray<string> {
+    return this.findAllByCss<HTMLSpanElement>('span.user-name').map(
+      (el) => el.textContent || ''
+    )
+  }
+
+  get users(): ReadonlyArray<string> {
+    return this.findAllByCss<HTMLSpanElement>('option').map(
+      (el) => el.textContent || ''
+    )
+  }
+
+  setGroupName(name: string): void {
     const element = this.findByCss<HTMLInputElement>('ion-input input')
     expect(element).toBeTruthy()
     this.setInput(element!, name)

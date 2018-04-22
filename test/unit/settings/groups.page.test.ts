@@ -16,7 +16,7 @@ import { GroupsPage } from '../../../src/app/settings/groups.page'
 import { GroupsPageModule } from '../../../src/app/settings/groups.page.module'
 import { GroupsService } from '../../../src/app/settings/groups.service'
 
-describe('PipelinesPage', () => {
+describe('GroupsPage', () => {
   let fixture: ComponentFixture<GroupsPage>
   let page: GroupsPageObject
   let groups: Group[]
@@ -64,14 +64,14 @@ describe('PipelinesPage', () => {
         avatar_url: null,
         email: 'alekxis@example.com',
         id: 13,
-        name: 'Alekxis Novak',
+        name: 'Alekxis Boon',
         role: 'admin'
       },
       {
         avatar_url: null,
         email: 'petr@example.com',
         id: 14,
-        name: 'Petr Nocolae',
+        name: 'Petr Boon',
         role: 'lead_owner'
       }
     ]
@@ -151,7 +151,7 @@ describe('PipelinesPage', () => {
     })
 
     it('creates a group and shows listing after clicking the save button', () => {
-      page.setName('NewGroup')
+      page.setGroupName('NewGroup')
       fixture.detectChanges()
       page.clickCreateGroupButton()
       fixture.detectChanges()
@@ -173,31 +173,37 @@ describe('PipelinesPage', () => {
     it('blocks the creation when the name is blank', () => {
       expect(page.createGroupButtonEnabled).toBe(false)
 
-      page.setName('NewGroup')
+      page.setGroupName('NewGroup')
       fixture.detectChanges()
 
       expect(page.createGroupButtonEnabled).toBe(true)
     })
   })
 
-  // describe('editing pipeline form', () => {
-  //   beforeEach(() => {
-  //     page.clickPipeline('Converted')
-  //     fixture.detectChanges()
-  //   })
+  describe('editing group form', () => {
+    beforeEach(() => {
+      page.clickGroup('Group1')
+      fixture.detectChanges()
+    })
 
-  //   it('updates a pipeline and shows listing after clicking the save button', () => {
-  //     page.setName('Converted/Archived')
-  //     fixture.detectChanges()
-  //     page.clickSavePipelineButton()
-  //     fixture.detectChanges()
+    it('shows users to select box', () => {
+      expect(page.header).toEqual('edit Sales Group') // it will be capitalized via CSS
+      expect(page.users).toEqual(['Alekxis Boon', 'Petr Boon'])
+    })
 
-  //     expect(salesServiceStub.updatePipeline).toHaveBeenCalledWith(102, {
-  //       name: 'Converted/Archived',
-  //       stage_order: []
-  //     })
-  //     expect(page.header).toEqual('Pipelines')
-  //     expect(page.pipelines).toEqual(['New', 'Converted/Archived'])
-  //   })
-  // })
+    it('shows user list of group', () => {
+      expect(page.groupUsers).toEqual(['John Boon', 'Mark Boon'])
+    })
+
+    it('updates a group', () => {
+      page.setGroupName('UpdatedGroup')
+      fixture.detectChanges()
+      page.clickUpdateGroupButton()
+      fixture.detectChanges()
+
+      expect(groupsServiceStub.updateGroup).toHaveBeenCalledWith(1, {
+        name: 'UpdatedGroup'
+      })
+    })
+  })
 })
