@@ -8,6 +8,7 @@ import { NavControllerStub } from '../../support/stubs'
 import { GroupsPageObject } from './groups.page.po'
 
 import { User } from '../../../src/app/auth/user.model'
+import { UsersService } from '../../../src/app/crm/users.service'
 import { NavService } from '../../../src/app/nav/nav.service'
 import { Group } from '../../../src/app/settings/group.model'
 import * as API from '../../../src/app/settings/groups.api.model'
@@ -20,6 +21,7 @@ describe('PipelinesPage', () => {
   let page: GroupsPageObject
   let groups: Group[]
   let groupsServiceStub: any
+  let usersServiceStub: any
   let groupUsers: User[]
   let userLists: User[]
 
@@ -90,17 +92,21 @@ describe('PipelinesPage', () => {
       groupUsers: () => Observable.of(groupUsers),
       groups: () => Observable.of(groups),
       updateGroup: (id: number, groupData: API.IGroupUpdate) => {
-        for (let i = 0; i < groups.length; i++) {
-          const group = groups[i]
-          if (group.id === id) {
-            groups[i] = { ...group, name: groupData.name! }
-            return Observable.of(group)
-          }
+        const group = groups.map((g) => g.id === id)
+        if (group === undefined) {
+          return Observable.of(undefined)
+        } else {
+          return Observable.of({
+            ...group,
+            ...groupData
+          })
         }
-        return Observable.of(undefined)
       }
     }
 
+    usersServiceStub = {
+      users: () => Observable.of(userLists)
+    }
     spyOn(groupsServiceStub, 'createGroup').and.callThrough()
     spyOn(groupsServiceStub, 'updateGroup').and.callThrough()
 
@@ -109,6 +115,7 @@ describe('PipelinesPage', () => {
       providers: [
         NavService,
         { provide: NavController, useValue: new NavControllerStub() },
+        { provide: UsersService, useValue: usersServiceStub },
         { provide: GroupsService, useValue: groupsServiceStub }
       ]
     })
@@ -118,59 +125,60 @@ describe('PipelinesPage', () => {
     fixture.detectChanges()
   }))
 
-  // describe('listing pipelines', () => {
-  //   it('shows a list of pipelines', () => {
-  //     expect(page.header).toEqual('Pipelines')
-  //     expect(page.pipelines).toEqual(['New', 'Converted'])
-  //   })
+  describe('listing groups', () => {
+    it('shows a list of groups', () => {
+      expect(page.header).toEqual('Sales Groups')
+      expect(page.groups).toEqual(['Group1', 'Group2'])
+    })
 
-  //   it('shows the add pipeline button', () => {
-  //     expect(page.addPipelineButtonVisible).toBe(true)
-  //   })
+    it('shows the create group button', () => {
+      expect(page.createGroupButtonVisible).toBe(true)
+    })
 
-  //   it('shows the new pipeline form after clicking the add pipeline button', () => {
-  //     page.clickAddPipelineButton()
-  //     fixture.detectChanges()
+    it('shows the new group form after clicking the create group button', () => {
+      page.clickCreateGroupButton()
+      fixture.detectChanges()
 
-  //     expect(page.header).toEqual('new Pipeline') // it will be capitalized via CSS
-  //   })
-  // })
+      expect(page.header).toEqual('new Sales Group') // it will be capitalized via CSS
+      expect(page.groupNameInputVisible).toBe(true)
+    })
+  })
 
-  // describe('creating pipeline form', () => {
-  //   beforeEach(() => {
-  //     page.clickAddPipelineButton()
-  //     fixture.detectChanges()
-  //   })
+  describe('creating group form', () => {
+    beforeEach(() => {
+      page.clickCreateGroupButton()
+      fixture.detectChanges()
+    })
 
-  //   it('creates a pipeline and shows listing after clicking the save button', () => {
-  //     page.setName('Without Response')
-  //     fixture.detectChanges()
-  //     page.clickSavePipelineButton()
-  //     fixture.detectChanges()
+    it('creates a group and shows listing after clicking the save button', () => {
+      page.setName('NewGroup')
+      fixture.detectChanges()
+      page.clickCreateGroupButton()
+      fixture.detectChanges()
 
-  //     expect(salesServiceStub.createPipeline).toHaveBeenCalledWith({
-  //       name: 'Without Response'
-  //     })
-  //     expect(page.header).toEqual('Pipelines')
-  //     expect(page.pipelines).toEqual(['New', 'Converted', 'Without Response'])
-  //   })
+      expect(groupsServiceStub.createGroup).toHaveBeenCalledWith({
+        name: 'NewGroup'
+      })
+      expect(page.header).toEqual('Sales Groups')
+      expect(page.groups).toEqual(['Group1', 'Group2', 'NewGroup'])
+    })
 
-  //   it('returns to the listing after clicking the back button', () => {
-  //     page.clickBack()
-  //     fixture.detectChanges()
+    it('returns to the listing after clicking the back button', () => {
+      page.clickBack()
+      fixture.detectChanges()
 
-  //     expect(page.header).toEqual('Pipelines')
-  //   })
+      expect(page.header).toEqual('Sales Groups')
+    })
 
-  //   it('blocks the creation when the name is blank', () => {
-  //     expect(page.savePipelineButtonEnabled).toBe(false)
+    it('blocks the creation when the name is blank', () => {
+      expect(page.createGroupButtonEnabled).toBe(false)
 
-  //     page.setName('A New Pipeline')
-  //     fixture.detectChanges()
+      page.setName('NewGroup')
+      fixture.detectChanges()
 
-  //     expect(page.savePipelineButtonEnabled).toBe(true)
-  //   })
-  // })
+      expect(page.createGroupButtonEnabled).toBe(true)
+    })
+  })
 
   // describe('editing pipeline form', () => {
   //   beforeEach(() => {

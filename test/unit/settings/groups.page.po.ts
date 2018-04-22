@@ -2,16 +2,21 @@ import { GroupsPage } from '../../../src/app/settings/groups.page'
 import { PageObject } from '../../support/page.po'
 
 export class GroupsPageObject extends PageObject<GroupsPage> {
-  get addPipelineButtonVisible(): boolean {
-    return this.elementVisible('button', 'Add Pipeline')
+  get createGroupButtonVisible(): boolean {
+    return this.elementVisible('button', 'Create Group')
   }
 
-  get savePipelineButtonEnabled(): boolean {
-    return this.inputEnabled('button', 'Save Pipeline')
+  get createGroupButtonEnabled(): boolean {
+    return this.inputEnabled('button', 'Create Group')
   }
 
-  clickAddPipelineButton(): void {
-    this.clickButton('Add Pipeline')
+  clickCreateGroupButton(): void {
+    this.clickButton('Create Group')
+  }
+
+  get groupNameInputVisible(): boolean {
+    const element = this.findByCss<HTMLInputElement>('ion-input input')
+    return element ? true : false
   }
 
   clickBack(): void {
@@ -37,8 +42,8 @@ export class GroupsPageObject extends PageObject<GroupsPage> {
     return h2 ? h2.textContent || '' : ''
   }
 
-  get pipelines(): ReadonlyArray<string> {
-    return this.findAllByCss<HTMLSpanElement>('button.button-with-arrow').map(
+  get groups(): ReadonlyArray<string> {
+    return this.findAllByCss<HTMLSpanElement>('div.group-title').map(
       (el) => el.textContent || ''
     )
   }
