@@ -40,9 +40,11 @@ export class GroupsPageObject extends PageObject<GroupsPage> {
   clickGroup(name: string): void {
     const group = this.findAllDebugByCss('div.group-title').find(
       (b) => b.nativeElement.textContent === name
-    )
+    )!
     expect(group).toBeTruthy()
-    this.click(group!)
+    const parent = group.parent!.parent!
+    expect(parent).toBeTruthy()
+    this.click(parent!)
   }
 
   get header(): string {
