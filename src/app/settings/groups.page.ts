@@ -23,6 +23,8 @@ import { GroupsService } from './groups.service'
   templateUrl: 'groups.page.html'
 })
 export class GroupsPage extends ReactivePage<State, UserAction> {
+  readonly userID: number
+
   constructor(
     private readonly groupsService: GroupsService,
     private readonly usersService: UsersService
@@ -50,8 +52,8 @@ export class GroupsPage extends ReactivePage<State, UserAction> {
     this.uiActions.next({ name: 'update' })
   }
 
-  addUser(user_id: number): void {
-    this.uiActions.next({ name: 'add_user', user_id: user_id })
+  addUser(): void {
+    this.uiActions.next({ name: 'add_user', user_id: this.userID })
   }
 
   deleteUser(user: User): void {
@@ -149,7 +151,7 @@ export class GroupsPage extends ReactivePage<State, UserAction> {
       })
     } else if (action.name === 'create' && state.name === 'new') {
       return this.groupsService
-        .createGroup(state.nameInput.value)
+        .createGroup({ name: state.nameInput.value })
         .concatMap(() => listGroups)
     } else if (action.name === 'edit') {
       const newC = Observable.combineLatest(
@@ -170,14 +172,11 @@ export class GroupsPage extends ReactivePage<State, UserAction> {
       }))
     } else if (action.name === 'update' && state.name === 'edit') {
       return this.groupsService
-        .updateGroup(state.group_id, state.nameInput.value)
+        .updateGroup(state.group_id, { name: state.nameInput.value })
         .map<Group, State>((group) => state)
     } else if (action.name === 'add_user' && state.name === 'edit') {
-      const isAlreadyAdded =
-        state.groupUsers.find((u) => u.id === action.user_id) !== undefined
-      const user = state.users.find((u) => u.id === action.user_id)
-
-      if (isAlreadyAdded || user === undefined) {
+      const user = state.users.find((u) => u.id === Number(action.user_id))
+      if (user === undefined) {
         return Observable.of(state)
       } else {
         return this.groupsService.addUser(state.group_id, action.user_id).map<
