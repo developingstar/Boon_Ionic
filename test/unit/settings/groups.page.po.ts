@@ -81,6 +81,12 @@ export class GroupsPageObject extends PageObject<GroupsPage> {
     this.click(element)
   }
 
+  addEvent(value: number): void {
+    const element = this.findByCss<HTMLSelectElement>('select')!
+    element.selectedValue = value
+    this.setSelect(element, value.toString())
+  }
+
   private clickButton(label: string): void {
     const button = this.findAllDebugByCss('button').find(
       (b) => b.nativeElement.textContent === label

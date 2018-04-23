@@ -77,6 +77,13 @@ describe('GroupsPage', () => {
     ]
 
     groupsServiceStub = {
+      addUser: (group_id: number, user_id: number) => {
+        const newUser = userLists.find((u) => u.id === user_id)
+        if (newUser) {
+          groupUsers.concat(newUser)
+        }
+        return Observable.of(groupUsers)
+      },
       createGroup: (groupData: API.IGroupCreate) => {
         const newGroup = new Group({
           id: 3,
@@ -114,6 +121,7 @@ describe('GroupsPage', () => {
     spyOn(groupsServiceStub, 'createGroup').and.callThrough()
     spyOn(groupsServiceStub, 'updateGroup').and.callThrough()
     spyOn(groupsServiceStub, 'deleteUser').and.callThrough()
+    spyOn(groupsServiceStub, 'addUser').and.callThrough()
 
     fixture = initComponent(GroupsPage, {
       imports: [GroupsPageModule, HttpClientTestingModule],
@@ -211,12 +219,22 @@ describe('GroupsPage', () => {
       })
     })
 
+    it('add a group user', () => {
+      page.addEvent(14)
+      fixture.detectChanges()
+      expect(groupsServiceStub.addUser).toHaveBeenCalledWith(1, '14')
+      expect(page.groupUsers.length).toEqual(3)
+      expect(page.groupUsers).toEqual(['John Boon', 'Mark Boon', 'Petr Boon'])
+      expect(page.users).toEqual(['Alekxis Boon'])
+    })
+
     it('delete a group user', () => {
       page.deleteEvent(2)
       fixture.detectChanges()
       expect(groupsServiceStub.deleteUser).toHaveBeenCalledWith(1, 12)
       expect(page.groupUsers.length).toEqual(1)
       expect(page.groupUsers).toEqual(['John Boon'])
+      expect(page.users).toEqual(['Mark Boon', 'Alekxis Boon', 'Petr Boon'])
     })
   })
 })
