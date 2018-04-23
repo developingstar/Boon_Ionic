@@ -11,6 +11,7 @@ import { Observable } from 'rxjs'
 import { CurrentUserService } from '../auth/current-user.service'
 import { User } from '../auth/user.model'
 import { emailValidator, phoneNumberValidator } from '../utils/form-validators'
+import { toastWarningDefaults } from '../utils/toast'
 import { FieldDefinition } from './field-definition.model'
 import { ISelectOption } from './field.component'
 import { SalesService } from './sales.service'
@@ -69,22 +70,26 @@ export class NewLeadPage {
       ...this.buildLeadCreate(formModel),
       stage_id: this.navParams.get('stageId')
     }
-    this.salesService.createLead(leadCreate).subscribe(
-      () => this.viewController.dismiss(),
-      (error: any) => {
-        if (error.status === 422) {
-          this.toastController
-            .create({
-              cssClass: 'boon-toast-warning',
-              dismissOnPageChange: true,
-              message: 'The form is invalid.',
-              position: 'top',
-              showCloseButton: true
-            })
-            .present()
+    const subscription = this.salesService
+      .createLead(leadCreate)
+      .finally(() => {
+        if (subscription) {
+          subscription.unsubscribe()
         }
-      }
-    )
+      })
+      .subscribe(
+        () => this.viewController.dismiss(),
+        (error: any) => {
+          if (error.status === 422) {
+            this.toastController
+              .create({
+                ...toastWarningDefaults,
+                message: 'The form is invalid.'
+              })
+              .present()
+          }
+        }
+      )
   }
 
   public cancel(): void {

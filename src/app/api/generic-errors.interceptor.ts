@@ -10,6 +10,7 @@ import { ToastController } from 'ionic-angular'
 import { Observable } from 'rxjs'
 
 import { AuthService } from '../auth/auth.service'
+import { toastWarningDefaults } from '../utils/toast'
 import { ApiError } from './error.model'
 
 @Injectable()
@@ -44,11 +45,8 @@ export class GenericErrorsInterceptor implements HttpInterceptor {
       this.extractErrorDetails(error).forEach((message) => {
         this.toast
           .create({
-            cssClass: 'boon-toast-warning',
-            dismissOnPageChange: true,
-            message: message,
-            position: 'top',
-            showCloseButton: true
+            ...toastWarningDefaults,
+            message: message
           })
           .present()
       })

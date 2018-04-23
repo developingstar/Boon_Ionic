@@ -1,3 +1,4 @@
+import { FormControl, Validators } from '@angular/forms'
 import { Action } from './action.model'
 import { Journey } from './journey.model'
 import { Trigger } from './trigger.model'
@@ -36,6 +37,8 @@ interface IDeleteTriggerAction extends IAction<'delete_trigger'> {
   readonly trigger: Trigger
 }
 
+interface IRenameJourneyAction extends IAction<'rename_journey'> {}
+
 interface IReorderActionsAction extends IAction<'reorder_actions'> {
   readonly oldPosition: number
   readonly newPosition: number
@@ -52,13 +55,16 @@ export type UserAction =
   | IAddTriggerAction
   | IUpdateTriggerAction
   | IDeleteTriggerAction
+  | IRenameJourneyAction
 
 export interface IState {
   readonly isLoading: boolean
   readonly journey?: Journey
+  readonly name: FormControl
 }
 
 export const initialState: IState = {
   isLoading: false,
-  journey: undefined
+  journey: undefined,
+  name: new FormControl('', Validators.required)
 }

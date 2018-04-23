@@ -1,0 +1,13 @@
+nav-content
+  nav-icons(right, currentPage="TextTemplatesPage")
+
+ion-content(padding)
+  button.new-template(ion-button, (click)="newTemplate()") New Template
+
+  ion-grid.table
+    ion-row.header
+      ion-col Name
+      ion-col Default sender
+    ion-row.template-row(*ngFor="let template of (templates | async)", (click)="show(template)")
+      ion-col {{template.name}}
+      ion-col {{template.default_sender}}

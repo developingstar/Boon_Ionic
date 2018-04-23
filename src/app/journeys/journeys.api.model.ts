@@ -10,6 +10,15 @@ export interface IJourneyUpdateRequest {
   }
 }
 
+export interface IJourneyCreateRequest {
+  readonly journey: {
+    readonly actions: ReadonlyArray<IAction>
+    readonly name?: string
+    readonly state?: State
+    readonly triggers: ReadonlyArray<ITrigger>
+  }
+}
+
 export interface IJourneysResponse {
   readonly links: ILinks
   readonly data: IJourneysData

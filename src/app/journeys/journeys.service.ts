@@ -58,4 +58,10 @@ export class JourneysService {
       .patch<API.IJourneyResponse>(`/api/journeys/${id}`, requestData)
       .map((response) => new Journey(response.data.journey))
   }
+
+  createJourney(requestData: API.IJourneyCreateRequest): Observable<Journey> {
+    return this.http
+      .post<API.IJourneyResponse>('/api/journeys', requestData)
+      .map((response) => new Journey(response.data.journey))
+  }
 }

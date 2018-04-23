@@ -1,0 +1,24 @@
+nav-content
+  nav-icons(right, currentPage="TextTemplatesPage")
+
+ion-content(padding)
+  .form(*ngIf="formGroup | async; let form", [formGroup]="form")
+    .form-header
+      h2 Compose Text
+      button(ion-button, (click)="save()", [disabled]="!form.valid") Save
+
+    .form-body
+      ion-item
+        ion-label Name:
+        ion-input(name="name", type="text", formControlName="name")
+      ion-item
+        ion-label Phone number:
+        select(item-content, name="default_sender", formControlName="default_sender")
+          option(*ngIf="initialMode == 'new'", value="")
+          option(*ngFor="let option of (phoneNumbers | async)", [value]="option") {{option}}
+        div(item-content)
+      ion-item
+        ion-textarea(name="content", formControlName="content")
+      p.shortcodes
+        | Available shortcodes:
+        ion-badge(*ngFor="let name of (shortcodeNames | async)") {{ name }}

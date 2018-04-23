@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core'
+import { Component, OnDestroy, OnInit } from '@angular/core'
 import { FormBuilder, FormGroup, Validators } from '@angular/forms'
 import {
   IonicPage,
@@ -6,10 +6,11 @@ import {
   NavParams,
   ToastController
 } from 'ionic-angular'
-import { Observable, Subject } from 'rxjs'
+import { Observable, Subject, Subscription } from 'rxjs'
 
 import { CurrentUserService } from '../auth/current-user.service'
 import { emailValidator, phoneNumberValidator } from '../utils/form-validators'
+import { toastWarningDefaults } from '../utils/toast'
 import { ISelectOption } from './field.component'
 import { Lead } from './lead.model'
 import { initialState, IPageData, State, UserAction } from './lead.page.state'
@@ -26,12 +27,13 @@ const UnassignedUserId = ''
   selector: 'lead-page',
   templateUrl: 'lead.page.html'
 })
-export class LeadPage implements OnInit {
+export class LeadPage implements OnDestroy, OnInit {
   public readonly fields: Observable<ReadonlyArray<Crm.API.IFieldDefinition>>
   public readonly owners: Observable<ReadonlyArray<ISelectOption>>
   public readonly stages: Observable<ReadonlyArray<Stage>>
 
   private readonly state: Observable<State>
+  private readonly stateSubscription: Subscription
   private readonly uiActions: Subject<UserAction> = new Subject()
 
   constructor(
@@ -137,11 +139,8 @@ export class LeadPage implements OnInit {
         if (error.status === 422) {
           this.toastController
             .create({
-              cssClass: 'boon-toast-warning',
-              dismissOnPageChange: true,
-              message: 'The form is invalid.',
-              position: 'top',
-              showCloseButton: true
+              ...toastWarningDefaults,
+              message: 'The form is invalid.'
             })
             .present()
         }
@@ -150,11 +149,18 @@ export class LeadPage implements OnInit {
         return observable
       })
       .shareReplay(1)
+
+    this.stateSubscription = this.state.subscribe()
   }
 
   ngOnInit(): void {
-    this.state.subscribe()
     this.uiActions.next('init')
+  }
+
+  ngOnDestroy(): void {
+    if (this.stateSubscription) {
+      this.stateSubscription.unsubscribe()
+    }
   }
 
   get lead(): Observable<Lead | undefined> {

@@ -42,4 +42,12 @@ journeys-page {
       @include bullet(#D8D8D8, '\25CF\25CF\25CF');
     }
   }
+
+  button.new-journey {
+    @extend .boon-button;
+
+    float: right;
+    margin-bottom: 10px;
+    width: 180px;
+  }
 }

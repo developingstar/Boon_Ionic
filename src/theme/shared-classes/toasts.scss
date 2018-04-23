@@ -8,6 +8,17 @@
     margin: $margin-size auto;
   }
 
+  &.boon-toast-success {
+    .toast-wrapper {
+      background-color: $color-valid-primary-lt;
+
+      .toast-message,
+      .toast-button {
+        color: $color-valid-primary;
+      }
+    }
+  }
+
   &.boon-toast-warning {
     .toast-wrapper {
       background-color: $color-invalid-primary-lt;

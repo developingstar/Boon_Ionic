@@ -1,22 +1,19 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="35px" height="35px" viewBox="0 0 35 35" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<svg xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" viewBox="0 0 34 34">
     <defs>
-        <polygon id="path-1" points="0 0 20 0 20 15 0 15"></polygon>
+        <style>
+            .svg-icon-journey-action-send-email-1{fill:#ffd5e1;}.svg-icon-journey-action-send-email-1,.svg-icon-journey-action-send-email-2{stroke:#ff0a53;}.svg-icon-journey-action-send-email-2{fill:none;}
+        </style>
     </defs>
-    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="Automation" transform="translate(-1035.000000, -377.000000)">
-            <g id="Trigger-object-Copy-10" transform="translate(992.000000, 367.000000)">
-                <g id="Group-13" transform="translate(44.000000, 11.000000)">
-                    <circle id="Oval-2" stroke="#FF0A53" fill="#FFD5E1" cx="16.5" cy="16.5" r="16.5"></circle>
-                    <g id="Page-1" transform="translate(5.000000, 10.000000)">
-                        <mask id="mask-2" fill="white">
-                            <use xlink:href="#path-1"></use>
-                        </mask>
-                        <g id="Clip-2"></g>
-                        <path d="M12.2761562,14.0223015 L8.13049433,8.09234721 L18.8197035,1.25465655 L12.2761562,14.0223015 Z M7.42200806,12.5840927 L7.88194921,8.89912563 L9.3988705,11.0688371 L7.42200806,12.5840927 Z M17.6132425,1.23517343 L7.61306054,7.63272262 L1.49318974,5.62507533 L17.6132425,1.23517343 Z M19.9253313,0.12020742 C19.8528021,0.0307621723 19.7404703,-0.0108608637 19.6290231,0.00242308395 C19.602488,0.00419427697 19.5786064,0.00862225953 19.5547249,0.0157070316 L0.245157123,5.27437911 C0.103636769,5.31245976 0.00368801963,5.43998566 0.000150010789,5.58699468 C-0.00427250026,5.7340037 0.089484734,5.86684318 0.229236083,5.9120086 L7.29375524,8.22961467 L6.66133616,13.2916843 C6.64541512,13.4254094 6.70998378,13.5555921 6.82673807,13.6220118 C6.8780392,13.6521221 6.93553184,13.6662917 6.99213998,13.6662917 C7.06378466,13.6662917 7.13542934,13.6432661 7.19469099,13.5981007 L9.78097545,11.6152501 L12.0470701,14.857419 C12.1098698,14.9468642 12.2115875,15 12.3203813,15 C12.3274573,15 12.3345333,15 12.3424939,14.9991144 C12.4592481,14.991144 12.5627349,14.9229531 12.615805,14.8184527 L19.9624804,0.482416393 C20.023511,0.365517654 20.009359,0.222936615 19.9253313,0.12020742 Z" id="Fill-1" fill="#FF0D56" mask="url(#mask-2)"></path>
-                    </g>
+    <g id="Page-1">
+        <g id="Automation">
+            <g id="Trigger-object-Copy-10">
+                <g id="Group-13">
+                    <circle id="Oval-2" cx="17" cy="17" r="16.5" class="svg-icon-journey-action-send-email-1"/>
                 </g>
             </g>
         </g>
     </g>
+    <path d="M12.46,24l.61-5.22L5.64,16.32a.09.09,0,0,1,0-.18l19.56-5.31a.1.1,0,0,1,.12.14L18,25.44a.1.1,0,0,1-.17,0L15.42,22l-2.81,2.1A.1.1,0,0,1,12.46,24Z" class="svg-icon-journey-action-send-email-2"/>
+    <line x1="13.07" x2="25.43" y1="18.78" y2="10.77" class="svg-icon-journey-action-send-email-2"/>
+    <line x1="15.42" x2="13.19" y1="21.99" y2="18.7" class="svg-icon-journey-action-send-email-2"/>
 </svg>

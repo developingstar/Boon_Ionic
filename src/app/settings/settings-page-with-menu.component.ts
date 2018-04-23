@@ -18,12 +18,8 @@ export class SettingsPageWithMenuComponent {
     { label: 'Account Settings', link: 'AccountSettingsPage' },
     { label: 'Billing Settings' },
     {
-      children: [
-        { label: 'Team members' },
-        { label: 'Sales groups', link: 'GroupsPage' }
-      ],
-      label: 'Team Settings',
-      link: 'GroupsPage'
+      children: [{ label: 'Team members' }, { label: 'Sales groups' }],
+      label: 'Team Settings'
     },
     {
       children: [{ label: 'Twilio' }, { label: 'Zapier' }],

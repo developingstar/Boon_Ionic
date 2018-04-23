@@ -1,5 +1,14 @@
+@import 'theme/style-guide/global-colors';
+
 .no-box-shadow {
   -webkit-box-shadow: 0 0 0 #fff;
   -moz-box-shadow: 0 0 0 #fff;
   box-shadow: 0 0 0 #fff;
+}
+
+.boon-header {
+  color: $color-header;
+  font-size: 25px;
+  font-weight: bold;
+  text-transform: capitalize;
 }

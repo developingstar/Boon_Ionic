@@ -22,4 +22,12 @@ export class EmailTemplate {
     this.name = ensureNonEmptyString(data.name)
     this.subject = ensureNonEmptyString(data.subject)
   }
+
+  get sender(): string {
+    if (this.default_sender_name) {
+      return `${this.default_sender_name} <${this.default_sender}>`
+    } else {
+      return `${this.default_sender}`
+    }
+  }
 }

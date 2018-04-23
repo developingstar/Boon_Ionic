@@ -1,5 +1,5 @@
-import { Component, Input, OnChanges, Output } from '@angular/core'
-import { BehaviorSubject, Observable } from 'rxjs'
+import { Component, Input, OnChanges, OnDestroy, Output } from '@angular/core'
+import { BehaviorSubject, Observable, Subscription } from 'rxjs'
 
 import { Stage } from './stage.model'
 
@@ -25,7 +25,7 @@ interface IStageViewModel {
   selector: 'pipeline',
   templateUrl: 'pipeline.component.html'
 })
-export class PipelineComponent implements OnChanges {
+export class PipelineComponent implements OnChanges, OnDestroy {
   @Input() public readonly currentStageId: number | undefined
   @Input() public readonly stages?: ReadonlyArray<Stage>
   @Input() public readonly type: 'select' | 'progress'
@@ -39,8 +39,12 @@ export class PipelineComponent implements OnChanges {
     ReadonlyArray<IStageViewModel>
   > = new BehaviorSubject<ReadonlyArray<IStageViewModel>>([])
 
+  private readonly selectSubscription: Subscription
+
   constructor() {
-    this.select.subscribe((stage) => this.ngOnChanges())
+    this.selectSubscription = this.select.subscribe((stage) =>
+      this.ngOnChanges()
+    )
   }
 
   ngOnChanges(): void {
@@ -50,6 +54,10 @@ export class PipelineComponent implements OnChanges {
         ? this.getStagesSelect(stages, this.select.getValue())
         : this.getStagesProgress(stages, this.currentStageId)
     this.stageData.next(stageData)
+  }
+
+  ngOnDestroy(): void {
+    this.selectSubscription.unsubscribe()
   }
 
   public onClick(stage: Stage): void {

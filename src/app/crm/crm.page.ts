@@ -1,9 +1,10 @@
 import { HttpParams } from '@angular/common/http'
-import { Component, OnInit } from '@angular/core'
+import { Component } from '@angular/core'
 import { IonicPage, ModalController, NavController } from 'ionic-angular'
-import { Observable, Subject } from 'rxjs'
+import { Observable } from 'rxjs'
 
-import { IHttpRequestOptions } from './../api/http-request-options'
+import { IHttpRequestOptions } from '../api/http-request-options'
+import { ReactivePage } from '../utils/reactive-page'
 import {
   FilterType,
   initialState,
@@ -23,42 +24,20 @@ import { Stage } from './stage.model'
   selector: 'crm-page',
   templateUrl: 'crm.page.html'
 })
-export class CrmPage implements OnInit {
+export class CrmPage extends ReactivePage<IState, UserAction> {
   readonly pipelines: Observable<ReadonlyArray<Pipeline>>
 
   private readonly stages: Observable<ReadonlyArray<Stage>>
-  private readonly state: Observable<IState>
-  private readonly uiActions: Subject<UserAction> = new Subject()
 
   constructor(
     private readonly salesService: SalesService,
     private readonly modalController: ModalController,
     private readonly navController: NavController
   ) {
-    this.state = this.uiActions
-      .mergeScan((state: IState, action: UserAction) => {
-        if (action === 'newLead') {
-          this.showNewLeadModal(state.stageId)
-          return Observable.of(state)
-        } else {
-          const newRequestOptions = this.actionToRequestOptions(state, action)
-          return this.salesService.leads(newRequestOptions).map((newLeads) => ({
-            leads: newLeads,
-            pipelineId: this.nextPipelineId(state, action),
-            requestOptions: newRequestOptions,
-            stageId: this.nextStageId(state, action)
-          }))
-        }
-      }, initialState)
-      .shareReplay(1)
+    super(initialState)
 
     this.pipelines = this.salesService.pipelines().shareReplay(1)
     this.stages = this.salesService.stages().shareReplay(1)
-  }
-
-  ngOnInit(): void {
-    this.state.subscribe()
-    this.uiActions.next('init')
   }
 
   public onPipelineChange(id: number | undefined): void {
@@ -155,6 +134,25 @@ export class CrmPage implements OnInit {
 
   get isNextPageButtonDisabled(): Observable<boolean> {
     return this.state.map((state) => state.leads.nextPageLink === null)
+  }
+
+  protected initialAction(): UserAction {
+    return 'init'
+  }
+
+  protected reduce(state: IState, action: UserAction): Observable<IState> {
+    if (action === 'newLead') {
+      this.showNewLeadModal(state.stageId)
+      return Observable.of(state)
+    } else {
+      const newRequestOptions = this.actionToRequestOptions(state, action)
+      return this.salesService.leads(newRequestOptions).map((newLeads) => ({
+        leads: newLeads,
+        pipelineId: this.nextPipelineId(state, action),
+        requestOptions: newRequestOptions,
+        stageId: this.nextStageId(state, action)
+      }))
+    }
   }
 
   private onSetFilterChange(type: FilterType, id: number | undefined): void {

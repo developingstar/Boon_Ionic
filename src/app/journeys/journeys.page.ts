@@ -1,9 +1,15 @@
 import { Component, OnDestroy, OnInit } from '@angular/core'
-import { IonicPage, NavController, PopoverController } from 'ionic-angular'
+import {
+  IonicPage,
+  ModalController,
+  NavController,
+  PopoverController
+} from 'ionic-angular'
 import { Observable, Subject, Subscription } from 'rxjs'
 
 import { IHttpRequestOptions } from './../api/http-request-options'
 import { ActionsComponent, ActionsResult } from './actions.component'
+import { CreateJourneyModalComponent } from './create-journey-modal.component'
 import { Journey } from './journey.model'
 import { initialState, IState, UserAction } from './journeys.page.state'
 import { JourneysService } from './journeys.service'
@@ -22,6 +28,7 @@ export class JourneysPage implements OnInit, OnDestroy {
 
   constructor(
     private journeysService: JourneysService,
+    private modalController: ModalController,
     private popoverController: PopoverController,
     private readonly navController: NavController
   ) {
@@ -50,6 +57,20 @@ export class JourneysPage implements OnInit, OnDestroy {
 
   public showJourney(journey: Journey): void {
     this.navController.setRoot('JourneyPage', { id: journey.id })
+  }
+
+  public openNewJourneyModal(event: Event): void {
+    const modal = this.modalController.create(
+      CreateJourneyModalComponent.name,
+      {},
+      { cssClass: 'create-journey-modal' }
+    )
+    modal.present({ ev: event })
+    modal.onDidDismiss((data?: { readonly journey?: Journey }) => {
+      if (data && data.journey) {
+        this.showJourney(data.journey)
+      }
+    })
   }
 
   public showActions(event: any, journey: Journey): void {

@@ -4,6 +4,7 @@ import { ReactiveFormsModule } from '@angular/forms'
 import { BrowserModule } from '@angular/platform-browser'
 import { SplashScreen } from '@ionic-native/splash-screen'
 import { StatusBar } from '@ionic-native/status-bar'
+import { SortablejsModule } from 'angular-sortablejs'
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular'
 
 import { ApiModule } from './api.module'
@@ -14,7 +15,6 @@ import { JourneysModule } from './journeys.module'
 import { MessagesModule } from './messages.module'
 import { NavModule } from './nav.module'
 import { NavService } from './nav/nav.service'
-import { TemplatesModule } from './templates.module'
 
 @NgModule({
   bootstrap: [IonicApp],
@@ -33,8 +33,8 @@ import { TemplatesModule } from './templates.module'
       popoverLeave: 'popover-pop-out'
     }),
     NavModule,
-    TemplatesModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    SortablejsModule.forRoot({ animation: 150 })
   ],
   providers: [
     NavService,

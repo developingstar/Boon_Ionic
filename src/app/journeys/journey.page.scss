@@ -6,7 +6,7 @@ $content-height: calc(100vh - #{$nav-height-large});
 $sidebar-width: 270px;
 $publish-box-height: 105px;
 $definition-body-height: calc(
-  100vh - #{$nav-height-large - $publish-box-height}
+  100vh - #{$nav-height-large} - #{$publish-box-height}
 );
 $definition-body-width: calc(100vw - #{$sidebar-width});
 
@@ -32,7 +32,6 @@ journey-page {
   .sidebar,
   .definition {
     height: $content-height;
-    overflow: scroll;
   }
 
   .sidebar {
@@ -42,6 +41,8 @@ journey-page {
     color: white;
     width: $sidebar-width;
     padding: 0 20px;
+
+    overflow: auto;
 
     .events-group {
       width: 230px;
@@ -113,7 +114,7 @@ journey-page {
         height: $definition-body-height;
         width: $definition-body-width;
         padding: 30px 20px;
-        overflow: scroll;
+        overflow: auto;
         white-space: nowrap;
 
         .events-groups {

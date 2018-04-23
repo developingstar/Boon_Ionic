@@ -1,0 +1,8 @@
+h2 New Journey
+
+.field-label Journey name
+ion-input.field-value([formControl]="name")
+
+.buttons
+  button(ion-button, (click)="create()", [disabled]="(isSaving | async) || name.invalid") Create
+  button.cancel(ion-button, outline, (click)="cancel()", [disabled]="(isSaving | async)") Cancel

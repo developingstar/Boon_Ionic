@@ -1,0 +1,10 @@
+@import 'theme/mixins';
+@import 'theme/style-guide';
+
+.boon-modal {
+  .modal-wrapper {
+    @include border-radius($modal-ios-border-radius);
+
+    background-color: #fff;
+  }
+}

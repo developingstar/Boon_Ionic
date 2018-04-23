@@ -27,6 +27,12 @@
   }
 }
 
+.boon-button-grey {
+  @extend .boon-button;
+
+  background-color: #a5acc6;
+}
+
 .boon-button.button-outline {
   background-color: transparent;
   border: 1px solid #d2d6e4;
@@ -36,6 +42,13 @@
 .boon-label {
   color: $color-text-secondary;
   padding: 0 $padding-label-size;
+}
+
+.boon-uppercase-label {
+  @extend .boon-label;
+
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .boon-input {
@@ -51,5 +64,15 @@
 
 .boon-invalid-input {
   background-color: $color-invalid-input-background;
+  border: 1px $text-input-highlight-color-invalid solid;
+}
+
+.boon-select {
+  @extend .boon-input;
+
+  height: 40px;
+}
+
+.boon-invalid-select {
   border: 1px $text-input-highlight-color-invalid solid;
 }

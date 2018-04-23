@@ -20,7 +20,7 @@ ion-grid.journey
         event(type="action", kind="wait", (click)="addNewAction('wait')")
     ion-col.definition(*ngIf="journey | async; let j")
       .definition-header
-        ion-input.journey-name([value]="j.name")
+        ion-input.journey-name([formControl]="name | async", (ionBlur)="renameJourney()")
         .publish-box
           button.boon-button(*ngIf="j.state == 'inactive'" ion-button (click)="publishJourney()") Publish journey
           button.boon-button(*ngIf="j.state == 'active'" ion-button (click)="stopJourney()") Stop journey

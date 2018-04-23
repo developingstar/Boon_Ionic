@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core'
+import { FormControl, Validators } from '@angular/forms'
 import { SortablejsOptions } from 'angular-sortablejs'
 import {
   IonicPage,
@@ -26,6 +27,7 @@ import { FieldUpdatedModalComponent } from './modals/field-updated-modal.compone
 import { PipelineAssignedModalComponent } from './modals/pipeline-assigned-modal.component'
 import { StageAssignedModalComponent } from './modals/stage-assigned-modal.component'
 
+import { toastWarningDefaults } from '../utils/toast'
 import { AssignLeadOwnerModalComponent } from './modals/assign-lead-owner-modal.component'
 import { AssignStageModalComponent } from './modals/assign-stage-modal.component'
 import { SendEmailModalComponent } from './modals/send-email-modal.component'
@@ -192,6 +194,10 @@ export class JourneyPage implements OnInit, OnDestroy {
     })
   }
 
+  public renameJourney(): void {
+    this.uiActions.next({ name: 'rename_journey' })
+  }
+
   get isLoading(): Observable<boolean> {
     return this.state.map((state) => state.isLoading)
   }
@@ -208,6 +214,10 @@ export class JourneyPage implements OnInit, OnDestroy {
       (state) =>
         state.journey ? state.journey.actions.map((action) => action.id!) : []
     )
+  }
+
+  get name(): Observable<FormControl> {
+    return this.state.map((state) => state.name)
   }
 
   private reduce(state: IState, action: UserAction): Observable<IState> {
@@ -326,6 +336,16 @@ export class JourneyPage implements OnInit, OnDestroy {
             }
           })
         }
+      case 'rename_journey':
+        if (state.journey === undefined || !state.name.valid) {
+          return Observable.of(state)
+        } else {
+          return this.updateJourneyState(state, {
+            journey: {
+              name: state.name.value
+            }
+          })
+        }
     }
   }
 
@@ -352,11 +372,8 @@ export class JourneyPage implements OnInit, OnDestroy {
             if (error.status === 422) {
               this.toastController
                 .create({
-                  cssClass: 'boon-toast-warning',
-                  dismissOnPageChange: true,
-                  message: 'Failed to update the journey.',
-                  position: 'top',
-                  showCloseButton: true
+                  ...toastWarningDefaults,
+                  message: 'Failed to update the journey.'
                 })
                 .present()
             }
@@ -374,7 +391,8 @@ export class JourneyPage implements OnInit, OnDestroy {
   private getJourney(): Observable<IState> {
     return this.journeysService.journey(this.journeyID).map((journey) => ({
       isLoading: false,
-      journey: journey
+      journey: journey,
+      name: new FormControl(journey.name, Validators.required)
     }))
   }
 

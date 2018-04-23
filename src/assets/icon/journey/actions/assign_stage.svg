@@ -1,18 +1,21 @@
-<svg width="35px" height="35px" viewBox="0 0 35 35" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<svg xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" viewBox="0 0 34 34">
     <defs>
-        <rect id="path-1" x="12" y="10" width="13" height="16" rx="2"></rect>
-        <rect id="path-2" x="7" y="7" width="13" height="16" rx="2"></rect>
+        <style>
+            .svg-icon-journey-action-assign-stage-1,.svg-icon-journey-action-assign-stage-2{fill:#bedcfe;}.svg-icon-journey-action-assign-stage-1,.svg-icon-journey-action-assign-stage-3,.svg-icon-journey-action-assign-stage-4{stroke:#07f;}.svg-icon-journey-action-assign-stage-3,.svg-icon-journey-action-assign-stage-4{fill:none;}.svg-icon-journey-action-assign-stage-3{stroke-linecap:round;stroke-dasharray:0.1 1.96;}
+        </style>
     </defs>
-    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="Automation" transform="translate(-526.000000, -226.000000)">
-            <g id="Group-6" transform="translate(527.000000, 227.000000)">
+    <g id="Page-1">
+        <g id="Automation">
+            <g id="Group-6">
                 <g id="Group-10">
-                    <circle id="Oval-2" stroke="#0077FF" fill="#BEDCFE" cx="16.5" cy="16.5" r="16.5"></circle>
-                    <g id="Rectangle-2-Copy-2">                        
-                        <rect stroke="#0077FF" stroke-width="0.75" x="12.375" y="10.375" width="12.25" height="15.25" rx="2"></rect>
+                    <circle id="Oval-2" cx="17" cy="17" r="16.5" class="svg-icon-journey-action-assign-stage-1"/>
+                    <g id="Rectangle-2-Copy-2">
+                        <rect id="path-1" width="13" height="16" x="12.5" y="10.5" class="svg-icon-journey-action-assign-stage-2" rx="2" ry="2"/>
+                        <rect width="12.25" height="15.25" x="12.87" y="10.88" class="svg-icon-journey-action-assign-stage-3" rx="2" ry="2"/>
                     </g>
-                    <g id="Rectangle-2-Copy-3">                        
-                        <rect stroke="#0077FF" stroke-width="0.75" x="7.375" y="7.375" width="12.25" height="15.25" rx="2" fill="#BEDCFE"></rect>
+                    <g id="Rectangle-2-Copy-3">
+                        <rect id="path-2" width="13" height="16" x="7.5" y="7.5" class="svg-icon-journey-action-assign-stage-2" rx="2" ry="2"/>
+                        <rect width="12.25" height="15.25" x="7.88" y="7.88" class="svg-icon-journey-action-assign-stage-4" rx="2" ry="2"/>
                     </g>
                 </g>
             </g>

@@ -1,23 +1,27 @@
-<svg width="35px" height="35px" viewBox="0 0 35 35" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<svg xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" viewBox="0 0 34 34">
     <defs>
-        <rect id="path-1" x="11" y="14" width="17" height="9" rx="2"></rect>
-        <rect id="path-2" x="5" y="10" width="17" height="9" rx="2"></rect>
+        <style>
+            .svg-icon-journey-trigger-pipeline-assigned-1,.svg-icon-journey-trigger-pipeline-assigned-4{fill:#bedcfe;}.svg-icon-journey-trigger-pipeline-assigned-1,.svg-icon-journey-trigger-pipeline-assigned-3{stroke:#07f;}.svg-icon-journey-trigger-pipeline-assigned-2,.svg-icon-journey-trigger-pipeline-assigned-3{fill:none;}
+        </style>
     </defs>
-    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="Automation" transform="translate(-355.000000, -377.000000)">
-            <g id="Trigger-object-Copy-4" transform="translate(312.000000, 367.000000)">
-                <g id="Group" transform="translate(44.000000, 11.000000)">
+    <g id="Page-1">
+        <g id="Automation">
+            <g id="Trigger-object-Copy-4">
+                <g id="Group">
                     <g id="Group-11">
-                        <circle id="Oval-2" stroke="#0077FF" fill="#BEDCFE" cx="16.5" cy="16.5" r="16.5"></circle>
+                        <circle id="Oval-2" cx="17" cy="17" r="16.5" class="svg-icon-journey-trigger-pipeline-assigned-1"/>
                         <g id="Rectangle-2">
-                            <rect stroke="#0077FF" stroke-width="0.75" x="11.375" y="14.375" width="16.25" height="8.25" rx="2"></rect>
+                            <rect id="path-1" width="17" height="9" x="11.5" y="14.5" class="svg-icon-journey-trigger-pipeline-assigned-2" rx="2" ry="2"/>
+                            <rect width="16.25" height="8.25" x="11.88" y="14.87" class="svg-icon-journey-trigger-pipeline-assigned-3" rx="2" ry="2"/>
                         </g>
                         <g id="Rectangle-2-Copy">
-                            <rect stroke="#0077FF" stroke-width="0.75" x="5.375" y="10.375" width="16.25" height="8.25" rx="2" fill="#BEDCFE"></rect>
+                            <rect id="path-2" width="17" height="9" x="5.5" y="10.5" class="svg-icon-journey-trigger-pipeline-assigned-4" rx="2" ry="2"/>
+                            <rect width="16.25" height="8.25" x="5.88" y="10.88" class="svg-icon-journey-trigger-pipeline-assigned-3" rx="2" ry="2"/>
                         </g>
                     </g>
                 </g>
             </g>
         </g>
     </g>
+    <polyline points="11.51 15.12 13.01 16.61 16.49 13.13" class="svg-icon-journey-trigger-pipeline-assigned-3"/>
 </svg>
