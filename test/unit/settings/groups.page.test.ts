@@ -85,6 +85,10 @@ describe('GroupsPage', () => {
         groups.push(newGroup)
         return Observable.of(groups)
       },
+      deleteUser: (group_id: number, user_id: number) => {
+        groupUsers = groupUsers.filter((g) => g.id !== user_id)
+        return Observable.of(groupUsers)
+      },
       group: (id: number) => {
         const group = groups.find((g) => g.id === id)
         return Observable.of(group)
@@ -109,6 +113,7 @@ describe('GroupsPage', () => {
     }
     spyOn(groupsServiceStub, 'createGroup').and.callThrough()
     spyOn(groupsServiceStub, 'updateGroup').and.callThrough()
+    spyOn(groupsServiceStub, 'deleteUser').and.callThrough()
 
     fixture = initComponent(GroupsPage, {
       imports: [GroupsPageModule, HttpClientTestingModule],
@@ -204,6 +209,14 @@ describe('GroupsPage', () => {
       expect(groupsServiceStub.updateGroup).toHaveBeenCalledWith(1, {
         name: 'UpdatedGroup'
       })
+    })
+
+    it('delete a group user', () => {
+      page.deleteEvent(2)
+      fixture.detectChanges()
+      expect(groupsServiceStub.deleteUser).toHaveBeenCalledWith(1, 12)
+      expect(page.groupUsers.length).toEqual(1)
+      expect(page.groupUsers).toEqual(['John Boon'])
     })
   })
 })

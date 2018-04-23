@@ -74,6 +74,13 @@ export class GroupsPageObject extends PageObject<GroupsPage> {
     this.setInput(element!, name)
   }
 
+  deleteEvent(position: number): void {
+    const element = this.findDebugByCss(
+      `.content-user .user-row:nth-of-type(${position}) .remove-user`
+    )!
+    this.click(element)
+  }
+
   private clickButton(label: string): void {
     const button = this.findAllDebugByCss('button').find(
       (b) => b.nativeElement.textContent === label
