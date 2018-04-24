@@ -35,6 +35,6 @@ settings-page-with-menu(currentPage="PipelinesPage")
         button(ion-button, (click)="addStage()") Add Stage
     ion-row
       ion-col
-        ion-list([sortablejs]="currentPipelineStages | async", [sortablejsOptions]="{ animation: 150 }")
+        ion-list
           button(ion-item *ngFor="let stage of currentPipelineStages | async", (click)="editStage(stage)")
             | {{ stage.name }}
