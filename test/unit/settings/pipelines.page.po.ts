@@ -43,6 +43,12 @@ export class PipelinesPageObject extends PageObject<PipelinesPage> {
     )
   }
 
+  get stages(): ReadonlyArray<string> {
+    return this.findAllByCss<HTMLSpanElement>('button.stage-name').map(
+      (el) => el.textContent || ''
+    )
+  }
+
   setName(name: string): void {
     const element = this.findByCss<HTMLInputElement>('ion-input input')
     expect(element).toBeTruthy()
