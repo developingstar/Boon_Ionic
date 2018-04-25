@@ -1,6 +1,6 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing'
 import { async, ComponentFixture } from '@angular/core/testing'
-import { NavController } from 'ionic-angular'
+import { ModalController, NavController } from 'ionic-angular'
 import { Observable } from 'rxjs'
 
 import { initComponent } from '../../support/helpers'
@@ -16,6 +16,8 @@ import { PipelinesPageModule } from '../../../src/app/settings/pipelines.page.mo
 
 describe('PipelinesPage', () => {
   let fixture: ComponentFixture<PipelinesPage>
+  let modalStub: any
+  let modalControllerStub: any
   let page: PipelinesPageObject
   let pipelines: Pipeline[]
   let salesServiceStub: any
@@ -28,8 +30,10 @@ describe('PipelinesPage', () => {
     ]
 
     stages = [
-      { pipeline_id: 102, name: 'Stage3', id: 3 },
-      { pipeline_id: 102, name: 'Stage1', id: 1 }
+      { pipeline_id: 102, name: 'Stage1', id: 1 },
+      { pipeline_id: 102, name: 'Stage2', id: 2 },
+      { pipeline_id: 101, name: 'Stage3', id: 3 },
+      { pipeline_id: 101, name: 'Stage4', id: 4 }
     ]
 
     salesServiceStub = {
@@ -59,12 +63,31 @@ describe('PipelinesPage', () => {
     spyOn(salesServiceStub, 'createPipeline').and.callThrough()
     spyOn(salesServiceStub, 'updatePipeline').and.callThrough()
 
+    modalStub = {
+      onDidDismiss: (stageName: string) => {
+        return stageName
+      },
+      present: () => {
+        return
+      }
+    }
+
+    spyOn(modalStub, 'present').and.callThrough()
+    spyOn(modalStub, 'onDidDismiss').and.callThrough()
+
+    modalControllerStub = {
+      create: () => modalStub
+    }
+
+    spyOn(modalControllerStub, 'create').and.callThrough()
+
     fixture = initComponent(PipelinesPage, {
       imports: [PipelinesPageModule, HttpClientTestingModule],
       providers: [
         NavService,
         { provide: NavController, useValue: new NavControllerStub() },
-        { provide: SalesService, useValue: salesServiceStub }
+        { provide: SalesService, useValue: salesServiceStub },
+        { provide: ModalController, useValue: modalControllerStub }
       ]
     })
 
@@ -136,6 +159,28 @@ describe('PipelinesPage', () => {
     it('shows a list of stages', () => {
       expect(page.header).toEqual('edit Pipeline')
       expect(page.stages).toEqual(['Stage3', 'Stage1'])
+    })
+
+    it('presents the new stage modal after clicking the new stage button', () => {
+      page.clickAddStageButton()
+
+      expect(modalControllerStub.create).toHaveBeenCalledWith(
+        'EditStageModalPage',
+        { title: 'Add new stage' },
+        { cssClass: 'edit-stage-modal' }
+      )
+      expect(modalStub.present).toHaveBeenCalled()
+    })
+
+    it('show the edit stage modal after clicking the stage', () => {
+      page.clickStage('Stage3')
+
+      expect(modalControllerStub.create).toHaveBeenCalledWith(
+        'EditStageModalPage',
+        { initialName: 'Stage3', title: 'Edit stage' },
+        { cssClass: 'edit-stage-modal' }
+      )
+      expect(modalStub.present).toHaveBeenCalled()
     })
 
     it('updates a pipeline and shows listing after clicking the save button', () => {
