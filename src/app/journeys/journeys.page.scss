@@ -31,7 +31,7 @@ journeys-page {
     cursor: pointer;
 
     .state-inactive::before {
-      @include bullet(#FCC52D);
+      @include bullet(#fcc52d);
     }
 
     .state-active::before {
@@ -39,7 +39,7 @@ journeys-page {
     }
 
     .actions::before {
-      @include bullet(#D8D8D8, '\25CF\25CF\25CF');
+      @include bullet(#d8d8d8, '\25CF\25CF\25CF');
     }
   }
 

@@ -20,12 +20,19 @@ export class IntegrationsService {
   service(id: number): Observable<Service> {
     return this.http
       .get<API.IServiceResponse>(`/api/services/${id}`)
-      .map((response: API.IServiceResponse) => new Service(response.data.service))
+      .map(
+        (response: API.IServiceResponse) => new Service(response.data.service)
+      )
   }
 
   updateService(id: number, service?: Service): Observable<Service> {
     return this.http
-      .patch<API.IServiceResponse>(`/api/services/${id}`, JSON.stringify({service: service}))
-      .map((response: API.IServiceResponse) => new Service(response.data.service))
+      .patch<API.IServiceResponse>(
+        `/api/services/${id}`,
+        JSON.stringify({ service: service })
+      )
+      .map(
+        (response: API.IServiceResponse) => new Service(response.data.service)
+      )
   }
 }

@@ -9,13 +9,13 @@ import { LeadPageObject } from './lead.page.po'
 
 import { CurrentUserService } from '../../../src/app/auth/current-user.service'
 import { User } from '../../../src/app/auth/user.model'
-import { UserService } from '../../../src/app/auth/user.service'
 import { FieldDefinition } from '../../../src/app/crm/field-definition.model'
 import { Lead } from '../../../src/app/crm/lead.model'
 import { LeadPage } from '../../../src/app/crm/lead.page'
 import { LeadPageModule } from '../../../src/app/crm/lead.page.module'
 import { SalesService } from '../../../src/app/crm/sales.service'
 import { Stage } from '../../../src/app/crm/stage.model'
+import { UsersService } from '../../../src/app/crm/users.service'
 import { NavService } from '../../../src/app/nav/nav.service'
 
 describe('LeadPage', () => {
@@ -30,118 +30,120 @@ describe('LeadPage', () => {
   let users: ReadonlyArray<User>
   const userRole: BehaviorSubject<string> = new BehaviorSubject<string>('admin')
 
-  beforeEach(async(() => {
-    users = [
-      {
-        email: 'john@example.com',
-        id: 100,
-        name: 'John Boon',
-        role: 'admin'
-      },
-      {
-        email: 'mark@example.com',
-        id: 101,
-        name: 'Mark Boon',
-        role: 'lead_owner'
-      }
-    ]
-
-    fields = [
-      { id: 300, name: 'First Name' },
-      { id: 301, name: 'Last Name' },
-      { id: 302, name: 'Website' }
-    ]
-
-    stages = [
-      {
-        id: 10,
-        name: 'Enrolling',
-        pipeline_id: 504
-      },
-      {
-        id: 14,
-        name: 'Signing',
-        pipeline_id: 504
-      },
-      {
-        id: 15,
-        name: 'Closing - Won',
-        pipeline_id: 504
-      }
-    ]
-
-    stage = stages[1]
-
-    lead = new Lead({
-      created_by_service_id: null,
-      created_by_user_id: 101,
-      email: 'lead@example.com',
-      fields: [
-        { id: 300, name: 'First Name', value: 'Mark' },
-        { id: 301, name: 'Last Name', value: 'Williams' },
-        { id: 302, name: 'Website', value: 'williams.com' }
-      ],
-      id: 1,
-      owner: {
-        email: 'john@example.com',
-        id: 100,
-        name: 'John Boon',
-        role: 'admin'
-      },
-      phone_number: '+999100200300',
-      stage_id: stage.id
-    })
-
-    const salesServiceStub = {
-      fields: () => Observable.of(fields),
-      lead: (id: number) => Observable.of(lead),
-      stage: (id: number) => Observable.of(stage),
-      stages: (pipeline_id: number) => Observable.of(stages),
-      updateLead: (id: number, data: Crm.API.ILeadUpdate) => {
-        leadUpdate = data
-        return Observable.of({
-          ...lead,
-          ...leadUpdate,
-          owner: leadUpdate.owner_id
-            ? users.find((user) => user.id === leadUpdate.owner_id)
-            : null
-        })
-      }
-    }
-
-    const currentUserServiceStub = {
-      details: Observable.of(users[0]),
-      role: () => userRole
-    }
-
-    const userServiceStub = {
-      users: () => Observable.of(users)
-    }
-
-    const navParamsStub = {
-      get: (prop: string) => lead.id
-    }
-
-    navControllerStub = new NavControllerStub()
-
-    spyOn(navControllerStub, 'setRoot').and.callThrough()
-
-    fixture = initComponent(LeadPage, {
-      imports: [LeadPageModule, HttpClientTestingModule],
-      providers: [
-        NavService,
-        { provide: NavParams, useValue: navParamsStub },
-        { provide: NavController, useValue: navControllerStub },
-        { provide: SalesService, useValue: salesServiceStub },
-        { provide: CurrentUserService, useValue: currentUserServiceStub },
-        { provide: UserService, useValue: userServiceStub }
+  beforeEach(
+    async(() => {
+      users = [
+        {
+          email: 'john@example.com',
+          id: 100,
+          name: 'John Boon',
+          role: 'admin'
+        },
+        {
+          email: 'mark@example.com',
+          id: 101,
+          name: 'Mark Boon',
+          role: 'lead_owner'
+        }
       ]
+
+      fields = [
+        { id: 300, name: 'First Name' },
+        { id: 301, name: 'Last Name' },
+        { id: 302, name: 'Website' }
+      ]
+
+      stages = [
+        {
+          id: 10,
+          name: 'Enrolling',
+          pipeline_id: 504
+        },
+        {
+          id: 14,
+          name: 'Signing',
+          pipeline_id: 504
+        },
+        {
+          id: 15,
+          name: 'Closing - Won',
+          pipeline_id: 504
+        }
+      ]
+
+      stage = stages[1]
+
+      lead = new Lead({
+        created_by_service_id: null,
+        created_by_user_id: 101,
+        email: 'lead@example.com',
+        fields: [
+          { id: 300, name: 'First Name', value: 'Mark' },
+          { id: 301, name: 'Last Name', value: 'Williams' },
+          { id: 302, name: 'Website', value: 'williams.com' }
+        ],
+        id: 1,
+        owner: {
+          email: 'john@example.com',
+          id: 100,
+          name: 'John Boon',
+          role: 'admin'
+        },
+        phone_number: '+999100200300',
+        stage_id: stage.id
+      })
+
+      const salesServiceStub = {
+        fields: () => Observable.of(fields),
+        lead: (id: number) => Observable.of(lead),
+        stage: (id: number) => Observable.of(stage),
+        stages: (pipeline_id: number) => Observable.of(stages),
+        updateLead: (id: number, data: Crm.API.ILeadUpdate) => {
+          leadUpdate = data
+          return Observable.of({
+            ...lead,
+            ...leadUpdate,
+            owner: leadUpdate.owner_id
+              ? users.find((user) => user.id === leadUpdate.owner_id)
+              : null
+          })
+        }
+      }
+
+      const currentUserServiceStub = {
+        details: Observable.of(users[0]),
+        role: () => userRole
+      }
+
+      const usersServiceStub = {
+        users: () => Observable.of(users)
+      }
+
+      const navParamsStub = {
+        get: (prop: string) => lead.id
+      }
+
+      navControllerStub = new NavControllerStub()
+
+      spyOn(navControllerStub, 'setRoot').and.callThrough()
+
+      fixture = initComponent(LeadPage, {
+        imports: [LeadPageModule, HttpClientTestingModule],
+        providers: [
+          NavService,
+          { provide: NavParams, useValue: navParamsStub },
+          { provide: NavController, useValue: navControllerStub },
+          { provide: SalesService, useValue: salesServiceStub },
+          { provide: CurrentUserService, useValue: currentUserServiceStub },
+          { provide: UsersService, useValue: usersServiceStub }
+        ]
+      })
+
+      page = new LeadPageObject(fixture)
+
+      fixture.detectChanges()
     })
-
-    page = new LeadPageObject(fixture)
-
-    fixture.detectChanges()
-  }))
+  )
 
   it('returns to the CRM page after clicking back', () => {
     page.clickBackButton()

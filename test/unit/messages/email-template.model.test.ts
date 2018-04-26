@@ -59,4 +59,26 @@ describe('EmailTemplate', () => {
       )
     })
   })
+
+  describe('sender', () => {
+    it('returns name and email', () => {
+      const template = sampleEmailTemplate({
+        default_sender: 'john@example.com',
+        default_sender_name: 'John Boon'
+      })
+
+      expect(template.sender).toEqual('John Boon <john@example.com>')
+    })
+
+    describe('when name is missing', () => {
+      it('returns email', () => {
+        const template = sampleEmailTemplate({
+          default_sender: 'john@example.com',
+          default_sender_name: null
+        })
+
+        expect(template.sender).toEqual('john@example.com')
+      })
+    })
+  })
 })

@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core'
 import { IonicModule } from 'ionic-angular'
 
+import { IntegrationsService } from './settings/integrations.service'
 import { SettingsPageWithMenuComponent } from './settings/settings-page-with-menu.component'
 
 @NgModule({
@@ -8,6 +9,6 @@ import { SettingsPageWithMenuComponent } from './settings/settings-page-with-men
   entryComponents: [],
   exports: [SettingsPageWithMenuComponent],
   imports: [IonicModule],
-  providers: []
+  providers: [IntegrationsService]
 })
 export class SettingsModule {}

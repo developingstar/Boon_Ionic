@@ -83,8 +83,30 @@ export class PageObject<T> {
     input.dispatchEvent(new Event('input'))
   }
 
+  setInputByName(name: string, value: string): void {
+    const element = this.findByCss<HTMLInputElement>(`input[name="${name}"]`)!
+    this.setInput(element, value)
+  }
+
   setSelect(select: HTMLSelectElement, value: string): void {
     select.value = value
     select.dispatchEvent(new Event('change'))
+  }
+
+  setSelectByName(name: string, value: string): void {
+    const element = this.findByCss<HTMLSelectElement>(`select[name="${name}"]`)!
+    this.setSelect(element, value)
+  }
+
+  setTextarea(input: HTMLTextAreaElement, value: string): void {
+    input.value = value
+    input.dispatchEvent(new Event('input'))
+  }
+
+  setTextareaByName(name: string, value: string): void {
+    const element = this.findByCss<HTMLTextAreaElement>(
+      `textarea[name="${name}"]`
+    )!
+    this.setTextarea(element, value)
   }
 }

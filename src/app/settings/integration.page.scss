@@ -1,17 +1,15 @@
 @import 'theme/shared-classes';
 
 integration-page {
-
   .integration-header {
     @include settings-page-header;
   }
 
-  form {   
-     
+  form {
     ion-input input.text-input {
       @extend .boon-input;
     }
-    
+
     .label {
       @extend .boon-uppercase-label;
     }

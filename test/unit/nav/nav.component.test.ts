@@ -16,27 +16,29 @@ describe('NavComponent and NavContentComponent', () => {
   let page: TestHostPageObject
   const user: BehaviorSubject<User | undefined> = new BehaviorSubject(undefined)
 
-  beforeEach(async(() => {
-    user.next(undefined)
+  beforeEach(
+    async(() => {
+      user.next(undefined)
 
-    const currentUserServiceStub = {
-      details: user
-    }
+      const currentUserServiceStub = {
+        details: user
+      }
 
-    fixture = initComponent(TestHostComponent, {
-      declarations: [TestHostComponent],
-      imports: [HttpClientTestingModule, NavModule],
-      providers: [
-        { provide: CurrentUserService, useValue: currentUserServiceStub },
-        NavService
-      ]
+      fixture = initComponent(TestHostComponent, {
+        declarations: [TestHostComponent],
+        imports: [HttpClientTestingModule, NavModule],
+        providers: [
+          { provide: CurrentUserService, useValue: currentUserServiceStub },
+          NavService
+        ]
+      })
+
+      navService = fixture.debugElement.injector.get(NavService)
+      page = new TestHostPageObject(fixture)
+
+      fixture.detectChanges()
     })
-
-    navService = fixture.debugElement.injector.get(NavService)
-    page = new TestHostPageObject(fixture)
-
-    fixture.detectChanges()
-  }))
+  )
 
   it('renders the center content in the nav', () => {
     fixture.detectChanges()

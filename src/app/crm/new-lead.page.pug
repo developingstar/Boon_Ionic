@@ -1,20 +1,21 @@
-h2.header New Contact
+h2 New Contact
 
-
-.form([formGroup]="newLeadForm")
+.form(*ngIf="formGroup | async; let form", [formGroup]="form")
   .base-fields
-    field(type="input", [form]="newLeadForm", formField="email", label="Email")
-    field(type="input", [form]="newLeadForm", formField="phone_number", label="Phone Number")
-    field(type="select", [form]="newLeadForm", formField="owner_id", label="Owner", [options]="owners | async")
-    field(type="select", [form]="newLeadForm", formField="pipeline_id", label="Pipeline", [options]="pipelines | async", (change)="setStages(newLeadForm.value.pipeline_id)")
-    field(type="select", [form]="newLeadForm", formField="stage_id", label="Stage", [options]="stages | async")
+    field(type="input", [form]="form", formField="email", label="Email")
+    field(type="input", [form]="form", formField="phone_number", label="Phone Number")
+    field(type="select", [form]="form", formField="owner_id", label="Owner", [options]="owners | async")
+
   hr
-  .custom-fields
-    field(*ngFor="let field of (fields | async)",
-      type="input",
-      [form]="newLeadForm",
-      [formField]="field.id",
-      [label]="field.name")
+
+  ion-scroll(scrollY="true", zoom="false")
+    .custom-fields
+      field(*ngFor="let field of (fields | async)",
+            type="input",
+            [form]="form",
+            [formField]="field.id",
+            [label]="field.name")
+
   .buttons
-    button(ion-button, (click)="create(newLeadForm.value)", [disabled]="!newLeadForm.valid") Create
+    button(ion-button, (click)="create(form.value)", [disabled]="!form.valid") Create
     button.cancel(ion-button, outline, (click)="cancel()") Cancel

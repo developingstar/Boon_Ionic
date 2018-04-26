@@ -12,93 +12,104 @@ describe('IntegrationsService', () => {
   let httpMock: HttpTestingController
   let integrationService: IntegrationsService
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      providers: [IntegrationsService]
-    })
+  beforeEach(
+    async(() => {
+      TestBed.configureTestingModule({
+        imports: [HttpClientTestingModule],
+        providers: [IntegrationsService]
+      })
 
-    httpMock = TestBed.get(HttpTestingController)
-    integrationService = TestBed.get(IntegrationsService)
-  }))
+      httpMock = TestBed.get(HttpTestingController)
+      integrationService = TestBed.get(IntegrationsService)
+    })
+  )
 
   describe('services', () => {
-    it('returns an array', async(() => {
-      const twilioService = sampleService()
+    it(
+      'returns an array',
+      async(() => {
+        const twilioService = sampleService()
 
-      const sendgridService = sampleService({
-        id: 2,
-        name: 'Sendgrid',
-        token: 'token'
-      })
-
-      integrationService
-        .services()
-        .subscribe((result: ReadonlyArray<Service>) => {
-          expect(result).toEqual([twilioService, sendgridService])
+        const sendgridService = sampleService({
+          id: 2,
+          name: 'Sendgrid',
+          token: 'token'
         })
 
-      const req = httpMock.expectOne('/api/services')
-      expect(req.request.method).toBe('GET')
+        integrationService
+          .services()
+          .subscribe((result: ReadonlyArray<Service>) => {
+            expect(result).toEqual([twilioService, sendgridService])
+          })
 
-      req.flush({
-        data: {
-          services: [
-            JSON.parse(JSON.stringify(twilioService)),
-            JSON.parse(JSON.stringify(sendgridService))
-          ]
-        }
+        const req = httpMock.expectOne('/api/services')
+        expect(req.request.method).toBe('GET')
+
+        req.flush({
+          data: {
+            services: [
+              JSON.parse(JSON.stringify(twilioService)),
+              JSON.parse(JSON.stringify(sendgridService))
+            ]
+          }
+        })
+
+        httpMock.verify()
       })
-
-      httpMock.verify()
-    }))
+    )
   })
 
   describe('service', () => {
-    it('returns a service', async(() => {
-      const twilioService = sampleService()
+    it(
+      'returns a service',
+      async(() => {
+        const twilioService = sampleService()
 
-      integrationService.service(1).subscribe((service) => {
-        expect(service.id).toEqual(1)
-        expect(service.name).toEqual('Twilio')
-        expect(service.token).toEqual('secret:token')
-      })
-
-      const req = httpMock.expectOne('/api/services/1')
-      expect(req.request.method).toBe('GET')
-
-      req.flush({
-        data: {
-          service: twilioService
-        }
-      })
-
-      httpMock.verify()
-    }))
-  })
-
-  describe('updateService', () => {
-    it('returns the updated service', async(() => {
-      const twilioService = sampleService()
-
-      integrationService
-        .updateService(1, twilioService)
-        .subscribe((service) => {
+        integrationService.service(1).subscribe((service) => {
           expect(service.id).toEqual(1)
           expect(service.name).toEqual('Twilio')
           expect(service.token).toEqual('secret:token')
         })
 
-      const req = httpMock.expectOne('/api/services/1')
-      expect(req.request.method).toBe('PATCH')
+        const req = httpMock.expectOne('/api/services/1')
+        expect(req.request.method).toBe('GET')
 
-      req.flush({
-        data: {
-          service: twilioService
-        }
+        req.flush({
+          data: {
+            service: twilioService
+          }
+        })
+
+        httpMock.verify()
       })
+    )
+  })
 
-      httpMock.verify()
-    }))
+  describe('updateService', () => {
+    it(
+      'returns the updated service',
+      async(() => {
+        const twilioService = sampleService()
+
+        integrationService
+          .updateService(1, twilioService)
+          .subscribe((service) => {
+            expect(service.id).toEqual(1)
+            expect(service.name).toEqual('Twilio')
+            expect(service.token).toEqual('secret:token')
+          })
+
+        const req = httpMock.expectOne('/api/services/1')
+        expect(req.request.method).toBe('PATCH')
+
+        req.flush({
+          data: {
+            service: twilioService
+          }
+        })
+
+        httpMock.verify()
+      })
+    )
   })
 })

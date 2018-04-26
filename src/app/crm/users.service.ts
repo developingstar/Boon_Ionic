@@ -6,13 +6,17 @@ import { User } from '../auth/user.model'
 
 @Injectable()
 export class UsersService {
-  constructor(private http: HttpClient) {}
+  constructor(private readonly http: HttpClient) {}
 
-  public users(): Observable<Array<User>> {
+  public users(): Observable<ReadonlyArray<User>> {
     return this.http
       .get('/api/users')
-      .map((response: { data: { users: Array<Auth.API.IUser> } }) =>
-        response.data.users.map((user) => new User(user))
+      .map(
+        (response: {
+          readonly data: {
+            readonly users: ReadonlyArray<Auth.API.IUser>
+          }
+        }) => response.data.users.map((user) => new User(user))
       )
   }
 

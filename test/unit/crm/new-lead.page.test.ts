@@ -8,11 +8,11 @@ import { NewLeadPageObject } from './new-lead.page.po'
 
 import { CurrentUserService } from '../../../src/app/auth/current-user.service'
 import { User } from '../../../src/app/auth/user.model'
-import { UserService } from '../../../src/app/auth/user.service'
 import { FieldDefinition } from '../../../src/app/crm/field-definition.model'
 import { NewLeadPage } from '../../../src/app/crm/new-lead.page'
 import { NewLeadPageModule } from '../../../src/app/crm/new-lead.page.module'
 import { SalesService } from '../../../src/app/crm/sales.service'
+import { UsersService } from '../../../src/app/crm/users.service'
 
 describe('NewLeadPage', () => {
   const stageId = 5
@@ -26,75 +26,77 @@ describe('NewLeadPage', () => {
   let salesServiceStub: any
   let viewControllerStub: any
 
-  beforeEach(async(() => {
-    users = [
-      {
-        email: 'john@example.com',
-        id: 100,
-        name: 'John Boon',
-        role: 'admin'
-      },
-      {
-        email: 'mark@example.com',
-        id: 101,
-        name: 'Mark Boon',
-        role: 'lead_owner'
-      }
-    ]
-
-    currentUser = new BehaviorSubject<User | undefined>(users[0])
-
-    fields = [
-      { id: 300, name: 'First Name' },
-      { id: 301, name: 'Last Name' },
-      { id: 302, name: 'Website' }
-    ]
-
-    salesServiceStub = {
-      createLead: (data: Crm.API.ILeadCreate) => {
-        leadCreate = data
-        return Observable.of({})
-      },
-      fields: () => Observable.of(fields)
-    }
-
-    spyOn(salesServiceStub, 'createLead').and.callThrough()
-
-    const currentUserServiceStub = {
-      details: currentUser
-    }
-
-    const userServiceStub = {
-      users: () => Observable.of(users)
-    }
-
-    viewControllerStub = {
-      dismiss: () => {
-        return
-      }
-    }
-
-    spyOn(viewControllerStub, 'dismiss').and.callThrough()
-
-    const navParamsStub = {
-      get: (param: string) => (param === 'stageId' ? stageId : undefined)
-    }
-
-    fixture = initComponent(NewLeadPage, {
-      imports: [NewLeadPageModule, HttpClientTestingModule],
-      providers: [
-        { provide: CurrentUserService, useValue: currentUserServiceStub },
-        { provide: SalesService, useValue: salesServiceStub },
-        { provide: UserService, useValue: userServiceStub },
-        { provide: ViewController, useValue: viewControllerStub },
-        { provide: NavParams, useValue: navParamsStub }
+  beforeEach(
+    async(() => {
+      users = [
+        {
+          email: 'john@example.com',
+          id: 100,
+          name: 'John Boon',
+          role: 'admin'
+        },
+        {
+          email: 'mark@example.com',
+          id: 101,
+          name: 'Mark Boon',
+          role: 'lead_owner'
+        }
       ]
+
+      currentUser = new BehaviorSubject<User | undefined>(users[0])
+
+      fields = [
+        { id: 300, name: 'First Name' },
+        { id: 301, name: 'Last Name' },
+        { id: 302, name: 'Website' }
+      ]
+
+      salesServiceStub = {
+        createLead: (data: Crm.API.ILeadCreate) => {
+          leadCreate = data
+          return Observable.of({})
+        },
+        fields: () => Observable.of(fields)
+      }
+
+      spyOn(salesServiceStub, 'createLead').and.callThrough()
+
+      const currentUserServiceStub = {
+        details: currentUser
+      }
+
+      const usersServiceStub = {
+        users: () => Observable.of(users)
+      }
+
+      viewControllerStub = {
+        dismiss: () => {
+          return
+        }
+      }
+
+      spyOn(viewControllerStub, 'dismiss').and.callThrough()
+
+      const navParamsStub = {
+        get: (param: string) => (param === 'stageId' ? stageId : undefined)
+      }
+
+      fixture = initComponent(NewLeadPage, {
+        imports: [NewLeadPageModule, HttpClientTestingModule],
+        providers: [
+          { provide: CurrentUserService, useValue: currentUserServiceStub },
+          { provide: SalesService, useValue: salesServiceStub },
+          { provide: UsersService, useValue: usersServiceStub },
+          { provide: ViewController, useValue: viewControllerStub },
+          { provide: NavParams, useValue: navParamsStub }
+        ]
+      })
+
+      page = new NewLeadPageObject(fixture)
+
+      fixture.detectChanges()
     })
-
-    page = new NewLeadPageObject(fixture)
-
-    fixture.detectChanges()
-  }))
+  )
 
   it('contains inputs for base fields', () => {
     expect(page.baseFieldLabels).toEqual(['Email', 'Phone Number', 'Owner'])

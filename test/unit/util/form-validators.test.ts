@@ -2,6 +2,7 @@ import { FormControl } from '@angular/forms'
 
 import {
   emailValidator,
+  numberValidator,
   phoneNumberValidator
 } from '../../../src/app/utils/form-validators'
 
@@ -16,6 +17,15 @@ describe('form validators', () => {
     it('requires the @ symbol', () => {
       expect(validate(emailValidator, 'a')).toBe(false)
       expect(validate(emailValidator, '@')).toBe(true)
+    })
+  })
+
+  describe('numberValidator', () => {
+    it('allows only numbers', () => {
+      expect(validate(numberValidator, '1234')).toBe(true)
+      expect(validate(numberValidator, '+1234')).toBe(false)
+      expect(validate(numberValidator, '1234+')).toBe(false)
+      expect(validate(numberValidator, '1 234')).toBe(false)
     })
   })
 

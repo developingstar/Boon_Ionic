@@ -31,8 +31,8 @@ declare namespace Crm {
     }
 
     interface IFieldDefinition {
-      id: number
-      name: string
+      readonly id: number
+      readonly name: string
     }
 
     interface IFieldDefinitionCreate {
@@ -71,12 +71,11 @@ declare namespace Crm {
     }
 
     interface ILeadCreate {
-      email?: string
-      phone_number?: string
-      stage_id?: number
-      owner_id?: number | null
-      pipeline_id?: number | null
-      fields?: Array<ILeadFieldUpdate>
+      readonly email?: string
+      readonly phone_number?: string
+      readonly stage_id?: number
+      readonly owner_id?: number | null
+      readonly fields?: ReadonlyArray<ILeadFieldUpdate>
     }
 
     type ILeadUpdate = ILeadCreate

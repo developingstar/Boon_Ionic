@@ -20,6 +20,8 @@ settings-page-with-menu {
       margin-bottom: 15px;
       cursor: pointer;
 
+      text-transform: capitalize;
+
       &.active {
         color: $color-primary;
       }
@@ -49,7 +51,5 @@ settings-page-with-menu {
     max-width: 760px;
     padding-left: 30px;
     padding-top: 10px;
-    height: calc(100vh - 80px);
-    overflow-y: auto;
   }
 }

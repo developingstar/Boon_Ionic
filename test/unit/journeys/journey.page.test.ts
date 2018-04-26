@@ -20,6 +20,7 @@ import { JourneyPage } from '../../../src/app/journeys/journey.page'
 import { JourneysService } from '../../../src/app/journeys/journeys.service'
 import { MessagesService } from '../../../src/app/messages/messages.service'
 import { NavService } from '../../../src/app/nav/nav.service'
+import { toastWarningDefaults } from '../../../src/app/utils/toast'
 import {
   sampleEmailTemplate,
   sampleField,
@@ -401,7 +402,7 @@ describe('JourneyPage', () => {
       })
 
       it('allows opening a modal for editing an event', () => {
-        page.openEditEventModal(1)
+        page.openEditTriggerModal(1)
 
         expect(modalControllerStub.create).toHaveBeenCalledWith(
           'FieldUpdatedModalComponent',
@@ -414,7 +415,7 @@ describe('JourneyPage', () => {
       it('allows to delete a given trigger', () => {
         spyOn(journeysServiceStub, 'updateJourney').and.callThrough()
 
-        page.deleteEvent(1)
+        page.deleteTrigger(1)
 
         expect(journeysServiceStub.updateJourney).toHaveBeenCalledWith(1, {
           journey: {
@@ -452,7 +453,7 @@ describe('JourneyPage', () => {
       })
 
       it('allows opening a modal for editing an event', () => {
-        page.openEditEventModal(4)
+        page.openEditActionModal(1)
 
         expect(modalControllerStub.create).toHaveBeenCalledWith(
           'AssignLeadOwnerModalComponent',
@@ -465,7 +466,7 @@ describe('JourneyPage', () => {
       it('allows to delete a given action', () => {
         spyOn(journeysServiceStub, 'updateJourney').and.callThrough()
 
-        page.deleteEvent(4)
+        page.deleteAction(1)
 
         expect(journeysServiceStub.updateJourney).toHaveBeenCalledWith(1, {
           journey: {
@@ -489,9 +490,12 @@ describe('JourneyPage', () => {
           return Observable.throw(new HttpErrorResponse({ status: 422 }))
         })
 
-        page.deleteEvent(1)
+        page.deleteAction(1)
 
-        expect(toastControllerStub.create).toHaveBeenCalled()
+        expect(toastControllerStub.create).toHaveBeenCalledWith({
+          ...toastWarningDefaults,
+          message: 'Failed to update the journey.'
+        })
         expect(toastStub.present).toHaveBeenCalled()
       })
     })

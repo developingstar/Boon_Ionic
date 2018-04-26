@@ -23,31 +23,27 @@ export class JourneyPageObject extends PageObject<JourneyPage> {
   }
 
   contentTriggers(): HTMLElement[] {
-    return this.findAllByCss<HTMLElement>(
-      '.content .events-group event[type="trigger"]'
-    )
+    return this.findAllByCss<HTMLElement>('.definition-body .triggers event')
   }
 
   contentActions(): HTMLElement[] {
-    return this.findAllByCss<HTMLElement>(
-      '.content .events-group event[type="action"]'
-    )
+    return this.findAllByCss<HTMLElement>('.definition-body .actions event')
   }
 
-  openEditEventModal(position: number): void {
-    const box = this.findDebugByCss(
-      `.content .events-group event:nth-of-type(${position})`
-    )!
-
-    this.click(box)
+  openEditTriggerModal(position: number): void {
+    this.openEditEventModal('trigger', position)
   }
 
-  deleteEvent(position: number): void {
-    const element = this.findDebugByCss(
-      `.content .events-group event:nth-of-type(${position}) .trash-icon`
-    )!
+  openEditActionModal(position: number): void {
+    this.openEditEventModal('action', position)
+  }
 
-    this.click(element)
+  deleteTrigger(position: number): void {
+    this.deleteEvent('trigger', position)
+  }
+
+  deleteAction(position: number): void {
+    this.deleteEvent('action', position)
   }
 
   expectEventBoxInformation(
@@ -55,8 +51,8 @@ export class JourneyPageObject extends PageObject<JourneyPage> {
     description: string,
     details: string
   ): void {
-    expect(this.boxDescription(element).textContent).toEqual(description)
-    expect(this.boxDetails(element).textContent).toEqual(details)
+    expect(element.children.item(1).textContent).toEqual(description)
+    expect(element.children.item(3).textContent).toEqual(details)
   }
 
   private openNewEventModal(
@@ -70,11 +66,22 @@ export class JourneyPageObject extends PageObject<JourneyPage> {
     this.click(box)
   }
 
-  private boxDescription(element: HTMLElement): Element {
-    return element.children.item(1)
+  private openEditEventModal(
+    type: 'action' | 'trigger',
+    position: number
+  ): void {
+    const box = this.findDebugByCss(
+      `.definition-body .${type}s event:nth-of-type(${position})`
+    )!
+
+    this.click(box)
   }
 
-  private boxDetails(element: HTMLElement): Element {
-    return element.children.item(3)
+  private deleteEvent(type: 'action' | 'trigger', position: number): void {
+    const element = this.findDebugByCss(
+      `.definition-body .${type}s event:nth-of-type(${position}) .trash-icon`
+    )!
+
+    this.click(element)
   }
 }

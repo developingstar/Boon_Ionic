@@ -18,51 +18,54 @@ describe('IntegrationPage', () => {
   let page: IntegrationPageObject
   let services: Service[]
   let integrationsServiceStub: any
-  beforeEach(async(() => {
-    services = [
-      { id: 1, name: 'Twilio', token: 'token:secret' },
-      { id: 2, name: 'Sendgrid', token: 'token' }
-    ]
+  beforeEach(
+    async(() => {
+      services = [
+        { id: 1, name: 'Twilio', token: 'token:secret' },
+        { id: 2, name: 'Sendgrid', token: 'token' }
+      ]
 
-    integrationsServiceStub = {
-      service: (id: number) => {
-        const service = services.find((s) => s.id === id)
-        return Observable.of(service)
-      },
-      services: () => Observable.of(services),
-      updateService: (id: number, service: Service) => {
-        for (let i = 0; i < services.length; i++) {
-          const s = services[i]
-          if (s.id === id) {
-            services[i] = { ...s, token: service.token! }
-            return Observable.of(s)
+      integrationsServiceStub = {
+        service: (id: number) => {
+          const service = services.find((s) => s.id === id)
+          return Observable.of(service)
+        },
+        services: () => Observable.of(services),
+        updateService: (id: number, params: Service) => {
+          const service = services.find((s) => s.id === id)
+          if (service === undefined) {
+            return Observable.of(undefined)
+          } else {
+            return Observable.of({
+              ...service,
+              ...params
+            })
           }
         }
-        return Observable.of(undefined)
       }
-    }
 
-    spyOn(integrationsServiceStub, 'service').and.callThrough()
-    spyOn(integrationsServiceStub, 'updateService').and.callThrough()
+      spyOn(integrationsServiceStub, 'service').and.callThrough()
+      spyOn(integrationsServiceStub, 'updateService').and.callThrough()
 
-    const navParamsStub = {
-      get: (prop: string) => 1
-    }
+      const navParamsStub = {
+        get: (prop: string) => 1
+      }
 
-    fixture = initComponent(IntegrationPage, {
-      imports: [IntegrationPageModule, HttpClientTestingModule],
-      providers: [
-        NavService,
-        { provide: NavController, useValue: new NavControllerStub() },
-        { provide: NavParams, useValue: navParamsStub },
-        { provide: IntegrationsService, useValue: integrationsServiceStub }
-      ]
+      fixture = initComponent(IntegrationPage, {
+        imports: [IntegrationPageModule, HttpClientTestingModule],
+        providers: [
+          NavService,
+          { provide: NavController, useValue: new NavControllerStub() },
+          { provide: NavParams, useValue: navParamsStub },
+          { provide: IntegrationsService, useValue: integrationsServiceStub }
+        ]
+      })
+
+      page = new IntegrationPageObject(fixture)
+
+      fixture.detectChanges()
     })
-
-    page = new IntegrationPageObject(fixture)
-
-    fixture.detectChanges()
-  }))
+  )
 
   describe('show service', () => {
     it('shows a service token', () => {
