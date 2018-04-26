@@ -14,6 +14,10 @@ export class PipelinesPageObject extends PageObject<PipelinesPage> {
     this.clickButton('Add Pipeline')
   }
 
+  clickAddStageButton(): void {
+    this.clickButton('Add Stage')
+  }
+
   clickBack(): void {
     const link = this.findDebugByCss('a.back-link')
     expect(link).toBeTruthy()
@@ -22,6 +26,14 @@ export class PipelinesPageObject extends PageObject<PipelinesPage> {
 
   clickPipeline(name: string): void {
     const button = this.findAllDebugByCss('.button-with-arrow').find(
+      (b) => b.nativeElement.textContent === name
+    )
+    expect(button).toBeTruthy()
+    this.click(button!)
+  }
+
+  clickStage(name: string): void {
+    const button = this.findAllDebugByCss('.stage-name').find(
       (b) => b.nativeElement.textContent === name
     )
     expect(button).toBeTruthy()
@@ -39,6 +51,12 @@ export class PipelinesPageObject extends PageObject<PipelinesPage> {
 
   get pipelines(): ReadonlyArray<string> {
     return this.findAllByCss<HTMLSpanElement>('button.button-with-arrow').map(
+      (el) => el.textContent || ''
+    )
+  }
+
+  get stages(): ReadonlyArray<string> {
+    return this.findAllByCss<HTMLSpanElement>('button.stage-name').map(
       (el) => el.textContent || ''
     )
   }

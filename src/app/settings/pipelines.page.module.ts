@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core'
+import { SortablejsModule } from 'angular-sortablejs'
 import { IonicPageModule } from 'ionic-angular'
 import { InlineSVGModule } from 'ng-inline-svg'
 
@@ -14,7 +15,8 @@ import { PipelinesPage } from './pipelines.page'
     InlineSVGModule,
     IonicPageModule.forChild(PipelinesPage),
     NavModule,
-    SettingsModule
+    SettingsModule,
+    SortablejsModule
   ]
 })
 export class PipelinesPageModule {}

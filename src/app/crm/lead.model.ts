@@ -1,5 +1,5 @@
 import { User } from '../auth/user.model'
-import { ensureNonEmptyString, ensureNumber } from '../utils/validators'
+import { ensureNumber } from '../utils/validators'
 import { Field } from './field.model'
 
 export class Lead {
@@ -18,7 +18,7 @@ export class Lead {
     this.email = data.email
     this.fields = data.fields.map((raw: Crm.API.IField) => new Field(raw))
     this.id = ensureNumber(data.id)
-    this.phone_number = ensureNonEmptyString(data.phone_number)
+    this.phone_number = data.phone_number
     this.stage_id = ensureNumber(data.stage_id)
 
     if (data.owner) {

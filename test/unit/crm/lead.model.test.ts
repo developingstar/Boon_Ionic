@@ -13,15 +13,10 @@ describe('Lead', () => {
     })
 
     it('ensures phone number is a non-empty string', () => {
-      expect(() => sampleLead({ phone_number: null })).toThrow(
-        new Error('Expected null to be a non-empty string')
-      )
-      expect(() => sampleLead({ phone_number: '' })).toThrow(
-        new Error('Expected  to be a non-empty string')
-      )
-      expect(() => sampleLead({ phone_number: 1 })).toThrow(
-        new Error('Expected 1 to be a non-empty string')
-      )
+      const nullPhonelead = sampleLead({ phone_number: null })
+      const emptyPhoneLead = sampleLead({ phone_number: '' })
+      expect(nullPhonelead.phone_number).toBeNull()
+      expect(emptyPhoneLead.phone_number).toEqual('')
     })
 
     it('ensures stage_id is a number', () => {

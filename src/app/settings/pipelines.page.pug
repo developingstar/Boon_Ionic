@@ -33,8 +33,8 @@ settings-page-with-menu(currentPage="PipelinesPage")
         span.description Add stages to pipeline. Drag to change order.
       ion-col(col-auto)
         button(ion-button, (click)="addStage()") Add Stage
-    ion-row
+    ion-row.stages-content
       ion-col
-        ion-list
-          button(ion-item *ngFor="let stage of currentPipelineStages | async", (click)="editStage(stage)")
+        ion-list([sortablejs]="currentPipelineStages | async", [sortablejsOptions]="{ animation: 150 }")
+          button.stage-name(ion-item *ngFor="let stage of currentPipelineStages | async", (click)="editStage(stage)")
             | {{ stage.name }}

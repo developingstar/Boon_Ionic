@@ -21,7 +21,10 @@ export class NavIconsComponent {
     { icon: 'automation.svg', pages: ['JourneysPage', 'JourneyPage'] },
     { icon: 'text.svg', pages: ['TextTemplatesPage'] },
     { icon: 'email.svg', pages: ['EmailTemplatesPage'] },
-    { icon: 'settings.svg', pages: ['PipelinesPage', 'CustomFieldsPage'] }
+    {
+      icon: 'settings.svg',
+      pages: ['PipelinesPage', 'CustomFieldsPage', 'IntegrationPage']
+    }
   ]
 
   constructor(private readonly nav: NavController) {}
