@@ -3,6 +3,7 @@ import { Lead } from '../../src/app/crm/lead.model'
 import { Stage } from '../../src/app/crm/stage.model'
 import { Journey } from '../../src/app/journeys/journey.model'
 import * as JourneysAPI from '../../src/app/journeys/journeys.api.model'
+import { Group } from '../../src/app/settings/group.model'
 import { FieldDefinition } from './../../src/app/crm/field-definition.model'
 import { Field } from './../../src/app/crm/field.model'
 import { Pipeline } from './../../src/app/crm/pipeline.model'
@@ -13,6 +14,7 @@ import { Service } from './../../src/app/settings/service.model'
 
 export function sampleUser(values: { readonly [key: string]: any } = {}): User {
   return new User({
+    avatar_url: null,
     email: 'john@example.com',
     id: 1,
     name: 'John Boon',
@@ -198,6 +200,16 @@ export function sampleShortcode(
   return new Shortcode({
     name: 'First Name',
     shortcode: 'first_name',
+    ...values
+  })
+}
+
+export function sampleGroup(
+  values: { readonly [key: string]: any } = {}
+): Group {
+  return new Group({
+    id: 1,
+    name: 'Group Name',
     ...values
   })
 }

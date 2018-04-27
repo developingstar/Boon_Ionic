@@ -63,6 +63,7 @@ describe('NavComponent and NavContentComponent', () => {
   describe('when current user is set', () => {
     it('renders his name', () => {
       user.next({
+        avatar_url: null,
         email: 'john@example.com',
         id: 1,
         name: 'John',

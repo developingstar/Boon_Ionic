@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="28px" height="28px" viewBox="0 0 28 28" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <defs></defs>
+    <g id="svg-icon-settings-arrow" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Team-Settings---Sales-Groups" transform="translate(-598.000000, -209.000000)">
+            <g id="svg-icon-settings-arrow-path1" transform="translate(599.000000, 210.000000)">
+                <circle id="svg-icon-settings-arrow-circle" stroke="#D2D6E4" cx="13" cy="13" r="13"></circle>
+                <polygon id="svg-icon-settings-arrow-shape" fill="#AFB5C7" transform="translate(13.700000, 13.000000) rotate(-90.000000) translate(-13.700000, -13.000000) " points="18.3 9.3 13.7 13.9 9.1 9.3 7.7 10.7 13.7 16.7 19.7 10.7"></polygon>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -176,6 +176,7 @@ export class GroupsPage extends ReactivePage<State, UserAction> {
         .map<Group, State>((group) => state)
     } else if (action.name === 'add_user' && state.name === 'edit') {
       const user = state.users.find((u) => u.id === Number(action.user_id))
+
       if (user === undefined) {
         return Observable.of(state)
       } else {

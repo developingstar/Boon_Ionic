@@ -17,4 +17,4 @@ import { GroupsPage } from './groups.page'
     SettingsModule
   ]
 })
-export class PipelinesPageModule {}
+export class GroupsPageModule {}

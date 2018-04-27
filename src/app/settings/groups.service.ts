@@ -61,7 +61,7 @@ export class GroupsService {
           readonly data: {
             readonly users: ReadonlyArray<Auth.API.IUser>
           }
-        }) => response.data.users.map((user) => user)
+        }) => response.data.users.map((user) => new User(user))
       )
   }
 
