@@ -13,6 +13,7 @@ import { FieldDefinition } from '../../../src/app/crm/field-definition.model'
 import { Lead } from '../../../src/app/crm/lead.model'
 import { LeadPage } from '../../../src/app/crm/lead.page'
 import { LeadPageModule } from '../../../src/app/crm/lead.page.module'
+import { Note } from '../../../src/app/crm/note.model'
 import { SalesService } from '../../../src/app/crm/sales.service'
 import { Stage } from '../../../src/app/crm/stage.model'
 import { UsersService } from '../../../src/app/crm/users.service'
@@ -24,6 +25,7 @@ describe('LeadPage', () => {
   let fields: ReadonlyArray<FieldDefinition>
   let stage: Stage
   let stages: ReadonlyArray<Stage>
+  let notes: ReadonlyArray<Note>
   let lead: Lead
   let leadUpdate: Crm.API.ILeadUpdate
   let navControllerStub: any
@@ -34,14 +36,12 @@ describe('LeadPage', () => {
     async(() => {
       users = [
         {
-          avatar_url: null,
           email: 'john@example.com',
           id: 100,
           name: 'John Boon',
           role: 'admin'
         },
         {
-          avatar_url: null,
           email: 'mark@example.com',
           id: 101,
           name: 'Mark Boon',
@@ -73,6 +73,17 @@ describe('LeadPage', () => {
         }
       ]
 
+      notes = [
+        {
+          content: 'note1',
+          id: 1
+        },
+        {
+          content: 'note2',
+          id: 2
+        }
+      ]
+
       stage = stages[1]
 
       lead = new Lead({
@@ -86,7 +97,6 @@ describe('LeadPage', () => {
         ],
         id: 1,
         owner: {
-          avatar_url: null,
           email: 'john@example.com',
           id: 100,
           name: 'John Boon',
@@ -99,6 +109,7 @@ describe('LeadPage', () => {
       const salesServiceStub = {
         fields: () => Observable.of(fields),
         lead: (id: number) => Observable.of(lead),
+        notes: (lead_id: number) => Observable.of(notes),
         stage: (id: number) => Observable.of(stage),
         stages: (pipeline_id: number) => Observable.of(stages),
         updateLead: (id: number, data: Crm.API.ILeadUpdate) => {
@@ -187,6 +198,15 @@ describe('LeadPage', () => {
 
       fixture.detectChanges()
       expect(page.isEditMode).toBe(true)
+    })
+
+    it('shows the notes of lead', () => {
+      expect(page.notes).toEqual(['note1', 'note2'])
+    })
+
+    it('add the notes to lead', () => {
+      page.setNote('NewNote3')
+      fixture.detectChanges()
     })
   })
 
