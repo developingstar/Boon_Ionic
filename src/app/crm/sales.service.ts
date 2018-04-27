@@ -9,6 +9,7 @@ import {
 import { PaginatedCollection } from './../api/paginated-collection'
 import { FieldDefinition } from './field-definition.model'
 import { Lead } from './lead.model'
+import { Note } from './note.model'
 import { Pipeline } from './pipeline.model'
 import { Stage } from './stage.model'
 
@@ -213,6 +214,25 @@ export class SalesService {
           }
         }) => new Stage(response.data.stage)
       )
+  }
+
+  public notes(lead_id: number | null = null): Observable<ReadonlyArray<Note>> {
+    return this.http
+      .get(`/api/leads/${lead_id}/notes`)
+      .map((response: Crm.API.INotesResponse) =>
+        response.data.notes.map((item) => new Note(item))
+      )
+  }
+
+  public createNote(
+    lead_id: number,
+    noteData: Crm.API.INoteCreate
+  ): Observable<Note> {
+    return this.http
+      .post(`/api/leads/${lead_id}/notes`, JSON.stringify({ note: noteData }))
+      .map((response: { readonly data: { readonly note: Crm.API.INote } }) => {
+        return new Note(response.data.note)
+      })
   }
 
   private urlForStages(pipeline_id: number | null): string {
