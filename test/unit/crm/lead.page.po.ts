@@ -61,24 +61,6 @@ export class LeadPageObject extends PageObject<LeadPage> {
     return this.findAllPoByCss(FieldPageObject, '.custom-fields field')
   }
 
-  get notes(): ReadonlyArray<string> {
-    return this.findAllByCss<HTMLDivElement>('div.note-content').map(
-      (el) => el.textContent || ''
-    )
-  }
-
-  setNote(note: string): void {
-    const element = this.findByCss<HTMLInputElement>('ion-input input')
-    expect(element).toBeTruthy()
-    this.setInput(element!, note)
-  }
-
-  clickAddNote(): void {
-    const img = this.findDebugByCss('div.send-button img')
-    expect(img).toBeTruthy()
-    this.click(img!)
-  }
-
   clickBackButton(): void {
     this.click(this.findDebugByCss('#back-button')!)
   }

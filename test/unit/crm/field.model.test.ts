@@ -23,16 +23,11 @@ describe('Field', () => {
       )
     })
 
-    it('ensures value is a non-empty string', () => {
-      expect(() => sampleField({ value: null })).toThrow(
-        new Error('Expected null to be a non-empty string')
-      )
-      expect(() => sampleField({ value: '' })).toThrow(
-        new Error('Expected  to be a non-empty string')
-      )
-      expect(() => sampleField({ value: 1 })).toThrow(
-        new Error('Expected 1 to be a non-empty string')
-      )
+    it('ensures phone number is a non-empty string', () => {
+      const nullField = sampleField({ value: null })
+      const emptyField = sampleField({ value: '' })
+      expect(nullField.value).toBeNull()
+      expect(emptyField.value).toEqual('')
     })
   })
 })

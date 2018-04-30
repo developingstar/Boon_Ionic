@@ -14,7 +14,6 @@ import { toastWarningDefaults } from '../utils/toast'
 import { ISelectOption } from './field.component'
 import { Lead } from './lead.model'
 import { initialState, IPageData, State, UserAction } from './lead.page.state'
-import { Note } from './note.model'
 import { SalesService } from './sales.service'
 import { Stage } from './stage.model'
 import { UsersService } from './users.service'
@@ -32,10 +31,6 @@ export class LeadPage implements OnDestroy, OnInit {
   public readonly fields: Observable<ReadonlyArray<Crm.API.IFieldDefinition>>
   public readonly owners: Observable<ReadonlyArray<ISelectOption>>
   public readonly stages: Observable<ReadonlyArray<Stage>>
-  public notes: Observable<ReadonlyArray<Note>>
-  public selectedNavItem: string
-  public newNote: string
-  public leadId: number
 
   private readonly state: Observable<State>
   private readonly stateSubscription: Subscription
@@ -45,12 +40,13 @@ export class LeadPage implements OnDestroy, OnInit {
     private readonly navController: NavController,
     private readonly toastController: ToastController,
     private readonly formBuilder: FormBuilder,
-    public readonly salesService: SalesService,
+    salesService: SalesService,
     navParams: NavParams,
     currentUserService: CurrentUserService,
     usersService: UsersService
   ) {
     this.fields = salesService.fields()
+
     const getRole = currentUserService.role()
 
     this.owners = getRole
@@ -72,8 +68,6 @@ export class LeadPage implements OnDestroy, OnInit {
 
     const leadId: number = navParams.get('id')
     const getLead = salesService.lead(leadId)
-    this.notes = salesService.notes(leadId)
-    this.leadId = leadId
 
     this.stages = getLead
       .switchMap((lead) => {
@@ -89,11 +83,9 @@ export class LeadPage implements OnDestroy, OnInit {
       this.owners,
       getRole,
       this.stages,
-      this.notes,
-      (fields, lead, owners, role, stages, notes) => ({
+      (fields, lead, owners, role, stages) => ({
         fields: fields,
         lead: lead,
-        notes: notes,
         owners: owners,
         role: role,
         stages: stages
@@ -139,19 +131,6 @@ export class LeadPage implements OnDestroy, OnInit {
                 }
               })
           }
-        } else if (action.name === 'create_note') {
-          return salesService
-            .createNote(this.leadId, action.newNote)
-            .map<Note, State>((note) => {
-              const data = {
-                ...state.data,
-                notes: state.data.notes.concat(note)
-              }
-              return {
-                ...state,
-                data: data
-              }
-            })
         }
 
         return Observable.of(state)
@@ -176,7 +155,6 @@ export class LeadPage implements OnDestroy, OnInit {
 
   ngOnInit(): void {
     this.uiActions.next('init')
-    this.selectedNavItem = 'notes'
   }
 
   ngOnDestroy(): void {
@@ -207,16 +185,6 @@ export class LeadPage implements OnDestroy, OnInit {
     return this.state.map((state) => state.mode === 'edit')
   }
 
-  get notesList(): Observable<ReadonlyArray<Note>> {
-    return this.state.map((state) => {
-      if (state.mode === 'show' || state.mode === 'edit') {
-        return state.data.notes
-      } else {
-        return []
-      }
-    })
-  }
-
   public goBack(): void {
     this.navController.setRoot('CrmPage')
   }
@@ -232,24 +200,6 @@ export class LeadPage implements OnDestroy, OnInit {
 
   public cancel(): void {
     this.uiActions.next('show')
-  }
-
-  public setNavItem(item: string): void {
-    this.selectedNavItem = item
-  }
-
-  public addNote(): void {
-    if (this.newNote.replace(/ /g, '') !== '') {
-      this.uiActions.next({
-        name: 'create_note',
-        newNote: { content: this.newNote }
-      })
-      this.newNote = ''
-    }
-  }
-
-  public isNoteEmpty(): boolean {
-    return this.newNote.replace(/ /g, '') === '' ? true : false
   }
 
   private buildForm(pageData: IPageData, editMode: boolean): FormGroup {

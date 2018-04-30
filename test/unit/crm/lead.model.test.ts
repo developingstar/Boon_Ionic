@@ -28,11 +28,6 @@ describe('Lead', () => {
       )
     })
 
-    it('ensures valid fields', () => {
-      expect(() =>
-        sampleLead({ fields: [{ id: 1, name: 'First Name' }] })
-      ).toThrow(new Error('Expected undefined to be a non-empty string'))
-    })
   })
 
   describe('name', () => {

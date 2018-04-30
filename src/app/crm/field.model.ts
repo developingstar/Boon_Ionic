@@ -8,6 +8,6 @@ export class Field {
   constructor(data: Crm.API.IField) {
     this.id = ensureNumber(data.id)
     this.name = ensureNonEmptyString(data.name)
-    this.value = ensureNonEmptyString(data.value)
+    this.value = data.value
   }
 }

@@ -102,20 +102,5 @@ declare namespace Crm {
     interface IStageUpdate {
       readonly name?: string
     }
-
-    interface INotesResponse {
-      readonly data: {
-        readonly notes: ReadonlyArray<INote>
-      }
-    }
-
-    interface INote {
-      readonly id: number
-      readonly content: string
-    }
-
-    interface INoteCreate {
-      readonly content?: string
-    }
   }
 }
