@@ -25,7 +25,7 @@ describe('LeadPage', () => {
   let fields: ReadonlyArray<FieldDefinition>
   let stage: Stage
   let stages: ReadonlyArray<Stage>
-  let notes: ReadonlyArray<Note>
+  let notes: Note[]
   let lead: Lead
   let leadUpdate: Crm.API.ILeadUpdate
   let navControllerStub: any
@@ -107,6 +107,13 @@ describe('LeadPage', () => {
       })
 
       const salesServiceStub = {
+        createNote: (lead_id: number, noteData: Crm.API.INoteCreate) => {
+          const newNote = new Note({
+            content: noteData.content,
+            id: 3
+          })
+          return Observable.of(newNote)
+        },
         fields: () => Observable.of(fields),
         lead: (id: number) => Observable.of(lead),
         notes: (lead_id: number) => Observable.of(notes),
@@ -206,7 +213,9 @@ describe('LeadPage', () => {
 
     it('add the notes to lead', () => {
       page.setNote('NewNote3')
+      page.clickAddNote()
       fixture.detectChanges()
+      // expect(page.notes).toEqual(['note1', 'note2', 'NewNote3'])
     })
   })
 
