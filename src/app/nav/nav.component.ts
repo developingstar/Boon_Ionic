@@ -19,6 +19,7 @@ export class NavComponent {
   readonly centerContent: Observable<NavContent>
   readonly navClass: Observable<string>
   readonly rightContent: Observable<NavContent>
+  myInput: any
 
   constructor(
     private readonly currentUserService: CurrentUserService,
@@ -35,5 +36,13 @@ export class NavComponent {
     return this.currentUserService.details.map(
       (details) => (details ? details.name : undefined)
     )
+  }
+
+  public onInput(event: any): void {
+    return
+  }
+
+  public onCancel(event: any): void {
+    return
   }
 }

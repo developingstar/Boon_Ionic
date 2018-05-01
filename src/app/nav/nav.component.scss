@@ -76,7 +76,7 @@ nav {
 
       .nav-center {
         @include nav-center($nav-height-mobile, 0px);
-
+        display: flex;
         border-right: none;
       }
 
@@ -98,6 +98,24 @@ nav {
 
       .nav-right {
         @include nav-right($nav-height-large);
+      }
+    }
+
+    .search-bar {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      padding-left: 30px;
+
+      .search-logo {
+        width: 30px;
+        height: 30px;
+        opacity: .2;
+      }
+
+      .search-content {
+        font-size: 16px;
+        margin-left: 20px;
       }
     }
   }
