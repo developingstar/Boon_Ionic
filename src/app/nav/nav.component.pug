@@ -3,8 +3,7 @@
   .nav-logo([inlineSVG]="'assets/icon/boon.svg'")
   .nav-center
     div.search-bar
-      img.search-logo(src='../../assets/icon/nav/search.png')
-      ion-input.search-content(name="name", type="text", placeholder="Search all contacts")
+      ion-auto-complete
   .nav-right
     div([cdkPortalOutlet]="rightContent | async")
     span.username(*ngIf="username | async") Hello, {{username | async}}

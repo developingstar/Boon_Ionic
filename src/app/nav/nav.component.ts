@@ -3,7 +3,6 @@ import { Observable } from 'rxjs'
 
 import { CurrentUserService } from './../auth/current-user.service'
 import { NavContent, NavService } from './nav.service'
-
 // Main navigation bar.
 //
 // Displays a responsive navigation bar at the top of the application. The navbar contains the
