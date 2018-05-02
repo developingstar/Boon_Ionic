@@ -11,8 +11,8 @@ export class LeadFilterService implements AutoCompleteService {
 
   }
 
-  public getResults(keyword: string): Observable<any[]> {
-    return this.http.get('/api/leads') // TODO: Update API Endpoint
+  public getResults(query: string): Observable<any[]> {
+    return this.http.get('/api/leads?query=' + query) // TODO: Update API Endpoint
       .map((response: Crm.API.ILeadsResponse) => {
         const json = response.data
         if (json) {
@@ -21,7 +21,7 @@ export class LeadFilterService implements AutoCompleteService {
             filteredLead.name = lead.owner && lead.owner.name ? lead.owner.name : ''
             return filteredLead
           })
-          return results.filter((lead) => lead.name !== '') // TODO: Update if API endpoint is correct
+          return results.filter((lead) => lead.name !== '' && lead.name.indexOf(query) !== -1) // TODO: Update if API endpoint is correct
         } else {
           Observable.throw({ message: 'Internal Server Error' })
           return []
