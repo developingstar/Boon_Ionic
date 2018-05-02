@@ -102,21 +102,17 @@ nav {
     }
 
     .search-bar {
+      position: relative;
       display: flex;
       align-items: center;
       width: 100%;
       padding-left: 30px;
       padding-right: 30px;
 
-      .search-logo {
-        width: 30px;
-        height: 30px;
-        opacity: .2;
-      }
-
-      .search-content {
-        font-size: 16px;
-        margin-left: 20px;
+      ul {
+        left: 30px;
+        right: 30px;
+        width: auto;
       }
     }
   }
