@@ -1,5 +1,5 @@
 import { Component } from '@angular/core'
-import { NavController } from 'ionic-angular'
+import { App } from 'ionic-angular'
 import { Observable } from 'rxjs'
 
 import { CurrentUserService } from './../auth/current-user.service'
@@ -20,11 +20,10 @@ export class NavComponent {
   readonly centerContent: Observable<NavContent>
   readonly navClass: Observable<string>
   readonly rightContent: Observable<NavContent>
-
   constructor(
+    protected app: App,
     private readonly currentUserService: CurrentUserService,
     public readonly filterService: LeadFilterService,
-    private readonly navController: NavController,
     navService: NavService
   ) {
     this.centerContent = navService.contentUpdated.map((portals) => portals[0])
@@ -49,6 +48,7 @@ export class NavComponent {
   }
 
   public itemSelected(event: any): void {
-    this.navController.setRoot('LeadPage', { id: event.id })
+    const nav = this.app.getRootNav()
+    nav.setRoot('LeadPage', { id: event.id })
   }
 }
