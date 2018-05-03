@@ -16,33 +16,31 @@ describe('NavComponent and NavContentComponent', () => {
   let page: TestHostPageObject
   const user: BehaviorSubject<User | undefined> = new BehaviorSubject(undefined)
 
-  beforeEach(
-    async(() => {
-      user.next(undefined)
+  beforeEach(async(() => {
+    user.next(undefined)
 
-      const currentUserServiceStub = {
-        details: user
-      }
+    const currentUserServiceStub = {
+      details: user
+    }
 
-      fixture = initComponent(TestHostComponent, {
-        declarations: [TestHostComponent],
-        imports: [HttpClientTestingModule, NavModule],
-        providers: [
-          { provide: CurrentUserService, useValue: currentUserServiceStub },
-          NavService
-        ]
-      })
-
-      navService = fixture.debugElement.injector.get(NavService)
-      page = new TestHostPageObject(fixture)
-
-      fixture.detectChanges()
+    fixture = initComponent(TestHostComponent, {
+      declarations: [TestHostComponent],
+      imports: [HttpClientTestingModule, NavModule],
+      providers: [
+        { provide: CurrentUserService, useValue: currentUserServiceStub },
+        NavService
+      ]
     })
-  )
 
-  it('renders the center content in the nav', () => {
+    navService = fixture.debugElement.injector.get(NavService)
+    page = new TestHostPageObject(fixture)
+
     fixture.detectChanges()
-    expect(page.getNavContent('center')).toBe('center content')
+  }))
+
+  it('renders auto-complete component in the nav', () => {
+    fixture.detectChanges()
+    expect(page.autoCompleteComponentVisible()).toBe(true)
   })
 
   it('renders the right content in the nav', () => {
@@ -62,13 +60,15 @@ describe('NavComponent and NavContentComponent', () => {
 
   describe('when current user is set', () => {
     it('renders his name', () => {
-      user.next({
-        avatar_url: null,
-        email: 'john@example.com',
-        id: 1,
-        name: 'John',
-        role: 'admin'
-      })
+      user.next(
+        new User({
+          avatar_url: null,
+          email: 'john@example.com',
+          id: 1,
+          name: 'John',
+          role: 'admin'
+        })
+      )
 
       fixture.detectChanges()
 
