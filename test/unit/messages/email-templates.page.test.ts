@@ -22,16 +22,18 @@ describe('EmailTemplatesPage', () => {
   let navControllerStub: NavControllerStub
   let messagesServiceStub: MessagesService
 
-  beforeEach(
-    async(() => {
-      collection = [
+  beforeEach(async(() => {
+    collection = [
+      new EmailTemplate(
         sampleEmailTemplate({
           default_sender: 'john@example.com',
           default_sender_name: 'John Boon',
           id: 1,
           name: 'Introduction',
           subject: 'Welcome in Boon'
-        }),
+        })
+      ),
+      new EmailTemplate(
         sampleEmailTemplate({
           default_sender: 'susan@example.com',
           default_sender_name: null,
@@ -39,41 +41,41 @@ describe('EmailTemplatesPage', () => {
           name: 'Follow up',
           subject: 'Hello from Boon'
         })
-      ]
-
-      const httpClient = new HttpClient(
-        new class extends HttpHandler {
-          handle(req: any): Observable<any> {
-            return Observable.never()
-          }
-        }()
       )
+    ]
 
-      messagesServiceStub = new MessagesService(httpClient)
-      messagesServiceStub.emailTemplates = () => Observable.of(collection)
+    const httpClient = new HttpClient(
+      new class extends HttpHandler {
+        handle(req: any): Observable<any> {
+          return Observable.never()
+        }
+      }()
+    )
 
-      spyOn(messagesServiceStub, 'emailTemplates').and.callThrough()
+    messagesServiceStub = new MessagesService(httpClient)
+    messagesServiceStub.emailTemplates = () => Observable.of(collection)
 
-      navControllerStub = new NavControllerStub({ name: 'EmailTemplatesPage' })
-      spyOn(navControllerStub, 'setRoot').and.callThrough()
+    spyOn(messagesServiceStub, 'emailTemplates').and.callThrough()
 
-      fixture = initComponent(EmailTemplatesPage, {
-        imports: [EmailTemplatesPageModule, HttpClientTestingModule],
-        providers: [
-          NavService,
-          { provide: NavController, useValue: navControllerStub },
-          {
-            provide: MessagesService,
-            useValue: messagesServiceStub
-          }
-        ]
-      })
+    navControllerStub = new NavControllerStub({ name: 'EmailTemplatesPage' })
+    spyOn(navControllerStub, 'setRoot').and.callThrough()
 
-      page = new EmailTemplatesPageObject(fixture)
-
-      fixture.detectChanges()
+    fixture = initComponent(EmailTemplatesPage, {
+      imports: [EmailTemplatesPageModule, HttpClientTestingModule],
+      providers: [
+        NavService,
+        { provide: NavController, useValue: navControllerStub },
+        {
+          provide: MessagesService,
+          useValue: messagesServiceStub
+        }
+      ]
     })
-  )
+
+    page = new EmailTemplatesPageObject(fixture)
+
+    fixture.detectChanges()
+  }))
 
   describe('table', () => {
     it('includes templates', () => {

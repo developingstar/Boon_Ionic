@@ -25,125 +25,123 @@ describe('GroupsPage', () => {
   let groupUsers: User[]
   let userLists: User[]
 
-  beforeEach(
-    async(() => {
-      groups = [{ id: 1, name: 'Group1' }, { id: 2, name: 'Group2' }]
+  beforeEach(async(() => {
+    groups = [{ id: 1, name: 'Group1' }, { id: 2, name: 'Group2' }]
 
-      groupUsers = [
-        {
-          avatar_url: null,
-          email: 'john@example.com',
-          id: 11,
-          name: 'John Boon',
-          role: 'admin'
-        },
-        {
-          avatar_url: null,
-          email: 'mark@example.com',
-          id: 12,
-          name: 'Mark Boon',
-          role: 'lead_owner'
-        }
-      ]
-
-      userLists = [
-        {
-          avatar_url: null,
-          email: 'john@example.com',
-          id: 11,
-          name: 'John Boon',
-          role: 'admin'
-        },
-        {
-          avatar_url: null,
-          email: 'mark@example.com',
-          id: 12,
-          name: 'Mark Boon',
-          role: 'lead_owner'
-        },
-        {
-          avatar_url: null,
-          email: 'alekxis@example.com',
-          id: 13,
-          name: 'Alekxis Boon',
-          role: 'admin'
-        },
-        {
-          avatar_url: null,
-          email: 'petr@example.com',
-          id: 14,
-          name: 'Petr Boon',
-          role: 'lead_owner'
-        }
-      ]
-
-      groupsServiceStub = {
-        addUser: (group_id: number, user_id: number) => {
-          const newUser = userLists.find((u) => u.id === user_id)
-          if (newUser) {
-            groupUsers.concat(newUser)
-          }
-          return Observable.of(groupUsers)
-        },
-        createGroup: (groupData: API.IGroupCreate) => {
-          const newGroup = new Group({
-            id: 3,
-            name: groupData.name
-          })
-          groups.push(newGroup)
-          return Observable.of(groups)
-        },
-        deleteUser: (group_id: number, user_id: number) => {
-          groupUsers = groupUsers.filter((g) => g.id !== user_id)
-          return Observable.of(groupUsers)
-        },
-        group: (id: number) => {
-          const group = groups.find((g) => g.id === id)
-          return Observable.of(group)
-        },
-        groupUsers: () => Observable.of(groupUsers),
-        groups: () => Observable.of(groups),
-        updateGroup: (id: number, groupData: API.IGroupUpdate) => {
-          const group = groups.map((g) => g.id === id)
-          if (group === undefined) {
-            return Observable.of(undefined)
-          } else {
-            return Observable.of({
-              ...group,
-              ...groupData
-            })
-          }
-        }
-      }
-
-      const navParamsStub = {
-        get: (prop: string) => undefined
-      }
-
-      usersServiceStub = {
-        users: () => Observable.of(userLists)
-      }
-      spyOn(groupsServiceStub, 'createGroup').and.callThrough()
-      spyOn(groupsServiceStub, 'updateGroup').and.callThrough()
-      spyOn(groupsServiceStub, 'deleteUser').and.callThrough()
-      spyOn(groupsServiceStub, 'addUser').and.callThrough()
-
-      fixture = initComponent(GroupsPage, {
-        imports: [GroupsPageModule, HttpClientTestingModule],
-        providers: [
-          NavService,
-          { provide: NavController, useValue: new NavControllerStub() },
-          { provide: NavParams, useValue: navParamsStub },
-          { provide: UsersService, useValue: usersServiceStub },
-          { provide: GroupsService, useValue: groupsServiceStub }
-        ]
+    groupUsers = [
+      new User({
+        avatar_url: null,
+        email: 'john@example.com',
+        id: 11,
+        name: 'John Boon',
+        role: 'admin'
+      }),
+      new User({
+        avatar_url: null,
+        email: 'mark@example.com',
+        id: 12,
+        name: 'Mark Boon',
+        role: 'lead_owner'
       })
+    ]
 
-      page = new GroupsPageObject(fixture)
+    userLists = [
+      new User({
+        avatar_url: null,
+        email: 'john@example.com',
+        id: 11,
+        name: 'John Boon',
+        role: 'admin'
+      }),
+      new User({
+        avatar_url: null,
+        email: 'mark@example.com',
+        id: 12,
+        name: 'Mark Boon',
+        role: 'lead_owner'
+      }),
+      new User({
+        avatar_url: null,
+        email: 'alekxis@example.com',
+        id: 13,
+        name: 'Alekxis Boon',
+        role: 'admin'
+      }),
+      new User({
+        avatar_url: null,
+        email: 'petr@example.com',
+        id: 14,
+        name: 'Petr Boon',
+        role: 'lead_owner'
+      })
+    ]
 
-      fixture.detectChanges()
+    groupsServiceStub = {
+      addUser: (groupId: number, userId: number) => {
+        const newUser = userLists.find((u) => u.id === userId)
+        if (newUser) {
+          groupUsers.concat(newUser)
+        }
+        return Observable.of(groupUsers)
+      },
+      createGroup: (groupData: API.IGroupCreate) => {
+        const newGroup = new Group({
+          id: 3,
+          name: groupData.name
+        })
+        groups.push(newGroup)
+        return Observable.of(groups)
+      },
+      deleteUser: (groupId: number, userId: number) => {
+        groupUsers = groupUsers.filter((g) => g.id !== userId)
+        return Observable.of(groupUsers)
+      },
+      group: (id: number) => {
+        const group = groups.find((g) => g.id === id)
+        return Observable.of(group)
+      },
+      groupUsers: () => Observable.of(groupUsers),
+      groups: () => Observable.of(groups),
+      updateGroup: (id: number, groupData: API.IGroupUpdate) => {
+        const group = groups.map((g) => g.id === id)
+        if (group === undefined) {
+          return Observable.of(undefined)
+        } else {
+          return Observable.of({
+            ...group,
+            ...groupData
+          })
+        }
+      }
+    }
+
+    const navParamsStub = {
+      get: (prop: string) => undefined
+    }
+
+    usersServiceStub = {
+      users: () => Observable.of(userLists)
+    }
+    spyOn(groupsServiceStub, 'createGroup').and.callThrough()
+    spyOn(groupsServiceStub, 'updateGroup').and.callThrough()
+    spyOn(groupsServiceStub, 'deleteUser').and.callThrough()
+    spyOn(groupsServiceStub, 'addUser').and.callThrough()
+
+    fixture = initComponent(GroupsPage, {
+      imports: [GroupsPageModule, HttpClientTestingModule],
+      providers: [
+        NavService,
+        { provide: NavController, useValue: new NavControllerStub() },
+        { provide: NavParams, useValue: navParamsStub },
+        { provide: UsersService, useValue: usersServiceStub },
+        { provide: GroupsService, useValue: groupsServiceStub }
+      ]
     })
-  )
+
+    page = new GroupsPageObject(fixture)
+
+    fixture.detectChanges()
+  }))
 
   describe('listing groups', () => {
     it('shows a list of groups', () => {

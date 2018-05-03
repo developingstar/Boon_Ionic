@@ -1,37 +1,37 @@
-import { User } from '../../src/app/auth/user.model'
-import { Lead } from '../../src/app/crm/lead.model'
 import { Stage } from '../../src/app/crm/stage.model'
-import { Journey } from '../../src/app/journeys/journey.model'
 import * as JourneysAPI from '../../src/app/journeys/journeys.api.model'
 import { Group } from '../../src/app/settings/group.model'
 import { FieldDefinition } from './../../src/app/crm/field-definition.model'
 import { Field } from './../../src/app/crm/field.model'
-import { Pipeline } from './../../src/app/crm/pipeline.model'
-import { EmailTemplate } from './../../src/app/messages/email-template.model'
+import {
+  IEmailTemplate,
+  ITextTemplate
+} from './../../src/app/messages/messages.api.model'
 import { Shortcode } from './../../src/app/messages/shortcode.model'
-import { TextTemplate } from './../../src/app/messages/text-template.model'
 import { Service } from './../../src/app/settings/service.model'
 
-export function sampleUser(values: { readonly [key: string]: any } = {}): User {
-  return new User({
+export function sampleUser(
+  values: { readonly [key: string]: any } = {}
+): Auth.API.IUser {
+  return {
     avatar_url: null,
     email: 'john@example.com',
     id: 1,
     name: 'John Boon',
     role: 'lead_owner',
     ...values
-  })
+  }
 }
 
 export function samplePipeline(
   values: { readonly [key: string]: any } = {}
-): Pipeline {
-  return new Pipeline({
+): Crm.API.IPipeline {
+  return {
     id: 1,
     name: 'Converted',
     stage_order: [],
     ...values
-  })
+  }
 }
 
 export function sampleStage(
@@ -45,10 +45,12 @@ export function sampleStage(
   })
 }
 
-export function sampleLead(values: { readonly [key: string]: any } = {}): Lead {
+export function sampleLead(
+  values: { readonly [key: string]: any } = {}
+): Crm.API.ILead {
   const fields = nameFields(values.firstName, values.lastName)
 
-  return new Lead({
+  return {
     created_by_service_id: null,
     created_by_user_id: null,
     email: 'john@example.com',
@@ -58,7 +60,7 @@ export function sampleLead(values: { readonly [key: string]: any } = {}): Lead {
     phone_number: '+999123456',
     stage_id: 1,
     ...values
-  })
+  }
 }
 
 export function sampleField(
@@ -84,20 +86,20 @@ export function sampleFieldDefinition(
 
 export function sampleTextTemplate(
   values: { readonly [key: string]: any } = {}
-): TextTemplate {
-  return new TextTemplate({
+): ITextTemplate {
+  return {
     content: 'Hello',
     default_sender: '+999600100200',
     id: 1,
     name: 'Introduction text message',
     ...values
-  })
+  }
 }
 
 export function sampleEmailTemplate(
   values: { readonly [key: string]: any } = {}
-): EmailTemplate {
-  return new EmailTemplate({
+): IEmailTemplate {
+  return {
     content: 'Hello',
     default_sender: 'user@example.com',
     default_sender_name: 'Support',
@@ -105,7 +107,7 @@ export function sampleEmailTemplate(
     name: 'Introduction e-mail message',
     subject: 'Introduction',
     ...values
-  })
+  }
 }
 
 function nameFields(
@@ -150,8 +152,8 @@ export function sampleJourney(
   values: {
     readonly [key in keyof JourneysAPI.IJourney]?: JourneysAPI.IJourney[key]
   } = {}
-): Journey {
-  return new Journey({
+): JourneysAPI.IJourney {
+  return {
     actions: [
       {
         data: {
@@ -180,7 +182,7 @@ export function sampleJourney(
       }
     ],
     ...values
-  })
+  }
 }
 
 export function sampleService(

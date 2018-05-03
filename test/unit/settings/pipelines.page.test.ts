@@ -23,140 +23,121 @@ describe('PipelinesPage', () => {
   let salesServiceStub: any
   let stages: Stage[]
 
-  beforeEach(
-    async(() => {
-      pipelines = [
-        { id: 101, name: 'New', stage_order: [] },
-        { id: 102, name: 'Converted', stage_order: [3, 1] }
-      ]
+  beforeEach(async(() => {
+    pipelines = [
+      { id: 101, name: 'New', stageOrder: [] },
+      { id: 102, name: 'Converted', stageOrder: [3, 1] }
+    ]
 
-      stages = [
-        { pipeline_id: 102, name: 'Stage1', id: 1 },
-        { pipeline_id: 102, name: 'Stage2', id: 2 },
-        { pipeline_id: 101, name: 'Stage3', id: 3 },
-        { pipeline_id: 101, name: 'Stage4', id: 4 }
-      ]
-
-      salesServiceStub = {
-        createPipeline: (pipelineData: Crm.API.IPipelineCreate) => {
-          const newPipeline = new Pipeline({
-            id: 103,
-            name: pipelineData.name,
-            stage_order: []
-          })
-          pipelines.push(newPipeline)
-          return Observable.of(newPipeline)
-        },
-        pipelines: () => Observable.of(pipelines),
-        stages: () => Observable.of(stages),
-        updatePipeline: (id: number, pipelineData: Crm.API.IPipelineUpdate) => {
-          for (let i = 0; i < pipelines.length; i++) {
-            const pipeline = pipelines[i]
-            if (pipeline.id === id) {
-              pipelines[i] = { ...pipeline, name: pipelineData.name! }
-              return Observable.of(pipeline)
-            }
+    stages = [
+      { pipelineId: 102, name: 'Stage1', id: 1 },
+      { pipelineId: 102, name: 'Stage2', id: 2 },
+      { pipelineId: 101, name: 'Stage3', id: 3 },
+      { pipelineId: 101, name: 'Stage4', id: 4 }
+    ]
+    salesServiceStub = {
+      createPipeline: (pipelineData: Crm.API.IPipelineCreate) => {
+        const newPipeline = new Pipeline({
+          id: 103,
+          name: pipelineData.name,
+          stage_order: []
+        })
+        pipelines.push(newPipeline)
+        return Observable.of(newPipeline)
+      },
+      pipelines: () => Observable.of(pipelines),
+      stages: () => Observable.of(stages),
+      updatePipeline: (id: number, pipelineData: Crm.API.IPipelineUpdate) => {
+        for (let i = 0; i < pipelines.length; i++) {
+          const pipeline = pipelines[i]
+          if (pipeline.id === id) {
+            pipelines[i] = { ...pipeline, name: pipelineData.name! }
+            return Observable.of(pipeline)
           }
-          return Observable.of(undefined)
         }
+        return Observable.of(undefined)
       }
+    }
+    spyOn(salesServiceStub, 'createPipeline').and.callThrough()
+    spyOn(salesServiceStub, 'updatePipeline').and.callThrough()
 
-      spyOn(salesServiceStub, 'createPipeline').and.callThrough()
-      spyOn(salesServiceStub, 'updatePipeline').and.callThrough()
+    const navParamsStub = {
+      get: (prop: string) => undefined
+    }
 
-      const navParamsStub = {
-        get: (prop: string) => undefined
+    modalStub = {
+      onDidDismiss: (stageName: string) => {
+        return stageName
+      },
+      present: () => {
+        return
       }
+    }
 
-      modalStub = {
-        onDidDismiss: (stageName: string) => {
-          return stageName
-        },
-        present: () => {
-          return
-        }
-      }
+    spyOn(modalStub, 'present').and.callThrough()
+    spyOn(modalStub, 'onDidDismiss').and.callThrough()
 
-      spyOn(modalStub, 'present').and.callThrough()
-      spyOn(modalStub, 'onDidDismiss').and.callThrough()
+    modalControllerStub = {
+      create: () => modalStub
+    }
 
-      modalControllerStub = {
-        create: () => modalStub
-      }
+    spyOn(modalControllerStub, 'create').and.callThrough()
 
-      spyOn(modalControllerStub, 'create').and.callThrough()
-
-      fixture = initComponent(PipelinesPage, {
-        imports: [PipelinesPageModule, HttpClientTestingModule],
-        providers: [
-          NavService,
-          { provide: NavController, useValue: new NavControllerStub() },
-          { provide: NavParams, useValue: navParamsStub },
-          { provide: SalesService, useValue: salesServiceStub },
-          { provide: ModalController, useValue: modalControllerStub }
-        ]
-      })
-
-      page = new PipelinesPageObject(fixture)
-
-      fixture.detectChanges()
+    fixture = initComponent(PipelinesPage, {
+      imports: [PipelinesPageModule, HttpClientTestingModule],
+      providers: [
+        NavService,
+        { provide: NavController, useValue: new NavControllerStub() },
+        { provide: NavParams, useValue: navParamsStub },
+        { provide: SalesService, useValue: salesServiceStub },
+        { provide: ModalController, useValue: modalControllerStub }
+      ]
     })
-  )
-
+    page = new PipelinesPageObject(fixture)
+    fixture.detectChanges()
+  }))
   describe('listing pipelines', () => {
     it('shows a list of pipelines', () => {
       expect(page.header).toEqual('Pipelines')
       expect(page.pipelines).toEqual(['New', 'Converted'])
     })
-
     it('shows the add pipeline button', () => {
       expect(page.addPipelineButtonVisible).toBe(true)
     })
-
     it('shows the new pipeline form after clicking the add pipeline button', () => {
       page.clickAddPipelineButton()
       fixture.detectChanges()
-
       expect(page.header).toEqual('new Pipeline') // it will be capitalized via CSS
     })
   })
-
   describe('creating pipeline form', () => {
     beforeEach(() => {
       page.clickAddPipelineButton()
       fixture.detectChanges()
     })
-
     it('creates a pipeline and shows listing after clicking the save button', () => {
       page.setName('Without Response')
       fixture.detectChanges()
       page.clickSavePipelineButton()
       fixture.detectChanges()
-
       expect(salesServiceStub.createPipeline).toHaveBeenCalledWith({
         name: 'Without Response'
       })
       expect(page.header).toEqual('Pipelines')
       expect(page.pipelines).toEqual(['New', 'Converted', 'Without Response'])
     })
-
     it('returns to the listing after clicking the back button', () => {
       page.clickBack()
       fixture.detectChanges()
-
       expect(page.header).toEqual('Pipelines')
     })
-
     it('blocks the creation when the name is blank', () => {
       expect(page.savePipelineButtonEnabled).toBe(false)
-
       page.setName('A New Pipeline')
       fixture.detectChanges()
-
       expect(page.savePipelineButtonEnabled).toBe(true)
     })
   })
-
   describe('editing pipeline form', () => {
     beforeEach(() => {
       page.clickPipeline('Converted')
@@ -195,7 +176,6 @@ describe('PipelinesPage', () => {
       fixture.detectChanges()
       page.clickSavePipelineButton()
       fixture.detectChanges()
-
       expect(salesServiceStub.updatePipeline).toHaveBeenCalledWith(102, {
         name: 'Converted/Archived',
         stage_order: [3, 1]

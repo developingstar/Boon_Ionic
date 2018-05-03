@@ -23,62 +23,66 @@ describe('JourneysPage', () => {
   let journeysServiceStub: JourneysService
   let navControllerStub: any
 
-  beforeEach(
-    async(() => {
-      collection = {
-        items: [
+  beforeEach(async(() => {
+    collection = {
+      items: [
+        new Journey(
           sampleJourney({
             id: 1,
             name: 'motivating introduction 1',
             published_at: '2018-03-11T11:07:48Z',
             state: 'active'
-          }),
+          })
+        ),
+        new Journey(
           sampleJourney({
             id: 2,
             name: 'motivating introduction 2'
-          }),
+          })
+        ),
+        new Journey(
           sampleJourney({
             id: 3,
             name: 'motivating introduction 3',
             published_at: '2018-03-12T09:16:32Z',
             state: 'active'
           })
-        ],
-        nextPageLink: 'http://example.com/next',
-        prevPageLink: 'http://example.com/prev'
-      }
+        )
+      ],
+      nextPageLink: 'http://example.com/next',
+      prevPageLink: 'http://example.com/prev'
+    }
 
-      const httpClient = new HttpClient(
-        new class extends HttpHandler {
-          handle(req: any): Observable<any> {
-            return Observable.never()
-          }
-        }()
-      )
+    const httpClient = new HttpClient(
+      new class extends HttpHandler {
+        handle(req: any): Observable<any> {
+          return Observable.never()
+        }
+      }()
+    )
 
-      journeysServiceStub = new JourneysService(httpClient)
-      journeysServiceStub.journeys = () => Observable.of(collection)
+    journeysServiceStub = new JourneysService(httpClient)
+    journeysServiceStub.journeys = () => Observable.of(collection)
 
-      spyOn(journeysServiceStub, 'journeys').and.callThrough()
+    spyOn(journeysServiceStub, 'journeys').and.callThrough()
 
-      navControllerStub = new NavControllerStub({ name: 'JourneysPage' })
+    navControllerStub = new NavControllerStub({ name: 'JourneysPage' })
 
-      spyOn(navControllerStub, 'setRoot').and.callThrough()
+    spyOn(navControllerStub, 'setRoot').and.callThrough()
 
-      fixture = initComponent(JourneysPage, {
-        imports: [JourneysPageModule, HttpClientTestingModule],
-        providers: [
-          NavService,
-          { provide: NavController, useValue: navControllerStub },
-          { provide: JourneysService, useValue: journeysServiceStub }
-        ]
-      })
-
-      page = new JourneysPageObject(fixture)
-
-      fixture.detectChanges()
+    fixture = initComponent(JourneysPage, {
+      imports: [JourneysPageModule, HttpClientTestingModule],
+      providers: [
+        NavService,
+        { provide: NavController, useValue: navControllerStub },
+        { provide: JourneysService, useValue: journeysServiceStub }
+      ]
     })
-  )
+
+    page = new JourneysPageObject(fixture)
+
+    fixture.detectChanges()
+  }))
 
   describe('table', () => {
     it('includes journeys', () => {

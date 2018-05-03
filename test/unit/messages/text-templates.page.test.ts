@@ -22,54 +22,56 @@ describe('TextTemplatesPage', () => {
   let navControllerStub: NavControllerStub
   let page: TextTemplatesPageObject
 
-  beforeEach(
-    async(() => {
-      collection = [
+  beforeEach(async(() => {
+    collection = [
+      new TextTemplate(
         sampleTextTemplate({
           default_sender: '+999111111',
           id: 1,
           name: 'Introduction'
-        }),
+        })
+      ),
+      new TextTemplate(
         sampleTextTemplate({
           default_sender: '+999222222',
           id: 2,
           name: 'Follow up'
         })
-      ]
-
-      const httpClient = new HttpClient(
-        new class extends HttpHandler {
-          handle(req: any): Observable<any> {
-            return Observable.never()
-          }
-        }()
       )
+    ]
 
-      messagesServiceStub = new MessagesService(httpClient)
-      messagesServiceStub.textTemplates = () => Observable.of(collection)
+    const httpClient = new HttpClient(
+      new class extends HttpHandler {
+        handle(req: any): Observable<any> {
+          return Observable.never()
+        }
+      }()
+    )
 
-      spyOn(messagesServiceStub, 'textTemplates').and.callThrough()
+    messagesServiceStub = new MessagesService(httpClient)
+    messagesServiceStub.textTemplates = () => Observable.of(collection)
 
-      navControllerStub = new NavControllerStub({ name: 'TextTemplatesPage' })
-      spyOn(navControllerStub, 'setRoot').and.callThrough()
+    spyOn(messagesServiceStub, 'textTemplates').and.callThrough()
 
-      fixture = initComponent(TextTemplatesPage, {
-        imports: [TextTemplatesPageModule, HttpClientTestingModule],
-        providers: [
-          NavService,
-          { provide: NavController, useValue: navControllerStub },
-          {
-            provide: MessagesService,
-            useValue: messagesServiceStub
-          }
-        ]
-      })
+    navControllerStub = new NavControllerStub({ name: 'TextTemplatesPage' })
+    spyOn(navControllerStub, 'setRoot').and.callThrough()
 
-      page = new TextTemplatesPageObject(fixture)
-
-      fixture.detectChanges()
+    fixture = initComponent(TextTemplatesPage, {
+      imports: [TextTemplatesPageModule, HttpClientTestingModule],
+      providers: [
+        NavService,
+        { provide: NavController, useValue: navControllerStub },
+        {
+          provide: MessagesService,
+          useValue: messagesServiceStub
+        }
+      ]
     })
-  )
+
+    page = new TextTemplatesPageObject(fixture)
+
+    fixture.detectChanges()
+  }))
 
   describe('table', () => {
     it('includes templates', () => {

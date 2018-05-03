@@ -13,6 +13,7 @@ import { FieldDefinition } from '../../../src/app/crm/field-definition.model'
 import { Lead } from '../../../src/app/crm/lead.model'
 import { LeadPage } from '../../../src/app/crm/lead.page'
 import { LeadPageModule } from '../../../src/app/crm/lead.page.module'
+import { Note } from '../../../src/app/crm/note.model'
 import { SalesService } from '../../../src/app/crm/sales.service'
 import { Stage } from '../../../src/app/crm/stage.model'
 import { UsersService } from '../../../src/app/crm/users.service'
@@ -24,129 +25,147 @@ describe('LeadPage', () => {
   let fields: ReadonlyArray<FieldDefinition>
   let stage: Stage
   let stages: ReadonlyArray<Stage>
+  let notes: Note[]
   let lead: Lead
   let leadUpdate: Crm.API.ILeadUpdate
   let navControllerStub: any
   let users: ReadonlyArray<User>
   const userRole: BehaviorSubject<string> = new BehaviorSubject<string>('admin')
 
-  beforeEach(
-    async(() => {
-      users = [
-        {
-          avatar_url: null,
-          email: 'john@example.com',
-          id: 100,
-          name: 'John Boon',
-          role: 'admin'
-        },
-        {
-          avatar_url: null,
-          email: 'mark@example.com',
-          id: 101,
-          name: 'Mark Boon',
-          role: 'lead_owner'
-        }
-      ]
-
-      fields = [
-        { id: 300, name: 'First Name' },
-        { id: 301, name: 'Last Name' },
-        { id: 302, name: 'Website' }
-      ]
-
-      stages = [
-        {
-          id: 10,
-          name: 'Enrolling',
-          pipeline_id: 504
-        },
-        {
-          id: 14,
-          name: 'Signing',
-          pipeline_id: 504
-        },
-        {
-          id: 15,
-          name: 'Closing - Won',
-          pipeline_id: 504
-        }
-      ]
-
-      stage = stages[1]
-
-      lead = new Lead({
-        created_by_service_id: null,
-        created_by_user_id: 101,
-        email: 'lead@example.com',
-        fields: [
-          { id: 300, name: 'First Name', value: 'Mark' },
-          { id: 301, name: 'Last Name', value: 'Williams' },
-          { id: 302, name: 'Website', value: 'williams.com' }
-        ],
-        id: 1,
-        owner: {
-          avatar_url: null,
-          email: 'john@example.com',
-          id: 100,
-          name: 'John Boon',
-          role: 'admin'
-        },
-        phone_number: '+999100200300',
-        stage_id: stage.id
+  beforeEach(async(() => {
+    users = [
+      new User({
+        avatar_url: null,
+        email: 'john@example.com',
+        id: 100,
+        name: 'John Boon',
+        role: 'admin'
+      }),
+      new User({
+        avatar_url: null,
+        email: 'mark@example.com',
+        id: 101,
+        name: 'Mark Boon',
+        role: 'lead_owner'
       })
+    ]
 
-      const salesServiceStub = {
-        fields: () => Observable.of(fields),
-        lead: (id: number) => Observable.of(lead),
-        stage: (id: number) => Observable.of(stage),
-        stages: (pipeline_id: number) => Observable.of(stages),
-        updateLead: (id: number, data: Crm.API.ILeadUpdate) => {
-          leadUpdate = data
-          return Observable.of({
-            ...lead,
-            ...leadUpdate,
-            owner: leadUpdate.owner_id
-              ? users.find((user) => user.id === leadUpdate.owner_id)
-              : null
-          })
-        }
+    fields = [
+      { id: 300, name: 'First Name' },
+      { id: 301, name: 'Last Name' },
+      { id: 302, name: 'Website' }
+    ]
+
+    stages = [
+      {
+        id: 10,
+        name: 'Enrolling',
+        pipelineId: 504
+      },
+      {
+        id: 14,
+        name: 'Signing',
+        pipelineId: 504
+      },
+      {
+        id: 15,
+        name: 'Closing - Won',
+        pipelineId: 504
       }
+    ]
 
-      const currentUserServiceStub = {
-        details: Observable.of(users[0]),
-        role: () => userRole
+    notes = [
+      {
+        content: 'note1',
+        id: 1
+      },
+      {
+        content: 'note2',
+        id: 2
       }
+    ]
 
-      const usersServiceStub = {
-        users: () => Observable.of(users)
-      }
+    stage = stages[1]
 
-      const navParamsStub = {
-        get: (prop: string) => lead.id
-      }
-
-      navControllerStub = new NavControllerStub()
-
-      spyOn(navControllerStub, 'setRoot').and.callThrough()
-
-      fixture = initComponent(LeadPage, {
-        imports: [LeadPageModule, HttpClientTestingModule],
-        providers: [
-          NavService,
-          { provide: NavParams, useValue: navParamsStub },
-          { provide: NavController, useValue: navControllerStub },
-          { provide: SalesService, useValue: salesServiceStub },
-          { provide: CurrentUserService, useValue: currentUserServiceStub },
-          { provide: UsersService, useValue: usersServiceStub }
-        ]
-      })
-
-      page = new LeadPageObject(fixture)
-
-      fixture.detectChanges()
+    lead = new Lead({
+      created_by_service_id: null,
+      created_by_user_id: 101,
+      email: 'lead@example.com',
+      fields: [
+        { id: 300, name: 'First Name', value: 'Mark' },
+        { id: 301, name: 'Last Name', value: 'Williams' },
+        { id: 302, name: 'Website', value: 'williams.com' }
+      ],
+      id: 1,
+      owner: {
+        avatar_url: null,
+        email: 'john@example.com',
+        id: 100,
+        name: 'John Boon',
+        role: 'admin'
+      },
+      phone_number: '+999100200300',
+      stage_id: stage.id
     })
-  )
+
+    const salesServiceStub = {
+      createNote: (leadId: number, noteData: Crm.API.INoteCreate) => {
+        const newNote = new Note({
+          content: noteData.content,
+          id: 3
+        })
+        return Observable.of(newNote)
+      },
+      fields: () => Observable.of(fields),
+      lead: (id: number) => Observable.of(lead),
+      notes: (leadId: number) => Observable.of(notes),
+      stage: (id: number) => Observable.of(stage),
+      stages: (pipelineId: number) => Observable.of(stages),
+      updateLead: (id: number, data: Crm.API.ILeadUpdate) => {
+        leadUpdate = data
+        return Observable.of({
+          ...lead,
+          ...leadUpdate,
+          owner: leadUpdate.owner_id
+            ? users.find((user) => user.id === leadUpdate.owner_id)
+            : null
+        })
+      }
+    }
+
+    const currentUserServiceStub = {
+      details: Observable.of(users[0]),
+      role: () => userRole
+    }
+
+    const usersServiceStub = {
+      users: () => Observable.of(users)
+    }
+
+    const navParamsStub = {
+      get: (prop: string) => lead.id
+    }
+
+    navControllerStub = new NavControllerStub()
+
+    spyOn(navControllerStub, 'setRoot').and.callThrough()
+
+    fixture = initComponent(LeadPage, {
+      imports: [LeadPageModule, HttpClientTestingModule],
+      providers: [
+        NavService,
+        { provide: NavParams, useValue: navParamsStub },
+        { provide: NavController, useValue: navControllerStub },
+        { provide: SalesService, useValue: salesServiceStub },
+        { provide: CurrentUserService, useValue: currentUserServiceStub },
+        { provide: UsersService, useValue: usersServiceStub }
+      ]
+    })
+
+    page = new LeadPageObject(fixture)
+
+    fixture.detectChanges()
+  }))
 
   it('returns to the CRM page after clicking back', () => {
     page.clickBackButton()
@@ -162,7 +181,7 @@ describe('LeadPage', () => {
     it('includes base fields', () => {
       expect(page.baseFieldValues).toEqual([
         lead.email!,
-        lead.phone_number!,
+        lead.phoneNumber!,
         lead.owner!.id.toString()
       ])
     })
@@ -187,6 +206,24 @@ describe('LeadPage', () => {
 
       fixture.detectChanges()
       expect(page.isEditMode).toBe(true)
+    })
+
+    it('shows the notes of lead', () => {
+      expect(page.notes).toEqual(['note1', 'note2'])
+    })
+
+    it('check to add empty note to lead', () => {
+      page.setNote('')
+      page.clickAddNote()
+      fixture.detectChanges()
+      expect(page.notes).toEqual(['note1', 'note2'])
+    })
+
+    it('add the note to lead', () => {
+      page.setNote('NewNote3')
+      page.clickAddNote()
+      fixture.detectChanges()
+      expect(page.notes).toEqual(['note1', 'note2', 'NewNote3'])
     })
   })
 
