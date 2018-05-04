@@ -13,7 +13,7 @@ ion-content(padding)
         span.actions
     ion-row.journey(*ngFor="let journey of (journeys | async)")
       ion-col(col-6, (click)="showJourney(journey)") {{journey.name || "-"}}
-      ion-col((click)="showJourney(journey)") {{(journey.published_at | date:'MM-dd-yyyy') || "-"}}
+      ion-col((click)="showJourney(journey)") {{(journey.publishedAt | date:'MM-dd-yyyy') || "-"}}
       ion-col((click)="showJourney(journey)")
         span.state-inactive(*ngIf="journey.state == 'inactive'") Draft
         span.state-active(*ngIf="journey.state == 'active'") Published

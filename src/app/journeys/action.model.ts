@@ -5,13 +5,23 @@ export class Action {
   readonly type: API.ActionType
   readonly data: API.ActionData
   readonly position: number | undefined
-  readonly journey_id: number
+  readonly journeyId: number
 
   constructor(data: API.IAction) {
     this.id = data.id
     this.type = data.type
     this.data = data.data
     this.position = data.position
-    this.journey_id = data.journey_id
+    this.journeyId = data.journey_id
+  }
+
+  public toApiRepresentation(): API.IAction {
+    return {
+      data: this.data,
+      id: this.id,
+      journey_id: this.journeyId,
+      position: this.position,
+      type: this.type
+    }
   }
 }

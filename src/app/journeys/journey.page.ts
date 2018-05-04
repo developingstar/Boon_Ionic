@@ -16,7 +16,9 @@ import { initialState, IState, UserAction } from './journey.page.state'
 import {
   ActionData,
   ActionType,
+  IAction,
   IJourneyUpdateRequest,
+  ITrigger,
   TriggerData,
   TriggerType
 } from './journeys.api.model'
@@ -131,10 +133,10 @@ export class JourneyPage implements OnInit, OnDestroy {
     modal.onDidDismiss((data: ActionData | null) => {
       if (data !== null) {
         this.uiActions.next({
-          action: {
-            ...action,
+          action: new Action({
+            ...action.toApiRepresentation(),
             data: data
-          },
+          }),
           name: 'update_action'
         })
       }
@@ -177,10 +179,10 @@ export class JourneyPage implements OnInit, OnDestroy {
       if (data !== null) {
         this.uiActions.next({
           name: 'update_trigger',
-          trigger: {
-            ...trigger,
+          trigger: new Trigger({
+            ...trigger.toApiRepresentation(),
             data: data
-          }
+          })
         })
       }
     })
@@ -248,7 +250,10 @@ export class JourneyPage implements OnInit, OnDestroy {
         } else {
           return this.updateJourneyState(state, {
             journey: {
-              actions: [...state.journey.actions, action.action]
+              actions: [
+                ...state.journey.toApiRepresentation().actions,
+                action.action.toApiRepresentation()
+              ]
             }
           })
         }
@@ -258,15 +263,16 @@ export class JourneyPage implements OnInit, OnDestroy {
         } else {
           return this.updateJourneyState(state, {
             journey: {
-              actions: state.journey.actions.reduce(
-                (actions, event: Action) => {
+              actions: state.journey
+                .toApiRepresentation()
+                .actions.reduce((actions, event: IAction) => {
                   return [
                     ...actions,
-                    event.id === action.action.id ? action.action : event
+                    event.id === action.action.toApiRepresentation().id
+                      ? action.action.toApiRepresentation()
+                      : event
                   ]
-                },
-                []
-              )
+                }, [])
             }
           })
         }
@@ -276,9 +282,9 @@ export class JourneyPage implements OnInit, OnDestroy {
         } else {
           return this.updateJourneyState(state, {
             journey: {
-              actions: state.journey.actions.filter(
-                (a) => a.id !== action.action.id
-              )
+              actions: state.journey
+                .toApiRepresentation()
+                .actions.filter((a) => a.id !== action.action.id)
             }
           })
         }
@@ -289,7 +295,7 @@ export class JourneyPage implements OnInit, OnDestroy {
           return this.updateJourneyState(state, {
             journey: {
               actions: this.reorderActions(
-                state.journey.actions,
+                state.journey.toApiRepresentation().actions,
                 action.oldPosition,
                 action.newPosition
               )
@@ -302,7 +308,10 @@ export class JourneyPage implements OnInit, OnDestroy {
         } else {
           return this.updateJourneyState(state, {
             journey: {
-              triggers: [...state.journey.triggers, action.trigger]
+              triggers: [
+                ...state.journey.toApiRepresentation().triggers,
+                action.trigger.toApiRepresentation()
+              ]
             }
           })
         }
@@ -312,15 +321,16 @@ export class JourneyPage implements OnInit, OnDestroy {
         } else {
           return this.updateJourneyState(state, {
             journey: {
-              triggers: state.journey.triggers.reduce(
-                (triggers, event: Trigger) => {
+              triggers: state.journey
+                .toApiRepresentation()
+                .triggers.reduce((triggers, event: ITrigger) => {
                   return [
                     ...triggers,
-                    event.id === action.trigger.id ? action.trigger : event
+                    event.id === action.trigger.toApiRepresentation().id
+                      ? action.trigger.toApiRepresentation()
+                      : event
                   ]
-                },
-                []
-              )
+                }, [])
             }
           })
         }
@@ -330,9 +340,11 @@ export class JourneyPage implements OnInit, OnDestroy {
         } else {
           return this.updateJourneyState(state, {
             journey: {
-              triggers: state.journey.triggers.filter(
-                (t) => t.id !== action.trigger.id
-              )
+              triggers: state.journey
+                .toApiRepresentation()
+                .triggers.filter(
+                  (t) => t.id !== action.trigger.toApiRepresentation().id
+                )
             }
           })
         }
@@ -432,11 +444,11 @@ export class JourneyPage implements OnInit, OnDestroy {
   }
 
   private reorderActions(
-    actions: ReadonlyArray<Action>,
+    actions: ReadonlyArray<IAction>,
     oldIndex: number,
     newIndex: number
-  ): ReadonlyArray<Action> {
-    const withoutAction: ReadonlyArray<Action> = [
+  ): ReadonlyArray<IAction> {
+    const withoutAction: ReadonlyArray<IAction> = [
       ...actions.slice(0, oldIndex),
       ...actions.slice(oldIndex + 1)
     ]

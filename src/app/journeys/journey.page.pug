@@ -22,9 +22,9 @@ ion-grid.journey
       .definition-header
         ion-input.journey-name([formControl]="name | async", (ionBlur)="renameJourney()")
         .publish-box
-          button.boon-button(*ngIf="j.state == 'inactive'" ion-button (click)="publishJourney()") Publish journey
-          button.boon-button(*ngIf="j.state == 'active'" ion-button (click)="stopJourney()") Stop journey
-          span(*ngIf="j.published_at") Published: {{j.published_at | date}}
+          button.boon-button(*ngIf="j.state == 'inactive'", ion-button, (click)="publishJourney()") Publish journey
+          button.boon-button(*ngIf="j.state == 'active'", ion-button, (click)="stopJourney()") Stop journey
+          span(*ngIf="j.publishedAt") Published: {{j.publishedAt | date}}
       .definition-body
         .scrollable
           .events-groups
