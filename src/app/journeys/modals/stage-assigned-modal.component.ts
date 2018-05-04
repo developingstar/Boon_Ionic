@@ -91,7 +91,7 @@ export class StageAssignedModalComponent implements OnDestroy {
   ): Pipeline | undefined {
     return pipelines.find(
       (pipeline) =>
-        pipeline.stage_order.find((stageId) => stageId === id) !== undefined
+        pipeline.stageOrder.find((stageId) => stageId === id) !== undefined
     )
   }
 }
