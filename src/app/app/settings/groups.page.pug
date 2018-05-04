@@ -1,0 +1,48 @@
+nav-content
+  nav-icons(right, currentPage="GroupsPage")
+
+settings-page-with-menu(currentPage="GroupsPage")
+  ion-grid(*ngIf="isListAction | async")
+    ion-row(align-items-end).groups-header
+      ion-col
+        h2 Sales Groups
+      ion-col(col-auto)
+        button.boon-button(ion-button, (click)="newGroup()") Create Group
+    ion-row.groups-list
+      ion-col(col-6, ion-item, *ngFor="let group of (groups | async)")
+        div.group((click)="editGroup(group)")
+          div
+            div.group-title
+              | {{group.name}}
+          div(inlineSVG="assets/icon/settings/arrow.svg")
+  ion-grid(*ngIf="showForm | async")
+    ion-row.groups-header
+      ion-col
+        a.back-link((click)="goBackToList()") < Back
+        h2 {{ name | async }} Sales Group
+      ion-col(col-auto)
+        button(*ngIf="isNewAction | async", ion-button, [disabled]="formInvalid | async", (click)="createGroup()") Create Group
+        button(*ngIf="isEditAction | async", ion-button, [disabled]="formInvalid | async", (click)="updateGroup()") Update Group
+    ion-row
+      ion-col(col-12)
+        form(autocomplete="off")
+          ion-label(stacked) Group Name
+          ion-input(name="name", type="text", [formControl]="currentGroupNameInput | async")
+    ion-row(*ngIf="(name | async) !== 'new'")
+      ion-col
+        form(autocomplete="off")
+            ion-label(stacked) Add Team Members
+            select.field-value([(ngModel)]="userID", (ngModelChange)="addUser($event)", [ngModelOptions]="{standalone: true}")
+              option(*ngFor="let user of usersList | async", [value]="user.id") {{user.name}}
+    ion-row.users-header(align-items-end, *ngIf="(name | async) !== 'new'")
+      ion-col
+        span.description Name
+    div.content-user
+      ion-row.user-row(*ngFor="let user of currentGroupUsers | async")
+        ion-col.center-y
+          div.remove-user((click)='deleteUser(user)', aria-label='Remove User')
+            span(aria-hidden='true')
+              | &times;
+          img.avatar-image(*ngIf="user.avatarUrl", [src]="user.avatarUrl")
+          ion-icon.default-avatar(name="ios-contacts", *ngIf="!user.avatarUrl")
+          span.user-name {{user.name}}

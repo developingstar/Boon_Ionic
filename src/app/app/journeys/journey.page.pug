@@ -1,0 +1,45 @@
+nav-content
+  nav-icons(right, currentPage="JourneysPage")
+
+ion-grid.journey
+  ion-row
+    ion-col.sidebar(col-auto, align-self-stretch)
+      .events-group
+        h6 Triggers
+        event(type="trigger", kind="field_updated", (click)="addNewTrigger('field_updated')")
+        event(type="trigger", kind="pipeline_assigned", (click)="addNewTrigger('pipeline_assigned')")
+        event(type="trigger", kind="stage_assigned", (click)="addNewTrigger('stage_assigned')")
+
+      .events-group
+        h6 Actions
+        event(type="action", kind="assign_lead_owner", (click)="addNewAction('assign_lead_owner')")
+        event(type="action", kind="assign_stage", (click)="addNewAction('assign_stage')")
+        event(type="action", kind="send_email", (click)="addNewAction('send_email')")
+        event(type="action", kind="send_text", (click)="addNewAction('send_text')")
+        event(type="action", kind="update_field", (click)="addNewAction('update_field')")
+        event(type="action", kind="wait", (click)="addNewAction('wait')")
+    ion-col.definition(*ngIf="journey | async; let j")
+      .definition-header
+        ion-input.journey-name([formControl]="name | async", (ionBlur)="renameJourney()")
+        .publish-box
+          button.boon-button(*ngIf="j.state == 'inactive'", ion-button, (click)="publishJourney()") Publish journey
+          button.boon-button(*ngIf="j.state == 'active'", ion-button, (click)="stopJourney()") Stop journey
+          span(*ngIf="j.publishedAt") Published: {{j.publishedAt | date}}
+      .definition-body
+        .scrollable
+          .events-groups
+            .events-group.triggers
+              event.big(*ngFor="let event of j.triggers", type="trigger", [kind]="event.type", (click)="updateTrigger(event)")
+                .trash-icon([inlineSVG]="'assets/icon/journey/trash.svg'", (click)="deleteTrigger($event, event)")
+                field-details(*ngIf="event.type == 'field_updated'", [event]="event")
+                pipeline-details(*ngIf="event.type == 'pipeline_assigned'", [event]="event")
+                stage-details(*ngIf="event.type == 'stage_assigned'", [event]="event")
+            .events-group.actions([ngClass]="{'sorting': (isSorting | async) == true}", [sortablejs]="actionIds | async", [sortablejsOptions]="sortableOptions", runInsideAngular="true")
+              event.big(*ngFor="let event of j.actions", type="action", [kind]="event.type", (click)="updateAction(event)")
+                .trash-icon([inlineSVG]="'assets/icon/journey/trash.svg'", (click)="deleteAction($event, event)")
+                email-template-details(*ngIf="event.type == 'send_email'", [event]="event")
+                field-details(*ngIf="event.type == 'update_field'", [event]="event")
+                lead-owner-details(*ngIf="event.type == 'assign_lead_owner'", [event]="event")
+                stage-details(*ngIf="event.type == 'assign_stage'", [event]="event")
+                text-template-details(*ngIf="event.type == 'send_text'", [event]="event")
+                wait-details(*ngIf="event.type == 'wait'", [event]="event")

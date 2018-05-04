@@ -1,0 +1,5 @@
+div([formGroup]="form")
+  .field-label {{label}}
+  input.field-value(*ngIf="type ==='input'", type="text", [formControlName]="formField")
+  select.field-value(*ngIf="type ==='select'", [formControlName]="formField")
+    option(*ngFor="let option of options", [value]="option.value") {{option.label}}

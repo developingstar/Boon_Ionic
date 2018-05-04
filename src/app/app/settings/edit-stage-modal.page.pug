@@ -1,0 +1,9 @@
+h2 {{ title }}
+
+form(autocomplete="off")
+  div
+    ion-label(stacked) Stage Name
+    ion-input(name="name", type="text", [formControl]="nameInput")
+  .buttons
+    a.cancel((click)="cancel()") Cancel
+    button(ion-button, (click)="save()") Save

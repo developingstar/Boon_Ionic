@@ -1,0 +1,12 @@
+//- Use ngClass instead of ngIf so that the content can be always rendered.
+.nav-container([ngClass]="navClass | async")
+  .nav-logo([inlineSVG]="'assets/icon/boon.svg'")
+  .nav-center
+    div([cdkPortalOutlet]="centerContent | async")
+  .nav-right
+    div([cdkPortalOutlet]="rightContent | async")
+    span.username(*ngIf="username | async") Hello, {{username | async}}
+
+//- Extra spacing for the content that follows the nav bar. With this, the parent component
+//- doesn't have to juggle margins depending on the visibility state of the nav bar.
+.spacing

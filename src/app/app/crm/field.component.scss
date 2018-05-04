@@ -1,0 +1,51 @@
+field {
+  .field-label,
+  .field-value {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .field-label {
+    color: #8a96a0;
+    font-size: 13px;
+    margin-bottom: 8px;
+  }
+
+  .field-value {
+    background-color: #fcfcfd;
+    border: 1px solid #d2d6e4;
+    border-radius: 3px;
+    color: #354052;
+    font-size: 14px;
+    height: 40px;
+    padding: 0 12px;
+    width: 100%;
+
+    &:disabled {
+      background-color: transparent;
+      border: 0;
+      color: #354052;
+      height: 16px;
+      padding: 0;
+    }
+
+    &.ng-invalid {
+      border: 1px solid red;
+    }
+  }
+
+  select.field-value:disabled {
+    // Remove the dropdown arrow
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    text-indent: 0px;
+    text-overflow: '';
+
+    // IE10
+    &::-ms-expand {
+      display: none;
+    }
+  }
+}

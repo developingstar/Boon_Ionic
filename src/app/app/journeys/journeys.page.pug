@@ -1,0 +1,30 @@
+nav-content
+  nav-icons(right, [currentPage]="'JourneysPage'")
+
+ion-content(padding)
+  button.new-journey(ion-button, (click)="openNewJourneyModal($event)") New Journey
+
+  ion-grid.table
+    ion-row.header
+      ion-col(col-6) Name
+      ion-col Published
+      ion-col Status
+      ion-col(col-auto)
+        span.actions
+    ion-row.journey(*ngFor="let journey of (journeys | async)")
+      ion-col(col-6, (click)="showJourney(journey)") {{journey.name || "-"}}
+      ion-col((click)="showJourney(journey)") {{(journey.publishedAt | date:'MM-dd-yyyy') || "-"}}
+      ion-col((click)="showJourney(journey)")
+        span.state-inactive(*ngIf="journey.state == 'inactive'") Draft
+        span.state-active(*ngIf="journey.state == 'active'") Published
+      ion-col(col-auto)
+        span.actions((click)="showActions($event, journey)")
+    ion-row.footer
+      ion-col
+      ion-col(col-auto)
+        button(ion-button, small, (click)="loadPrevPage()", [disabled]="isPrevPageButtonDisabled | async")
+          ion-icon(name="ios-arrow-back-outline")
+          span Prev
+        button(ion-button, small, (click)="loadNextPage()", [disabled]="isNextPageButtonDisabled | async")
+          span Next
+          ion-icon(name="ios-arrow-forward-outline")

@@ -1,0 +1,50 @@
+@import 'theme/shared-classes';
+@import 'theme/style-guide';
+
+.edit-stage-modal {
+  .modal-wrapper {
+    @include md {
+      height: 225px;
+    }
+
+    edit-stage-modal-page {
+      background-color: white;
+      padding: 20px;
+
+      h2 {
+        @extend .boon-header;
+
+        border-bottom: 1px solid $color-border;
+        margin-top: 5px;
+        padding-bottom: 5px;
+      }
+
+      form {
+        ion-input input.text-input {
+          @extend .boon-input;
+        }
+
+        .label {
+          @extend .boon-uppercase-label;
+        }
+
+        .buttons {
+          text-align: right;
+
+          a.cancel {
+            cursor: pointer;
+            display: inline-block;
+            line-height: 36px;
+            margin: 4px 1em 4px 0;
+          }
+
+          button {
+            @extend .boon-button;
+
+            padding: 0 55px;
+          }
+        }
+      }
+    }
+  }
+}

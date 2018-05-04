@@ -1,0 +1,30 @@
+@import 'theme/shared-classes';
+
+event {
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  vertical-align: top;
+
+  margin: 0 10px 10px 0;
+  height: 90px;
+  width: 110px;
+  padding: 10px;
+
+  background-color: white;
+
+  color: $color-text-secondary;
+  font-size: 11px;
+  text-transform: capitalize;
+
+  .icon {
+    width: 35px;
+    margin: auto;
+  }
+
+  &.big {
+    height: 100px;
+    width: 120px;
+  }
+}

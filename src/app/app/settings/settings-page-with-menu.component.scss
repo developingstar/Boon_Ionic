@@ -1,0 +1,57 @@
+@import 'theme/style-guide';
+
+settings-page-with-menu {
+  .settings-menu {
+    border-right: 1px solid $color-border;
+    font-weight: 500;
+    height: 100%;
+    margin-top: -10px;
+    padding-left: 0;
+    padding-top: 37px;
+
+    /* both levels */
+    &,
+    ul {
+      list-style-type: none;
+    }
+
+    li {
+      line-height: 33px;
+      margin-bottom: 15px;
+      cursor: pointer;
+
+      text-transform: capitalize;
+
+      &.active {
+        color: $color-primary;
+      }
+    }
+
+    /* first level only */
+    > div > li {
+      padding-left: 18%;
+
+      &.active {
+        border-left: 3px solid $color-primary;
+        padding-left: calc(18% - 3px);
+      }
+    }
+
+    /* second level only */
+    > div > li > ul {
+      padding-left: 20px;
+
+      > li {
+        color: $color-light-dark;
+      }
+    }
+  }
+
+  .content {
+    max-width: 760px;
+    padding-left: 30px;
+    padding-top: 10px;
+    height: calc(100vh - 80px);
+    overflow-y: auto;
+  }
+}

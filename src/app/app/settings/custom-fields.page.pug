@@ -1,0 +1,42 @@
+nav-content
+  nav-icons(right, currentPage="CustomFieldsPage")
+
+settings-page-with-menu(currentPage="CustomFieldsPage")
+  ion-grid(*ngIf="showList | async")
+    ion-row.header(align-items-end)
+      ion-col
+        h2 Custom Fields
+      ion-col(col-auto)
+        button(ion-button, (click)="newField()") Add New Field
+    ion-row
+      ion-col
+        ion-list
+          button.button-with-arrow(ion-item,
+                                   *ngFor="let field of (fields | async)",
+                                   (click)="editField(field)")
+            | {{ field.name }}
+
+  ion-grid(*ngIf="showForm | async")
+    ion-row.header
+      ion-col
+        a.back-link((click)="goBackToList()") < Back
+        h2(*ngIf="isCreateMode | async") Create Field
+        h2(*ngIf="isEditMode | async") Edit Field
+      ion-col(col-auto)
+        button(*ngIf="isCreateMode | async",
+               ion-button,
+               [disabled]="formInvalid | async",
+               (click)="createField()")
+          | Create Field
+        button(*ngIf="isEditMode | async",
+               ion-button,
+               [disabled]="formInvalid | async",
+               (click)="updateField()")
+          | Update Field
+    ion-row
+      ion-col
+        form(autocomplete="off")
+          ion-label(stacked) Name
+          ion-input(name="name",
+                    type="text",
+                    [formControl]="formControl | async")

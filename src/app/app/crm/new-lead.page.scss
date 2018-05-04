@@ -1,0 +1,94 @@
+@import 'theme/shared-classes';
+@import 'theme/style-guide';
+
+.new-lead-page-modal {
+  @extend .boon-modal;
+
+  display: flex;
+  justify-content: center;
+
+  .modal-wrapper {
+    height: 100%;
+    width: 100%;
+
+    @include md {
+      height: 500px;
+      width: 75%;
+      left: initial;
+    }
+  }
+}
+
+new-lead-page {
+  background-color: $color-content-background;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 34px;
+  overflow-y: auto;
+  padding-bottom: 100px;
+
+  h2 {
+    color: #232d3b;
+    flex-grow: 0;
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 42px;
+    margin-top: 0;
+  }
+
+  .form {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    height: 90%;
+
+    @include md {
+      height: 360px;
+    }
+  }
+
+  .base-fields {
+    flex-grow: 0;
+    margin-bottom: 6px;
+  }
+
+  hr {
+    border-top: 1px solid #d2d6e4;
+    flex-grow: 0;
+    margin-bottom: 32px;
+    margin-top: 0;
+    width: 100%;
+  }
+
+  .custom-fields {
+    flex-grow: 1;
+  }
+
+  .buttons {
+    button {
+      @extend .boon-button;
+
+      margin-right: 12px;
+      width: 115px;
+    }
+
+    .cancel {
+      background-color: #a5acc7;
+      color: #fff;
+    }
+  }
+
+  field {
+    display: inline-block;
+    margin-bottom: 24px;
+    margin-right: 40px;
+    vertical-align: top;
+    width: 195px;
+  }
+
+  ion-scroll {
+    height: 100%;
+    margin-bottom: 10px;
+  }
+}

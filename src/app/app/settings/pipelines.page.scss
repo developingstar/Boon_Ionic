@@ -1,0 +1,48 @@
+@import 'theme/shared-classes';
+@import 'theme/style-guide';
+@import 'mixins';
+
+pipelines-page {
+  .pipelines-header,
+  .stages-header {
+    @include settings-page-header;
+  }
+
+  .stages-header {
+    margin-top: 35px;
+
+    h3 {
+      color: $color-header;
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    span.description {
+      color: $color-light-dark;
+    }
+  }
+
+  ion-list {
+    @include settings-page-item-list;
+  }
+
+  form {
+    ion-input input.text-input {
+      @extend .boon-input;
+    }
+
+    .label {
+      @extend .boon-uppercase-label;
+    }
+  }
+
+  settings-page-with-menu ion-content.content.content-md {
+    .fixed-content,
+    .scroll-content {
+      @include md {
+        padding-left: 30px;
+        padding-right: 30px;
+      }
+    }
+  }
+}
