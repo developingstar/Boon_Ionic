@@ -26,7 +26,7 @@ ion-content(padding)
       ion-col {{lead.name || "-"}}
       ion-col {{lead.email || "-"}}
       ion-col(*ngIf="isStageColumnVisible | async") {{(stageForLead(lead) | async)?.name}}
-      ion-col {{lead.phone_number || "-"}}
+      ion-col {{lead.phoneNumber || "-"}}
       ion-col {{lead.owner?.name || "-"}}
     ion-row.footer
       ion-col

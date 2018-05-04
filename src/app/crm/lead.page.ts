@@ -78,8 +78,8 @@ export class LeadPage implements OnDestroy, OnInit {
     this.stages = getLead
       .switchMap((lead) => {
         return salesService
-          .stage(lead.stage_id)
-          .switchMap((stage) => salesService.stages(stage.pipeline_id))
+          .stage(lead.stageId)
+          .switchMap((stage) => salesService.stages(stage.pipelineId))
       })
       .shareReplay(1)
 
@@ -265,8 +265,8 @@ export class LeadPage implements OnDestroy, OnInit {
           ? pageData.lead.owner.id.toString()
           : UnassignedUserId
       },
-      phone_number: [
-        { value: pageData.lead.phone_number, disabled: !editMode },
+      phoneNumber: [
+        { value: pageData.lead.phoneNumber, disabled: !editMode },
         [phoneNumberValidator(), Validators.required]
       ]
     }
@@ -303,7 +303,7 @@ export class LeadPage implements OnDestroy, OnInit {
         formModel.owner_id === UnassignedUserId
           ? null
           : parseInt(formModel.owner_id, 10),
-      phone_number: formModel.phone_number
+      phone_number: formModel.phoneNumber
     }
   }
 }

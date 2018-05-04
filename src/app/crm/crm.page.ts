@@ -108,11 +108,11 @@ export class CrmPage extends ReactivePage<IState, UserAction> {
           return stages
         } else {
           return stages
-            .filter((stage) => stage.pipeline_id === pipeline.id)
+            .filter((stage) => stage.pipelineId === pipeline.id)
             .sort(
               (a, b) =>
-                pipeline.stage_order.indexOf(a.id) -
-                pipeline.stage_order.indexOf(b.id)
+                pipeline.stageOrder.indexOf(a.id) -
+                pipeline.stageOrder.indexOf(b.id)
             )
         }
       })
@@ -124,7 +124,7 @@ export class CrmPage extends ReactivePage<IState, UserAction> {
 
   public stageForLead(lead: Lead): Observable<Stage | undefined> {
     return this.stages.map((stages) =>
-      stages.find((stage) => stage.id === lead.stage_id)
+      stages.find((stage) => stage.id === lead.stageId)
     )
   }
 
@@ -201,6 +201,12 @@ export class CrmPage extends ReactivePage<IState, UserAction> {
           return new HttpParams()
         } else {
           return new HttpParams().set(type, value)
+        }
+      case 'stage_id':
+        if (value === undefined) {
+          return params.delete(type)
+        } else {
+          return params.set('stage_id', value)
         }
       default:
         if (value === undefined) {

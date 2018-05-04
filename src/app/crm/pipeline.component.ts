@@ -18,7 +18,7 @@ interface IStageViewModel {
 //
 // Example usage:
 //
-//    pipeline([stages]="stages", type="progress", [currentStageId]="lead.stage_id")
+//    pipeline([stages]="stages", type="progress", [currentStageId]="lead.stageId")
 //
 //    pipeline([stages]="stages", type="select", (select)="onSelect($event)")
 @Component({

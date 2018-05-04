@@ -9,6 +9,7 @@ import {
 import { PaginatedCollection } from './../api/paginated-collection'
 import { FieldDefinition } from './field-definition.model'
 import { Lead } from './lead.model'
+import { Note } from './note.model'
 import { Pipeline } from './pipeline.model'
 import { Stage } from './stage.model'
 
@@ -79,15 +80,11 @@ export class SalesService {
     )
   }
 
-  public fields(): Observable<ReadonlyArray<FieldDefinition>> {
+  public fields(): Observable<FieldDefinition[]> {
     return this.http
       .get(`/api/fields`)
-      .map(
-        (response: {
-          readonly data: {
-            readonly fields: ReadonlyArray<Crm.API.IFieldDefinition>
-          }
-        }) => response.data.fields.map((field) => new FieldDefinition(field))
+      .map((response: { data: { fields: Crm.API.IFieldDefinition[] } }) =>
+        response.data.fields.map((field) => new FieldDefinition(field))
       )
   }
 
@@ -126,11 +123,9 @@ export class SalesService {
     )
   }
 
-  public stages(
-    pipeline_id: number | null = null
-  ): Observable<ReadonlyArray<Stage>> {
+  public stages(pipelineId: number | null = null): Observable<Stage[]> {
     return this.http
-      .get(this.urlForStages(pipeline_id))
+      .get(this.urlForStages(pipelineId))
       .map((response: Crm.API.IStagesResponse) =>
         response.data.stages.map((item) => new Stage(item))
       )
@@ -215,11 +210,30 @@ export class SalesService {
       )
   }
 
-  private urlForStages(pipeline_id: number | null): string {
-    if (pipeline_id === null) {
+  public notes(leadId: number | null = null): Observable<ReadonlyArray<Note>> {
+    return this.http
+      .get(`/api/leads/${leadId}/notes`)
+      .map((response: Crm.API.INotesResponse) =>
+        response.data.notes.map((item) => new Note(item))
+      )
+  }
+
+  public createNote(
+    leadId: number,
+    noteData: Crm.API.INoteCreate
+  ): Observable<Note> {
+    return this.http
+      .post(`/api/leads/${leadId}/notes`, JSON.stringify({ note: noteData }))
+      .map((response: { readonly data: { readonly note: Crm.API.INote } }) => {
+        return new Note(response.data.note)
+      })
+  }
+
+  private urlForStages(pipelineId: number | null): string {
+    if (pipelineId === null) {
       return '/api/stages'
     } else {
-      return `/api/pipelines/${pipeline_id}/stages`
+      return `/api/pipelines/${pipelineId}/stages`
     }
   }
 }
