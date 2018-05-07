@@ -1,0 +1,52 @@
+@import 'theme/shared-classes';
+
+confirm-code-page {
+  .app-root &.ion-page {
+    // There is no naviagation on the login page so do not move the form lower.
+    top: initial;
+  }
+
+  .content {
+    @extend .flex;
+    @extend .full-page-wrapper;
+
+    .scroll-content {
+      @extend .center;
+    }
+
+    form {
+      width: 35vw;
+      margin-bottom: 100px;
+
+      .title {
+        margin-bottom: 20px;
+      }
+
+      .label-comment {
+        display: flex;
+        height: 100%;
+        align-items: center;
+      }
+
+      ion-input {
+        input {
+          @extend .boon-input;
+        }
+
+        &.ng-invalid.ng-touched input {
+          @extend .boon-invalid-input;
+        }
+      }
+
+      .label {
+        @extend .boon-label;
+        margin-top: 0;
+        flex: none;
+      }
+
+      button {
+        @extend .boon-button;
+      }
+    }
+  }
+}
