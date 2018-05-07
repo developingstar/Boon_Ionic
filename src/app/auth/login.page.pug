@@ -10,7 +10,9 @@ ion-content(padding)
     ion-row
       ion-col
         ion-label(stacked) Password
-        ion-input(name="password", type="password", [(ngModel)]="passwordModel", required)
+        ion-item
+          ion-input(name="password", type="password", [(ngModel)]="passwordModel", required)
+          button(clear, item-right, type="button", (click)="gotoForgot()") Forgot
     ion-row
       ion-col
 
