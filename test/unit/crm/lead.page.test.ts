@@ -32,140 +32,143 @@ describe('LeadPage', () => {
   let users: ReadonlyArray<User>
   const userRole: BehaviorSubject<string> = new BehaviorSubject<string>('admin')
 
-  beforeEach(async(() => {
-    users = [
-      new User({
-        avatar_url: null,
-        email: 'john@example.com',
-        id: 100,
-        name: 'John Boon',
-        role: 'admin'
-      }),
-      new User({
-        avatar_url: null,
-        email: 'mark@example.com',
-        id: 101,
-        name: 'Mark Boon',
-        role: 'lead_owner'
-      })
-    ]
-
-    fields = [
-      { id: 300, name: 'First Name' },
-      { id: 301, name: 'Last Name' },
-      { id: 302, name: 'Website' }
-    ]
-
-    stages = [
-      {
-        id: 10,
-        name: 'Enrolling',
-        pipelineId: 504
-      },
-      {
-        id: 14,
-        name: 'Signing',
-        pipelineId: 504
-      },
-      {
-        id: 15,
-        name: 'Closing - Won',
-        pipelineId: 504
-      }
-    ]
-
-    notes = [
-      {
-        content: 'note1',
-        id: 1
-      },
-      {
-        content: 'note2',
-        id: 2
-      }
-    ]
-
-    stage = stages[1]
-
-    lead = new Lead({
-      created_by_service_id: null,
-      created_by_user_id: 101,
-      email: 'lead@example.com',
-      fields: [
-        { id: 300, name: 'First Name', value: 'Mark' },
-        { id: 301, name: 'Last Name', value: 'Williams' },
-        { id: 302, name: 'Website', value: 'williams.com' }
-      ],
-      id: 1,
-      owner: {
-        avatar_url: null,
-        email: 'john@example.com',
-        id: 100,
-        name: 'John Boon',
-        role: 'admin'
-      },
-      phone_number: '+999100200300',
-      stage_id: stage.id
-    })
-
-    const salesServiceStub = {
-      createNote: (leadId: number, noteData: Crm.API.INoteCreate) => {
-        const newNote = new Note({
-          content: noteData.content,
-          id: 3
+  beforeEach(
+    async(() => {
+      users = [
+        new User({
+          avatar_url: null,
+          email: 'john@example.com',
+          id: 100,
+          name: 'John Boon',
+          role: 'admin'
+        }),
+        new User({
+          avatar_url: null,
+          email: 'mark@example.com',
+          id: 101,
+          name: 'Mark Boon',
+          role: 'lead_owner'
         })
-        return Observable.of(newNote)
-      },
-      fields: () => Observable.of(fields),
-      lead: (id: number) => Observable.of(lead),
-      notes: (leadId: number) => Observable.of(notes),
-      stage: (id: number) => Observable.of(stage),
-      stages: (pipelineId: number) => Observable.of(stages),
-      updateLead: (id: number, data: Crm.API.ILeadUpdate) => {
-        leadUpdate = data
-        return Observable.of({
-          ...lead,
-          ...leadUpdate,
-          owner: leadUpdate.owner_id
-            ? users.find((user) => user.id === leadUpdate.owner_id)
-            : null
-        })
-      }
-    }
-
-    const currentUserServiceStub = {
-      details: Observable.of(users[0]),
-      role: () => userRole
-    }
-
-    const usersServiceStub = {
-      users: () => Observable.of(users)
-    }
-
-    const navParamsStub = {
-      get: (prop: string) => lead.id
-    }
-
-    navControllerStub = new NavControllerStub()
-
-    spyOn(navControllerStub, 'setRoot').and.callThrough()
-
-    fixture = initComponent(LeadPage, {
-      imports: [LeadPageModule, HttpClientTestingModule],
-      providers: [
-        NavService,
-        { provide: NavParams, useValue: navParamsStub },
-        { provide: NavController, useValue: navControllerStub },
-        { provide: SalesService, useValue: salesServiceStub },
-        { provide: CurrentUserService, useValue: currentUserServiceStub },
-        { provide: UsersService, useValue: usersServiceStub }
       ]
+
+      fields = [
+        { id: 300, name: 'First Name' },
+        { id: 301, name: 'Last Name' },
+        { id: 302, name: 'Website' }
+      ]
+
+      stages = [
+        {
+          id: 10,
+          name: 'Enrolling',
+          pipelineId: 504
+        },
+        {
+          id: 14,
+          name: 'Signing',
+          pipelineId: 504
+        },
+        {
+          id: 15,
+          name: 'Closing - Won',
+          pipelineId: 504
+        }
+      ]
+
+      notes = [
+        {
+          content: 'note1',
+          id: 1
+        },
+        {
+          content: 'note2',
+          id: 2
+        }
+      ]
+
+      stage = stages[1]
+
+      lead = new Lead({
+        created_by_service_id: null,
+        created_by_user_id: 101,
+        email: 'lead@example.com',
+        fields: [
+          { id: 300, name: 'First Name', value: 'Mark' },
+          { id: 301, name: 'Last Name', value: 'Williams' },
+          { id: 302, name: 'Website', value: 'williams.com' }
+        ],
+        id: 1,
+        owner: {
+          avatar_url: null,
+          email: 'john@example.com',
+          id: 100,
+          name: 'John Boon',
+          role: 'admin'
+        },
+        phone_number: '+999100200300',
+        stage_id: stage.id
+      })
+
+      const salesServiceStub = {
+        createNote: (leadId: number, noteData: Crm.API.INoteCreate) => {
+          const newNote = new Note({
+            content: noteData.content,
+            id: 3
+          })
+          return Observable.of(newNote)
+        },
+        fields: () => Observable.of(fields),
+        lead: (id: number) => Observable.of(lead),
+        notes: (leadId: number) => Observable.of(notes),
+        stage: (id: number) => Observable.of(stage),
+        stages: (pipelineId: number) => Observable.of(stages),
+        updateLead: (id: number, data: Crm.API.ILeadUpdate) => {
+          leadUpdate = data
+          return Observable.of({
+            ...lead,
+            stageId: leadUpdate.stage_id,
+            ...leadUpdate,
+            owner: leadUpdate.owner_id
+              ? users.find((user) => user.id === leadUpdate.owner_id)
+              : null
+          })
+        }
+      }
+
+      const currentUserServiceStub = {
+        details: Observable.of(users[0]),
+        role: () => userRole
+      }
+
+      const usersServiceStub = {
+        users: () => Observable.of(users)
+      }
+
+      const navParamsStub = {
+        get: (prop: string) => lead.id
+      }
+
+      navControllerStub = new NavControllerStub()
+
+      spyOn(navControllerStub, 'setRoot').and.callThrough()
+
+      fixture = initComponent(LeadPage, {
+        imports: [LeadPageModule, HttpClientTestingModule],
+        providers: [
+          NavService,
+          { provide: NavParams, useValue: navParamsStub },
+          { provide: NavController, useValue: navControllerStub },
+          { provide: SalesService, useValue: salesServiceStub },
+          { provide: CurrentUserService, useValue: currentUserServiceStub },
+          { provide: UsersService, useValue: usersServiceStub }
+        ]
+      })
+
+      page = new LeadPageObject(fixture)
+
+      fixture.detectChanges()
     })
-
-    page = new LeadPageObject(fixture)
-
-    fixture.detectChanges()
-  }))
+  )
 
   it('returns to the CRM page after clicking back', () => {
     page.clickBackButton()
@@ -284,6 +287,28 @@ describe('LeadPage', () => {
       fixture.detectChanges()
 
       expect(page.isSaveButtonEnabled).toBe(false)
+    })
+  })
+  describe('selecting and updating stage', () => {
+    it('shows update stage button', () => {
+      expect(page.updateStageBtn.nativeElement.firstChild!.textContent).toEqual(
+        'Update stage'
+      )
+    })
+    it('update stage button is disabled until stage is changed by user', () => {
+      expect(page.updateStageBtn.nativeElement.disabled).toBeTruthy()
+    })
+    it('enables update stage button when user selects different stage', () => {
+      page.selectStage(1)
+      expect(page.updateStageBtn.nativeElement.disabled).toBeFalsy()
+    })
+    it('updates stage after clicking update stage button', () => {
+      page.selectStage(3)
+      page.clickUpdateStage()
+      expect(fixture.componentInstance.currentStageId).toEqual(
+        fixture.componentInstance.newStageId
+      )
+      expect(page.updateStageBtn.nativeElement.disabled).toBeTruthy()
     })
   })
 })
