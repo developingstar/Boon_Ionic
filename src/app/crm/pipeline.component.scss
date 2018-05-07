@@ -146,10 +146,8 @@ pipeline {
   flex-wrap: nowrap;
   width: 100%;
 
-  &[type='select'] {
-    .item-container {
-      cursor: pointer;
-    }
+  .item-container {
+    cursor: pointer;
   }
 
   .view-all-container-initial,

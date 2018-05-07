@@ -26,7 +26,7 @@ interface IStageViewModel {
   templateUrl: 'pipeline.component.html'
 })
 export class PipelineComponent implements OnChanges, OnDestroy {
-  @Input() public readonly currentStageId: number | undefined
+  @Input() public currentStageId: number | undefined
   @Input() public readonly stages?: ReadonlyArray<Stage>
   @Input() public readonly type: 'select' | 'progress'
 
@@ -62,6 +62,9 @@ export class PipelineComponent implements OnChanges, OnDestroy {
 
   public onClick(stage: Stage): void {
     if (this.type === 'select') {
+      this.select.next(stage.id)
+    } else {
+      this.currentStageId = stage.id
       this.select.next(stage.id)
     }
   }
