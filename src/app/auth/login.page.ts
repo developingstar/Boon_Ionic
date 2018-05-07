@@ -42,7 +42,7 @@ export class LoginPage implements OnInit {
   }
 
   public gotoForgot(): void {
-    return
+    this.nav.setRoot('SendCodePage')
   }
 
   set emailModel(value: string) {

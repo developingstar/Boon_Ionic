@@ -18,6 +18,10 @@ send-code-page {
       width: 35vw;
       margin-bottom: 100px;
 
+      .title {
+        margin-bottom: 20px;
+      }
+
       .label-comment {
         display: flex;
         height: 100%;
@@ -42,6 +46,10 @@ send-code-page {
 
       button {
         @extend .boon-button;
+      }
+
+      .login {
+        cursor: pointer;
       }
     }
   }

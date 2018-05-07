@@ -1,13 +1,13 @@
 ion-content(padding)
   form(#sendForm="ngForm", (ngSubmit)="sendCode()", autocomplete="off")
-    ion-row
+    ion-row.title
       ion-col
         h1 Enter account email
         ion-label(stacked) We will send a code to confirm email ownership.
     ion-row
       ion-col
         ion-label(stacked) Email
-        ion-input(name="email", type="email", [(ngModel)]="emailModel", required, #email)
+        ion-input(name="email", type="email", placeholder="Please input user email", [(ngModel)]="emailModel", required, #email)
 
     ion-row
       ion-col

@@ -8,6 +8,10 @@ import { ConfirmCodePage } from './confirm.code.page'
 @NgModule({
   declarations: [ConfirmCodePage],
   entryComponents: [ConfirmCodePage],
-  imports: [IonicPageModule.forChild(ConfirmCodePage), NavModule, InlineSVGModule]
+  imports: [
+    IonicPageModule.forChild(ConfirmCodePage),
+    NavModule,
+    InlineSVGModule
+  ]
 })
 export class ConfirmCodePageModule {}

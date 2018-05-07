@@ -26,6 +26,7 @@ export class ConfirmCodePage implements OnInit {
   public confirmCode(): void {
     const code = this.code.getValue() as string
     this.authService.sendCode(code)
+    this.nav.setRoot('NewPasswordPage')
   }
 
   public goLogin(): void {

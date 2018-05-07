@@ -8,6 +8,10 @@ import { NewPasswordPage } from './new.password.page'
 @NgModule({
   declarations: [NewPasswordPage],
   entryComponents: [NewPasswordPage],
-  imports: [IonicPageModule.forChild(NewPasswordPage), NavModule, InlineSVGModule]
+  imports: [
+    IonicPageModule.forChild(NewPasswordPage),
+    NavModule,
+    InlineSVGModule
+  ]
 })
 export class NewPasswordPageModule {}

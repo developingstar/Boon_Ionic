@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
-import { Subscription } from 'rxjs'
+import { Observable, Subscription } from 'rxjs'
 
 import { CurrentUserService } from './current-user.service'
 import { User } from './user.model'
@@ -30,5 +30,23 @@ export class AuthService {
 
   public logout(): void {
     this.currentUserService.details.next(undefined)
+  }
+
+  public sendCode(email: string): void {
+    return
+  }
+
+  public sendResetRequest(
+    email: string
+  ): Observable<{
+    readonly data: {
+      readonly message: string
+    }
+  }> {
+    return this.http
+      .post('/api/users/request-password-reset', { email: email })
+      .map((response: { readonly data: { readonly message: string } }) => {
+        return response
+      })
   }
 }
