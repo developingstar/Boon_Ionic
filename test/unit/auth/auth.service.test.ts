@@ -62,4 +62,23 @@ describe('AuthService', () => {
       })
     }))
   })
+
+  describe('reset password', () => {
+    it('send reset request', async(() => {
+      service.sendResetRequest('admin@example.com').subscribe((result) => {
+        expect(result.data.message).toEqual('OK')
+      })
+
+      const req = httpMock.expectOne('/api/users/request-password-reset')
+      expect(req.request.method).toBe('POST')
+
+      req.flush({
+        data: {
+          message: 'OK'
+        }
+      })
+
+      httpMock.verify()
+    }))
+  })
 })
