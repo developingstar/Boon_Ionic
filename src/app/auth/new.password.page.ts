@@ -13,9 +13,8 @@ import { AuthService } from './auth.service'
 })
 export class NewPasswordPage implements OnInit {
   public readonly newPassword: BehaviorSubject<string> = new BehaviorSubject('')
-  public readonly confirmPassword: BehaviorSubject<
-    string
-  > = new BehaviorSubject('')
+  public readonly confirmPassword: BehaviorSubject<string> = new BehaviorSubject('')
+  public readonly code: BehaviorSubject<string> = new BehaviorSubject('')
 
   constructor(
     private readonly authService: AuthService,
@@ -27,9 +26,14 @@ export class NewPasswordPage implements OnInit {
   }
 
   public createNewPassword(): void {
+    const code = this.code.getValue() as string
     const newPassword = this.newPassword.getValue() as string
     const confirmPassword = this.confirmPassword.getValue() as string
-    this.nav.setRoot('LoginPage')
+    
+  }
+
+  set codeModel(value: string) {
+    this.code.next(value)
   }
 
   set newPasswordModel(value: string) {
