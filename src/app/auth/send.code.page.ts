@@ -27,7 +27,7 @@ export class SendCodePage implements OnInit {
     const email = this.email.getValue() as string
     const result = this.authService.sendResetRequest(email)
     result.subscribe((response: { data: { message: string } }) => {
-      this.nav.setRoot('ConfirmCodePage')
+      this.nav.setRoot('NewPasswordPage')
     })
   }
 
