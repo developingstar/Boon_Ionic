@@ -80,5 +80,24 @@ describe('AuthService', () => {
 
       httpMock.verify()
     }))
+
+    it('create new password', async(() => {
+      service
+        .createNewPassword('token_code', 'new_password')
+        .subscribe((result) => {
+          expect(result.data.message).toEqual('OK')
+        })
+
+      const req = httpMock.expectOne('/api/users/reset-password')
+      expect(req.request.method).toBe('POST')
+
+      req.flush({
+        data: {
+          message: 'OK'
+        }
+      })
+
+      httpMock.verify()
+    }))
   })
 })
