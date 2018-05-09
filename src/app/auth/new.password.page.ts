@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core'
-import { IonicPage, NavController } from 'ionic-angular'
+import { IonicPage, NavController, ToastController } from 'ionic-angular'
 import { BehaviorSubject } from 'rxjs'
 
+import { toastWarningDefaults } from '../utils/toast'
 import { AuthService } from './auth.service'
 
 @IonicPage({
@@ -13,12 +14,15 @@ import { AuthService } from './auth.service'
 })
 export class NewPasswordPage implements OnInit {
   public readonly newPassword: BehaviorSubject<string> = new BehaviorSubject('')
-  public readonly confirmPassword: BehaviorSubject<string> = new BehaviorSubject('')
+  public readonly confirmPassword: BehaviorSubject<
+    string
+  > = new BehaviorSubject('')
   public readonly code: BehaviorSubject<string> = new BehaviorSubject('')
 
   constructor(
     private readonly authService: AuthService,
-    private readonly nav: NavController
+    private readonly nav: NavController,
+    private toastController: ToastController,
   ) {}
 
   ngOnInit(): void {
@@ -29,7 +33,28 @@ export class NewPasswordPage implements OnInit {
     const code = this.code.getValue() as string
     const newPassword = this.newPassword.getValue() as string
     const confirmPassword = this.confirmPassword.getValue() as string
-    
+    if (newPassword === confirmPassword) {
+      const result = this.authService.createNewPassword(code, newPassword)
+      result.subscribe((response: { data: { message: string } }) => {
+        this.nav.setRoot('LoginPage')
+      }, (error: any) => {
+        if (error.status === 422) {
+          this.toastController
+            .create({
+              ...toastWarningDefaults,
+              message: 'Invalid or expired token'
+            })
+            .present()
+        }
+      })
+    } else {
+      this.toastController
+        .create({
+          ...toastWarningDefaults,
+          message: 'Password is invalid.'
+        })
+        .present()
+    }
   }
 
   set codeModel(value: string) {
