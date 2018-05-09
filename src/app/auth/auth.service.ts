@@ -49,4 +49,19 @@ export class AuthService {
         return response
       })
   }
+
+  public createNewPassword(
+    token: string,
+    password: string
+  ): Observable<{
+    readonly data: {
+      readonly message: string
+    }
+  }> {
+    return this.http
+      .post('/api/users/reset-password', { token: token, password: password })
+      .map((response: { readonly data: { readonly message: string } }) => {
+        return response
+      })
+  }
 }
