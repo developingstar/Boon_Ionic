@@ -2,13 +2,16 @@ import { Component, OnDestroy, OnInit } from '@angular/core'
 import { FormBuilder, FormGroup, Validators } from '@angular/forms'
 import {
   IonicPage,
+  ModalController,
   NavController,
   NavParams,
+  PopoverController,
   ToastController
 } from 'ionic-angular'
 import { Observable, Subject, Subscription } from 'rxjs'
 
 import { CurrentUserService } from '../auth/current-user.service'
+import { IPopoverResult } from '../popover/popover'
 import { emailValidator, phoneNumberValidator } from '../utils/form-validators'
 import { toastSuccessDefaults, toastWarningDefaults } from '../utils/toast'
 import { ISelectOption } from './field.component'
@@ -31,8 +34,9 @@ const UnassignedUserId = ''
 export class LeadPage implements OnDestroy, OnInit {
   public readonly fields: Observable<ReadonlyArray<Crm.API.IFieldDefinition>>
   public readonly owners: Observable<ReadonlyArray<ISelectOption>>
-  public readonly stages: Observable<ReadonlyArray<Stage>>
+  public stages: Observable<ReadonlyArray<Stage>>
   public notes: Observable<ReadonlyArray<Note>>
+  public getLead: Observable<Lead>
   public selectedNavItem: string
   public newNote: string
   public leadId: number
@@ -46,9 +50,11 @@ export class LeadPage implements OnDestroy, OnInit {
   constructor(
     private readonly navController: NavController,
     private readonly toastController: ToastController,
+    private modalController: ModalController,
     private readonly formBuilder: FormBuilder,
     public readonly salesService: SalesService,
-    navParams: NavParams,
+    public popoverCtrl: PopoverController,
+    public navParams: NavParams,
     currentUserService: CurrentUserService,
     usersService: UsersService
   ) {
@@ -72,23 +78,14 @@ export class LeadPage implements OnDestroy, OnInit {
         return [unassigned].concat(options)
       })
 
-    const leadId: number = navParams.get('id')
-    const getLead = salesService.lead(leadId)
-    this.notes = salesService.notes(leadId)
-    this.leadId = leadId
-
-    this.stages = getLead
-      .switchMap((lead) => {
-        return salesService.stage(lead.stageId).switchMap((stage) => {
-          this.currentStageId = stage.id
-          return salesService.stages(stage.pipelineId)
-        })
-      })
-      .shareReplay(1)
+    this.leadId = navParams.get('id')
+    this.getLead = salesService.lead(this.leadId)
+    this.notes = salesService.notes(this.leadId)
+    this.stages = this.setStages()
 
     const loadPageData = Observable.combineLatest(
       this.fields,
-      getLead,
+      this.getLead,
       this.owners,
       getRole,
       this.stages,
@@ -135,8 +132,9 @@ export class LeadPage implements OnDestroy, OnInit {
               .updateLead(state.data.lead.id, action.leadUpdate)
               .map<Lead, State>((lead) => {
                 const data = { ...state.data, lead: lead }
-                this.currentStageId = lead.stageId
-                if (action.leadUpdate.stage_id) this.stageUpdateSuccess()
+                if (action.leadUpdate.stage_id) {
+                  this.handleUpdateStages(data, action, lead)
+                }
                 return {
                   data: data,
                   formGroup: this.buildForm(data, false),
@@ -271,13 +269,68 @@ export class LeadPage implements OnDestroy, OnInit {
   public onStageChange(event: any): void {
     this.newStageId = event
   }
-  private stageUpdateSuccess(): void {
+  public more(event: any): void {
+    const popover = this.popoverCtrl.create(
+      'PopoverPage',
+      { instanceName: 'leadMore' },
+      { cssClass: 'boon-popover' }
+    )
+    popover.present({
+      ev: event
+    })
+    popover.onDidDismiss((data: IPopoverResult) => {
+      if (data && data.name === 'changePipeline') {
+        this.changePipelineModal()
+      }
+    })
+  }
+
+  private setStages(): any {
+    return this.getLead
+      .switchMap((lead) => {
+        return this.salesService.stage(lead.stageId).switchMap((stage) => {
+          this.currentStageId = stage.id
+          return this.salesService.stages(stage.pipelineId)
+        })
+      })
+      .shareReplay(1)
+  }
+  private toast(message: string): void {
     this.toastController
       .create({
         ...toastSuccessDefaults,
-        message: 'Lead updated successfully'
+        message: message
       })
       .present()
+  }
+  private handleUpdateStages(data: any, action: any, lead: Lead): void {
+    this.currentStageId = lead.stageId
+    const ids = data.stages.map((stage: Stage) => stage.id)
+    if (ids.indexOf(this.currentStageId) === -1) {
+      this.stages = this.setStages().map((stages: Stage[]) => {
+        data.stages = stages
+        return stages
+      })
+    }
+    this.toast('Lead updated successfully')
+  }
+
+  private changePipelineModal(): void {
+    const modal = this.modalController.create(
+      'AssignStageModalComponent',
+      {
+        action: { data: { stage_id: this.currentStageId } },
+        isPipeline: true
+      },
+      { cssClass: 'assign-stage-modal-component' }
+    )
+    modal.present()
+    modal.onDidDismiss((data: any) => {
+      if (data && data.stage_id) {
+        this.newStageId = data.stage_id
+        this.updateStage()
+      }
+    })
   }
   private buildForm(pageData: IPageData, editMode: boolean): FormGroup {
     const baseFields = {
