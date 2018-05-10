@@ -1,5 +1,7 @@
-.modal-header
+.modal-header(*ngIf="!isChangePipeline")
   event(type="action", kind="assign_stage")
+.modal-header(*ngIf="isChangePipeline")
+  event(type="action", kind="change_pipeline")
 .modal-body
   form.form
     label select pipeline

@@ -7,9 +7,9 @@ import { Pipeline } from '../../crm/pipeline.model'
 import { SalesService } from './../../crm/sales.service'
 import { IAssignStageData, IStageEvent } from './../journeys.api.model'
 import {
+  buildSelectOptions,
   ISelectOption,
-  numberFormControl,
-  toSelectOption
+  numberFormControl
 } from './event-modal.helpers'
 
 @IonicPage()
@@ -22,7 +22,8 @@ export class AssignStageModalComponent implements OnDestroy {
   public readonly pipelineSelect: FormControl
   public readonly stageOptions: Observable<ReadonlyArray<ISelectOption>>
   public readonly stageSelect: FormControl
-
+  public isChangePipeline: boolean
+  private loadedStageOptions: boolean
   private readonly pipelineSubscription: Subscription
   private readonly stageOptionsSubscription: Subscription
 
@@ -31,10 +32,11 @@ export class AssignStageModalComponent implements OnDestroy {
     private salesService: SalesService
   ) {
     const action: IStageEvent = viewController.data.action
+    this.isChangePipeline = viewController.data.isPipeline
     const pipelinesResponse = this.salesService.pipelines().shareReplay()
 
     this.pipelineSelect = numberFormControl('')
-    this.pipelineOptions = pipelinesResponse.map(toSelectOption)
+    this.pipelineOptions = pipelinesResponse.map(buildSelectOptions)
     this.pipelineSubscription = pipelinesResponse.subscribe((pipelines) => {
       if (action) {
         const selectedPipeline = this.pipelineByStageId(
@@ -52,11 +54,15 @@ export class AssignStageModalComponent implements OnDestroy {
 
     this.stageSelect = numberFormControl('')
     this.stageOptions = changes.flatMap(this.fetchStageOptions.bind(this))
+    this.stageOptions.subscribe((options: ISelectOption[]) => {
+      if (action && !this.loadedStageOptions) {
+        this.stageSelect.setValue(action.data.stage_id)
+        this.loadedStageOptions = true
+      } else {
+        this.stageSelect.patchValue(options[0].value)
+      }
+    })
     this.stageOptionsSubscription = this.stageOptions.subscribe()
-
-    if (action) {
-      this.stageSelect.setValue(action.data.stage_id)
-    }
   }
 
   ngOnDestroy(): void {
@@ -81,7 +87,7 @@ export class AssignStageModalComponent implements OnDestroy {
   ): Observable<ReadonlyArray<ISelectOption>> {
     return this.salesService
       .stages(pipelineId)
-      .map(toSelectOption)
+      .map(buildSelectOptions)
       .shareReplay(1)
   }
 
