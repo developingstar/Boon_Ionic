@@ -31,6 +31,7 @@ export class EmailTemplatePage extends TemplatePage<
   IEmailTemplate,
   TemplateFormGroup
 > {
+  public shortcode: string
   protected readonly resourcesRootPage: string = 'EmailTemplatesPage'
 
   constructor(
@@ -56,9 +57,9 @@ export class EmailTemplatePage extends TemplatePage<
         default_sender: '',
         default_sender_name: null,
         name: '',
-        subject: ''
+        shortcode: null,
+        subject: '',
       }
-
       return this.messagesService.shortcodes().map((shortcodes) => ({
         ...state,
         form: this.createFormGroup(newTemplate),
@@ -85,9 +86,9 @@ export class EmailTemplatePage extends TemplatePage<
     return Observable.zip(
       fetchTemplate,
       fetchShortcodes,
-      (template, shortcodes) => ({
+      (template: EmailTemplate, shortcodes) => ({
         ...state,
-        form: this.createFormGroup(template),
+        form: this.createFormGroup(template.toApiRepresentation()),
         mode: mode,
         shortcodes: shortcodes,
         template: template
@@ -109,11 +110,12 @@ export class EmailTemplatePage extends TemplatePage<
   }
 
   protected createFormGroup(
-    values: EmailTemplate | IEmailTemplate | undefined = {
+    values: IEmailTemplate | undefined = {
       content: '',
       default_sender: '',
       default_sender_name: '',
       name: '',
+      shortcode: null,
       subject: ''
     }
   ): TemplateFormGroup {
@@ -125,6 +127,7 @@ export class EmailTemplatePage extends TemplatePage<
       ]),
       default_sender_name: new FormControl(values.default_sender_name || ''),
       name: new FormControl(values.name, Validators.required),
+      shortcode: new FormControl(values.shortcode),
       subject: new FormControl(values.subject, Validators.required)
     })
   }

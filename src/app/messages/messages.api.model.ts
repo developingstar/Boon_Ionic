@@ -40,6 +40,7 @@ export interface IEmailTemplate {
   readonly id?: number
   readonly name: string
   readonly subject: string
+  readonly shortcode: string | null
 }
 
 export interface IEmailTemplateCreateRequest {

@@ -24,8 +24,9 @@ ion-content(padding)
             ion-item
               ion-label From Email:
               ion-input(name="default_sender", type="text", formControlName="default_sender")
+      ion-item
+        ion-label Shortcodes
+        ion-select(formControlName="shortcode", [(ngModel)]="shortcode", placeholder="Available shortcodes")
+          ion-option(*ngFor="let name of (shortcodeNames | async)", [value]="name") {{name}}
       ion-item.item-without-border
         ion-textarea(name="content", formControlName="content")
-      p.shortcodes
-        | Available shortcodes:
-        ion-badge(*ngFor="let name of (shortcodeNames | async)") {{ name }}
