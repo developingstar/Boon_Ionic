@@ -1,0 +1,14 @@
+.single-team-member(*ngFor="let teamMember of (teamMembers | async)", (click)="goToTeamMember(teamMember.id)")
+  .member-picture
+    img(src="{{ teamMember.avatarUrl }}", alt="profile")
+  .member-details
+    h3.member-name
+      | {{teamMember.name}}
+    .phone-number
+      img.twilio-icon(src="../../assets/icon/twilio-logo-red.svg")
+      h4.member-phone-number
+        | {{teamMember.phoneNumber}}
+  .member-more
+    .oval
+    .oval
+    .oval

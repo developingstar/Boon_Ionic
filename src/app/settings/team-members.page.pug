@@ -1,0 +1,14 @@
+nav-content
+  nav-icons(right, [currentPage]="'TeamMembersPage'")
+
+settings-page-with-menu.settings-page([currentPage]="'TeamMembersPage'")
+  ion-content.scrollable-content-wrapper
+    .settings-content-wrapper
+      .settings-header
+        h1
+          | Team Members
+        button.settings-button(ion-button, medium, [navPush]="'AddEditTeamMemberPage'")
+          | add team member
+      .scroll-spacer
+      .settings-body
+        team-member-component.team-member([teamMembers]="teamMembers")
