@@ -84,7 +84,7 @@ export class SettingsPageWithMenuComponent {
           { label: 'Billing Settings' },
           {
             children: [
-              { label: 'Team members' },
+              { label: 'Team members', link: 'TeamMembersPage' },
               { label: 'Sales groups', link: 'GroupsPage' }
             ],
             label: 'Team Settings',

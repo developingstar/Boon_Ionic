@@ -8,6 +8,8 @@ export class User {
   readonly email: string
   readonly id: number
   readonly name: string
+  readonly password: string
+  readonly phoneNumber: string
   readonly role: 'admin' | 'lead_owner'
   readonly avatarUrl: string | null
 
@@ -15,6 +17,8 @@ export class User {
     this.email = ensureNonEmptyString(data.email)
     this.id = ensureNumber(data.id)
     this.name = ensureNonEmptyString(data.name)
+    this.password = data.password || ''
+    this.phoneNumber = data.phone_number || ''
     this.role = ensureInclusionOf<Auth.API.Role>(data.role, [
       'admin',
       'lead_owner'
@@ -28,6 +32,8 @@ export class User {
       email: this.email,
       id: this.id,
       name: this.name,
+      password: this.password,
+      phone_number: this.phoneNumber,
       role: this.role
     }
   }
