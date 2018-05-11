@@ -22,15 +22,21 @@ lead-page {
   button.update-stage-button {
     float: right;
     @extend .boon-button;
-    background: white !important;
     padding: 0 30px;
     margin-bottom: 20px;
-    color: $color-primary;
-    border: 1px solid $color-primary;
     cursor: pointer;
     &:disabled {
+      background: white !important;
       color: rgb(201, 198, 198);
       border: 1px solid rgb(201, 198, 198);
+    }
+  }
+  .lead-more-button {
+    background: white !important;
+    @extend .update-stage-button;
+    border: 1px solid rgb(224, 232, 235) !important;
+    .bullets::before {
+      @include bullet(#d8d8d8, '\25CF\25CF\25CF');
     }
   }
 

@@ -285,6 +285,24 @@ export class LeadPage implements OnDestroy, OnInit {
     })
   }
 
+  public changePipelineModal(): void {
+    const modal = this.modalController.create(
+      'AssignStageModalComponent',
+      {
+        action: { data: { stage_id: this.currentStageId } },
+        isPipeline: true
+      },
+      { cssClass: 'assign-stage-modal-component' }
+    )
+    modal.present()
+    modal.onDidDismiss((data: any) => {
+      if (data && data.stage_id) {
+        this.newStageId = data.stage_id
+        this.updateStage()
+      }
+    })
+  }
+
   private setStages(): any {
     return this.getLead
       .switchMap((lead) => {
@@ -313,24 +331,6 @@ export class LeadPage implements OnDestroy, OnInit {
       })
     }
     this.toast('Lead updated successfully')
-  }
-
-  private changePipelineModal(): void {
-    const modal = this.modalController.create(
-      'AssignStageModalComponent',
-      {
-        action: { data: { stage_id: this.currentStageId } },
-        isPipeline: true
-      },
-      { cssClass: 'assign-stage-modal-component' }
-    )
-    modal.present()
-    modal.onDidDismiss((data: any) => {
-      if (data && data.stage_id) {
-        this.newStageId = data.stage_id
-        this.updateStage()
-      }
-    })
   }
   private buildForm(pageData: IPageData, editMode: boolean): FormGroup {
     const baseFields = {

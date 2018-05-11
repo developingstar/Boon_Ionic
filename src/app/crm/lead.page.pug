@@ -7,7 +7,9 @@ ion-content(padding)
 
   div(*ngIf="lead | async; let lead")
     h1 {{lead.name}}
-    button.update-stage-button(ion-button, clear, [disabled]="!canUpdateStage()", (click)="updateStage()") Update stage
+    button.lead-more-button(ion-button, clear, (click)="more($event)" )
+      .bullets
+    button.update-stage-button(ion-button, [disabled]="!canUpdateStage()", (click)="updateStage()") Update stage
 
     pipeline([stages]="stages | async", type="progress", [currentStageId]="lead.stageId", (select)="onStageChange($event)")
 
