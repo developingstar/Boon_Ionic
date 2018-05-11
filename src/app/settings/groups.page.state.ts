@@ -16,7 +16,7 @@ export type State =
   | { readonly name: 'list'; readonly groups: ReadonlyArray<Group> }
   | {
       readonly name: 'edit'
-      readonly group_id: number
+      readonly groupId: number
       readonly nameInput: FormControl
       readonly groupUsers: ReadonlyArray<User>
       readonly users: ReadonlyArray<User>

@@ -2,13 +2,6 @@
 @import 'theme/style-guide';
 
 journeys-page {
-  @mixin bullet($color, $content: '\25CF') {
-    color: $color;
-    content: $content;
-    font-size: 130%;
-    margin-right: 5px;
-  }
-
   &,
   .content {
     background-color: $color-content-background;

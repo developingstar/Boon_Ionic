@@ -1,0 +1,66 @@
+@import '../style-guide/sizes.scss';
+@import '../style-guide/global-colors.scss';
+
+.settings-back-button {
+  color: $color-primary;
+  position: absolute;
+  font-size: 15px;
+  z-index: 50;
+  font-weight: 400;
+  display: flex;
+  flex-direction: row;
+  cursor: pointer;
+  h4 {
+    margin: 1px 0 0 7px;
+    font-size: 15px;
+    font-weight: 400;
+  }
+}
+
+.settings-page {
+  .grid {
+    height: calc(100vh - #{$nav-height-mobile});
+    @include md {
+      height: calc(100vh - #{$nav-height-large});
+    }
+    .row {
+      height: 100%;
+    }
+  }
+
+  .scrollable-content-wrapper {
+    .settings-header {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: flex-end;
+      padding-bottom: 10px;
+      border-bottom: 1px solid $color-border;
+      position: fixed;
+      width: 75%;
+      height: 100px;
+      max-width: 600px;
+      background: white;
+      margin-top: -30px;
+    }
+    .scroll-spacer {
+      height: 100px;
+    }
+    .settings-body {
+      width: 100%;
+      max-width: 600px;
+    }
+    h1 {
+      font-size: 25px;
+      font-weight: $font-weight-headers;
+      color: $color-text-primary-dk;
+      margin-bottom: 0;
+    }
+    .settings-button {
+      @extend .boon-button;
+      background-color: $color-primary;
+      font-size: 12px;
+      width: 180px;
+    }
+  }
+}

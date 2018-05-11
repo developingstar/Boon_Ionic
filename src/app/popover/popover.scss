@@ -1,0 +1,12 @@
+page-popover {
+  .popover-item {
+    cursor: pointer;
+    width: 100%;
+    height: 50px;
+    text-align: left;
+    padding: 10px;
+    font-size: 13px;
+    color: $color-text-primary;
+    font-weight: 500;
+  }
+}

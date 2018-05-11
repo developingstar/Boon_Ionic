@@ -5,7 +5,6 @@ export type UserAction =
   | { readonly name: 'create' }
   | { readonly name: 'edit' }
   | { readonly name: 'update' }
-  | { readonly name: 'shortcode', readonly value: string }
 
 export type State<Model, IModel, TemplateFormGroup> =
   | {

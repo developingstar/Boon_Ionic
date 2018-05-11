@@ -115,10 +115,6 @@ export class TextTemplatePage extends TemplatePage<
     )
   }
 
-  protected addShortCode(state: State): Observable<State>  {
-    return Observable.of(state)
-  }
-
   protected updateTemplate(
     id: number,
     form: TemplateFormGroup

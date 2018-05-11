@@ -30,97 +30,103 @@ describe('NewLeadPage', () => {
   let pipelines: Pipeline[]
   let salesServiceStub: any
   let viewControllerStub: any
-  beforeEach(async(() => {
-    users = [
-      new User({
-        avatar_url: null,
-        email: 'john@example.com',
-        id: 100,
-        name: 'John Boon',
-        role: 'admin'
-      }),
-      new User({
-        avatar_url: null,
-        email: 'mark@example.com',
-        id: 101,
-        name: 'Mark Boon',
-        role: 'lead_owner'
-      })
-    ]
-    pipelines = [
-      new Pipeline(
-        samplePipeline({ id: 1, name: 'Converted', stage_order: [1, 2, 3] })
-      ),
-      new Pipeline(
-        samplePipeline({
-          id: 2,
-          name: 'Without response',
-          stage_order: [4, 5, 6]
+  beforeEach(
+    async(() => {
+      users = [
+        new User({
+          avatar_url: null,
+          email: 'john@example.com',
+          id: 100,
+          name: 'John Boon',
+          password: '',
+          phone_number: '',
+          role: 'admin'
+        }),
+        new User({
+          avatar_url: null,
+          email: 'mark@example.com',
+          id: 101,
+          name: 'Mark Boon',
+          password: '',
+          phone_number: '',
+          role: 'lead_owner'
         })
-      )
-    ]
-    stages = [
-      sampleStage({ id: 1, name: 'Stage One', pipeline_id: 1 }),
-      sampleStage({ id: 2, name: 'Stage Two', pipeline_id: 1 }),
-      sampleStage({ id: 3, name: 'Stage Three', pipeline_id: 1 })
-    ]
-    stages2 = [
-      sampleStage({ id: 4, name: 'Stage Four', pipeline_id: 2 }),
-      sampleStage({ id: 5, name: 'Stage Five', pipeline_id: 2 }),
-      sampleStage({ id: 6, name: 'Stage Six', pipeline_id: 2 })
-    ]
-    currentUser = new BehaviorSubject<User | undefined>(users[0])
-    fields = [
-      { id: 300, name: 'First Name' },
-      { id: 301, name: 'Last Name' },
-      { id: 302, name: 'Website' }
-    ]
-    salesServiceStub = {
-      createLead: (data: Crm.API.ILeadCreate) => {
-        leadCreate = data
-        return Observable.of({})
-      },
-      fields: () => Observable.of(fields),
-      pipelines: () => {
-        return Observable.of(pipelines)
-      },
-      stages: (data: number | string) => {
-        if (data === 1 || data === '1') {
-          return Observable.of(stages)
-        } else {
-          return Observable.of(stages2)
+      ]
+      pipelines = [
+        new Pipeline(
+          samplePipeline({ id: 1, name: 'Converted', stage_order: [1, 2, 3] })
+        ),
+        new Pipeline(
+          samplePipeline({
+            id: 2,
+            name: 'Without response',
+            stage_order: [4, 5, 6]
+          })
+        )
+      ]
+      stages = [
+        sampleStage({ id: 1, name: 'Stage One', pipeline_id: 1 }),
+        sampleStage({ id: 2, name: 'Stage Two', pipeline_id: 1 }),
+        sampleStage({ id: 3, name: 'Stage Three', pipeline_id: 1 })
+      ]
+      stages2 = [
+        sampleStage({ id: 4, name: 'Stage Four', pipeline_id: 2 }),
+        sampleStage({ id: 5, name: 'Stage Five', pipeline_id: 2 }),
+        sampleStage({ id: 6, name: 'Stage Six', pipeline_id: 2 })
+      ]
+      currentUser = new BehaviorSubject<User | undefined>(users[0])
+      fields = [
+        { id: 300, name: 'First Name' },
+        { id: 301, name: 'Last Name' },
+        { id: 302, name: 'Website' }
+      ]
+      salesServiceStub = {
+        createLead: (data: Crm.API.ILeadCreate) => {
+          leadCreate = data
+          return Observable.of({})
+        },
+        fields: () => Observable.of(fields),
+        pipelines: () => {
+          return Observable.of(pipelines)
+        },
+        stages: (data: number | string) => {
+          if (data === 1 || data === '1') {
+            return Observable.of(stages)
+          } else {
+            return Observable.of(stages2)
+          }
         }
       }
-    }
-    spyOn(salesServiceStub, 'createLead').and.callThrough()
-    const currentUserServiceStub = {
-      details: currentUser
-    }
-    const usersServiceStub = {
-      users: () => Observable.of(users)
-    }
-    viewControllerStub = {
-      dismiss: () => {
-        return
+      spyOn(salesServiceStub, 'createLead').and.callThrough()
+      const currentUserServiceStub = {
+        details: currentUser
       }
-    }
-    spyOn(viewControllerStub, 'dismiss').and.callThrough()
-    const navParamsStub = {
-      get: (param: string) => (param === 'stageId' ? stageId : undefined)
-    }
-    fixture = initComponent(NewLeadPage, {
-      imports: [NewLeadPageModule, HttpClientTestingModule],
-      providers: [
-        { provide: CurrentUserService, useValue: currentUserServiceStub },
-        { provide: SalesService, useValue: salesServiceStub },
-        { provide: UsersService, useValue: usersServiceStub },
-        { provide: ViewController, useValue: viewControllerStub },
-        { provide: NavParams, useValue: navParamsStub }
-      ]
+      const usersServiceStub = {
+        users: () => Observable.of(users)
+      }
+      viewControllerStub = {
+        dismiss: () => {
+          return
+        }
+      }
+      spyOn(viewControllerStub, 'dismiss').and.callThrough()
+      const navParamsStub = {
+        get: (param: string) => (param === 'stageId' ? stageId : undefined)
+      }
+      fixture = initComponent(NewLeadPage, {
+        imports: [NewLeadPageModule, HttpClientTestingModule],
+        providers: [
+          { provide: CurrentUserService, useValue: currentUserServiceStub },
+          { provide: SalesService, useValue: salesServiceStub },
+          { provide: UsersService, useValue: usersServiceStub },
+          { provide: ViewController, useValue: viewControllerStub },
+          { provide: NavParams, useValue: navParamsStub }
+        ]
+      })
+      page = new NewLeadPageObject(fixture)
+      fixture.detectChanges()
     })
-    page = new NewLeadPageObject(fixture)
-    fixture.detectChanges()
-  }))
+  )
 
   it('contains inputs for base fields', () => {
     expect(page.baseFieldLabels).toEqual([

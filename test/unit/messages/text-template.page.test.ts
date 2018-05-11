@@ -35,79 +35,83 @@ describe('TextTemplatePage', () => {
   let toastControllerStub: any
   let toastStub: any
 
-  beforeEach(async(() => {
-    template = new TextTemplate(
-      sampleTextTemplate({
-        content: 'Welcome in Boon',
-        default_sender: '+999111111',
-        id: 1,
-        name: 'Introduction'
-      })
-    )
+  beforeEach(
+    async(() => {
+      template = new TextTemplate(
+        sampleTextTemplate({
+          content: 'Welcome in Boon',
+          default_sender: '+999111111',
+          id: 1,
+          name: 'Introduction'
+        })
+      )
 
-    phoneNumbers = ['+999000000', '+999111111', '+999222222']
+      phoneNumbers = ['+999000000', '+999111111', '+999222222']
 
-    const httpClient = new HttpClient(
-      new class extends HttpHandler {
-        handle(req: any): Observable<any> {
-          return Observable.never()
+      const httpClient = new HttpClient(
+        new class extends HttpHandler {
+          handle(req: any): Observable<any> {
+            return Observable.never()
+          }
+        }()
+      )
+
+      messagesServiceStub = new MessagesService(httpClient)
+      messagesServiceStub.shortcodes = () =>
+        Observable.of([
+          sampleShortcode({ name: 'First Name', shortcode: 'first_name' }),
+          sampleShortcode({ name: 'Last Name', shortcode: 'last_name' })
+        ])
+
+      phoneNumbersService = new PhoneNumbersService(httpClient)
+      phoneNumbersService.getAll = () => Observable.of(phoneNumbers)
+      spyOn(phoneNumbersService, 'getAll').and.callThrough()
+
+      navControllerStub = new NavControllerStub({ name: 'TextTemplatePage' })
+      spyOn(navControllerStub, 'setRoot').and.callThrough()
+
+      toastStub = {
+        present: () => {
+          return
         }
-      }()
-    )
-
-    messagesServiceStub = new MessagesService(httpClient)
-    messagesServiceStub.shortcodes = () =>
-      Observable.of([
-        sampleShortcode({ name: 'First Name', shortcode: 'first_name' }),
-        sampleShortcode({ name: 'Last Name', shortcode: 'last_name' })
-      ])
-
-    phoneNumbersService = new PhoneNumbersService(httpClient)
-    phoneNumbersService.getAll = () => Observable.of(phoneNumbers)
-    spyOn(phoneNumbersService, 'getAll').and.callThrough()
-
-    navControllerStub = new NavControllerStub({ name: 'TextTemplatePage' })
-    spyOn(navControllerStub, 'setRoot').and.callThrough()
-
-    toastStub = {
-      present: () => {
-        return
       }
-    }
-    toastControllerStub = {
-      create: () => toastStub
-    }
-    spyOn(toastStub, 'present').and.callThrough()
-    spyOn(toastControllerStub, 'create').and.callThrough()
-  }))
+      toastControllerStub = {
+        create: () => toastStub
+      }
+      spyOn(toastStub, 'present').and.callThrough()
+      spyOn(toastControllerStub, 'create').and.callThrough()
+    })
+  )
 
   describe('create', () => {
-    beforeEach(async(() => {
-      messagesServiceStub.createTextTemplate = () => Observable.of(template)
+    beforeEach(
+      async(() => {
+        messagesServiceStub.createTextTemplate = () => Observable.of(template)
 
-      navParamsStub = {
-        get: (prop: string) => 'new'
-      }
+        navParamsStub = {
+          get: (prop: string) => 'new'
+        }
 
-      fixture = initComponent(TextTemplatePage, {
-        imports: [TextTemplatePageModule, HttpClientTestingModule],
-        providers: [
-          NavService,
-          { provide: NavController, useValue: navControllerStub },
-          { provide: NavParams, useValue: navParamsStub },
-          {
-            provide: MessagesService,
-            useValue: messagesServiceStub
-          },
-          { provide: PhoneNumbersService, useValue: phoneNumbersService },
-          { provide: ToastController, useValue: toastControllerStub }
-        ]
+        fixture = initComponent(TextTemplatePage, {
+          imports: [TextTemplatePageModule, HttpClientTestingModule],
+          providers: [
+            NavService,
+            { provide: NavController, useValue: navControllerStub },
+            { provide: NavParams, useValue: navParamsStub },
+            {
+              provide: MessagesService,
+              useValue: messagesServiceStub
+            },
+            { provide: PhoneNumbersService, useValue: phoneNumbersService },
+            { provide: ToastController, useValue: toastControllerStub }
+          ]
+        })
+
+        page = new TextTemplatePageObject(fixture)
+
+        fixture.detectChanges()
       })
-
-      page = new TextTemplatePageObject(fixture)
-
-      fixture.detectChanges()
-    }))
+    )
 
     it('allows to create template', () => {
       spyOn(messagesServiceStub, 'createTextTemplate').and.callThrough()
@@ -161,34 +165,36 @@ describe('TextTemplatePage', () => {
   })
 
   describe('update', () => {
-    beforeEach(async(() => {
-      messagesServiceStub.textTemplate = () => Observable.of(template)
-      messagesServiceStub.updateTextTemplate = () => Observable.of(template)
-      spyOn(messagesServiceStub, 'textTemplate').and.callThrough()
+    beforeEach(
+      async(() => {
+        messagesServiceStub.textTemplate = () => Observable.of(template)
+        messagesServiceStub.updateTextTemplate = () => Observable.of(template)
+        spyOn(messagesServiceStub, 'textTemplate').and.callThrough()
 
-      navParamsStub = {
-        get: (prop: string) => template.id
-      }
+        navParamsStub = {
+          get: (prop: string) => template.id
+        }
 
-      fixture = initComponent(TextTemplatePage, {
-        imports: [TextTemplatePageModule, HttpClientTestingModule],
-        providers: [
-          NavService,
-          { provide: NavController, useValue: navControllerStub },
-          { provide: NavParams, useValue: navParamsStub },
-          {
-            provide: MessagesService,
-            useValue: messagesServiceStub
-          },
-          { provide: PhoneNumbersService, useValue: phoneNumbersService },
-          { provide: ToastController, useValue: toastControllerStub }
-        ]
+        fixture = initComponent(TextTemplatePage, {
+          imports: [TextTemplatePageModule, HttpClientTestingModule],
+          providers: [
+            NavService,
+            { provide: NavController, useValue: navControllerStub },
+            { provide: NavParams, useValue: navParamsStub },
+            {
+              provide: MessagesService,
+              useValue: messagesServiceStub
+            },
+            { provide: PhoneNumbersService, useValue: phoneNumbersService },
+            { provide: ToastController, useValue: toastControllerStub }
+          ]
+        })
+
+        page = new TextTemplatePageObject(fixture)
+
+        fixture.detectChanges()
       })
-
-      page = new TextTemplatePageObject(fixture)
-
-      fixture.detectChanges()
-    }))
+    )
 
     it('fills initial values', () => {
       spyOn(messagesServiceStub, 'updateTextTemplate').and.callThrough()

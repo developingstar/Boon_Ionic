@@ -52,10 +52,10 @@ export class GroupsService {
   }
 
   public groupUsers(
-    group_id: number | null = null
+    groupId: number | null = null
   ): Observable<ReadonlyArray<User>> {
     return this.http
-      .get(`/api/groups/${group_id}/users`)
+      .get(`/api/groups/${groupId}/users`)
       .map(
         (response: {
           readonly data: {
@@ -66,30 +66,30 @@ export class GroupsService {
   }
 
   public addUser(
-    group_id: number,
-    user_id: number
+    groupId: number,
+    userId: number
   ): Observable<{
     readonly data: {
       readonly message: string
     }
   }> {
     return this.http
-      .post(`/api/groups/${group_id}/users/${user_id}`, JSON.stringify({}))
+      .post(`/api/groups/${groupId}/users/${userId}`, JSON.stringify({}))
       .map((response: { readonly data: { readonly message: string } }) => {
         return response
       })
   }
 
   public deleteUser(
-    group_id: number,
-    user_id: number
+    groupId: number,
+    userId: number
   ): Observable<{
     readonly data: {
       readonly message: string
     }
   }> {
     return this.http
-      .delete(`/api/groups/${group_id}/users/${user_id}`)
+      .delete(`/api/groups/${groupId}/users/${userId}`)
       .map((response: { readonly data: { readonly message: string } }) => {
         return response
       })

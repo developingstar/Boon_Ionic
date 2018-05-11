@@ -16,31 +16,33 @@ describe('NavComponent and NavContentComponent', () => {
   let page: TestHostPageObject
   const user: BehaviorSubject<User | undefined> = new BehaviorSubject(undefined)
 
-  beforeEach(async(() => {
-    user.next(undefined)
+  beforeEach(
+    async(() => {
+      user.next(undefined)
 
-    const currentUserServiceStub = {
-      details: user
-    }
+      const currentUserServiceStub = {
+        details: user
+      }
 
-    fixture = initComponent(TestHostComponent, {
-      declarations: [TestHostComponent],
-      imports: [HttpClientTestingModule, NavModule],
-      providers: [
-        { provide: CurrentUserService, useValue: currentUserServiceStub },
-        NavService
-      ]
+      fixture = initComponent(TestHostComponent, {
+        declarations: [TestHostComponent],
+        imports: [HttpClientTestingModule, NavModule],
+        providers: [
+          { provide: CurrentUserService, useValue: currentUserServiceStub },
+          NavService
+        ]
+      })
+
+      navService = fixture.debugElement.injector.get(NavService)
+      page = new TestHostPageObject(fixture)
+
+      fixture.detectChanges()
     })
+  )
 
-    navService = fixture.debugElement.injector.get(NavService)
-    page = new TestHostPageObject(fixture)
-
+  it('renders the center content in the nav', () => {
     fixture.detectChanges()
-  }))
-
-  it('renders auto-complete component in the nav', () => {
-    fixture.detectChanges()
-    expect(page.autoCompleteComponentVisible()).toBe(true)
+    expect(page.getNavContent('center')).toBe('center content')
   })
 
   it('renders the right content in the nav', () => {
@@ -62,17 +64,19 @@ describe('NavComponent and NavContentComponent', () => {
     it('renders his name', () => {
       user.next(
         new User({
-          avatar_url: null,
+          avatar_url: '',
           email: 'john@example.com',
-          id: 1,
-          name: 'John',
+          id: 100,
+          name: 'John Boon',
+          password: '',
+          phone_number: '',
           role: 'admin'
         })
       )
 
       fixture.detectChanges()
 
-      expect(page.getUsername()).toBe('Hello, John')
+      expect(page.getUsername()).toBe('Hello, John Boon')
     })
   })
 

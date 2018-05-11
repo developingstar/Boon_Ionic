@@ -10,3 +10,10 @@
   -moz-box-shadow: $top $left $blur $color;
   box-shadow: $top $left $blur $color;
 }
+
+@mixin bullet($color, $content: '\25CF') {
+  color: $color;
+  content: $content;
+  font-size: 130%;
+  margin-right: 5px;
+}

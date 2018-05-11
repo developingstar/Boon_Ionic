@@ -41,10 +41,6 @@ export class LoginPage implements OnInit {
     this.authService.login(email, password)
   }
 
-  public gotoForgot(): void {
-    this.nav.setRoot('SendCodePage')
-  }
-
   set emailModel(value: string) {
     this.email.next(value)
   }

@@ -22,60 +22,62 @@ describe('EmailTemplatesPage', () => {
   let navControllerStub: NavControllerStub
   let messagesServiceStub: MessagesService
 
-  beforeEach(async(() => {
-    collection = [
-      new EmailTemplate(
-        sampleEmailTemplate({
-          default_sender: 'john@example.com',
-          default_sender_name: 'John Boon',
-          id: 1,
-          name: 'Introduction',
-          subject: 'Welcome in Boon'
-        })
-      ),
-      new EmailTemplate(
-        sampleEmailTemplate({
-          default_sender: 'susan@example.com',
-          default_sender_name: null,
-          id: 2,
-          name: 'Follow up',
-          subject: 'Hello from Boon'
-        })
-      )
-    ]
-
-    const httpClient = new HttpClient(
-      new class extends HttpHandler {
-        handle(req: any): Observable<any> {
-          return Observable.never()
-        }
-      }()
-    )
-
-    messagesServiceStub = new MessagesService(httpClient)
-    messagesServiceStub.emailTemplates = () => Observable.of(collection)
-
-    spyOn(messagesServiceStub, 'emailTemplates').and.callThrough()
-
-    navControllerStub = new NavControllerStub({ name: 'EmailTemplatesPage' })
-    spyOn(navControllerStub, 'setRoot').and.callThrough()
-
-    fixture = initComponent(EmailTemplatesPage, {
-      imports: [EmailTemplatesPageModule, HttpClientTestingModule],
-      providers: [
-        NavService,
-        { provide: NavController, useValue: navControllerStub },
-        {
-          provide: MessagesService,
-          useValue: messagesServiceStub
-        }
+  beforeEach(
+    async(() => {
+      collection = [
+        new EmailTemplate(
+          sampleEmailTemplate({
+            default_sender: 'john@example.com',
+            default_sender_name: 'John Boon',
+            id: 1,
+            name: 'Introduction',
+            subject: 'Welcome in Boon'
+          })
+        ),
+        new EmailTemplate(
+          sampleEmailTemplate({
+            default_sender: 'susan@example.com',
+            default_sender_name: null,
+            id: 2,
+            name: 'Follow up',
+            subject: 'Hello from Boon'
+          })
+        )
       ]
+
+      const httpClient = new HttpClient(
+        new class extends HttpHandler {
+          handle(req: any): Observable<any> {
+            return Observable.never()
+          }
+        }()
+      )
+
+      messagesServiceStub = new MessagesService(httpClient)
+      messagesServiceStub.emailTemplates = () => Observable.of(collection)
+
+      spyOn(messagesServiceStub, 'emailTemplates').and.callThrough()
+
+      navControllerStub = new NavControllerStub({ name: 'EmailTemplatesPage' })
+      spyOn(navControllerStub, 'setRoot').and.callThrough()
+
+      fixture = initComponent(EmailTemplatesPage, {
+        imports: [EmailTemplatesPageModule, HttpClientTestingModule],
+        providers: [
+          NavService,
+          { provide: NavController, useValue: navControllerStub },
+          {
+            provide: MessagesService,
+            useValue: messagesServiceStub
+          }
+        ]
+      })
+
+      page = new EmailTemplatesPageObject(fixture)
+
+      fixture.detectChanges()
     })
-
-    page = new EmailTemplatesPageObject(fixture)
-
-    fixture.detectChanges()
-  }))
+  )
 
   describe('table', () => {
     it('includes templates', () => {

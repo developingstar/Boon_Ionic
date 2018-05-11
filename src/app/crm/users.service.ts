@@ -25,4 +25,13 @@ export class UsersService {
       }) => new User(response.data.user)
     )
   }
+
+  public getTeamMembers(): Observable<User[]> {
+    return this.http
+      .get(`/api/users`)
+      .map((response: TeamSettings.ITeamMembers) =>
+        response.data.users.map((user) => new User(user))
+      )
+      .shareReplay(1)
+  }
 }

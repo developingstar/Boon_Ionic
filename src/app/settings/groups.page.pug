@@ -43,6 +43,6 @@ settings-page-with-menu(currentPage="GroupsPage")
           div.remove-user((click)='deleteUser(user)', aria-label='Remove User')
             span(aria-hidden='true')
               | &times;
-          img.avatar-image(*ngIf="user.avatar_url", [src]="user.avatar_url")
-          ion-icon.default-avatar(name="ios-contacts", *ngIf="!user.avatar_url")
+          img.avatar-image(*ngIf="user.avatarUrl", [src]="user.avatarUrl")
+          ion-icon.default-avatar(name="ios-contacts", *ngIf="!user.avatarUrl")
           span.user-name {{user.name}}

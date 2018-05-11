@@ -24,3 +24,15 @@ export function toSelectOption(
 
   return [defaultOption].concat(options)
 }
+
+export function buildSelectOptions(
+  objects: ReadonlyArray<{ readonly id: number; readonly name: string }>
+): ReadonlyArray<ISelectOption> {
+  const options = objects.map((object) => {
+    return {
+      label: object.name,
+      value: object.id
+    }
+  })
+  return options
+}

@@ -16,9 +16,11 @@ export function sampleUser(
   return {
     avatar_url: null,
     email: 'john@example.com',
-    id: 1,
+    id: 100,
     name: 'John Boon',
-    role: 'lead_owner',
+    password: '',
+    phone_number: '',
+    role: 'admin',
     ...values
   }
 }

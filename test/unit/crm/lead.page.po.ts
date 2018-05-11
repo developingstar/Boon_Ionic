@@ -113,6 +113,11 @@ export class LeadPageObject extends PageObject<LeadPage> {
     this.clickButton('Cancel')
   }
 
+  openPopover(): void {
+    const button = this.findDebugByCss('.lead-more-button')
+    this.click(button!)
+  }
+
   private clickButton(name: string): void {
     const button = this.findAllDebugByCss('.buttons button').find(
       (de) => de.nativeElement.textContent === name

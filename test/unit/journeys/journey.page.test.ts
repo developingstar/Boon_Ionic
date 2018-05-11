@@ -51,222 +51,224 @@ describe('JourneyPage', () => {
   let toastControllerStub: any
   let toastStub: any
 
-  beforeEach(async(() => {
-    journey = new Journey(
-      sampleJourney({
-        actions: [
-          {
-            data: {
-              owner_id: 2
+  beforeEach(
+    async(() => {
+      journey = new Journey(
+        sampleJourney({
+          actions: [
+            {
+              data: {
+                owner_id: 2
+              },
+              id: 1,
+              journey_id: 1,
+              position: 1,
+              type: 'assign_lead_owner'
             },
-            id: 1,
-            journey_id: 1,
-            position: 1,
-            type: 'assign_lead_owner'
-          },
-          {
-            data: {
-              stage_id: 1
+            {
+              data: {
+                stage_id: 1
+              },
+              id: 2,
+              journey_id: 1,
+              position: 2,
+              type: 'assign_stage'
             },
-            id: 2,
-            journey_id: 1,
-            position: 2,
-            type: 'assign_stage'
-          },
-          {
-            data: {
-              send_from_owner: true,
-              template_id: 1
+            {
+              data: {
+                send_from_owner: true,
+                template_id: 1
+              },
+              id: 3,
+              journey_id: 1,
+              position: 3,
+              type: 'send_email'
             },
-            id: 3,
-            journey_id: 1,
-            position: 3,
-            type: 'send_email'
-          },
-          {
-            data: {
-              send_from_owner: false,
-              template_id: 2
+            {
+              data: {
+                send_from_owner: false,
+                template_id: 2
+              },
+              id: 4,
+              journey_id: 1,
+              position: 4,
+              type: 'send_text'
             },
-            id: 4,
-            journey_id: 1,
-            position: 4,
-            type: 'send_text'
-          },
-          {
-            data: {
-              field_id: 1,
-              value: 'New'
+            {
+              data: {
+                field_id: 1,
+                value: 'New'
+              },
+              id: 5,
+              journey_id: 1,
+              position: 5,
+              type: 'update_field'
             },
-            id: 5,
-            journey_id: 1,
-            position: 5,
-            type: 'update_field'
-          },
-          {
-            data: {
-              for: 3600
+            {
+              data: {
+                for: 3600
+              },
+              id: 6,
+              journey_id: 1,
+              position: 6,
+              type: 'wait'
+            }
+          ],
+          id: 1,
+          name: 'Introduction',
+          published_at: null,
+          state: 'inactive',
+          triggers: [
+            {
+              data: {
+                field_id: 1,
+                value: 'New'
+              },
+              id: 1,
+              journey_id: 1,
+              type: 'field_updated'
             },
-            id: 6,
-            journey_id: 1,
-            position: 6,
-            type: 'wait'
+            {
+              data: {
+                pipeline_id: 1
+              },
+              id: 2,
+              journey_id: 1,
+              type: 'pipeline_assigned'
+            },
+            {
+              data: {
+                stage_id: 1
+              },
+              id: 3,
+              journey_id: 1,
+              type: 'stage_assigned'
+            }
+          ]
+        })
+      )
+
+      const httpClient = new HttpClient(
+        new class extends HttpHandler {
+          handle(req: any): Observable<any> {
+            return Observable.never()
           }
-        ],
-        id: 1,
-        name: 'Introduction',
-        published_at: null,
-        state: 'inactive',
-        triggers: [
-          {
-            data: {
-              field_id: 1,
-              value: 'New'
-            },
+        }()
+      )
+
+      journeysServiceStub = new JourneysService(httpClient)
+      journeysServiceStub.journey = () => Observable.of(journey)
+      spyOn(journeysServiceStub, 'journey').and.callThrough()
+      journeysServiceStub.updateJourney = () => Observable.of(journey)
+
+      const salesServiceStub = new SalesService(httpClient)
+      salesServiceStub.pipeline = () =>
+        Observable.of(
+          new Pipeline(
+            samplePipeline({
+              id: 1,
+              name: 'Potential clients'
+            })
+          )
+        )
+      salesServiceStub.stage = () =>
+        Observable.of(
+          sampleStage({
             id: 1,
-            journey_id: 1,
-            type: 'field_updated'
-          },
-          {
-            data: {
-              pipeline_id: 1
-            },
-            id: 2,
-            journey_id: 1,
-            type: 'pipeline_assigned'
-          },
-          {
-            data: {
-              stage_id: 1
-            },
-            id: 3,
-            journey_id: 1,
-            type: 'stage_assigned'
-          }
+            name: 'Converted'
+          })
+        )
+      salesServiceStub.field = () =>
+        Observable.of(
+          sampleField({
+            id: 1,
+            name: 'Website'
+          })
+        )
+
+      const usersServiceStub = new UsersService(httpClient)
+      usersServiceStub.user = () =>
+        Observable.of(
+          new User(
+            sampleUser({
+              id: 2,
+              name: 'Susan Boon'
+            })
+          )
+        )
+
+      const messagesServiceStub = new MessagesService(httpClient)
+      messagesServiceStub.emailTemplate = () =>
+        Observable.of(
+          new EmailTemplate(
+            sampleEmailTemplate({
+              id: 1,
+              name: 'Email Introduction'
+            })
+          )
+        )
+      messagesServiceStub.textTemplate = () =>
+        Observable.of(
+          new TextTemplate(
+            sampleTextTemplate({
+              id: 2,
+              name: 'Text Introduction'
+            })
+          )
+        )
+
+      modalStub = {
+        onDidDismiss: () => {
+          return
+        },
+        present: () => {
+          return
+        }
+      }
+      modalControllerStub = {
+        create: () => modalStub
+      }
+      spyOn(modalStub, 'present').and.callThrough()
+      spyOn(modalControllerStub, 'create').and.callThrough()
+
+      toastStub = {
+        present: () => {
+          return
+        }
+      }
+      toastControllerStub = {
+        create: () => toastStub
+      }
+      spyOn(toastStub, 'present').and.callThrough()
+      spyOn(toastControllerStub, 'create').and.callThrough()
+
+      navParamsStub = {
+        get: () => journey.id.toString()
+      }
+
+      navControllerStub = new NavControllerStub({
+        name: 'JourneyPage'
+      })
+
+      fixture = initComponent(JourneyPage, {
+        imports: [JourneyPageModule, HttpClientTestingModule],
+        providers: [
+          NavService,
+          { provide: JourneysService, useValue: journeysServiceStub },
+          { provide: MessagesService, useValue: messagesServiceStub },
+          { provide: ModalController, useValue: modalControllerStub },
+          { provide: NavController, useValue: navControllerStub },
+          { provide: NavParams, useValue: navParamsStub },
+          { provide: SalesService, useValue: salesServiceStub },
+          { provide: ToastController, useValue: toastControllerStub },
+          { provide: UsersService, useValue: usersServiceStub }
         ]
       })
-    )
 
-    const httpClient = new HttpClient(
-      new class extends HttpHandler {
-        handle(req: any): Observable<any> {
-          return Observable.never()
-        }
-      }()
-    )
-
-    journeysServiceStub = new JourneysService(httpClient)
-    journeysServiceStub.journey = () => Observable.of(journey)
-    spyOn(journeysServiceStub, 'journey').and.callThrough()
-    journeysServiceStub.updateJourney = () => Observable.of(journey)
-
-    const salesServiceStub = new SalesService(httpClient)
-    salesServiceStub.pipeline = () =>
-      Observable.of(
-        new Pipeline(
-          samplePipeline({
-            id: 1,
-            name: 'Potential clients'
-          })
-        )
-      )
-    salesServiceStub.stage = () =>
-      Observable.of(
-        sampleStage({
-          id: 1,
-          name: 'Converted'
-        })
-      )
-    salesServiceStub.field = () =>
-      Observable.of(
-        sampleField({
-          id: 1,
-          name: 'Website'
-        })
-      )
-
-    const usersServiceStub = new UsersService(httpClient)
-    usersServiceStub.user = () =>
-      Observable.of(
-        new User(
-          sampleUser({
-            id: 2,
-            name: 'Susan Boon'
-          })
-        )
-      )
-
-    const messagesServiceStub = new MessagesService(httpClient)
-    messagesServiceStub.emailTemplate = () =>
-      Observable.of(
-        new EmailTemplate(
-          sampleEmailTemplate({
-            id: 1,
-            name: 'Email Introduction'
-          })
-        )
-      )
-    messagesServiceStub.textTemplate = () =>
-      Observable.of(
-        new TextTemplate(
-          sampleTextTemplate({
-            id: 2,
-            name: 'Text Introduction'
-          })
-        )
-      )
-
-    modalStub = {
-      onDidDismiss: () => {
-        return
-      },
-      present: () => {
-        return
-      }
-    }
-    modalControllerStub = {
-      create: () => modalStub
-    }
-    spyOn(modalStub, 'present').and.callThrough()
-    spyOn(modalControllerStub, 'create').and.callThrough()
-
-    toastStub = {
-      present: () => {
-        return
-      }
-    }
-    toastControllerStub = {
-      create: () => toastStub
-    }
-    spyOn(toastStub, 'present').and.callThrough()
-    spyOn(toastControllerStub, 'create').and.callThrough()
-
-    navParamsStub = {
-      get: () => journey.id.toString()
-    }
-
-    navControllerStub = new NavControllerStub({
-      name: 'JourneyPage'
+      page = new JourneyPageObject(fixture)
+      fixture.detectChanges()
     })
-
-    fixture = initComponent(JourneyPage, {
-      imports: [JourneyPageModule, HttpClientTestingModule],
-      providers: [
-        NavService,
-        { provide: JourneysService, useValue: journeysServiceStub },
-        { provide: MessagesService, useValue: messagesServiceStub },
-        { provide: ModalController, useValue: modalControllerStub },
-        { provide: NavController, useValue: navControllerStub },
-        { provide: NavParams, useValue: navParamsStub },
-        { provide: SalesService, useValue: salesServiceStub },
-        { provide: ToastController, useValue: toastControllerStub },
-        { provide: UsersService, useValue: usersServiceStub }
-      ]
-    })
-
-    page = new JourneyPageObject(fixture)
-    fixture.detectChanges()
-  }))
+  )
 
   describe('events sidebar', () => {
     describe('triggers', () => {

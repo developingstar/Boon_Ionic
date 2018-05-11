@@ -1,10 +1,9 @@
 import { Component } from '@angular/core'
-import { App } from 'ionic-angular'
 import { Observable } from 'rxjs'
 
 import { CurrentUserService } from './../auth/current-user.service'
-import { LeadFilterService } from './lead.filter.service'
 import { NavContent, NavService } from './nav.service'
+
 // Main navigation bar.
 //
 // Displays a responsive navigation bar at the top of the application. The navbar contains the
@@ -20,10 +19,9 @@ export class NavComponent {
   readonly centerContent: Observable<NavContent>
   readonly navClass: Observable<string>
   readonly rightContent: Observable<NavContent>
+
   constructor(
-    protected app: App,
     private readonly currentUserService: CurrentUserService,
-    public readonly filterService: LeadFilterService,
     navService: NavService
   ) {
     this.centerContent = navService.contentUpdated.map((portals) => portals[0])
@@ -37,18 +35,5 @@ export class NavComponent {
     return this.currentUserService.details.map(
       (details) => (details ? details.name : undefined)
     )
-  }
-
-  public onInput(event: any): void {
-    return
-  }
-
-  public onCancel(event: any): void {
-    return
-  }
-
-  public itemSelected(event: any): void {
-    const nav = this.app.getRootNav()
-    nav.setRoot('LeadPage', { id: event.id })
   }
 }

@@ -1,4 +1,4 @@
-import { Component, ElementRef } from '@angular/core'
+import { Component } from '@angular/core'
 import { FormControl, Validators } from '@angular/forms'
 import {
   IonicPage,
@@ -31,15 +31,13 @@ export class EmailTemplatePage extends TemplatePage<
   IEmailTemplate,
   TemplateFormGroup
 > {
-  public shortcode: string = ''
   protected readonly resourcesRootPage: string = 'EmailTemplatesPage'
 
   constructor(
     navParams: NavParams,
     protected navController: NavController,
     protected messagesService: MessagesService,
-    protected toastController: ToastController,
-    public elRef: ElementRef
+    protected toastController: ToastController
   ) {
     super(
       initialState,
@@ -58,7 +56,7 @@ export class EmailTemplatePage extends TemplatePage<
         default_sender: '',
         default_sender_name: null,
         name: '',
-        subject: '',
+        subject: ''
       }
       return this.messagesService.shortcodes().map((shortcodes) => ({
         ...state,
@@ -76,24 +74,6 @@ export class EmailTemplatePage extends TemplatePage<
     return this.messagesService.createEmailTemplate({
       template: form.value
     })
-  }
-
-  protected addShortCode(state: State, shortcode: string = ''): Observable<State>  {
-    if (state.mode === 'new' || state.mode === 'edit') {
-      const form = state.form as TemplateFormGroup
-      let content =  form.controls.content.value
-      const position = document.getElementsByTagName('textarea')[0].selectionStart
-
-      content = content.substr(0, position) + shortcode + content.substr(position, content.length)
-      form.controls.content.setValue(content)
-
-      return Observable.of({
-        ...state,
-        form: form,
-      })
-    } else {
-      return Observable.of(state)
-    }
   }
 
   protected edit(state: State): Observable<State> {
@@ -144,7 +124,6 @@ export class EmailTemplatePage extends TemplatePage<
       ]),
       default_sender_name: new FormControl(values.default_sender_name || ''),
       name: new FormControl(values.name, Validators.required),
-      shortcode: new FormControl(null),
       subject: new FormControl(values.subject, Validators.required)
     })
   }

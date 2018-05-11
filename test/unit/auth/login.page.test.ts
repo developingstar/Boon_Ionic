@@ -17,33 +17,36 @@ describe('LoginPage', () => {
   let isAuthenticated: boolean
   let nextPage: string | undefined
 
-  beforeEach(async(() => {
-    nextPage = undefined
+  beforeEach(
+    async(() => {
+      nextPage = undefined
 
-    const authServiceStub = {
-      login: (email: string, password: string) => (isAuthenticated = true)
-    }
+      const authServiceStub = {
+        login: (email: string, password: string) => (isAuthenticated = true)
+      }
 
-    const currentUserServiceStub = {
-      isAuthenticated: (): Observable<boolean> => Observable.of(isAuthenticated)
-    }
+      const currentUserServiceStub = {
+        isAuthenticated: (): Observable<boolean> =>
+          Observable.of(isAuthenticated)
+      }
 
-    const navControllerStub = {
-      setRoot: (newRoot: string) => (nextPage = newRoot)
-    }
+      const navControllerStub = {
+        setRoot: (newRoot: string) => (nextPage = newRoot)
+      }
 
-    fixture = initComponent(LoginPage, {
-      imports: [LoginPageModule],
-      providers: [
-        NavService,
-        { provide: AuthService, useValue: authServiceStub },
-        { provide: CurrentUserService, useValue: currentUserServiceStub },
-        { provide: NavController, useValue: navControllerStub }
-      ]
+      fixture = initComponent(LoginPage, {
+        imports: [LoginPageModule],
+        providers: [
+          NavService,
+          { provide: AuthService, useValue: authServiceStub },
+          { provide: CurrentUserService, useValue: currentUserServiceStub },
+          { provide: NavController, useValue: navControllerStub }
+        ]
+      })
+
+      page = new LoginPageObject(fixture)
     })
-
-    page = new LoginPageObject(fixture)
-  }))
+  )
 
   describe('when user is unauthenticated', () => {
     it('includes a login form', () => {
@@ -57,18 +60,6 @@ describe('LoginPage', () => {
       fixture.detectChanges()
 
       expect(isAuthenticated).toEqual(true)
-    })
-
-    it('forgot a password click', () => {
-      isAuthenticated = false
-      fixture.detectChanges()
-
-      expect(page.forgotButtonVisible).toBe(true)
-
-      page.clickForgotPassword()
-      fixture.detectChanges()
-
-      expect(nextPage).toEqual('SendCodePage')
     })
   })
 

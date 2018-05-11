@@ -32,76 +32,80 @@ describe('EmailTemplatePage', () => {
   let toastControllerStub: any
   let toastStub: any
 
-  beforeEach(async(() => {
-    template = new EmailTemplate(
-      sampleEmailTemplate({
-        content: 'Hello',
-        default_sender: 'user@example.com',
-        default_sender_name: 'Support',
-        id: 1,
-        name: 'Introduction e-mail message',
-        subject: 'Introduction'
-      })
-    )
+  beforeEach(
+    async(() => {
+      template = new EmailTemplate(
+        sampleEmailTemplate({
+          content: 'Hello',
+          default_sender: 'user@example.com',
+          default_sender_name: 'Support',
+          id: 1,
+          name: 'Introduction e-mail message',
+          subject: 'Introduction'
+        })
+      )
 
-    const httpClient = new HttpClient(
-      new class extends HttpHandler {
-        handle(req: any): Observable<any> {
-          return Observable.never()
+      const httpClient = new HttpClient(
+        new class extends HttpHandler {
+          handle(req: any): Observable<any> {
+            return Observable.never()
+          }
+        }()
+      )
+
+      messagesServiceStub = new MessagesService(httpClient)
+      messagesServiceStub.shortcodes = () =>
+        Observable.of([
+          sampleShortcode({ name: 'First Name', shortcode: 'first_name' }),
+          sampleShortcode({ name: 'Last Name', shortcode: 'last_name' })
+        ])
+
+      navControllerStub = new NavControllerStub({ name: 'EmailTemplatePage' })
+      spyOn(navControllerStub, 'setRoot').and.callThrough()
+
+      toastStub = {
+        present: () => {
+          return
         }
-      }()
-    )
-
-    messagesServiceStub = new MessagesService(httpClient)
-    messagesServiceStub.shortcodes = () =>
-      Observable.of([
-        sampleShortcode({ name: 'First Name', shortcode: 'first_name' }),
-        sampleShortcode({ name: 'Last Name', shortcode: 'last_name' })
-      ])
-
-    navControllerStub = new NavControllerStub({ name: 'EmailTemplatePage' })
-    spyOn(navControllerStub, 'setRoot').and.callThrough()
-
-    toastStub = {
-      present: () => {
-        return
       }
-    }
-    toastControllerStub = {
-      create: () => toastStub
-    }
-    spyOn(toastStub, 'present').and.callThrough()
-    spyOn(toastControllerStub, 'create').and.callThrough()
-  }))
+      toastControllerStub = {
+        create: () => toastStub
+      }
+      spyOn(toastStub, 'present').and.callThrough()
+      spyOn(toastControllerStub, 'create').and.callThrough()
+    })
+  )
 
   describe('create', () => {
-    beforeEach(async(() => {
-      messagesServiceStub.createEmailTemplate = () => {
-        return Observable.of(template)
-      }
+    beforeEach(
+      async(() => {
+        messagesServiceStub.createEmailTemplate = () => {
+          return Observable.of(template)
+        }
 
-      navParamsStub = {
-        get: (prop: string) => 'new'
-      }
+        navParamsStub = {
+          get: (prop: string) => 'new'
+        }
 
-      fixture = initComponent(EmailTemplatePage, {
-        imports: [EmailTemplatePageModule, HttpClientTestingModule],
-        providers: [
-          NavService,
-          { provide: NavController, useValue: navControllerStub },
-          { provide: NavParams, useValue: navParamsStub },
-          {
-            provide: MessagesService,
-            useValue: messagesServiceStub
-          },
-          { provide: ToastController, useValue: toastControllerStub }
-        ]
+        fixture = initComponent(EmailTemplatePage, {
+          imports: [EmailTemplatePageModule, HttpClientTestingModule],
+          providers: [
+            NavService,
+            { provide: NavController, useValue: navControllerStub },
+            { provide: NavParams, useValue: navParamsStub },
+            {
+              provide: MessagesService,
+              useValue: messagesServiceStub
+            },
+            { provide: ToastController, useValue: toastControllerStub }
+          ]
+        })
+
+        page = new EmailTemplatePageObject(fixture)
+
+        fixture.detectChanges()
       })
-
-      page = new EmailTemplatePageObject(fixture)
-
-      fixture.detectChanges()
-    }))
+    )
 
     it('allows to create template', () => {
       spyOn(messagesServiceStub, 'createEmailTemplate').and.callThrough()
@@ -157,33 +161,35 @@ describe('EmailTemplatePage', () => {
   })
 
   describe('update', () => {
-    beforeEach(async(() => {
-      messagesServiceStub.emailTemplate = () => Observable.of(template)
-      messagesServiceStub.updateEmailTemplate = () => Observable.of(template)
-      spyOn(messagesServiceStub, 'emailTemplate').and.callThrough()
+    beforeEach(
+      async(() => {
+        messagesServiceStub.emailTemplate = () => Observable.of(template)
+        messagesServiceStub.updateEmailTemplate = () => Observable.of(template)
+        spyOn(messagesServiceStub, 'emailTemplate').and.callThrough()
 
-      navParamsStub = {
-        get: (prop: string) => template.id
-      }
+        navParamsStub = {
+          get: (prop: string) => template.id
+        }
 
-      fixture = initComponent(EmailTemplatePage, {
-        imports: [EmailTemplatePageModule, HttpClientTestingModule],
-        providers: [
-          NavService,
-          { provide: NavController, useValue: navControllerStub },
-          { provide: NavParams, useValue: navParamsStub },
-          {
-            provide: MessagesService,
-            useValue: messagesServiceStub
-          },
-          { provide: ToastController, useValue: toastControllerStub }
-        ]
+        fixture = initComponent(EmailTemplatePage, {
+          imports: [EmailTemplatePageModule, HttpClientTestingModule],
+          providers: [
+            NavService,
+            { provide: NavController, useValue: navControllerStub },
+            { provide: NavParams, useValue: navParamsStub },
+            {
+              provide: MessagesService,
+              useValue: messagesServiceStub
+            },
+            { provide: ToastController, useValue: toastControllerStub }
+          ]
+        })
+
+        page = new EmailTemplatePageObject(fixture)
+
+        fixture.detectChanges()
       })
-
-      page = new EmailTemplatePageObject(fixture)
-
-      fixture.detectChanges()
-    }))
+    )
 
     it('fills initial values', () => {
       spyOn(messagesServiceStub, 'updateEmailTemplate').and.callThrough()

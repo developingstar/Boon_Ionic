@@ -23,79 +23,81 @@ describe('PipelinesPage', () => {
   let salesServiceStub: any
   let stages: Stage[]
 
-  beforeEach(async(() => {
-    pipelines = [
-      { id: 101, name: 'New', stageOrder: [] },
-      { id: 102, name: 'Converted', stageOrder: [3, 1] }
-    ]
-
-    stages = [
-      { pipelineId: 102, name: 'Stage1', id: 1 },
-      { pipelineId: 102, name: 'Stage2', id: 2 },
-      { pipelineId: 101, name: 'Stage3', id: 3 },
-      { pipelineId: 101, name: 'Stage4', id: 4 }
-    ]
-    salesServiceStub = {
-      createPipeline: (pipelineData: Crm.API.IPipelineCreate) => {
-        const newPipeline = new Pipeline({
-          id: 103,
-          name: pipelineData.name,
-          stage_order: []
-        })
-        pipelines.push(newPipeline)
-        return Observable.of(newPipeline)
-      },
-      pipelines: () => Observable.of(pipelines),
-      stages: () => Observable.of(stages),
-      updatePipeline: (id: number, pipelineData: Crm.API.IPipelineUpdate) => {
-        for (let i = 0; i < pipelines.length; i++) {
-          const pipeline = pipelines[i]
-          if (pipeline.id === id) {
-            pipelines[i] = { ...pipeline, name: pipelineData.name! }
-            return Observable.of(pipeline)
-          }
-        }
-        return Observable.of(undefined)
-      }
-    }
-    spyOn(salesServiceStub, 'createPipeline').and.callThrough()
-    spyOn(salesServiceStub, 'updatePipeline').and.callThrough()
-
-    const navParamsStub = {
-      get: (prop: string) => undefined
-    }
-
-    modalStub = {
-      onDidDismiss: (stageName: string) => {
-        return stageName
-      },
-      present: () => {
-        return
-      }
-    }
-
-    spyOn(modalStub, 'present').and.callThrough()
-    spyOn(modalStub, 'onDidDismiss').and.callThrough()
-
-    modalControllerStub = {
-      create: () => modalStub
-    }
-
-    spyOn(modalControllerStub, 'create').and.callThrough()
-
-    fixture = initComponent(PipelinesPage, {
-      imports: [PipelinesPageModule, HttpClientTestingModule],
-      providers: [
-        NavService,
-        { provide: NavController, useValue: new NavControllerStub() },
-        { provide: NavParams, useValue: navParamsStub },
-        { provide: SalesService, useValue: salesServiceStub },
-        { provide: ModalController, useValue: modalControllerStub }
+  beforeEach(
+    async(() => {
+      pipelines = [
+        { id: 101, name: 'New', stageOrder: [] },
+        { id: 102, name: 'Converted', stageOrder: [3, 1] }
       ]
+
+      stages = [
+        { pipelineId: 102, name: 'Stage1', id: 1 },
+        { pipelineId: 102, name: 'Stage2', id: 2 },
+        { pipelineId: 101, name: 'Stage3', id: 3 },
+        { pipelineId: 101, name: 'Stage4', id: 4 }
+      ]
+      salesServiceStub = {
+        createPipeline: (pipelineData: Crm.API.IPipelineCreate) => {
+          const newPipeline = new Pipeline({
+            id: 103,
+            name: pipelineData.name,
+            stage_order: []
+          })
+          pipelines.push(newPipeline)
+          return Observable.of(newPipeline)
+        },
+        pipelines: () => Observable.of(pipelines),
+        stages: () => Observable.of(stages),
+        updatePipeline: (id: number, pipelineData: Crm.API.IPipelineUpdate) => {
+          for (let i = 0; i < pipelines.length; i++) {
+            const pipeline = pipelines[i]
+            if (pipeline.id === id) {
+              pipelines[i] = { ...pipeline, name: pipelineData.name! }
+              return Observable.of(pipeline)
+            }
+          }
+          return Observable.of(undefined)
+        }
+      }
+      spyOn(salesServiceStub, 'createPipeline').and.callThrough()
+      spyOn(salesServiceStub, 'updatePipeline').and.callThrough()
+
+      const navParamsStub = {
+        get: (prop: string) => undefined
+      }
+
+      modalStub = {
+        onDidDismiss: (stageName: string) => {
+          return stageName
+        },
+        present: () => {
+          return
+        }
+      }
+
+      spyOn(modalStub, 'present').and.callThrough()
+      spyOn(modalStub, 'onDidDismiss').and.callThrough()
+
+      modalControllerStub = {
+        create: () => modalStub
+      }
+
+      spyOn(modalControllerStub, 'create').and.callThrough()
+
+      fixture = initComponent(PipelinesPage, {
+        imports: [PipelinesPageModule, HttpClientTestingModule],
+        providers: [
+          NavService,
+          { provide: NavController, useValue: new NavControllerStub() },
+          { provide: NavParams, useValue: navParamsStub },
+          { provide: SalesService, useValue: salesServiceStub },
+          { provide: ModalController, useValue: modalControllerStub }
+        ]
+      })
+      page = new PipelinesPageObject(fixture)
+      fixture.detectChanges()
     })
-    page = new PipelinesPageObject(fixture)
-    fixture.detectChanges()
-  }))
+  )
   describe('listing pipelines', () => {
     it('shows a list of pipelines', () => {
       expect(page.header).toEqual('Pipelines')

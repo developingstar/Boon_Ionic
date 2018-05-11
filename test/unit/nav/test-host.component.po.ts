@@ -11,16 +11,6 @@ export class TestHostPageObject extends PageObject<TestHostComponent> {
     return this.findByCss<HTMLElement>(`nav .nav-${placement}`)!.textContent
   }
 
-  getDivContent(): string | null {
-    const el = this.findByCss<HTMLDivElement>('nav .search-bar')!
-    return el !== null ? el.textContent : null
-  }
-
-  autoCompleteComponentVisible(): boolean {
-    const element = this.findByCss<HTMLElement>('ion-auto-complete')
-    return element ? true : false
-  }
-
   getUsername(): string | null {
     const el = this.findByCss<HTMLElement>('nav .nav-right span')
 

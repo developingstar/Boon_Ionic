@@ -15,22 +15,6 @@ export class LoginPageObject extends PageObject<LoginPage> {
     form!.dispatchEvent(new Event('submit'))
   }
 
-  clickForgotPassword(): void {
-    this.clickButton('Forgot')
-  }
-
-  get forgotButtonVisible(): boolean {
-    return this.elementVisible('button', 'Forgot')
-  }
-
-  private clickButton(label: string): void {
-    const button = this.findAllDebugByCss('button').find(
-      (b) => b.nativeElement.textContent === label
-    )
-    expect(button).toBeTruthy()
-    this.click(button!)
-  }
-
   private setInputByType(type: string, value: string): void {
     const input = this.findByCss<HTMLInputElement>(`input[type="${type}"]`)
     this.setInput(input!, value)

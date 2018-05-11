@@ -2,8 +2,7 @@
 .nav-container([ngClass]="navClass | async")
   .nav-logo([inlineSVG]="'assets/icon/boon.svg'")
   .nav-center
-    div.search-bar
-      ion-auto-complete
+    div([cdkPortalOutlet]="centerContent | async")
   .nav-right
     div([cdkPortalOutlet]="rightContent | async")
     span.username(*ngIf="username | async") Hello, {{username | async}}

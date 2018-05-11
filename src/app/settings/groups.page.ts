@@ -164,15 +164,15 @@ export class GroupsPage extends ReactivePage<State, UserAction> {
       )
 
       return newC.map<IGroupData, State>((groupData: IGroupData) => ({
+        groupId: action.group.id,
         groupUsers: groupData.groupUsers,
-        group_id: action.group.id,
         name: 'edit',
         nameInput: new FormControl(action.group.name, Validators.required),
         users: groupData.users
       }))
     } else if (action.name === 'update' && state.name === 'edit') {
       return this.groupsService
-        .updateGroup(state.group_id, { name: state.nameInput.value })
+        .updateGroup(state.groupId, { name: state.nameInput.value })
         .map<Group, State>((group) => state)
     } else if (action.name === 'add_user' && state.name === 'edit') {
       const user = state.users.find((u) => u.id === Number(action.user_id))
@@ -180,7 +180,7 @@ export class GroupsPage extends ReactivePage<State, UserAction> {
       if (user === undefined) {
         return Observable.of(state)
       } else {
-        return this.groupsService.addUser(state.group_id, action.user_id).map<
+        return this.groupsService.addUser(state.groupId, action.user_id).map<
           {
             readonly data: {
               readonly message: string
@@ -194,7 +194,7 @@ export class GroupsPage extends ReactivePage<State, UserAction> {
       }
     } else if (action.name === 'delete_user' && state.name === 'edit') {
       const userIndex = state.groupUsers.indexOf(action.user)
-      return this.groupsService.deleteUser(state.group_id, action.user.id).map<
+      return this.groupsService.deleteUser(state.groupId, action.user.id).map<
         {
           readonly data: {
             readonly message: string

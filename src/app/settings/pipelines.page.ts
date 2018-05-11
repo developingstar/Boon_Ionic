@@ -191,8 +191,8 @@ export class PipelinesPage extends ReactivePage<State, UserAction> {
       return this.salesService.stages(action.pipeline.id).map((stages) => {
         const stagesState: ReadonlyArray<
           IStageState
-        > = action.pipeline.stage_order
-          .map((stage_id) => stages.find((stage) => stage.id === stage_id))
+        > = action.pipeline.stageOrder
+          .map((stageId) => stages.find((stage) => stage.id === stageId))
           .filter((stage) => stage !== undefined)
           .map((stage: Stage) => ({
             edited: false,

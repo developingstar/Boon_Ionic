@@ -1,3 +1,4 @@
+import { AbstractControl } from '@angular/forms'
 import { emailRegExp, phoneNumberRegExp } from './form-validators'
 
 export function ensureNonEmptyString(data: any): string {
@@ -58,4 +59,11 @@ function findByTypeMismatch<T>(
   type: string
 ): T | undefined {
   return array.find((item) => typeof item !== type)
+}
+
+export function ValidateUrlTest(control: AbstractControl): any {
+  if (!control.value.startsWith('https') || !control.value.includes('.io')) {
+    return { validUrl: true }
+  }
+  return null
 }

@@ -16,88 +16,58 @@ describe('AuthService', () => {
 
   const userDetails: User = new User(sampleUser())
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      providers: [AuthService, CurrentUserService]
-    })
+  beforeEach(
+    async(() => {
+      TestBed.configureTestingModule({
+        imports: [HttpClientTestingModule],
+        providers: [AuthService, CurrentUserService]
+      })
 
-    currentUserService = TestBed.get(CurrentUserService)
-    httpMock = TestBed.get(HttpTestingController)
-    service = TestBed.get(AuthService)
-  }))
+      currentUserService = TestBed.get(CurrentUserService)
+      httpMock = TestBed.get(HttpTestingController)
+      service = TestBed.get(AuthService)
+    })
+  )
 
   describe('login', () => {
     describe('on valid credentials', () => {
-      it('sets user details', async(() => {
-        currentUserService.details.next(undefined)
+      it(
+        'sets user details',
+        async(() => {
+          currentUserService.details.next(undefined)
 
-        service.login('user@example.com', 'secret').add(() => {
-          currentUserService.details.subscribe((details) => {
-            expect(details).toEqual(userDetails)
+          service.login('user@example.com', 'secret').add(() => {
+            currentUserService.details.subscribe((details) => {
+              expect(details).toEqual(userDetails)
+            })
           })
+
+          const req = httpMock.expectOne(`/api/sessions`)
+          expect(req.request.method).toBe('POST')
+
+          req.flush({
+            data: {
+              user: userDetails
+            }
+          })
+
+          httpMock.verify()
         })
-
-        const req = httpMock.expectOne(`/api/sessions`)
-        expect(req.request.method).toBe('POST')
-
-        req.flush({
-          data: {
-            user: userDetails
-          }
-        })
-
-        httpMock.verify()
-      }))
+      )
     })
   })
 
   describe('logout', () => {
-    it(`sets user details to undefined`, async(() => {
-      currentUserService.details.next(userDetails)
-      service.logout()
+    it(
+      `sets user details to undefined`,
+      async(() => {
+        currentUserService.details.next(userDetails)
+        service.logout()
 
-      currentUserService.details.subscribe((details) => {
-        expect(details).toBeUndefined()
-      })
-    }))
-  })
-
-  describe('reset password', () => {
-    it('send reset request', async(() => {
-      service.sendResetRequest('admin@example.com').subscribe((result) => {
-        expect(result.data.message).toEqual('OK')
-      })
-
-      const req = httpMock.expectOne('/api/users/request-password-reset')
-      expect(req.request.method).toBe('POST')
-
-      req.flush({
-        data: {
-          message: 'OK'
-        }
-      })
-
-      httpMock.verify()
-    }))
-
-    it('create new password', async(() => {
-      service
-        .createNewPassword('token_code', 'new_password')
-        .subscribe((result) => {
-          expect(result.data.message).toEqual('OK')
+        currentUserService.details.subscribe((details) => {
+          expect(details).toBeUndefined()
         })
-
-      const req = httpMock.expectOne('/api/users/reset-password')
-      expect(req.request.method).toBe('POST')
-
-      req.flush({
-        data: {
-          message: 'OK'
-        }
       })
-
-      httpMock.verify()
-    }))
+    )
   })
 })
