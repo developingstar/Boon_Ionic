@@ -39,6 +39,18 @@ export abstract class TemplatePage<
     }
   }
 
+  public itemSelected(value: string): void {
+    // this.state.flatMap((state) => {
+    //   if (state.mode === 'new' || state.mode === 'edit') {
+    //     const form = state.form
+    //     return Observable.of(form)
+    //   } else {
+    //     return Observable.empty()
+    //   }
+    // })
+    this.uiActions.next({ name: 'shortcode', value: value })
+  }
+
   public save(): void {
     if (this.initialMode === 'new') {
       this.uiActions.next({ name: 'create' })
@@ -95,6 +107,8 @@ export abstract class TemplatePage<
         return this.update(state)
           .do(this.redirectOnSuccess.bind(this))
           .do(this.toastOnSuccess.bind(this))
+      case 'shortcode':
+        return this.addShortCode(state, action.value)
     }
   }
 
@@ -113,6 +127,10 @@ export abstract class TemplatePage<
     form: TemplateFormGroup
   ): Observable<Model>
   protected abstract getTemplateId(template: Model): number
+
+  protected abstract addShortCode(
+    state: State<Model, IModel, TemplateFormGroup>, shortcode: string
+  ): Observable<State<Model, IModel, TemplateFormGroup>>
 
   private create(
     state: State<Model, IModel, TemplateFormGroup>

@@ -104,15 +104,19 @@ export class TextTemplatePage extends TemplatePage<
       fetchPhoneNumbers,
       fetchShortcodes,
       fetchTemplate,
-      (phoneNumbers, shortcodes, template) => ({
+      (phoneNumbers, shortcodes, template: TextTemplate) => ({
         ...state,
-        form: this.createFormGroup(template),
+        form: this.createFormGroup(template.toApiRepresentation()),
         mode: mode,
         phoneNumbers: phoneNumbers,
         shortcodes: shortcodes,
         template: template
       })
     )
+  }
+
+  protected addShortCode(state: State): Observable<State>  {
+    return Observable.of(state)
   }
 
   protected updateTemplate(
@@ -129,7 +133,7 @@ export class TextTemplatePage extends TemplatePage<
   }
 
   protected createFormGroup(
-    values: TextTemplate | ITextTemplate | undefined = {
+    values: ITextTemplate | undefined = {
       content: '',
       default_sender: '',
       name: ''

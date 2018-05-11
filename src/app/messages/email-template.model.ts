@@ -11,7 +11,6 @@ export class EmailTemplate {
   readonly defaultSenderName: string | null
   readonly id: number
   readonly name: string
-  readonly shortcode: string | null
   readonly subject: string
   readonly type: 'email'
 
@@ -22,7 +21,6 @@ export class EmailTemplate {
     this.id = ensureNumber(data.id)
     this.name = ensureNonEmptyString(data.name)
     this.subject = ensureNonEmptyString(data.subject)
-    this.shortcode = data.shortcode
   }
 
   get sender(): string {
@@ -40,7 +38,6 @@ export class EmailTemplate {
       default_sender_name: this.defaultSenderName,
       id: this.id,
       name: this.name,
-      shortcode: this.shortcode,
       subject: this.subject
     }
   }
