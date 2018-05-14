@@ -23,5 +23,11 @@
         cursor: pointer;
       }
     }
+
+    .templates-header {
+      display: flex;
+      padding: 10px 0;
+      justify-content: space-between;
+    }
   }
 }
