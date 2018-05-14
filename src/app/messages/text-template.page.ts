@@ -115,6 +115,31 @@ export class TextTemplatePage extends TemplatePage<
     )
   }
 
+  protected addShortCode(
+    state: State,
+    shortcode: string = ''
+  ): Observable<State> {
+    if (state.mode === 'new' || state.mode === 'edit') {
+      const form = state.form as TemplateFormGroup
+      let content = form.controls.content.value
+      const position = document.getElementsByTagName('textarea')[0]
+        .selectionStart
+
+      content =
+        content.substr(0, position) +
+        shortcode +
+        content.substr(position, content.length)
+      form.controls.content.setValue(content)
+
+      return Observable.of({
+        ...state,
+        form: form
+      })
+    } else {
+      return Observable.of(state)
+    }
+  }
+
   protected updateTemplate(
     id: number,
     form: TemplateFormGroup
@@ -141,7 +166,8 @@ export class TextTemplatePage extends TemplatePage<
         phoneNumberValidator(),
         Validators.required
       ]),
-      name: new FormControl(values.name, Validators.required)
+      name: new FormControl(values.name, Validators.required),
+      shortcode: new FormControl(null)
     })
   }
 }

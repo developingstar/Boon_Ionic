@@ -17,8 +17,11 @@ ion-content(padding)
           option(*ngIf="initialMode == 'new'", value="")
           option(*ngFor="let option of (phoneNumbers | async)", [value]="option") {{option}}
         div(item-content)
+      ion-item.shortcodes
+        ion-label ShortCodes:
+        select(item-content, (ngModelChange)="itemSelected($event)", formControlName="shortcode")
+          option(*ngFor="let name of shortcodeNames | async", [value]="name") {{name}}
+        div(item-content)
       ion-item
         ion-textarea(name="content", formControlName="content")
-      p.shortcodes
-        | Available shortcodes:
-        ion-badge(*ngFor="let name of (shortcodeNames | async)") {{ name }}
+
