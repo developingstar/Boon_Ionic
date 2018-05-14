@@ -100,6 +100,19 @@ export class CrmPage extends ReactivePage<IState, UserAction> {
       })
   }
 
+  get pipelineName(): Observable<string> {
+    return this.activePipelineId
+      .withLatestFrom(this.pipelines)
+      .map(([id, pipelines]) => {
+        if (id === null) {
+          return 'All Contacts'
+        } else {
+          const activePipeline = pipelines.find((pipeline) => pipeline.id === id) || null
+          return activePipeline ? activePipeline.name : ''
+        }
+      })
+  }
+
   get stagesForActivePipeline(): Observable<ReadonlyArray<Stage>> {
     return this.activePipeline
       .withLatestFrom(this.stages)

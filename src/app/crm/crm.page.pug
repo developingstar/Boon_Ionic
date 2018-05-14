@@ -10,7 +10,9 @@ ion-header.nav-pipelines
         span([ngClass]="{'active': (activePipelineId | async) == pipeline.id}", (click)="onPipelineChange(pipeline.id)") {{pipeline.name}}
 
 ion-content(padding)
-  button.new-contact(ion-button, (click)="newLead()") New Contact
+  div.header-row
+    h2 {{pipelineName | async}}
+    button.new-contact(ion-button, (click)="newLead()") New Contact
 
   div.nav-stages([hidden]="areAllContactsVisible | async")
     pipeline([stages]="stagesForActivePipeline | async", type="select", (select)="onStageChange($event)")
