@@ -2,7 +2,9 @@ nav-content
   nav-icons(right, currentPage="EmailTemplatesPage")
 
 ion-content(padding)
-  button.new-template(ion-button, (click)="newTemplate()") New Template
+  .templates-header
+    h2 Email Templates
+    button.new-template(ion-button, (click)="newTemplate()") New Template
 
   ion-grid.table
     ion-row.header
