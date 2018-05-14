@@ -171,6 +171,13 @@ describe('CrmPage', () => {
     })
   })
   describe('pipelines nav', () => {
+    it('check header', () => {
+      expect(page.getHeader()).toEqual('All Contacts')
+      page.selectPipeline(2)
+      expect(page.getHeader()).toEqual('Converted')
+      page.selectPipeline(3)
+      expect(page.getHeader()).toEqual('Without response')
+    })
     it('includes items and a default option', () => {
       const nav = page.pipelinesNavElements()
       expect(nav.length).toBe(3)
