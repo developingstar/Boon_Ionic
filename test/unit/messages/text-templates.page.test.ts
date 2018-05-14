@@ -97,12 +97,6 @@ describe('TextTemplatesPage', () => {
     })
   })
 
-  describe('templates title', () => {
-    it('show text message templates title', () => {
-      expect(page.header).toEqual('Text Message Templates')
-    })
-  })
-
   describe('new template button', () => {
     it('allows creating a new template', () => {
       page.newTemplate()

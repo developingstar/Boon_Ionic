@@ -17,9 +17,4 @@ export class TemplatesPageObject<T> extends PageObject<T> {
     const element = this.findDebugByCss(`.new-template`)!
     this.click(element)
   }
-
-  get header(): string {
-    const h2 = this.findByCss<HTMLHeadingElement>('h2')
-    return h2 ? h2.textContent || '' : ''
-  }
 }

@@ -113,12 +113,6 @@ describe('EmailTemplatesPage', () => {
     })
   })
 
-  describe('templates title', () => {
-    it('show email templates title', () => {
-      expect(page.header).toEqual('Email Templates')
-    })
-  })
-
   describe('new template button', () => {
     it('allows creating a new template', () => {
       page.newTemplate()
