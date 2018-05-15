@@ -22,7 +22,7 @@ import {
   templateUrl: 'pipelines.page.html'
 })
 export class PipelinesPage extends ReactivePage<State, UserAction> {
-  isNameChanged: boolean
+  isChanged: boolean
   isStageChanged: boolean
   originalPipeline: Pipeline
 
@@ -35,7 +35,8 @@ export class PipelinesPage extends ReactivePage<State, UserAction> {
   }
 
   nameChanged(value: string): void {
-    this.isNameChanged = this.originalPipeline.name !== value ? true : false
+    this.isChanged = this.originalPipeline.name !== value ? true : false
+    this.isChanged = this.isChanged || this.isStageChanged
   }
 
   ionViewCanLeave(): Promise<boolean> {
@@ -60,7 +61,7 @@ export class PipelinesPage extends ReactivePage<State, UserAction> {
           'You have chaged somethingsomething. Do you want to save them?',
         title: 'Confirm'
       })
-      if (!this.isNameChanged && !this.isStageChanged) resolve(true)
+      if (!this.isChanged) resolve(true)
       else alert.present()
     })
   }
