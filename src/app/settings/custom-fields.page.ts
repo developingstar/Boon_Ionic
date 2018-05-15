@@ -1,6 +1,6 @@
 import { Component } from '@angular/core'
 import { FormControl, Validators } from '@angular/forms'
-import { IonicPage } from 'ionic-angular'
+import { AlertController, IonicPage } from 'ionic-angular'
 import { Observable } from 'rxjs'
 
 import { FieldDefinition } from '../crm/field-definition.model'
@@ -16,8 +16,45 @@ import { initialState, State, UserAction } from './custom-fields.page.state'
   templateUrl: 'custom-fields.page.html'
 })
 export class CustomFieldsPage extends ReactivePage<State, UserAction> {
-  constructor(private salesService: SalesService) {
+  isChanged: boolean
+  originalField: FieldDefinition
+
+  constructor(
+    public alertCtrl: AlertController,
+    private salesService: SalesService
+  ) {
     super(initialState)
+  }
+
+  nameChanged(value: string): void {
+    this.isChanged = this.originalField.name !== value ? true : false
+  }
+
+  ionViewCanLeave(): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      const alert = this.alertCtrl.create({
+        buttons: [
+          {
+            handler: () => {
+              this.uiActions.next({ name: 'update' })
+              resolve(true)
+            },
+            text: 'Save'
+          },
+          {
+            handler: () => {
+              resolve(true)
+            },
+            text: "Don't Save"
+          }
+        ],
+        subTitle:
+          'You have chaged somethingsomething. Do you want to save them?',
+        title: 'Confirm'
+      })
+      if (!this.isChanged) resolve(true)
+      else alert.present()
+    })
   }
 
   get showList(): Observable<boolean> {
@@ -79,6 +116,10 @@ export class CustomFieldsPage extends ReactivePage<State, UserAction> {
   }
 
   editField(field: FieldDefinition): void {
+    this.originalField = new FieldDefinition({
+      id: field.id,
+      name: field.name
+    })
     this.uiActions.next({ name: 'edit', field: field })
   }
 
