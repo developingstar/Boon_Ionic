@@ -1,6 +1,6 @@
 import { Component } from '@angular/core'
 import { FormControl, Validators } from '@angular/forms'
-import { IonicPage, ModalController } from 'ionic-angular'
+import { AlertController, IonicPage, ModalController } from 'ionic-angular'
 import { Observable } from 'rxjs'
 
 import { Pipeline } from '../crm/pipeline.model'
@@ -22,11 +22,47 @@ import {
   templateUrl: 'pipelines.page.html'
 })
 export class PipelinesPage extends ReactivePage<State, UserAction> {
+  isNameChanged: boolean
+  isStageChanged: boolean
+  originalPipeline: Pipeline
+
   constructor(
+    public alertCtrl: AlertController,
     private readonly modalCtrl: ModalController,
     private readonly salesService: SalesService
   ) {
     super(initialState)
+  }
+
+  nameChanged(value: string): void {
+    this.isNameChanged = this.originalPipeline.name !== value ? true : false
+  }
+
+  ionViewCanLeave(): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      const alert = this.alertCtrl.create({
+        buttons: [
+          {
+            handler: () => {
+              this.uiActions.next({ name: 'update' })
+              resolve(true)
+            },
+            text: 'Save'
+          },
+          {
+            handler: () => {
+              resolve(true)
+            },
+            text: "Don't Save"
+          }
+        ],
+        subTitle:
+          'You have chaged somethingsomething. Do you want to save them?',
+        title: 'Confirm'
+      })
+      if (!this.isNameChanged && !this.isStageChanged) resolve(true)
+      else alert.present()
+    })
   }
 
   addStage(): void {
@@ -71,6 +107,11 @@ export class PipelinesPage extends ReactivePage<State, UserAction> {
   }
 
   editPipeline(pipeline: Pipeline): void {
+    this.originalPipeline = new Pipeline({
+      id: pipeline.id,
+      name: pipeline.name,
+      stage_order: pipeline.stageOrder
+    })
     this.uiActions.next({ name: 'edit', pipeline: pipeline })
   }
 
@@ -175,6 +216,7 @@ export class PipelinesPage extends ReactivePage<State, UserAction> {
       action.name === 'add-stage' &&
       (state.mode === 'edit' || state.mode === 'new')
     ) {
+      this.isStageChanged = true
       return Observable.of({
         ...state,
         stages: state.stages.concat(action.stage)
@@ -183,6 +225,7 @@ export class PipelinesPage extends ReactivePage<State, UserAction> {
       action.name === 'edit-stage' &&
       (state.mode === 'edit' || state.mode === 'new')
     ) {
+      this.isStageChanged = true
       return Observable.of({
         ...state,
         stages: this.updateStageName(state.stages, action.stage, action.newName)
