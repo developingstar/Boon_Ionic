@@ -9,7 +9,7 @@ settings-page-with-menu(currentPage="IntegrationPage")
     ion-row(*ngIf="service | async; let s")
       ion-col
         ion-label(stacked) TOKEN
-        ion-input(name="token", type="text", [value]="s.token", [(ngModel)]="s.token", required, #token)
+        ion-input(name="token", type="text", [value]="s.token", [(ngModel)]="s.token", (input)='tokenChanged()', required, #token)
     ion-row
       ion-col(col-4)
         button.boon-button(ion-button, full, type="submit", (click)="updateService()", [disabled]="!integrationForm.form.valid")
