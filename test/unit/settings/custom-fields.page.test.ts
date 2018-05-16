@@ -1,6 +1,6 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing'
 import { async, ComponentFixture } from '@angular/core/testing'
-import { NavController, NavParams } from 'ionic-angular'
+import { NavController, NavParams, ToastController } from 'ionic-angular'
 import { Observable } from 'rxjs'
 
 import { initComponent } from '../../support/helpers'
@@ -12,12 +12,15 @@ import { SalesService } from '../../../src/app/crm/sales.service'
 import { NavService } from '../../../src/app/nav/nav.service'
 import { CustomFieldsPage } from '../../../src/app/settings/custom-fields.page'
 import { CustomFieldsPageModule } from '../../../src/app/settings/custom-fields.page.module'
+import { toastSuccessDefaults } from '../../../src/app/utils/toast'
 
 describe('CustomFieldsPage', () => {
   let fixture: ComponentFixture<CustomFieldsPage>
   let page: CustomFieldsPageObject
   let fields: FieldDefinition[]
   let salesServiceStub: any
+  let toastControllerStub: any
+  let toastStub: any
 
   beforeEach(
     async(() => {
@@ -49,6 +52,17 @@ describe('CustomFieldsPage', () => {
       spyOn(salesServiceStub, 'createField').and.callThrough()
       spyOn(salesServiceStub, 'updateField').and.callThrough()
 
+      toastStub = {
+        present: () => {
+          return
+        }
+      }
+      toastControllerStub = {
+        create: () => toastStub
+      }
+      spyOn(toastStub, 'present').and.callThrough()
+      spyOn(toastControllerStub, 'create').and.callThrough()
+
       const navParamsStub = {
         get: (prop: string) => undefined
       }
@@ -59,7 +73,8 @@ describe('CustomFieldsPage', () => {
           NavService,
           { provide: NavController, useValue: new NavControllerStub() },
           { provide: NavParams, useValue: navParamsStub },
-          { provide: SalesService, useValue: salesServiceStub }
+          { provide: SalesService, useValue: salesServiceStub },
+          { provide: ToastController, useValue: toastControllerStub }
         ]
       })
 
@@ -120,6 +135,10 @@ describe('CustomFieldsPage', () => {
         'Last Name',
         'New Field'
       ])
+      expect(toastControllerStub.create).toHaveBeenCalledWith({
+        ...toastSuccessDefaults,
+        message: 'Create custom field successfully.'
+      })
     })
 
     it('returns to the listing after clicking the back button', () => {
@@ -162,6 +181,10 @@ describe('CustomFieldsPage', () => {
 
       expect(page.header).toBe('Custom Fields')
       expect(page.customFields).toEqual(['Updated Field', 'Last Name'])
+      expect(toastControllerStub.create).toHaveBeenCalledWith({
+        ...toastSuccessDefaults,
+        message: 'Update custom field successfully.'
+      })
     })
 
     it('returns to the listing after clicking the back button', () => {
