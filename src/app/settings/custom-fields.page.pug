@@ -39,4 +39,4 @@ settings-page-with-menu(currentPage="CustomFieldsPage")
           ion-label(stacked) Name
           ion-input(name="name",
                     type="text",
-                    [formControl]="formControl | async", (input)='nameChanged($event.target.value)')
+                    [formControl]="formControl | async", (change)='nameChanged($event.target.value)')

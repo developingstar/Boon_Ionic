@@ -27,7 +27,7 @@ settings-page-with-menu(currentPage="GroupsPage")
       ion-col(col-12)
         form(autocomplete="off")
           ion-label(stacked) Group Name
-          ion-input(name="name", type="text", [formControl]="currentGroupNameInput | async", (input)='nameChanged($event.target.value)')
+          ion-input(name="name", type="text", [formControl]="currentGroupNameInput | async", (change)='nameChanged($event.target.value)')
     ion-row(*ngIf="(name | async) !== 'new'")
       ion-col
         form(autocomplete="off")
