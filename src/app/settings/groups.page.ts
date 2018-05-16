@@ -1,6 +1,6 @@
 import { Component } from '@angular/core'
 import { FormControl, Validators } from '@angular/forms'
-import { IonicPage } from 'ionic-angular'
+import { AlertController, IonicPage } from 'ionic-angular'
 import { Observable } from 'rxjs'
 
 import { User } from '../auth/user.model'
@@ -24,12 +24,46 @@ import { GroupsService } from './groups.service'
 })
 export class GroupsPage extends ReactivePage<State, UserAction> {
   readonly userID: number
+  isChanged: boolean
+  originalGroup: Group
 
   constructor(
+    public alertCtrl: AlertController,
     private readonly groupsService: GroupsService,
     private readonly usersService: UsersService
   ) {
     super(initialState)
+  }
+
+  ionViewCanLeave(): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      const alert = this.alertCtrl.create({
+        buttons: [
+          {
+            handler: () => {
+              this.uiActions.next({ name: 'update' })
+              resolve(true)
+            },
+            text: 'Save'
+          },
+          {
+            handler: () => {
+              resolve(true)
+            },
+            text: "Don't Save"
+          }
+        ],
+        subTitle:
+          'You have chaged somethingsomething. Do you want to save them?',
+        title: 'Confirm'
+      })
+      if (!this.isChanged) resolve(true)
+      else alert.present()
+    })
+  }
+
+  nameChanged(value: string): void {
+    this.isChanged = this.originalGroup.name !== value ? true : false
   }
 
   newGroup(): void {
@@ -37,6 +71,11 @@ export class GroupsPage extends ReactivePage<State, UserAction> {
   }
 
   editGroup(group: Group): void {
+    this.originalGroup = new Group({
+      id: group.id,
+      name: group.name
+    })
+
     this.uiActions.next({ name: 'edit', group: group })
   }
 
