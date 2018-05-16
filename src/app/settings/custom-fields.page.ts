@@ -1,11 +1,12 @@
 import { Component } from '@angular/core'
 import { FormControl, Validators } from '@angular/forms'
-import { AlertController, IonicPage } from 'ionic-angular'
+import { IonicPage, ToastController } from 'ionic-angular'
 import { Observable } from 'rxjs'
 
 import { FieldDefinition } from '../crm/field-definition.model'
 import { SalesService } from '../crm/sales.service'
 import { ReactivePage } from '../utils/reactive-page'
+import { toastSuccessDefaults } from '../utils/toast'
 import { initialState, State, UserAction } from './custom-fields.page.state'
 
 @IonicPage({
@@ -16,45 +17,11 @@ import { initialState, State, UserAction } from './custom-fields.page.state'
   templateUrl: 'custom-fields.page.html'
 })
 export class CustomFieldsPage extends ReactivePage<State, UserAction> {
-  isChanged: boolean
-  originalField: FieldDefinition
-
   constructor(
-    public alertCtrl: AlertController,
-    private salesService: SalesService
+    private salesService: SalesService,
+    private readonly toastController: ToastController
   ) {
     super(initialState)
-  }
-
-  nameChanged(value: string): void {
-    this.isChanged = this.originalField.name !== value ? true : false
-  }
-
-  ionViewCanLeave(): Promise<boolean> {
-    return new Promise((resolve, reject) => {
-      const alert = this.alertCtrl.create({
-        buttons: [
-          {
-            handler: () => {
-              this.uiActions.next({ name: 'update' })
-              resolve(true)
-            },
-            text: 'Save'
-          },
-          {
-            handler: () => {
-              resolve(true)
-            },
-            text: "Don't Save"
-          }
-        ],
-        subTitle:
-          'You have chaged somethingsomething. Do you want to save them?',
-        title: 'Confirm'
-      })
-      if (!this.isChanged) resolve(true)
-      else alert.present()
-    })
   }
 
   get showList(): Observable<boolean> {
@@ -116,10 +83,6 @@ export class CustomFieldsPage extends ReactivePage<State, UserAction> {
   }
 
   editField(field: FieldDefinition): void {
-    this.originalField = new FieldDefinition({
-      id: field.id,
-      name: field.name
-    })
     this.uiActions.next({ name: 'edit', field: field })
   }
 
@@ -149,9 +112,10 @@ export class CustomFieldsPage extends ReactivePage<State, UserAction> {
           const fieldCreate = {
             name: state.formControl.value
           }
-          return this.salesService
-            .createField(fieldCreate)
-            .concatMap(() => this.listFieldsState())
+          return this.salesService.createField(fieldCreate).concatMap(() => {
+            this.toast('Create custom field successfully.')
+            return this.listFieldsState()
+          })
         }
 
         return Observable.of(state)
@@ -168,7 +132,10 @@ export class CustomFieldsPage extends ReactivePage<State, UserAction> {
           }
           return this.salesService
             .updateField(state.fieldId, fieldUpdate)
-            .concatMap(() => this.listFieldsState())
+            .concatMap(() => {
+              this.toast('Update custom field successfully.')
+              return this.listFieldsState()
+            })
         }
 
         return Observable.of(state)
@@ -182,5 +149,14 @@ export class CustomFieldsPage extends ReactivePage<State, UserAction> {
         fields: fields,
         mode: 'list'
       }))
+  }
+
+  private toast(message: string): void {
+    this.toastController
+      .create({
+        ...toastSuccessDefaults,
+        message: message
+      })
+      .present()
   }
 }
