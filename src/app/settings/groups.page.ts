@@ -6,7 +6,6 @@ import { Observable } from 'rxjs'
 import { User } from '../auth/user.model'
 import { UsersService } from '../crm/users.service'
 import { ReactivePage } from '../utils/reactive-page'
-import { AlertService } from './alert.service'
 import { Group } from './group.model'
 import {
   IGroupData,
@@ -25,28 +24,12 @@ import { GroupsService } from './groups.service'
 })
 export class GroupsPage extends ReactivePage<State, UserAction> {
   readonly userID: number
-  isChanged: boolean
-  originalGroup: Group
 
   constructor(
     private readonly groupsService: GroupsService,
-    private readonly usersService: UsersService,
-    public alertService: AlertService
+    private readonly usersService: UsersService
   ) {
     super(initialState)
-  }
-
-  ionViewCanLeave(): Promise<boolean> {
-    if (this.isChanged)
-      return this.alertService.showSaveConfirmDialog(
-        this.handleYes,
-        this.handleNo
-      )
-    else return Promise.resolve(true)
-  }
-
-  nameChanged(value: string): void {
-    this.isChanged = this.originalGroup.name !== value ? true : false
   }
 
   newGroup(): void {
@@ -54,11 +37,6 @@ export class GroupsPage extends ReactivePage<State, UserAction> {
   }
 
   editGroup(group: Group): void {
-    this.originalGroup = new Group({
-      id: group.id,
-      name: group.name
-    })
-
     this.uiActions.next({ name: 'edit', group: group })
   }
 
@@ -195,14 +173,7 @@ export class GroupsPage extends ReactivePage<State, UserAction> {
     } else if (action.name === 'update' && state.name === 'edit') {
       return this.groupsService
         .updateGroup(state.groupId, { name: state.nameInput.value })
-        .map<Group, State>((group) => {
-          this.isChanged = false
-          this.originalGroup = new Group({
-            id: group.id,
-            name: group.name
-          })
-          return state
-        })
+        .map<Group, State>((group) => state)
     } else if (action.name === 'add_user' && state.name === 'edit') {
       const user = state.users.find((u) => u.id === Number(action.user_id))
 
@@ -239,13 +210,5 @@ export class GroupsPage extends ReactivePage<State, UserAction> {
     } else {
       return Observable.of(state)
     }
-  }
-
-  private handleYes(): boolean {
-    return true
-  }
-
-  private handleNo(): boolean {
-    return false
   }
 }
