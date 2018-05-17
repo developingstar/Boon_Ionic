@@ -1,12 +1,12 @@
 import { Component } from '@angular/core'
 import { FormControl, Validators } from '@angular/forms'
-import { IonicPage, ToastController } from 'ionic-angular'
+import { IonicPage } from 'ionic-angular'
 import { Observable } from 'rxjs'
 
 import { User } from '../auth/user.model'
 import { UsersService } from '../crm/users.service'
 import { ReactivePage } from '../utils/reactive-page'
-import { showToast } from '../utils/toast'
+import { AlertService } from './alert.service'
 import { Group } from './group.model'
 import {
   IGroupData,
@@ -25,13 +25,28 @@ import { GroupsService } from './groups.service'
 })
 export class GroupsPage extends ReactivePage<State, UserAction> {
   readonly userID: number
+  isChanged: boolean
+  originalGroup: Group
 
   constructor(
     private readonly groupsService: GroupsService,
-    private readonly toastController: ToastController,
-    private readonly usersService: UsersService
+    private readonly usersService: UsersService,
+    public alertService: AlertService
   ) {
     super(initialState)
+  }
+
+  ionViewCanLeave(): Promise<boolean> {
+    if (this.isChanged)
+      return this.alertService.showSaveConfirmDialog(
+        this.handleYes,
+        this.handleNo
+      )
+    else return Promise.resolve(true)
+  }
+
+  nameChanged(value: string): void {
+    this.isChanged = this.originalGroup.name !== value ? true : false
   }
 
   newGroup(): void {
@@ -39,6 +54,11 @@ export class GroupsPage extends ReactivePage<State, UserAction> {
   }
 
   editGroup(group: Group): void {
+    this.originalGroup = new Group({
+      id: group.id,
+      name: group.name
+    })
+
     this.uiActions.next({ name: 'edit', group: group })
   }
 
@@ -154,10 +174,7 @@ export class GroupsPage extends ReactivePage<State, UserAction> {
     } else if (action.name === 'create' && state.name === 'new') {
       return this.groupsService
         .createGroup({ name: state.nameInput.value })
-        .concatMap(() => {
-          showToast(this.toastController, 'Created new group successfully.')
-          return listGroups
-        })
+        .concatMap(() => listGroups)
     } else if (action.name === 'edit') {
       const newC = Observable.combineLatest(
         this.groupsService.groupUsers(action.group.id),
@@ -179,7 +196,11 @@ export class GroupsPage extends ReactivePage<State, UserAction> {
       return this.groupsService
         .updateGroup(state.groupId, { name: state.nameInput.value })
         .map<Group, State>((group) => {
-          showToast(this.toastController, 'Updated group name successfully.')
+          this.isChanged = false
+          this.originalGroup = new Group({
+            id: group.id,
+            name: group.name
+          })
           return state
         })
     } else if (action.name === 'add_user' && state.name === 'edit') {
@@ -195,13 +216,10 @@ export class GroupsPage extends ReactivePage<State, UserAction> {
             }
           },
           State
-        >((response) => {
-          showToast(this.toastController, 'Added user successfully.')
-          return {
-            ...state,
-            groupUsers: state.groupUsers.concat(user)
-          }
-        })
+        >((response) => ({
+          ...state,
+          groupUsers: state.groupUsers.concat(user)
+        }))
       }
     } else if (action.name === 'delete_user' && state.name === 'edit') {
       const userIndex = state.groupUsers.indexOf(action.user)
@@ -212,17 +230,22 @@ export class GroupsPage extends ReactivePage<State, UserAction> {
           }
         },
         State
-      >((response) => {
-        showToast(this.toastController, 'Removed user successfully.')
-        return {
-          ...state,
-          groupUsers: state.groupUsers.filter(
-            (user, index) => index !== userIndex
-          )
-        }
-      })
+      >((response) => ({
+        ...state,
+        groupUsers: state.groupUsers.filter(
+          (user, index) => index !== userIndex
+        )
+      }))
     } else {
       return Observable.of(state)
     }
+  }
+
+  private handleYes(): boolean {
+    return true
+  }
+
+  private handleNo(): boolean {
+    return false
   }
 }

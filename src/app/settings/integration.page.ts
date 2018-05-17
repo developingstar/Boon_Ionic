@@ -1,9 +1,9 @@
 import { Component } from '@angular/core'
-import { IonicPage, NavParams, ToastController } from 'ionic-angular'
+import { IonicPage, NavParams } from 'ionic-angular'
 import { Observable } from 'rxjs'
 
 import { ReactivePage } from '../utils/reactive-page'
-import { showToast } from '../utils/toast'
+import { AlertService } from './alert.service'
 import { initialState, IState, UserAction } from './integration.page.state'
 import { IntegrationsService } from './integrations.service'
 import { Service } from './service.model'
@@ -16,16 +16,37 @@ import { Service } from './service.model'
   templateUrl: 'integration.page.html'
 })
 export class IntegrationPage extends ReactivePage<IState, UserAction> {
+  navSubscribe: any
+  originalService: Service
+  isChanged: boolean
+
   constructor(
     public navParams: NavParams,
-    private readonly toastController: ToastController,
-    private readonly integrationsService: IntegrationsService
+    private readonly integrationsService: IntegrationsService,
+    public alertService: AlertService
   ) {
     super(initialState)
+    this.isChanged = false
+  }
+
+  ionViewCanLeave(): Promise<boolean> {
+    if (this.isChanged)
+      return this.alertService.showSaveConfirmDialog(
+        this.handleYes,
+        this.handleNo
+      )
+    else return Promise.resolve(true)
   }
 
   public updateService(): void {
     this.uiActions.next({ name: 'update_service' })
+  }
+
+  public tokenChanged(): void {
+    this.service.subscribe((service: Service) => {
+      this.isChanged =
+        service.token !== this.originalService.token ? true : false
+    })
   }
 
   get service(): Observable<Service> {
@@ -43,10 +64,19 @@ export class IntegrationPage extends ReactivePage<IState, UserAction> {
     const serviceID = Number(this.navParams.get('id'))
     const selectedService = this.integrationsService
       .service(serviceID)
-      .map((service) => ({
-        name: 'edit',
-        service: service
-      }))
+      .map((service) => {
+        if (!this.originalService) {
+          this.originalService = new Service({
+            id: service.id,
+            name: service.name,
+            token: service.token
+          })
+        }
+        return {
+          name: 'edit',
+          service: service
+        }
+      })
     switch (action.name) {
       case 'edit':
         return selectedService
@@ -54,7 +84,12 @@ export class IntegrationPage extends ReactivePage<IState, UserAction> {
         return this.integrationsService
           .updateService(serviceID, state.service)
           .map((service) => {
-            showToast(this.toastController, 'Updated token successfully.')
+            this.isChanged = false
+            this.originalService = new Service({
+              id: service.id,
+              name: service.name,
+              token: service.token
+            })
             return {
               ...state,
               service: service
@@ -63,5 +98,13 @@ export class IntegrationPage extends ReactivePage<IState, UserAction> {
       default:
         return Observable.of(state)
     }
+  }
+
+  private handleYes(): boolean {
+    return true
+  }
+
+  private handleNo(): boolean {
+    return false
   }
 }
