@@ -19,9 +19,8 @@ ion-content(padding)
         div(item-content)
       ion-item.shortcodes
         ion-label ShortCodes:
-        select(item-content, (ngModelChange)="itemSelected($event)", formControlName="shortcode")
-          option(*ngFor="let name of shortcodeNames | async", [value]="name") {{name}}
-        div(item-content)
+        ion-select([(ngModel)]='selectedShortCode', interface="popover", [ngModelOptions]="{standalone: true}", (ionChange)="itemSelected($event)", placeholder="Select Shortcode")
+          ion-option(*ngFor="let name of shortcodeNames | async", [value]="name") {{name}}
       ion-item
         ion-textarea(name="content", formControlName="content")
 
