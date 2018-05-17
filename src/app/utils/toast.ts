@@ -14,19 +14,23 @@ export const toastWarningDefaults: ToastOptions = {
   showCloseButton: true
 }
 
-export function toast(toastController: ToastController, message: string, type: boolean = true /* true: success, false: warning */): void {
-  const toastMessage = type ? toastController
-    .create({
-      ...toastSuccessDefaults,
-      duration: 2000,
-      message: message,
-    }) : toastController
-    .create({
-      ...toastWarningDefaults,
-      duration: 2000,
-      message: message,
-    })
+export function showToast(
+  toastController: ToastController,
+  message: string,
+  duration: number = 2000,
+  type: boolean = true /* true: success, false: warning */
+): void {
+  const toastMessage = type
+    ? toastController.create({
+        ...toastSuccessDefaults,
+        duration: duration,
+        message: message
+      })
+    : toastController.create({
+        ...toastWarningDefaults,
+        duration: duration,
+        message: message
+      })
 
-  if (toastMessage)
-      toastMessage.present()
+  if (toastMessage) toastMessage.present()
 }
