@@ -1,6 +1,6 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing'
 import { async, ComponentFixture } from '@angular/core/testing'
-import { NavController, NavParams } from 'ionic-angular'
+import { NavController, NavParams, ToastController } from 'ionic-angular'
 import { Observable } from 'rxjs'
 
 import { initComponent } from '../../support/helpers'
@@ -15,6 +15,7 @@ import * as API from '../../../src/app/settings/groups.api.model'
 import { GroupsPage } from '../../../src/app/settings/groups.page'
 import { GroupsPageModule } from '../../../src/app/settings/groups.page.module'
 import { GroupsService } from '../../../src/app/settings/groups.service'
+import { toastSuccessDefaults } from '../../../src/app/utils/toast'
 
 describe('GroupsPage', () => {
   let fixture: ComponentFixture<GroupsPage>
@@ -24,6 +25,8 @@ describe('GroupsPage', () => {
   let usersServiceStub: any
   let groupUsers: User[]
   let userLists: User[]
+  let toastControllerStub: any
+  let toastStub: any
 
   beforeEach(
     async(() => {
@@ -140,6 +143,17 @@ describe('GroupsPage', () => {
       spyOn(groupsServiceStub, 'deleteUser').and.callThrough()
       spyOn(groupsServiceStub, 'addUser').and.callThrough()
 
+      toastStub = {
+        present: () => {
+          return
+        }
+      }
+      toastControllerStub = {
+        create: () => toastStub
+      }
+      spyOn(toastStub, 'present').and.callThrough()
+      spyOn(toastControllerStub, 'create').and.callThrough()
+
       fixture = initComponent(GroupsPage, {
         imports: [GroupsPageModule, HttpClientTestingModule],
         providers: [
@@ -147,7 +161,8 @@ describe('GroupsPage', () => {
           { provide: NavController, useValue: new NavControllerStub() },
           { provide: NavParams, useValue: navParamsStub },
           { provide: UsersService, useValue: usersServiceStub },
-          { provide: GroupsService, useValue: groupsServiceStub }
+          { provide: GroupsService, useValue: groupsServiceStub },
+          { provide: ToastController, useValue: toastControllerStub }
         ]
       })
 
@@ -193,6 +208,10 @@ describe('GroupsPage', () => {
       })
       expect(page.header).toEqual('Sales Groups')
       expect(page.groups).toEqual(['Group1', 'Group2', 'NewGroup'])
+      expect(toastControllerStub.create).toHaveBeenCalledWith({
+        ...toastSuccessDefaults,
+        message: 'Created new group successfully.'
+      })
     })
 
     it('returns to the listing after clicking the back button', () => {
@@ -236,6 +255,10 @@ describe('GroupsPage', () => {
       expect(groupsServiceStub.updateGroup).toHaveBeenCalledWith(1, {
         name: 'UpdatedGroup'
       })
+      expect(toastControllerStub.create).toHaveBeenCalledWith({
+        ...toastSuccessDefaults,
+        message: 'Updated group name successfully.'
+      })
     })
 
     it('add a group user', () => {
@@ -245,6 +268,10 @@ describe('GroupsPage', () => {
       expect(page.groupUsers.length).toEqual(3)
       expect(page.groupUsers).toEqual(['John Boon', 'Mark Boon', 'Petr Boon'])
       expect(page.users).toEqual(['Alekxis Boon'])
+      expect(toastControllerStub.create).toHaveBeenCalledWith({
+        ...toastSuccessDefaults,
+        message: 'Added user successfully.'
+      })
     })
 
     it('delete a group user', () => {
@@ -254,6 +281,10 @@ describe('GroupsPage', () => {
       expect(page.groupUsers.length).toEqual(1)
       expect(page.groupUsers).toEqual(['John Boon'])
       expect(page.users).toEqual(['Mark Boon', 'Alekxis Boon', 'Petr Boon'])
+      expect(toastControllerStub.create).toHaveBeenCalledWith({
+        ...toastSuccessDefaults,
+        message: 'Removed user successfully.'
+      })
     })
   })
 })
