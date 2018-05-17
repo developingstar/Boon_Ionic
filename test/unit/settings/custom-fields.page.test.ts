@@ -137,6 +137,7 @@ describe('CustomFieldsPage', () => {
       ])
       expect(toastControllerStub.create).toHaveBeenCalledWith({
         ...toastSuccessDefaults,
+        duration: 2000,
         message: 'Created custom field successfully.'
       })
     })
@@ -183,6 +184,7 @@ describe('CustomFieldsPage', () => {
       expect(page.customFields).toEqual(['Updated Field', 'Last Name'])
       expect(toastControllerStub.create).toHaveBeenCalledWith({
         ...toastSuccessDefaults,
+        duration: 2000,
         message: 'Updated custom field successfully.'
       })
     })

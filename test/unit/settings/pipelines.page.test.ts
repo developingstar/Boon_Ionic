@@ -149,6 +149,7 @@ describe('PipelinesPage', () => {
       expect(page.pipelines).toEqual(['New', 'Converted', 'Without Response'])
       expect(toastControllerStub.create).toHaveBeenCalledWith({
         ...toastSuccessDefaults,
+        duration: 2000,
         message: 'Created pipeline successfully.'
       })
     })
@@ -210,6 +211,7 @@ describe('PipelinesPage', () => {
       expect(page.pipelines).toEqual(['New', 'Converted/Archived'])
       expect(toastControllerStub.create).toHaveBeenCalledWith({
         ...toastSuccessDefaults,
+        duration: 2000,
         message: 'Updated pipeline successfully.'
       })
     })

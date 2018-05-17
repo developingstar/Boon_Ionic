@@ -210,6 +210,7 @@ describe('GroupsPage', () => {
       expect(page.groups).toEqual(['Group1', 'Group2', 'NewGroup'])
       expect(toastControllerStub.create).toHaveBeenCalledWith({
         ...toastSuccessDefaults,
+        duration: 2000,
         message: 'Created new group successfully.'
       })
     })
@@ -257,6 +258,7 @@ describe('GroupsPage', () => {
       })
       expect(toastControllerStub.create).toHaveBeenCalledWith({
         ...toastSuccessDefaults,
+        duration: 2000,
         message: 'Updated group name successfully.'
       })
     })
@@ -270,6 +272,7 @@ describe('GroupsPage', () => {
       expect(page.users).toEqual(['Alekxis Boon'])
       expect(toastControllerStub.create).toHaveBeenCalledWith({
         ...toastSuccessDefaults,
+        duration: 2000,
         message: 'Added user successfully.'
       })
     })
@@ -283,6 +286,7 @@ describe('GroupsPage', () => {
       expect(page.users).toEqual(['Mark Boon', 'Alekxis Boon', 'Petr Boon'])
       expect(toastControllerStub.create).toHaveBeenCalledWith({
         ...toastSuccessDefaults,
+        duration: 2000,
         message: 'Removed user successfully.'
       })
     })

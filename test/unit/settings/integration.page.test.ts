@@ -107,6 +107,7 @@ describe('IntegrationPage', () => {
       expect(page.token).toEqual('updated-token:secret')
       expect(toastControllerStub.create).toHaveBeenCalledWith({
         ...toastSuccessDefaults,
+        duration: 2000,
         message: 'Updated token successfully.'
       })
     })
