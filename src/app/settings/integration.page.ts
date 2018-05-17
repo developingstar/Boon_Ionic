@@ -54,7 +54,7 @@ export class IntegrationPage extends ReactivePage<IState, UserAction> {
         return this.integrationsService
           .updateService(serviceID, state.service)
           .map((service) => {
-            this.toast('Update token successfully.')
+            this.toast('Updated token successfully.')
             return {
               ...state,
               service: service

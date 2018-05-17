@@ -168,7 +168,7 @@ export class PipelinesPage extends ReactivePage<State, UserAction> {
           this.saveStagesAndUpdatePipeline(state.stages, pipeline)
         )
         .concatMap(() => {
-          this.toast('Create pipeline successfully.')
+          this.toast('Created pipeline successfully.')
           return listPipelines
         })
     } else if (action.name === 'update' && state.mode === 'edit') {
@@ -176,7 +176,7 @@ export class PipelinesPage extends ReactivePage<State, UserAction> {
         ...state.pipeline,
         name: state.nameInput.value
       }).concatMap(() => {
-        this.toast('Update pipeline successfully.')
+        this.toast('Updated pipeline successfully.')
         return listPipelines
       })
     } else if (

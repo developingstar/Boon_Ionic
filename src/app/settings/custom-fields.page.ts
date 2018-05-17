@@ -113,7 +113,7 @@ export class CustomFieldsPage extends ReactivePage<State, UserAction> {
             name: state.formControl.value
           }
           return this.salesService.createField(fieldCreate).concatMap(() => {
-            this.toast('Create custom field successfully.')
+            this.toast('Created custom field successfully.')
             return this.listFieldsState()
           })
         }
@@ -133,7 +133,7 @@ export class CustomFieldsPage extends ReactivePage<State, UserAction> {
           return this.salesService
             .updateField(state.fieldId, fieldUpdate)
             .concatMap(() => {
-              this.toast('Update custom field successfully.')
+              this.toast('Updated custom field successfully.')
               return this.listFieldsState()
             })
         }
