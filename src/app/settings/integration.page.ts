@@ -3,7 +3,7 @@ import { IonicPage, NavParams, ToastController } from 'ionic-angular'
 import { Observable } from 'rxjs'
 
 import { ReactivePage } from '../utils/reactive-page'
-import { toastSuccessDefaults } from '../utils/toast'
+import { showToast } from '../utils/toast'
 import { initialState, IState, UserAction } from './integration.page.state'
 import { IntegrationsService } from './integrations.service'
 import { Service } from './service.model'
@@ -54,7 +54,7 @@ export class IntegrationPage extends ReactivePage<IState, UserAction> {
         return this.integrationsService
           .updateService(serviceID, state.service)
           .map((service) => {
-            this.toast('Updated token successfully.')
+            showToast(this.toastController, 'Updated token successfully.')
             return {
               ...state,
               service: service
@@ -63,14 +63,5 @@ export class IntegrationPage extends ReactivePage<IState, UserAction> {
       default:
         return Observable.of(state)
     }
-  }
-
-  private toast(message: string): void {
-    this.toastController
-      .create({
-        ...toastSuccessDefaults,
-        message: message
-      })
-      .present()
   }
 }

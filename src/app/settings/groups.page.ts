@@ -6,7 +6,7 @@ import { Observable } from 'rxjs'
 import { User } from '../auth/user.model'
 import { UsersService } from '../crm/users.service'
 import { ReactivePage } from '../utils/reactive-page'
-import { toastSuccessDefaults } from '../utils/toast'
+import { showToast } from '../utils/toast'
 import { Group } from './group.model'
 import {
   IGroupData,
@@ -155,7 +155,7 @@ export class GroupsPage extends ReactivePage<State, UserAction> {
       return this.groupsService
         .createGroup({ name: state.nameInput.value })
         .concatMap(() => {
-          this.toast('Created new group successfully.')
+          showToast(this.toastController, 'Created new group successfully.')
           return listGroups
         })
     } else if (action.name === 'edit') {
@@ -179,7 +179,7 @@ export class GroupsPage extends ReactivePage<State, UserAction> {
       return this.groupsService
         .updateGroup(state.groupId, { name: state.nameInput.value })
         .map<Group, State>((group) => {
-          this.toast('Updated group name successfully.')
+          showToast(this.toastController, 'Updated group name successfully.')
           return state
         })
     } else if (action.name === 'add_user' && state.name === 'edit') {
@@ -196,7 +196,7 @@ export class GroupsPage extends ReactivePage<State, UserAction> {
           },
           State
         >((response) => {
-          this.toast('Added user successfully.')
+          showToast(this.toastController, 'Added user successfully.')
           return {
             ...state,
             groupUsers: state.groupUsers.concat(user)
@@ -213,7 +213,7 @@ export class GroupsPage extends ReactivePage<State, UserAction> {
         },
         State
       >((response) => {
-        this.toast('Removed user successfully.')
+        showToast(this.toastController, 'Removed user successfully.')
         return {
           ...state,
           groupUsers: state.groupUsers.filter(
@@ -224,14 +224,5 @@ export class GroupsPage extends ReactivePage<State, UserAction> {
     } else {
       return Observable.of(state)
     }
-  }
-
-  private toast(message: string): void {
-    this.toastController
-      .create({
-        ...toastSuccessDefaults,
-        message: message
-      })
-      .present()
   }
 }

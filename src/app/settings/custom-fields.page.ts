@@ -6,7 +6,7 @@ import { Observable } from 'rxjs'
 import { FieldDefinition } from '../crm/field-definition.model'
 import { SalesService } from '../crm/sales.service'
 import { ReactivePage } from '../utils/reactive-page'
-import { toastSuccessDefaults } from '../utils/toast'
+import { showToast } from '../utils/toast'
 import { initialState, State, UserAction } from './custom-fields.page.state'
 
 @IonicPage({
@@ -113,7 +113,10 @@ export class CustomFieldsPage extends ReactivePage<State, UserAction> {
             name: state.formControl.value
           }
           return this.salesService.createField(fieldCreate).concatMap(() => {
-            this.toast('Created custom field successfully.')
+            showToast(
+              this.toastController,
+              'Created custom field successfully.'
+            )
             return this.listFieldsState()
           })
         }
@@ -133,7 +136,10 @@ export class CustomFieldsPage extends ReactivePage<State, UserAction> {
           return this.salesService
             .updateField(state.fieldId, fieldUpdate)
             .concatMap(() => {
-              this.toast('Updated custom field successfully.')
+              showToast(
+                this.toastController,
+                'Updated custom field successfully.'
+              )
               return this.listFieldsState()
             })
         }
@@ -149,14 +155,5 @@ export class CustomFieldsPage extends ReactivePage<State, UserAction> {
         fields: fields,
         mode: 'list'
       }))
-  }
-
-  private toast(message: string): void {
-    this.toastController
-      .create({
-        ...toastSuccessDefaults,
-        message: message
-      })
-      .present()
   }
 }

@@ -7,7 +7,7 @@ import { Pipeline } from '../crm/pipeline.model'
 import { SalesService } from '../crm/sales.service'
 import { Stage } from '../crm/stage.model'
 import { ReactivePage } from '../utils/reactive-page'
-import { toastSuccessDefaults } from '../utils/toast'
+import { showToast } from '../utils/toast'
 import {
   initialState,
   IStageState,
@@ -168,7 +168,7 @@ export class PipelinesPage extends ReactivePage<State, UserAction> {
           this.saveStagesAndUpdatePipeline(state.stages, pipeline)
         )
         .concatMap(() => {
-          this.toast('Created pipeline successfully.')
+          showToast(this.toastController, 'Created pipeline successfully.')
           return listPipelines
         })
     } else if (action.name === 'update' && state.mode === 'edit') {
@@ -176,7 +176,7 @@ export class PipelinesPage extends ReactivePage<State, UserAction> {
         ...state.pipeline,
         name: state.nameInput.value
       }).concatMap(() => {
-        this.toast('Updated pipeline successfully.')
+        showToast(this.toastController, 'Updated pipeline successfully.')
         return listPipelines
       })
     } else if (
@@ -260,14 +260,5 @@ export class PipelinesPage extends ReactivePage<State, UserAction> {
         return s
       }
     })
-  }
-
-  private toast(message: string): void {
-    this.toastController
-      .create({
-        ...toastSuccessDefaults,
-        message: message
-      })
-      .present()
   }
 }
