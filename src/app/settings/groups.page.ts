@@ -1,6 +1,6 @@
 import { Component } from '@angular/core'
 import { FormControl, Validators } from '@angular/forms'
-import { IonicPage } from 'ionic-angular'
+import { AlertController, IonicPage } from 'ionic-angular'
 import { Observable } from 'rxjs'
 
 import { User } from '../auth/user.model'
@@ -27,7 +27,8 @@ export class GroupsPage extends ReactivePage<State, UserAction> {
 
   constructor(
     private readonly groupsService: GroupsService,
-    private readonly usersService: UsersService
+    private readonly usersService: UsersService,
+    public alertCtrl: AlertController
   ) {
     super(initialState)
   }
@@ -57,7 +58,25 @@ export class GroupsPage extends ReactivePage<State, UserAction> {
   }
 
   deleteUser(user: User): void {
-    this.uiActions.next({ name: 'delete_user', user: user })
+    const alert = this.alertCtrl.create({
+      buttons: [
+        {
+          handler: () => {
+            this.uiActions.next({ name: 'delete_user', user: user })
+          },
+          text: 'Yes'
+        },
+        {
+          handler: () => {
+            return
+          },
+          text: 'No'
+        }
+      ],
+      subTitle: 'Do you really want to remove this user?',
+      title: 'Confirm'
+    })
+    alert.present()
   }
 
   get usersList(): Observable<ReadonlyArray<User>> {
