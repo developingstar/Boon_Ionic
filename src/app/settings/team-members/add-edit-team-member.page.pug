@@ -33,10 +33,10 @@ settings-page-with-menu.settings-page([currentPage]="'TeamMembersPage'")
           ion-input.user-name(formControlName="name", (input)='nameChanged($event.target.value)', type="text")
         .form-row
           ion-label(stacked) Email
-          ion-input.email(formControlName="email", (input)='emailChanged()', type="email" )
+          ion-input.email(formControlName="email", (input)='emailChanged($event.target.value)', type="email" )
         .form-row([hidden]="myForm.value.id")
           ion-label(stacked) Password
-          ion-input.password(formControlName="password", (input)='passwordChanged()', type="password" )
+          ion-input.password(formControlName="password", (input)='passwordChanged($event.target.value)', type="password" )
         .form-row
           ion-label(stacked) Twilio Number
           ion-select.phone_number_select.select-lg(formControlName="phoneNumber" #phone_number)

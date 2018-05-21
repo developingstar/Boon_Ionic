@@ -24,6 +24,9 @@ export class AddEditTeamMemberPage implements OnInit {
   public formData: FormData
   public originalMember: User
   public isChanged: boolean
+  public isNameChanged: boolean
+  public isPasswordChanged: boolean
+  public isEmailChanged: boolean
 
   constructor(
     public navCtrl: NavController,
@@ -59,21 +62,11 @@ export class AddEditTeamMemberPage implements OnInit {
             name: res.name,
             password: res.password,
             phone_number: res.phoneNumber,
-            role: res.role,
+            role: res.role
           })
           this.myForm.setValue(res)
           this.localUrl = this.myForm.value.avatarUrl
         })
-    } else {
-      this.originalMember = new User({
-        avatar_url: null,
-        email: '',
-        id: 0,
-        name: '',
-        password: '',
-        phone_number: '',
-        role: 'lead_owner',
-      })
     }
   }
 
@@ -87,15 +80,38 @@ export class AddEditTeamMemberPage implements OnInit {
   }
 
   public nameChanged(newName: string): void {
-    this.isChanged = this.originalMember.name !== newName ? true : false
+    if (this.originalMember) {
+      this.isNameChanged = this.originalMember.name !== newName ? true : false
+    } else {
+      if (newName !== '') this.isNameChanged = true
+      else this.isNameChanged = false
+    }
+    this.isChanged =
+      this.isNameChanged || this.isEmailChanged || this.isPasswordChanged
   }
 
   public emailChanged(newEmail: string): void {
-    this.isChanged = this.originalMember.email !== newEmail ? true : false
+    if (this.originalMember) {
+      this.isEmailChanged =
+        this.originalMember.email !== newEmail ? true : false
+    } else {
+      if (newEmail !== '') this.isEmailChanged = true
+      else this.isEmailChanged = false
+    }
+    this.isChanged =
+      this.isNameChanged || this.isEmailChanged || this.isPasswordChanged
   }
 
   public passwordChanged(newPassword: string): void {
-    this.isChanged = this.originalMember.password !== newPassword ? true : false
+    if (this.originalMember) {
+      this.isPasswordChanged =
+        this.originalMember.name !== newPassword ? true : false
+    } else {
+      if (newPassword !== '') this.isPasswordChanged = true
+      else this.isPasswordChanged = false
+    }
+    this.isChanged =
+      this.isNameChanged || this.isEmailChanged || this.isPasswordChanged
   }
 
   onFileChange(event: any): void {
