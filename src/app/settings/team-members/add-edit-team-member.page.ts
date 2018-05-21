@@ -1,12 +1,13 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core'
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
-import { IonicPage, NavController, NavParams } from 'ionic-angular'
+import { IonicPage, NavController, NavParams, ToastController } from 'ionic-angular'
 import { Observable } from 'rxjs'
 import { User } from '../../auth/user.model'
 import {
   emailValidator,
   phoneNumberValidator
 } from '../../utils/form-validators'
+import { showToast } from '../../utils/toast'
 import { PhoneNumber } from './phone_number.model'
 import { TeamMembersService } from './team-members.service'
 
@@ -26,6 +27,7 @@ export class AddEditTeamMemberPage implements OnInit {
     public navParams: NavParams,
     private formBuilder: FormBuilder,
     public teamMembersService: TeamMembersService,
+    private toastController: ToastController,
     public changeDetector: ChangeDetectorRef
   ) {
     this.myForm = this.formBuilder.group({
@@ -75,6 +77,7 @@ export class AddEditTeamMemberPage implements OnInit {
       this.teamMembersService
         .updateTeamMember(this.myForm.value)
         .subscribe((userRes: User) => {
+          showToast(this.toastController, 'Updated team member successfully.')
           if (!userRes.avatarUrl) {
             this.uploadAvatar(userRes.id)
           }
@@ -83,6 +86,7 @@ export class AddEditTeamMemberPage implements OnInit {
       this.teamMembersService
         .addTeamMember(this.myForm.value)
         .subscribe((res: User) => {
+          showToast(this.toastController, 'Created team member successfully.')
           this.uploadAvatar(res.id)
         })
     }
