@@ -1,6 +1,11 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing'
 import { async, ComponentFixture } from '@angular/core/testing'
-import { NavController, NavParams } from 'ionic-angular'
+import {
+  ModalController,
+  NavController,
+  NavParams,
+  PopoverController
+} from 'ionic-angular'
 import { BehaviorSubject, Observable } from 'rxjs'
 
 import { initComponent } from '../../support/helpers'
@@ -29,6 +34,10 @@ describe('LeadPage', () => {
   let lead: Lead
   let leadUpdate: Crm.API.ILeadUpdate
   let navControllerStub: any
+  let modalControllerStub: any
+  let modalStub: any
+  let popoverControllerStub: any
+  let popoverStub: any
   let users: ReadonlyArray<User>
   const userRole: BehaviorSubject<string> = new BehaviorSubject<string>('admin')
 
@@ -40,6 +49,8 @@ describe('LeadPage', () => {
           email: 'john@example.com',
           id: 100,
           name: 'John Boon',
+          password: '',
+          phone_number: '',
           role: 'admin'
         }),
         new User({
@@ -47,6 +58,8 @@ describe('LeadPage', () => {
           email: 'mark@example.com',
           id: 101,
           name: 'Mark Boon',
+          password: '',
+          phone_number: '',
           role: 'lead_owner'
         })
       ]
@@ -99,10 +112,12 @@ describe('LeadPage', () => {
         ],
         id: 1,
         owner: {
-          avatar_url: null,
+          avatar_url: '',
           email: 'john@example.com',
           id: 100,
           name: 'John Boon',
+          password: '',
+          phone_number: '',
           role: 'admin'
         },
         phone_number: '+999100200300',
@@ -126,6 +141,7 @@ describe('LeadPage', () => {
           leadUpdate = data
           return Observable.of({
             ...lead,
+            stageId: leadUpdate.stage_id,
             ...leadUpdate,
             owner: leadUpdate.owner_id
               ? users.find((user) => user.id === leadUpdate.owner_id)
@@ -151,12 +167,41 @@ describe('LeadPage', () => {
 
       spyOn(navControllerStub, 'setRoot').and.callThrough()
 
+      modalStub = {
+        onDidDismiss: () => {
+          return
+        },
+        present: () => {
+          return
+        }
+      }
+      popoverStub = {
+        onDidDismiss: () => {
+          return
+        },
+        present: () => {
+          return
+        }
+      }
+      modalControllerStub = {
+        create: () => modalStub
+      }
+      popoverControllerStub = {
+        create: () => popoverStub
+      }
+      spyOn(modalStub, 'present').and.callThrough()
+      spyOn(modalControllerStub, 'create').and.callThrough()
+      spyOn(popoverStub, 'present').and.callThrough()
+      spyOn(popoverControllerStub, 'create').and.callThrough()
+
       fixture = initComponent(LeadPage, {
         imports: [LeadPageModule, HttpClientTestingModule],
         providers: [
           NavService,
           { provide: NavParams, useValue: navParamsStub },
           { provide: NavController, useValue: navControllerStub },
+          { provide: ModalController, useValue: modalControllerStub },
+          { provide: PopoverController, useValue: popoverControllerStub },
           { provide: SalesService, useValue: salesServiceStub },
           { provide: CurrentUserService, useValue: currentUserServiceStub },
           { provide: UsersService, useValue: usersServiceStub }
@@ -286,6 +331,51 @@ describe('LeadPage', () => {
       fixture.detectChanges()
 
       expect(page.isSaveButtonEnabled).toBe(false)
+    })
+  })
+  describe('selecting and updating stage', () => {
+    it('shows update stage button', () => {
+      expect(page.updateStageBtn.nativeElement.firstChild!.textContent).toEqual(
+        'Update stage'
+      )
+    })
+    it('update stage button is disabled until stage is changed by user', () => {
+      expect(page.updateStageBtn.nativeElement.disabled).toBeTruthy()
+    })
+    it('enables update stage button when user selects different stage', () => {
+      page.selectStage(1)
+      expect(page.updateStageBtn.nativeElement.disabled).toBeFalsy()
+    })
+    it('updates stage after clicking update stage button', () => {
+      page.selectStage(3)
+      page.clickUpdateStage()
+      expect(fixture.componentInstance.currentStageId).toEqual(
+        fixture.componentInstance.newStageId
+      )
+      expect(page.updateStageBtn.nativeElement.disabled).toBeTruthy()
+    })
+  })
+  describe('More Button', () => {
+    it('opens popover when more button is clicked', () => {
+      page.openPopover()
+      expect(popoverControllerStub.create).toHaveBeenCalledWith(
+        'PopoverPage',
+        { instanceName: 'leadMore' },
+        { cssClass: 'boon-popover' }
+      )
+      expect(popoverStub.present).toHaveBeenCalled()
+    })
+    it('opens change pipeline modal', () => {
+      fixture.componentInstance.changePipelineModal()
+      expect(modalControllerStub.create).toHaveBeenCalledWith(
+        'AssignStageModalComponent',
+        {
+          action: { data: { stage_id: lead.stageId } },
+          isPipeline: true
+        },
+        { cssClass: 'assign-stage-modal-component' }
+      )
+      expect(modalStub.present).toHaveBeenCalled()
     })
   })
 })

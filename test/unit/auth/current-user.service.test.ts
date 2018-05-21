@@ -8,8 +8,10 @@ describe('CurrentUserService', () => {
   const userDetails: User = new User({
     avatar_url: null,
     email: 'john@example.com',
-    id: 1,
-    name: 'John',
+    id: 100,
+    name: 'John Boon',
+    password: '',
+    phone_number: '',
     role: 'admin'
   })
 

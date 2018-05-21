@@ -46,6 +46,11 @@ export class CrmPageObject extends PageObject<CrmPage> {
     this.fixture.detectChanges()
   }
 
+  getHeader(): string {
+    const h2 = this.findByCss<HTMLHeadingElement>('h2')
+    return h2 ? h2.textContent || '' : ''
+  }
+
   private clickButton(selector: string): void {
     const button = this.findDebugByCss(selector)
     this.click(button!)

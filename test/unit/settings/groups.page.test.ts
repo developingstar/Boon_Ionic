@@ -35,6 +35,8 @@ describe('GroupsPage', () => {
           email: 'john@example.com',
           id: 11,
           name: 'John Boon',
+          password: '',
+          phone_number: '',
           role: 'admin'
         }),
         new User({
@@ -42,6 +44,8 @@ describe('GroupsPage', () => {
           email: 'mark@example.com',
           id: 12,
           name: 'Mark Boon',
+          password: '',
+          phone_number: '',
           role: 'lead_owner'
         })
       ]
@@ -52,6 +56,8 @@ describe('GroupsPage', () => {
           email: 'john@example.com',
           id: 11,
           name: 'John Boon',
+          password: '',
+          phone_number: '',
           role: 'admin'
         }),
         new User({
@@ -59,6 +65,8 @@ describe('GroupsPage', () => {
           email: 'mark@example.com',
           id: 12,
           name: 'Mark Boon',
+          password: '',
+          phone_number: '',
           role: 'lead_owner'
         }),
         new User({
@@ -66,6 +74,8 @@ describe('GroupsPage', () => {
           email: 'alekxis@example.com',
           id: 13,
           name: 'Alekxis Boon',
+          password: '',
+          phone_number: '',
           role: 'admin'
         }),
         new User({
@@ -73,6 +83,8 @@ describe('GroupsPage', () => {
           email: 'petr@example.com',
           id: 14,
           name: 'Petr Boon',
+          password: '',
+          phone_number: '',
           role: 'lead_owner'
         })
       ]

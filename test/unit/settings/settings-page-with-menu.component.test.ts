@@ -64,7 +64,7 @@ describe('SettingsPageWithMenuComponent', () => {
         { label: 'Pipelines', link: 'PipelinesPage' },
         { label: 'Custom Fields', link: 'CustomFieldsPage' }
       ],
-      label: 'CMS Settings'
+      label: 'CRM Settings'
     }
 
     assignCurrentPage('PipelinesPage')

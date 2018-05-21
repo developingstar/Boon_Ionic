@@ -1,3 +1,4 @@
+import { DebugElement } from '@angular/core'
 import { LeadPage } from '../../../src/app/crm/lead.page'
 import { PageObject } from '../../support/page.po'
 import { FieldPageObject } from './field.component.po'
@@ -25,6 +26,11 @@ export class LeadPageObject extends PageObject<LeadPage> {
     return this.findAllByCss<HTMLElement>('.buttons button').map(
       (el) => el.textContent || ''
     )
+  }
+
+  get updateStageBtn(): DebugElement {
+    const item = this.findDebugByCss('.update-stage-button')
+    return item!
   }
 
   get isSaveButtonEnabled(): boolean {
@@ -67,6 +73,18 @@ export class LeadPageObject extends PageObject<LeadPage> {
     )
   }
 
+  clickUpdateStage(): any {
+    this.click(this.updateStageBtn!)
+    this.fixture.detectChanges()
+  }
+
+  selectStage(position: number): void {
+    const selector = `.item-container:nth-child(${position})`
+    const item = this.findDebugByCss(selector)
+    this.click(item!)
+    this.fixture.detectChanges()
+  }
+
   setNote(note: string): void {
     const element = this.findByCss<HTMLInputElement>('ion-input input')
     expect(element).toBeTruthy()
@@ -93,6 +111,11 @@ export class LeadPageObject extends PageObject<LeadPage> {
 
   clickCancelButton(): void {
     this.clickButton('Cancel')
+  }
+
+  openPopover(): void {
+    const button = this.findDebugByCss('.lead-more-button')
+    this.click(button!)
   }
 
   private clickButton(name: string): void {

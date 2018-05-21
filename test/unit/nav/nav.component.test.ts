@@ -79,17 +79,19 @@ describe('NavComponent and NavContentComponent', () => {
     it('renders his name', () => {
       user.next(
         new User({
-          avatar_url: null,
+          avatar_url: '',
           email: 'john@example.com',
-          id: 1,
-          name: 'John',
+          id: 100,
+          name: 'John Boon',
+          password: '',
+          phone_number: '',
           role: 'admin'
         })
       )
 
       fixture.detectChanges()
 
-      expect(page.getUsername()).toBe('Hello, John')
+      expect(page.getUsername()).toBe('Hello, John Boon')
     })
   })
 
