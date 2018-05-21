@@ -11,6 +11,28 @@ export class TestHostPageObject extends PageObject<TestHostComponent> {
     return this.findByCss<HTMLElement>(`nav .nav-${placement}`)!.textContent
   }
 
+  getDivContent(): string | null {
+    const el = this.findByCss<HTMLDivElement>('nav .search-bar')!
+    return el !== null ? el.textContent : null
+  }
+
+  autoCompleteComponentVisible(): boolean {
+    const element = this.findByCss<HTMLElement>('ion-auto-complete')
+    return element ? true : false
+  }
+
+  setLeadName(name: string): void {
+    const element = this.findByCss<HTMLInputElement>('input.searchbar-input')
+    expect(element).toBeTruthy()
+    this.setInput(element!, name)
+  }
+
+  filterResult(): ReadonlyArray<string> {
+    return this.findAllByCss<HTMLSpanElement>('li span').map(
+      (el) => el.textContent || ''
+    )
+  }
+
   getUsername(): string | null {
     const el = this.findByCss<HTMLElement>('nav .nav-right span')
 

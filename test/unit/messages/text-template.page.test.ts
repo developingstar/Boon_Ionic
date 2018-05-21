@@ -125,8 +125,7 @@ describe('TextTemplatePage', () => {
         template: {
           content: 'Hello from Boon team!',
           default_sender: '+999222222',
-          name: 'Introduction to Boon',
-          shortcode: null
+          name: 'Introduction to Boon'
         }
       })
 
@@ -217,8 +216,7 @@ describe('TextTemplatePage', () => {
         template: {
           content: 'Hello from Boon team!',
           default_sender: '+999222222',
-          name: 'Introduction to Boon',
-          shortcode: null
+          name: 'Introduction to Boon'
         }
       })
 

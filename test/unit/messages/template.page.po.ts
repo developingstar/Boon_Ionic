@@ -19,7 +19,7 @@ export class TemplatePageObject<T> extends PageObject<T> {
   }
 
   getShortcodes(): ReadonlyArray<string> {
-    return this.findAllByCss<HTMLSpanElement>('.shortcodes option').map(
+    return this.findAllByCss<HTMLSpanElement>('.shortcodes ion-badge').map(
       (el) => el.textContent || ''
     )
   }
@@ -27,12 +27,5 @@ export class TemplatePageObject<T> extends PageObject<T> {
   save(): void {
     const element = this.findDebugByCss('.form button')!
     this.click(element)
-  }
-
-  addShortcodeEvent(value: string): void {
-    const element = this.findByCss<HTMLSelectElement>('.shortcodes select')
-    expect(element).toBeTruthy()
-    element!.selectedValue = value
-    this.setSelect(element!, value)
   }
 }

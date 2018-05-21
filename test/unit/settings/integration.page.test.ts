@@ -1,6 +1,6 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing'
 import { async, ComponentFixture } from '@angular/core/testing'
-import { NavController, NavParams, ToastController } from 'ionic-angular'
+import { NavController, NavParams } from 'ionic-angular'
 import { Observable } from 'rxjs'
 
 import { initComponent } from '../../support/helpers'
@@ -12,16 +12,12 @@ import { IntegrationPage } from '../../../src/app/settings/integration.page'
 import { IntegrationPageModule } from '../../../src/app/settings/integration.page.module'
 import { IntegrationsService } from '../../../src/app/settings/integrations.service'
 import { Service } from '../../../src/app/settings/service.model'
-import { toastSuccessDefaults } from '../../../src/app/utils/toast'
 
 describe('IntegrationPage', () => {
   let fixture: ComponentFixture<IntegrationPage>
   let page: IntegrationPageObject
   let services: Service[]
   let integrationsServiceStub: any
-  let toastControllerStub: any
-  let toastStub: any
-
   beforeEach(
     async(() => {
       services = [
@@ -51,17 +47,6 @@ describe('IntegrationPage', () => {
       spyOn(integrationsServiceStub, 'service').and.callThrough()
       spyOn(integrationsServiceStub, 'updateService').and.callThrough()
 
-      toastStub = {
-        present: () => {
-          return
-        }
-      }
-      toastControllerStub = {
-        create: () => toastStub
-      }
-      spyOn(toastStub, 'present').and.callThrough()
-      spyOn(toastControllerStub, 'create').and.callThrough()
-
       const navParamsStub = {
         get: (prop: string) => 1
       }
@@ -72,8 +57,7 @@ describe('IntegrationPage', () => {
           NavService,
           { provide: NavController, useValue: new NavControllerStub() },
           { provide: NavParams, useValue: navParamsStub },
-          { provide: IntegrationsService, useValue: integrationsServiceStub },
-          { provide: ToastController, useValue: toastControllerStub }
+          { provide: IntegrationsService, useValue: integrationsServiceStub }
         ]
       })
 
@@ -105,11 +89,6 @@ describe('IntegrationPage', () => {
       })
       expect(page.header).toEqual('Twilio')
       expect(page.token).toEqual('updated-token:secret')
-      expect(toastControllerStub.create).toHaveBeenCalledWith({
-        ...toastSuccessDefaults,
-        duration: 2000,
-        message: 'Updated token successfully.'
-      })
     })
   })
 })

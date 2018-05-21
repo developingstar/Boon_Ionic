@@ -1,6 +1,6 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing'
 import { async, ComponentFixture } from '@angular/core/testing'
-import { AlertController, NavController, NavParams } from 'ionic-angular'
+import { NavController, NavParams } from 'ionic-angular'
 import { Observable } from 'rxjs'
 
 import { initComponent } from '../../support/helpers'
@@ -24,8 +24,6 @@ describe('GroupsPage', () => {
   let usersServiceStub: any
   let groupUsers: User[]
   let userLists: User[]
-  let alertStub: any
-  let alertControllerStub: any
 
   beforeEach(
     async(() => {
@@ -37,8 +35,6 @@ describe('GroupsPage', () => {
           email: 'john@example.com',
           id: 11,
           name: 'John Boon',
-          password: '',
-          phone_number: '',
           role: 'admin'
         }),
         new User({
@@ -46,8 +42,6 @@ describe('GroupsPage', () => {
           email: 'mark@example.com',
           id: 12,
           name: 'Mark Boon',
-          password: '',
-          phone_number: '',
           role: 'lead_owner'
         })
       ]
@@ -58,8 +52,6 @@ describe('GroupsPage', () => {
           email: 'john@example.com',
           id: 11,
           name: 'John Boon',
-          password: '',
-          phone_number: '',
           role: 'admin'
         }),
         new User({
@@ -67,8 +59,6 @@ describe('GroupsPage', () => {
           email: 'mark@example.com',
           id: 12,
           name: 'Mark Boon',
-          password: '',
-          phone_number: '',
           role: 'lead_owner'
         }),
         new User({
@@ -76,8 +66,6 @@ describe('GroupsPage', () => {
           email: 'alekxis@example.com',
           id: 13,
           name: 'Alekxis Boon',
-          password: '',
-          phone_number: '',
           role: 'admin'
         }),
         new User({
@@ -85,8 +73,6 @@ describe('GroupsPage', () => {
           email: 'petr@example.com',
           id: 14,
           name: 'Petr Boon',
-          password: '',
-          phone_number: '',
           role: 'lead_owner'
         })
       ]
@@ -142,22 +128,6 @@ describe('GroupsPage', () => {
       spyOn(groupsServiceStub, 'deleteUser').and.callThrough()
       spyOn(groupsServiceStub, 'addUser').and.callThrough()
 
-      alertStub = {
-        onDidDismiss: () => {
-          return
-        },
-        present: () => {
-          return
-        }
-      }
-
-      alertControllerStub = {
-        create: () => alertStub
-      }
-
-      spyOn(alertStub, 'present').and.callThrough()
-      spyOn(alertControllerStub, 'create').and.callThrough()
-
       fixture = initComponent(GroupsPage, {
         imports: [GroupsPageModule, HttpClientTestingModule],
         providers: [
@@ -165,8 +135,7 @@ describe('GroupsPage', () => {
           { provide: NavController, useValue: new NavControllerStub() },
           { provide: NavParams, useValue: navParamsStub },
           { provide: UsersService, useValue: usersServiceStub },
-          { provide: GroupsService, useValue: groupsServiceStub },
-          { provide: AlertController, useValue: alertControllerStub }
+          { provide: GroupsService, useValue: groupsServiceStub }
         ]
       })
 
@@ -269,7 +238,10 @@ describe('GroupsPage', () => {
     it('delete a group user', () => {
       page.deleteEvent(2)
       fixture.detectChanges()
-      expect(alertControllerStub.create).toHaveBeenCalled()
+      expect(groupsServiceStub.deleteUser).toHaveBeenCalledWith(1, 12)
+      expect(page.groupUsers.length).toEqual(1)
+      expect(page.groupUsers).toEqual(['John Boon'])
+      expect(page.users).toEqual(['Mark Boon', 'Alekxis Boon', 'Petr Boon'])
     })
   })
 })

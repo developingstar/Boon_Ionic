@@ -38,8 +38,6 @@ describe('NewLeadPage', () => {
           email: 'john@example.com',
           id: 100,
           name: 'John Boon',
-          password: '',
-          phone_number: '',
           role: 'admin'
         }),
         new User({
@@ -47,8 +45,6 @@ describe('NewLeadPage', () => {
           email: 'mark@example.com',
           id: 101,
           name: 'Mark Boon',
-          password: '',
-          phone_number: '',
           role: 'lead_owner'
         })
       ]

@@ -171,13 +171,6 @@ describe('CrmPage', () => {
     })
   })
   describe('pipelines nav', () => {
-    it('check header', () => {
-      expect(page.getHeader()).toEqual('All Contacts')
-      page.selectPipeline(2)
-      expect(page.getHeader()).toEqual('Converted')
-      page.selectPipeline(3)
-      expect(page.getHeader()).toEqual('Without response')
-    })
     it('includes items and a default option', () => {
       const nav = page.pipelinesNavElements()
       expect(nav.length).toBe(3)
@@ -191,12 +184,12 @@ describe('CrmPage', () => {
       expect(salesServiceStub.leads).toHaveBeenCalled()
       let latestArgs = salesServiceStub.leads.calls.mostRecent().args
       expect(latestArgs[0].url).toBeNull()
-      expect(latestArgs[0].params.get('pipeline_id')).toBe('1')
+      expect(latestArgs[0].params.get('pipelineId')).toBe('1')
       page.selectPipeline(1)
       expect(salesServiceStub.leads).toHaveBeenCalled()
       latestArgs = salesServiceStub.leads.calls.mostRecent().args
       expect(latestArgs[0].url).toBeNull()
-      expect(latestArgs[0].params.get('pipeline_id')).toBe(null)
+      expect(latestArgs[0].params.get('pipelineId')).toBe(null)
     })
     it('resets current page on option select', () => {
       page.clickNextPageButton()
@@ -209,7 +202,6 @@ describe('CrmPage', () => {
     })
     describe('stages nav', () => {
       it('includes items and a default option when pipeline is selected', () => {
-        page.selectPipeline(1)
         expect(page.stagesNav()!.hidden).toBeTruthy()
         page.selectPipeline(2)
         expect(page.stagesNav()!.hidden).toBeFalsy()
@@ -230,12 +222,12 @@ describe('CrmPage', () => {
         expect(salesServiceStub.leads).toHaveBeenCalled()
         let latestArgs = salesServiceStub.leads.calls.mostRecent().args
         expect(latestArgs[0].url).toBeNull()
-        expect(latestArgs[0].params.get('stage_id')).toBe('2')
+        expect(latestArgs[0].params.get('stageId')).toBe('2')
         page.selectStage(1)
         expect(salesServiceStub.leads).toHaveBeenCalled()
         latestArgs = salesServiceStub.leads.calls.mostRecent().args
         expect(latestArgs[0].url).toBeNull()
-        expect(latestArgs[0].params.get('stage_id')).toBe(null)
+        expect(latestArgs[0].params.get('stageId')).toBe(null)
       })
       it('clears the stage filter on pipeline change', () => {
         expect(salesServiceStub.leads).toHaveBeenCalled()
@@ -245,12 +237,12 @@ describe('CrmPage', () => {
         expect(salesServiceStub.leads).toHaveBeenCalled()
         let latestArgs = salesServiceStub.leads.calls.mostRecent().args
         expect(latestArgs[0].url).toBeNull()
-        expect(latestArgs[0].params.get('stage_id')).toBe('2')
+        expect(latestArgs[0].params.get('stageId')).toBe('2')
         page.selectPipeline(2)
         expect(salesServiceStub.leads).toHaveBeenCalled()
         latestArgs = salesServiceStub.leads.calls.mostRecent().args
         expect(latestArgs[0].url).toBeNull()
-        expect(latestArgs[0].params.get('stage_id')).toBe(null)
+        expect(latestArgs[0].params.get('stageId')).toBe(null)
       })
       it('resets the stage selection on pipeline change', () => {
         page.selectPipeline(2)
