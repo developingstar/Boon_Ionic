@@ -1,13 +1,14 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core'
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
-import { IonicPage, NavController, NavParams, ToastController } from 'ionic-angular'
+import { IonicPage, NavController, NavParams } from 'ionic-angular'
 import { Observable } from 'rxjs'
+
 import { User } from '../../auth/user.model'
 import {
   emailValidator,
   phoneNumberValidator
 } from '../../utils/form-validators'
-import { showToast } from '../../utils/toast'
+import { AlertService } from '../alert.service'
 import { PhoneNumber } from './phone_number.model'
 import { TeamMembersService } from './team-members.service'
 
@@ -21,14 +22,16 @@ export class AddEditTeamMemberPage implements OnInit {
   public readonly phoneNumbers: Observable<ReadonlyArray<PhoneNumber>>
   public localUrl: string = ''
   public formData: FormData
+  public originalMember: User
+  public isChanged: boolean
 
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
     private formBuilder: FormBuilder,
     public teamMembersService: TeamMembersService,
-    private toastController: ToastController,
-    public changeDetector: ChangeDetectorRef
+    public changeDetector: ChangeDetectorRef,
+    public alertService: AlertService
   ) {
     this.myForm = this.formBuilder.group({
       avatarUrl: new FormControl(),
@@ -39,7 +42,7 @@ export class AddEditTeamMemberPage implements OnInit {
       phoneNumber: new FormControl('', phoneNumberValidator()),
       role: new FormControl()
     })
-
+    this.isChanged = false
     this.phoneNumbers = this.teamMembersService.getNumbers()
   }
 
@@ -49,10 +52,50 @@ export class AddEditTeamMemberPage implements OnInit {
       this.teamMembersService
         .getTeamMember(teamMemberId)
         .subscribe((res: User) => {
+          this.originalMember = new User({
+            avatar_url: res.avatarUrl,
+            email: res.email,
+            id: res.id,
+            name: res.name,
+            password: res.password,
+            phone_number: res.phoneNumber,
+            role: res.role,
+          })
           this.myForm.setValue(res)
           this.localUrl = this.myForm.value.avatarUrl
         })
+    } else {
+      this.originalMember = new User({
+        avatar_url: null,
+        email: '',
+        id: 0,
+        name: '',
+        password: '',
+        phone_number: '',
+        role: 'lead_owner',
+      })
     }
+  }
+
+  ionViewCanLeave(): Promise<boolean> {
+    if (this.isChanged)
+      return this.alertService.showSaveConfirmDialog(
+        this.handleYes,
+        this.handleNo
+      )
+    else return Promise.resolve(true)
+  }
+
+  public nameChanged(newName: string): void {
+    this.isChanged = this.originalMember.name !== newName ? true : false
+  }
+
+  public emailChanged(newEmail: string): void {
+    this.isChanged = this.originalMember.email !== newEmail ? true : false
+  }
+
+  public passwordChanged(newPassword: string): void {
+    this.isChanged = this.originalMember.password !== newPassword ? true : false
   }
 
   onFileChange(event: any): void {
@@ -77,7 +120,6 @@ export class AddEditTeamMemberPage implements OnInit {
       this.teamMembersService
         .updateTeamMember(this.myForm.value)
         .subscribe((userRes: User) => {
-          showToast(this.toastController, 'Updated team member successfully.')
           if (!userRes.avatarUrl) {
             this.uploadAvatar(userRes.id)
           }
@@ -86,7 +128,6 @@ export class AddEditTeamMemberPage implements OnInit {
       this.teamMembersService
         .addTeamMember(this.myForm.value)
         .subscribe((res: User) => {
-          showToast(this.toastController, 'Created team member successfully.')
           this.uploadAvatar(res.id)
         })
     }
@@ -100,5 +141,13 @@ export class AddEditTeamMemberPage implements OnInit {
           this.myForm.setValue(imageRes)
         })
     }
+  }
+
+  private handleYes(): boolean {
+    return true
+  }
+
+  private handleNo(): boolean {
+    return false
   }
 }

@@ -30,13 +30,13 @@ settings-page-with-menu.settings-page([currentPage]="'TeamMembersPage'")
             | Update photo
         .form-row.name-row
           ion-label(stacked) Name
-          ion-input.user-name(formControlName="name", type="text")
+          ion-input.user-name(formControlName="name", (input)='nameChanged($event.target.value)', type="text")
         .form-row
           ion-label(stacked) Email
-          ion-input.email(formControlName="email", type="email" )
+          ion-input.email(formControlName="email", (input)='emailChanged()', type="email" )
         .form-row([hidden]="myForm.value.id")
           ion-label(stacked) Password
-          ion-input.password(formControlName="password", type="password" )
+          ion-input.password(formControlName="password", (input)='passwordChanged()', type="password" )
         .form-row
           ion-label(stacked) Twilio Number
           ion-select.phone_number_select.select-lg(formControlName="phoneNumber" #phone_number)
