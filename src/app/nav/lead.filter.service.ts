@@ -1,27 +1,30 @@
 import { HttpClient } from '@angular/common/http'
-import {Injectable} from '@angular/core'
-import {AutoCompleteService} from 'ionic2-auto-complete'
+import { Injectable } from '@angular/core'
+import { AutoCompleteService } from 'ionic2-auto-complete'
 import { Observable } from 'rxjs'
 
+import { Lead } from '../crm/lead.model'
 @Injectable()
 export class LeadFilterService implements AutoCompleteService {
   labelAttribute = 'name'
 
-  constructor(private readonly http: HttpClient) {
-
-  }
+  constructor(private readonly http: HttpClient) {}
 
   public getResults(query: string): Observable<any[]> {
-    return this.http.get('/api/leads?query=' + query) // TODO: Update API Endpoint
+    return this.http
+      .get('/api/leads?query=' + query)
       .map((response: Crm.API.ILeadsResponse) => {
-        const json = response.data
-        if (json) {
-          const results = response.data.leads.map((lead) => {
-            const filteredLead = { id: lead.id, name: '' }
-            filteredLead.name = lead.owner && lead.owner.name ? lead.owner.name : ''
-            return filteredLead
+        if (response.data) {
+          const results = response.data.leads.map((lead: Crm.API.ILead) => {
+            const leadModel = new Lead(lead)
+            let name = leadModel.name ? leadModel.name : leadModel.email
+            name = name ? name : leadModel.phoneNumber
+            return {
+              id: leadModel.id,
+              name: name
+            }
           })
-          return results.filter((lead) => lead.name !== '' && lead.name.indexOf(query) !== -1) // TODO: Update if API endpoint is correct
+          return results
         } else {
           Observable.throw({ message: 'Internal Server Error' })
           return []
