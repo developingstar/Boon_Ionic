@@ -22,7 +22,7 @@ export class NewPasswordPage implements OnInit {
   constructor(
     private readonly authService: AuthService,
     private readonly nav: NavController,
-    private toastController: ToastController,
+    private toastController: ToastController
   ) {}
 
   ngOnInit(): void {
@@ -35,18 +35,21 @@ export class NewPasswordPage implements OnInit {
     const confirmPassword = this.confirmPassword.getValue() as string
     if (newPassword === confirmPassword) {
       const result = this.authService.createNewPassword(code, newPassword)
-      result.subscribe((response: { data: { message: string } }) => {
-        this.nav.setRoot('LoginPage')
-      }, (error: any) => {
-        if (error.status === 422) {
-          this.toastController
-            .create({
-              ...toastWarningDefaults,
-              message: 'Invalid or expired token'
-            })
-            .present()
+      result.subscribe(
+        (response: { data: { message: string } }) => {
+          this.nav.setRoot('LoginPage')
+        },
+        (error: any) => {
+          if (error.status === 422) {
+            this.toastController
+              .create({
+                ...toastWarningDefaults,
+                message: 'Invalid or expired token'
+              })
+              .present()
+          }
         }
-      })
+      )
     } else {
       this.toastController
         .create({
@@ -67,5 +70,9 @@ export class NewPasswordPage implements OnInit {
 
   set confirmPasswordModel(value: string) {
     this.confirmPassword.next(value)
+  }
+
+  public goLogin(): void {
+    this.nav.setRoot('LoginPage')
   }
 }
