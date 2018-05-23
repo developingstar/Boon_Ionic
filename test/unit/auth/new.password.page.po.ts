@@ -41,6 +41,17 @@ export class NewPasswordPageObject extends PageObject<NewPasswordPage> {
     return input ? true : false
   }
 
+  get loginHereVisible(): boolean {
+    const element = this.findDebugByCss('a.login')
+    return element ? true : false
+  }
+
+  clickLoginHere(): void {
+    const link = this.findDebugByCss('a.login')
+    expect(link).toBeTruthy()
+    this.click(link!)
+  }
+
   clickSubmitCodeButton(): void {
     this.clickButton('Submit Code')
   }

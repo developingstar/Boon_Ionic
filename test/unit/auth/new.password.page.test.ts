@@ -15,31 +15,33 @@ describe('NewPasswordPage', () => {
   let page: NewPasswordPageObject
   let nextPage: string | undefined
   let navControllerStub: any
-  beforeEach(async(() => {
-    nextPage = undefined
+  beforeEach(
+    async(() => {
+      nextPage = undefined
 
-    navControllerStub = {
-      setRoot: (newRoot: string) => (nextPage = newRoot)
-    }
-
-    const authServiceStub = {
-      createNewPassword: (token: string, password: string) => {
-        navControllerStub.setRoot('LoginPage')
-        return Observable.of(null)
+      navControllerStub = {
+        setRoot: (newRoot: string) => (nextPage = newRoot)
       }
-    }
 
-    fixture = initComponent(NewPasswordPage, {
-      imports: [NewPasswordPageModule],
-      providers: [
-        NavService,
-        { provide: AuthService, useValue: authServiceStub },
-        { provide: NavController, useValue: navControllerStub }
-      ]
+      const authServiceStub = {
+        createNewPassword: (token: string, password: string) => {
+          navControllerStub.setRoot('LoginPage')
+          return Observable.of(null)
+        }
+      }
+
+      fixture = initComponent(NewPasswordPage, {
+        imports: [NewPasswordPageModule],
+        providers: [
+          NavService,
+          { provide: AuthService, useValue: authServiceStub },
+          { provide: NavController, useValue: navControllerStub }
+        ]
+      })
+
+      page = new NewPasswordPageObject(fixture)
     })
-
-    page = new NewPasswordPageObject(fixture)
-  }))
+  )
 
   describe('Send Code Form', () => {
     it('Form UIs are visible', () => {
@@ -48,6 +50,7 @@ describe('NewPasswordPage', () => {
       expect(page.codeInputVisible).toBe(true)
       expect(page.newPasswordInputVisible).toBe(true)
       expect(page.confirmPasswordInputVisible).toBe(true)
+      expect(page.loginHereVisible).toBe(true)
     })
 
     it('Submit a form', () => {
@@ -57,6 +60,13 @@ describe('NewPasswordPage', () => {
       page.setInputValue('confirm-password', 'password')
       page.submitForm()
 
+      fixture.detectChanges()
+
+      expect(nextPage).toEqual('LoginPage')
+    })
+
+    it('Go to login page', () => {
+      page.clickLoginHere()
       fixture.detectChanges()
 
       expect(nextPage).toEqual('LoginPage')
