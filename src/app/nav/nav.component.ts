@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from '@angular/core'
+import { Component } from '@angular/core'
 import { App } from 'ionic-angular'
 import { Observable } from 'rxjs'
 
@@ -13,7 +13,6 @@ import { NavContent, NavService } from './nav.service'
 //
 // The component is implemented using portals from Angular Material CDK.
 @Component({
-  encapsulation: ViewEncapsulation.None,
   selector: 'nav',
   templateUrl: 'nav.component.html'
 })
@@ -21,9 +20,6 @@ export class NavComponent {
   readonly centerContent: Observable<NavContent>
   readonly navClass: Observable<string>
   readonly rightContent: Observable<NavContent>
-  selectedItem: any
-  results: Crm.API.ISearchDropdownItem[]
-
   constructor(
     protected app: App,
     private readonly currentUserService: CurrentUserService,
@@ -52,15 +48,7 @@ export class NavComponent {
   }
 
   public itemSelected(event: any): void {
-    if (event.id) {
-      const nav = this.app.getRootNav()
-      nav.setRoot('LeadPage', { id: event.id })
-    }
-  }
-
-  public search(event: any): void {
-    this.filterService.getResults(event.query).subscribe((results: Crm.API.ISearchDropdownItem[]) => {
-      this.results = results
-    })
+    const nav = this.app.getRootNav()
+    nav.setRoot('LeadPage', { id: event.id })
   }
 }

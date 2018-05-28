@@ -1,11 +1,14 @@
 import { Component } from '@angular/core'
 import { FormControl, Validators } from '@angular/forms'
-import { AlertController, IonicPage } from 'ionic-angular'
+import { IonicPage } from 'ionic-angular'
 import { Observable } from 'rxjs'
 
+import { CurrentUserService } from '../auth/current-user.service'
 import { User } from '../auth/user.model'
 import { UsersService } from '../crm/users.service'
+import { pageAccess } from '../utils/app-access'
 import { ReactivePage } from '../utils/reactive-page'
+import { AlertService } from './alert.service'
 import { Group } from './group.model'
 import {
   IGroupData,
@@ -24,13 +27,29 @@ import { GroupsService } from './groups.service'
 })
 export class GroupsPage extends ReactivePage<State, UserAction> {
   readonly userID: number
+  isChanged: boolean
+  originalGroup: Group
 
   constructor(
+    public alertService: AlertService,
     private readonly groupsService: GroupsService,
     private readonly usersService: UsersService,
-    public alertCtrl: AlertController
+    private currentUserService: CurrentUserService
   ) {
     super(initialState)
+  }
+
+  ionViewCanLeave(): Promise<boolean> {
+    if (this.isChanged)
+      return this.alertService.showSaveConfirmDialog(
+        this.handleYes,
+        this.handleNo
+      )
+    else return Promise.resolve(true)
+  }
+
+  nameChanged(value: string): void {
+    this.isChanged = this.originalGroup.name !== value ? true : false
   }
 
   newGroup(): void {
@@ -38,6 +57,11 @@ export class GroupsPage extends ReactivePage<State, UserAction> {
   }
 
   editGroup(group: Group): void {
+    this.originalGroup = new Group({
+      id: group.id,
+      name: group.name
+    })
+
     this.uiActions.next({ name: 'edit', group: group })
   }
 
@@ -58,25 +82,7 @@ export class GroupsPage extends ReactivePage<State, UserAction> {
   }
 
   deleteUser(user: User): void {
-    const alert = this.alertCtrl.create({
-      buttons: [
-        {
-          handler: () => {
-            this.uiActions.next({ name: 'delete_user', user: user })
-          },
-          text: 'Yes'
-        },
-        {
-          handler: () => {
-            return
-          },
-          text: 'No'
-        }
-      ],
-      subTitle: 'Do you really want to remove this user?',
-      title: 'Confirm'
-    })
-    alert.present()
+    this.uiActions.next({ name: 'delete_user', user: user })
   }
 
   get usersList(): Observable<ReadonlyArray<User>> {
@@ -192,7 +198,14 @@ export class GroupsPage extends ReactivePage<State, UserAction> {
     } else if (action.name === 'update' && state.name === 'edit') {
       return this.groupsService
         .updateGroup(state.groupId, { name: state.nameInput.value })
-        .map<Group, State>((group) => state)
+        .map<Group, State>((group) => {
+          this.isChanged = false
+          this.originalGroup = new Group({
+            id: state.groupId,
+            name: state.nameInput.value
+          })
+          return state
+        })
     } else if (action.name === 'add_user' && state.name === 'edit') {
       const user = state.users.find((u) => u.id === Number(action.user_id))
 
@@ -229,5 +242,21 @@ export class GroupsPage extends ReactivePage<State, UserAction> {
     } else {
       return Observable.of(state)
     }
+  }
+
+  private handleYes(): boolean {
+    return true
+  }
+
+  private handleNo(): boolean {
+    return false
+  }
+
+  private async ionViewCanEnter(): Promise<boolean> {
+    const role = await this.currentUserService
+      .role()
+      .first()
+      .toPromise()
+    return pageAccess(role).GroupsPage !== undefined
   }
 }

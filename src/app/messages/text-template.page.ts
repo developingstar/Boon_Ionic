@@ -8,6 +8,8 @@ import {
 import { Observable } from 'rxjs'
 
 import { FormControl, Validators } from '@angular/forms'
+import { CurrentUserService } from '../auth/current-user.service'
+import { pageAccess } from '../utils/app-access'
 import { phoneNumberValidator } from '../utils/form-validators'
 import { ITextTemplate } from './messages.api.model'
 import { MessagesService } from './messages.service'
@@ -39,7 +41,8 @@ export class TextTemplatePage extends TemplatePage<
     protected navController: NavController,
     protected messagesService: MessagesService,
     protected toastController: ToastController,
-    private phoneNumbersService: PhoneNumbersService
+    private phoneNumbersService: PhoneNumbersService,
+    private currentUserService: CurrentUserService
   ) {
     super(
       initialState,
@@ -169,5 +172,13 @@ export class TextTemplatePage extends TemplatePage<
       name: new FormControl(values.name, Validators.required),
       shortcode: new FormControl(null)
     })
+  }
+
+  private async ionViewCanEnter(): Promise<boolean> {
+    const role = await this.currentUserService
+      .role()
+      .first()
+      .toPromise()
+    return pageAccess(role).TextTemplatePage !== undefined
   }
 }

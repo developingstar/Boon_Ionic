@@ -2,6 +2,8 @@ import { Component } from '@angular/core'
 import { IonicPage, NavController } from 'ionic-angular'
 import { Observable } from 'rxjs'
 
+import { CurrentUserService } from '../auth/current-user.service'
+import { pageAccess } from '../utils/app-access'
 import { EmailTemplate } from './email-template.model'
 import { initialState, IState } from './email-templates.page.state'
 import { MessagesService } from './messages.service'
@@ -20,7 +22,8 @@ export class EmailTemplatesPage extends TemplatesPage<EmailTemplate> {
 
   constructor(
     protected navController: NavController,
-    protected service: MessagesService
+    protected service: MessagesService,
+    private currentUserService: CurrentUserService
   ) {
     super(initialState, navController, service)
   }
@@ -38,5 +41,13 @@ export class EmailTemplatesPage extends TemplatesPage<EmailTemplate> {
             templates: templates
           }))
     }
+  }
+
+  private async ionViewCanEnter(): Promise<boolean> {
+    const role = await this.currentUserService
+      .role()
+      .first()
+      .toPromise()
+    return pageAccess(role).TextTemplatesPage !== undefined
   }
 }

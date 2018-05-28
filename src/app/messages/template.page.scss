@@ -45,11 +45,6 @@
           font-weight: 800;
         }
 
-        select {
-          min-width: 80px;
-          margin: auto;
-        }
-
         textarea {
           min-height: 250px;
           padding: 4px 12px;
@@ -78,18 +73,30 @@
             border-bottom: 0 none;
           }
         }
-      }
 
-      .shortcodes {
-        padding: 0 20px;
+        &.shortcodes {
+          ion-select {
+            position: relative;
+            width: 250px;
+            border: 1px solid;
+            border-bottom: 0;
+            border-top: 0;
+            border-color: #dedede;
+            padding: 13px 0;
 
-        ion-badge {
-          &:first-of-type,
-          & + ion-badge {
-            margin-left: 4px;
+            .select-text {
+              text-align: center;
+            }
+
+            .select-icon {
+              display: none;
+            }
           }
         }
       }
     }
   }
+}
+.popover-md .popover-viewport {
+  opacity: 1;
 }

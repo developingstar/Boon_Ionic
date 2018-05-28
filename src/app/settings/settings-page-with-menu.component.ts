@@ -103,7 +103,7 @@ export class SettingsPageWithMenuComponent {
               { label: 'Pipelines', link: 'PipelinesPage' },
               { label: 'Custom Fields', link: 'CustomFieldsPage' }
             ],
-            label: 'CMS Settings',
+            label: 'CRM Settings',
             link: 'PipelinesPage'
           }
         ]

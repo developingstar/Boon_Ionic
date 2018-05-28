@@ -3,8 +3,10 @@ import { FormControl, Validators } from '@angular/forms'
 import { IonicPage } from 'ionic-angular'
 import { Observable } from 'rxjs'
 
+import { CurrentUserService } from '../auth/current-user.service'
 import { FieldDefinition } from '../crm/field-definition.model'
 import { SalesService } from '../crm/sales.service'
+import { pageAccess } from '../utils/app-access'
 import { ReactivePage } from '../utils/reactive-page'
 import { AlertService } from './alert.service'
 import { initialState, State, UserAction } from './custom-fields.page.state'
@@ -21,8 +23,9 @@ export class CustomFieldsPage extends ReactivePage<State, UserAction> {
   originalField: FieldDefinition
 
   constructor(
+    public alertService: AlertService,
     private salesService: SalesService,
-    public alertService: AlertService
+    private currentUserService: CurrentUserService
   ) {
     super(initialState)
   }
@@ -173,5 +176,13 @@ export class CustomFieldsPage extends ReactivePage<State, UserAction> {
 
   private handleNo(): boolean {
     return false
+  }
+
+  private async ionViewCanEnter(): Promise<boolean> {
+    const role = await this.currentUserService
+      .role()
+      .first()
+      .toPromise()
+    return pageAccess(role).CustomFieldsPage !== undefined
   }
 }

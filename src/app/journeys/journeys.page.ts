@@ -7,6 +7,8 @@ import {
 } from 'ionic-angular'
 import { Observable, Subject, Subscription } from 'rxjs'
 
+import { CurrentUserService } from '../auth/current-user.service'
+import { pageAccess } from '../utils/app-access'
 import { IHttpRequestOptions } from './../api/http-request-options'
 import { ActionsComponent, ActionsResult } from './actions.component'
 import { CreateJourneyModalComponent } from './create-journey-modal.component'
@@ -30,7 +32,8 @@ export class JourneysPage implements OnInit, OnDestroy {
     private journeysService: JourneysService,
     private modalController: ModalController,
     private popoverController: PopoverController,
-    private readonly navController: NavController
+    private readonly navController: NavController,
+    private currentUserService: CurrentUserService
   ) {
     this.state = this.uiActions
       .mergeScan((state, action) => this.reduce(state, action), initialState)
@@ -150,5 +153,13 @@ export class JourneysPage implements OnInit, OnDestroy {
       journeys: newJourneys,
       requestOptions: requestOptions
     }))
+  }
+
+  private async ionViewCanEnter(): Promise<boolean> {
+    const role = await this.currentUserService
+      .role()
+      .first()
+      .toPromise()
+    return pageAccess(role).JourneysPage !== undefined
   }
 }

@@ -2,6 +2,8 @@ import { Component } from '@angular/core'
 import { IonicPage, NavParams } from 'ionic-angular'
 import { Observable } from 'rxjs'
 
+import { CurrentUserService } from '../auth/current-user.service'
+import { pageAccess } from '../utils/app-access'
 import { ReactivePage } from '../utils/reactive-page'
 import { AlertService } from './alert.service'
 import { initialState, IState, UserAction } from './integration.page.state'
@@ -22,8 +24,9 @@ export class IntegrationPage extends ReactivePage<IState, UserAction> {
 
   constructor(
     public navParams: NavParams,
+    public alertService: AlertService,
     private readonly integrationsService: IntegrationsService,
-    public alertService: AlertService
+    private currentUserService: CurrentUserService
   ) {
     super(initialState)
     this.isChanged = false
@@ -106,5 +109,13 @@ export class IntegrationPage extends ReactivePage<IState, UserAction> {
 
   private handleNo(): boolean {
     return false
+  }
+
+  private async ionViewCanEnter(): Promise<boolean> {
+    const role = await this.currentUserService
+      .role()
+      .first()
+      .toPromise()
+    return pageAccess(role).IntegrationPage !== undefined
   }
 }

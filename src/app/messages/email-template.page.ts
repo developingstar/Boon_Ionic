@@ -8,6 +8,8 @@ import {
 } from 'ionic-angular'
 import { Observable } from 'rxjs'
 
+import { CurrentUserService } from '../auth/current-user.service'
+import { pageAccess } from '../utils/app-access'
 import { emailValidator } from '../utils/form-validators'
 import { EmailTemplate } from './email-template.model'
 import {
@@ -18,7 +20,6 @@ import {
 import { IEmailTemplate } from './messages.api.model'
 import { MessagesService } from './messages.service'
 import { TemplatePage } from './template.page'
-
 @IonicPage({
   segment: 'email-template/:id'
 })
@@ -36,10 +37,11 @@ export class EmailTemplatePage extends TemplatePage<
 
   constructor(
     navParams: NavParams,
+    elRef: ElementRef,
     protected navController: NavController,
     protected messagesService: MessagesService,
     protected toastController: ToastController,
-    public elRef: ElementRef
+    private currentUserService: CurrentUserService
   ) {
     super(
       initialState,
@@ -154,5 +156,13 @@ export class EmailTemplatePage extends TemplatePage<
       shortcode: new FormControl(null),
       subject: new FormControl(values.subject, Validators.required)
     })
+  }
+
+  private async ionViewCanEnter(): Promise<boolean> {
+    const role = await this.currentUserService
+      .role()
+      .first()
+      .toPromise()
+    return pageAccess(role).EmailTemplatePage !== undefined
   }
 }

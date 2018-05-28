@@ -12,7 +12,9 @@ import { AlertService } from '../alert.service'
 import { PhoneNumber } from './phone_number.model'
 import { TeamMembersService } from './team-members.service'
 
-@IonicPage()
+@IonicPage({
+  segment: 'settings/team/team-member'
+})
 @Component({
   selector: 'page-add-edit-team-member',
   templateUrl: 'add-edit-team-member.page.html'

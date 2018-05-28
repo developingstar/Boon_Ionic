@@ -62,13 +62,4 @@ export class TeamMembersService {
       .post(`/api/users/${teamMemberId}/avatar`, imageForm, requestOptions)
       .map((response: TeamSettings.ITeamMember) => new User(response.data.user))
   }
-
-  public deleteTeamMemberImage(
-    teamMemberId: number,
-    image: any
-  ): Observable<User> {
-    return this.http
-      .post(`/api/users/${teamMemberId}/avatar`, image)
-      .map((response: TeamSettings.ITeamMember) => new User(response.data.user))
-  }
 }

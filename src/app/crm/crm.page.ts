@@ -4,6 +4,8 @@ import { IonicPage, ModalController, NavController } from 'ionic-angular'
 import { Observable } from 'rxjs'
 
 import { IHttpRequestOptions } from '../api/http-request-options'
+import { CurrentUserService } from '../auth/current-user.service'
+import { pageAccess } from '../utils/app-access'
 import { ReactivePage } from '../utils/reactive-page'
 import {
   FilterType,
@@ -32,7 +34,8 @@ export class CrmPage extends ReactivePage<IState, UserAction> {
   constructor(
     private readonly salesService: SalesService,
     private readonly modalController: ModalController,
-    private readonly navController: NavController
+    private readonly navController: NavController,
+    private readonly currentUserService: CurrentUserService
   ) {
     super(initialState)
 
@@ -107,7 +110,8 @@ export class CrmPage extends ReactivePage<IState, UserAction> {
         if (id === null) {
           return 'All Contacts'
         } else {
-          const activePipeline = pipelines.find((pipeline) => pipeline.id === id) || null
+          const activePipeline =
+            pipelines.find((pipeline) => pipeline.id === id) || null
           return activePipeline ? activePipeline.name : ''
         }
       })
@@ -260,5 +264,13 @@ export class CrmPage extends ReactivePage<IState, UserAction> {
       }
     )
     modal.present()
+  }
+
+  private async ionViewCanEnter(): Promise<boolean> {
+    const role = await this.currentUserService
+      .role()
+      .first()
+      .toPromise()
+    return pageAccess(role).CrmPage !== undefined
   }
 }

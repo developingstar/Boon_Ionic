@@ -3,6 +3,9 @@
 @import 'theme/style-guide';
 @import 'theme/variables';
 
+.icon-wrapper {
+  height: 100%;
+}
 // Nav link with an SVG image.
 .nav-icon-link {
   @extend .center;

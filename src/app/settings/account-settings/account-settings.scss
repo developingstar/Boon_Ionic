@@ -1,0 +1,93 @@
+@import 'theme/shared-classes';
+@import 'theme/style-guide';
+
+page-account-settings {
+  .content {
+    overflow: hidden;
+  }
+  form {
+    .member-photo-section {
+      height: 150px;
+      margin: 3px 0 25px 0;
+      display: flex;
+      flex-direction: column;
+      .photo-wrapper {
+        background: #fcfcfd;
+        border: 1px solid #d2d6e4;
+        width: 109px;
+        height: 109px;
+        border-radius: 50%;
+        overflow: hidden;
+        .member-photo {
+          height: 100%;
+          width: 100%;
+          object-fit: cover;
+        }
+      }
+      h3 {
+        margin: 12px 0 0 12px;
+        font-size: 1.4rem;
+      }
+    }
+
+    .form-row {
+      height: 88px;
+      button {
+        margin: 20px 0 0 0;
+      }
+    }
+
+    ion-input {
+      .text-input {
+        @extend .boon-input;
+        margin: 0;
+        width: 100%;
+      }
+
+      &.ng-invalid.ng-touched input {
+        @extend .boon-invalid-input;
+      }
+    }
+
+    .label {
+      @extend .boon-label;
+      padding-bottom: 8px !important;
+      text-transform: uppercase;
+      font-size: 1rem !important;
+      letter-spacing: 0.2em;
+    }
+
+    ion-select {
+      @extend .boon-input;
+      min-width: 100%;
+      button {
+        display: none;
+      }
+    }
+
+    .hide-field {
+      display: none;
+    }
+
+    .avatar-input {
+      width: 0.1px;
+      height: 0.1px;
+      opacity: 0;
+      overflow: hidden;
+      position: absolute;
+      z-index: -1;
+    }
+    .choose-file-label {
+      font-size: 14px;
+      font-weight: 400;
+      margin: 10px 0 0 13px;
+      cursor: pointer;
+    }
+
+    .settings-button {
+      @extend .no-box-shadow;
+      @extend .boon-button;
+      width: 25%;
+    }
+  }
+}

@@ -49,6 +49,11 @@ declare namespace Crm {
       readonly value: string
     }
 
+    interface IFilterLead {
+      readonly id: number
+      readonly value: string
+    }
+
     interface ILead {
       readonly created_by_service_id: number | null
       readonly created_by_user_id: number | null

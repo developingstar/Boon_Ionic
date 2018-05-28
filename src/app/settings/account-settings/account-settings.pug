@@ -1,0 +1,41 @@
+nav-content
+  nav-icons(right, [currentPage]="'AccountSettingsPage'")
+
+settings-page-with-menu.settings-page([currentPage]="'AccountSettingsPage'")
+  ion-content.scrollable-content-wrapper
+    .settings-content-wrapper
+      .settings-header.no-button
+        h1()
+          | Account Settings
+      .scroll-spacer
+      .settings-body
+        form([formGroup]="userForm", (ngSubmit)="updateCurrentUser()").team-member-form
+          .member-photo-section
+            .photo-wrapper
+              img.member-photo(*ngIf="localUrl", [src]="localUrl")
+            input.avatar-input(type="file", (change)="onFileChange($event)", name="file", id="file")
+            label.choose-file-label(for="file")
+              | Update photo
+          .form-row
+            ion-label(stacked) Name
+            ion-input.user-name(formControlName="name", type="text")
+          .form-row
+            ion-label(stacked) Email
+            ion-input(formControlName="email", type="email" )
+          .form-row
+            button.settings-button(ion-button, medium, type="submit")
+              | update info
+      //- form([formGroup]="passwordForm", (ngSubmit)="updatePassword()").password-form
+      //-   .form-row
+      //-     ion-label(stacked) Current Password
+      //-     ion-input(formControlName="current_password", type="text")
+      //-   .form-row.password-row
+      //-     .password
+      //-       ion-label(stacked) New Password
+      //-       ion-input(formControlName="new_password", type="test" )
+      //-     .retype-password
+      //-       ion-label(stacked) Retype New Password
+      //-       ion-input(formControlName="password_repeat", type="text" )
+      //-   .form-row
+      //-     button.settings-button(ion-button, medium, type="submit")
+      //-       | change password

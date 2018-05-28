@@ -29,6 +29,8 @@ import { FieldUpdatedModalComponent } from './modals/field-updated-modal.compone
 import { PipelineAssignedModalComponent } from './modals/pipeline-assigned-modal.component'
 import { StageAssignedModalComponent } from './modals/stage-assigned-modal.component'
 
+import { CurrentUserService } from '../auth/current-user.service'
+import { pageAccess } from '../utils/app-access'
 import { toastWarningDefaults } from '../utils/toast'
 import { AssignLeadOwnerModalComponent } from './modals/assign-lead-owner-modal.component'
 import { AssignStageModalComponent } from './modals/assign-stage-modal.component'
@@ -79,7 +81,8 @@ export class JourneyPage implements OnInit, OnDestroy {
     navParams: NavParams,
     private journeysService: JourneysService,
     private modalController: ModalController,
-    private toastController: ToastController
+    private toastController: ToastController,
+    private currentUserService: CurrentUserService
   ) {
     this.journeyID = Number(navParams.get('id'))
     this.state = this.uiActions
@@ -458,5 +461,13 @@ export class JourneyPage implements OnInit, OnDestroy {
       actions[oldIndex],
       ...withoutAction.slice(newIndex)
     ]
+  }
+
+  private async ionViewCanEnter(): Promise<boolean> {
+    const role = await this.currentUserService
+      .role()
+      .first()
+      .toPromise()
+    return pageAccess(role).JourneyPage !== undefined
   }
 }

@@ -3,9 +3,11 @@ import { FormControl, Validators } from '@angular/forms'
 import { IonicPage, ModalController } from 'ionic-angular'
 import { Observable } from 'rxjs'
 
+import { CurrentUserService } from '../auth/current-user.service'
 import { Pipeline } from '../crm/pipeline.model'
 import { SalesService } from '../crm/sales.service'
 import { Stage } from '../crm/stage.model'
+import { pageAccess } from '../utils/app-access'
 import { ReactivePage } from '../utils/reactive-page'
 import { AlertService } from './alert.service'
 import {
@@ -28,9 +30,10 @@ export class PipelinesPage extends ReactivePage<State, UserAction> {
   originalPipeline: Pipeline
 
   constructor(
+    public alertService: AlertService,
     private readonly modalCtrl: ModalController,
     private readonly salesService: SalesService,
-    public alertService: AlertService
+    private currentUserService: CurrentUserService
   ) {
     super(initialState)
   }
@@ -287,5 +290,13 @@ export class PipelinesPage extends ReactivePage<State, UserAction> {
 
   private handleNo(): boolean {
     return false
+  }
+
+  private async ionViewCanEnter(): Promise<boolean> {
+    const role = await this.currentUserService
+      .role()
+      .first()
+      .toPromise()
+    return pageAccess(role).PipelinesPage !== undefined
   }
 }
