@@ -29,4 +29,32 @@ export class AlertService {
       alert.present()
     })
   }
+
+  showRemoveConfirmDialog(
+    message: string,
+    handleYes: any,
+    handleNo: any
+  ): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      const alert = this.alertCtrl.create({
+        buttons: [
+          {
+            handler: () => {
+              resolve(handleYes())
+            },
+            text: 'Yes'
+          },
+          {
+            handler: () => {
+              resolve(handleNo())
+            },
+            text: 'No'
+          }
+        ],
+        subTitle: message,
+        title: 'Confirm'
+      })
+      alert.present()
+    })
+  }
 }

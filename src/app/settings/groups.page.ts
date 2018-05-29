@@ -1,6 +1,6 @@
 import { Component } from '@angular/core'
 import { FormControl, Validators } from '@angular/forms'
-import { IonicPage } from 'ionic-angular'
+import { AlertController, IonicPage } from 'ionic-angular'
 import { Observable } from 'rxjs'
 
 import { CurrentUserService } from '../auth/current-user.service'
@@ -29,12 +29,14 @@ export class GroupsPage extends ReactivePage<State, UserAction> {
   readonly userID: number
   isChanged: boolean
   originalGroup: Group
+  selectedUser: User
 
   constructor(
     public alertService: AlertService,
     private readonly groupsService: GroupsService,
     private readonly usersService: UsersService,
-    private currentUserService: CurrentUserService
+    private currentUserService: CurrentUserService,
+    public alertCtrl: AlertController
   ) {
     super(initialState)
   }
@@ -82,7 +84,18 @@ export class GroupsPage extends ReactivePage<State, UserAction> {
   }
 
   deleteUser(user: User): void {
-    this.uiActions.next({ name: 'delete_user', user: user })
+    this.selectedUser = user
+    this.alertService
+      .showRemoveConfirmDialog(
+        'Do you really want to remove this user?',
+        this.handleYes,
+        this.handleNo
+      )
+      .then((val: boolean) => {
+        if (val === true) {
+          this.uiActions.next({ name: 'delete_user', user: this.selectedUser })
+        }
+      })
   }
 
   get usersList(): Observable<ReadonlyArray<User>> {
