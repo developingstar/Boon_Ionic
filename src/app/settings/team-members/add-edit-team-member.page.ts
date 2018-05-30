@@ -1,6 +1,11 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core'
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
-import { IonicPage, NavController, NavParams } from 'ionic-angular'
+import {
+  IonicPage,
+  NavController,
+  NavParams,
+  ToastController
+} from 'ionic-angular'
 import { Observable } from 'rxjs'
 
 import { User } from '../../auth/user.model'
@@ -8,6 +13,9 @@ import {
   emailValidator,
   phoneNumberValidator
 } from '../../utils/form-validators'
+
+import { CurrentUserService } from '../../auth/current-user.service'
+import { showToast } from '../../utils/toast'
 import { AlertService } from '../alert.service'
 import { PhoneNumber } from './phone_number.model'
 import { TeamMembersService } from './team-members.service'
@@ -36,7 +44,9 @@ export class AddEditTeamMemberPage implements OnInit {
     private formBuilder: FormBuilder,
     public teamMembersService: TeamMembersService,
     public changeDetector: ChangeDetectorRef,
-    public alertService: AlertService
+    public alertService: AlertService,
+    private toastController: ToastController,
+    public currentService: CurrentUserService
   ) {
     this.myForm = this.formBuilder.group({
       avatarUrl: new FormControl(),
@@ -132,12 +142,22 @@ export class AddEditTeamMemberPage implements OnInit {
   }
 
   saveTeamMember(): void {
-    this.myForm.patchValue({ role: 'lead_owner' })
+    let currentEmail = ''
+    this.currentService.details.subscribe((details: any) => {
+      if (details) {
+        currentEmail = details.email
+      }
+    })
+
+    if (currentEmail !== this.myForm.value.email) {
+      this.myForm.patchValue({ role: 'lead_owner' })
+    }
 
     if (this.myForm.value.id !== null) {
       this.teamMembersService
         .updateTeamMember(this.myForm.value)
         .subscribe((userRes: User) => {
+          showToast(this.toastController, 'Updated team member successfully.')
           if (!userRes.avatarUrl) {
             this.uploadAvatar(userRes.id)
           }
@@ -146,6 +166,7 @@ export class AddEditTeamMemberPage implements OnInit {
       this.teamMembersService
         .addTeamMember(this.myForm.value)
         .subscribe((res: User) => {
+          showToast(this.toastController, 'Created team member successfully.')
           this.uploadAvatar(res.id)
         })
     }
