@@ -1,6 +1,6 @@
 import { Component } from '@angular/core'
 import { FormControl, Validators } from '@angular/forms'
-import { IonicPage } from 'ionic-angular'
+import { IonicPage, ToastController } from 'ionic-angular'
 import { Observable } from 'rxjs'
 
 import { CurrentUserService } from '../auth/current-user.service'
@@ -8,6 +8,7 @@ import { FieldDefinition } from '../crm/field-definition.model'
 import { SalesService } from '../crm/sales.service'
 import { pageAccess } from '../utils/app-access'
 import { ReactivePage } from '../utils/reactive-page'
+import { showToast } from '../utils/toast'
 import { AlertService } from './alert.service'
 import { initialState, State, UserAction } from './custom-fields.page.state'
 
@@ -25,7 +26,8 @@ export class CustomFieldsPage extends ReactivePage<State, UserAction> {
   constructor(
     public alertService: AlertService,
     private salesService: SalesService,
-    private currentUserService: CurrentUserService
+    private currentUserService: CurrentUserService,
+    private readonly toastController: ToastController
   ) {
     super(initialState)
   }
@@ -90,6 +92,7 @@ export class CustomFieldsPage extends ReactivePage<State, UserAction> {
   }
 
   goBackToList(): void {
+    this.isChanged = false
     this.uiActions.next({ name: 'list' })
   }
 
@@ -135,9 +138,14 @@ export class CustomFieldsPage extends ReactivePage<State, UserAction> {
           const fieldCreate = {
             name: state.formControl.value
           }
-          return this.salesService
-            .createField(fieldCreate)
-            .concatMap(() => this.listFieldsState())
+          return this.salesService.createField(fieldCreate).concatMap(() => {
+            showToast(
+              this.toastController,
+              'Created custom field successfully.'
+            )
+            this.isChanged = false
+            return this.listFieldsState()
+          })
         }
 
         return Observable.of(state)
@@ -154,7 +162,14 @@ export class CustomFieldsPage extends ReactivePage<State, UserAction> {
           }
           return this.salesService
             .updateField(state.fieldId, fieldUpdate)
-            .concatMap(() => this.listFieldsState())
+            .concatMap(() => {
+              showToast(
+                this.toastController,
+                'Updated custom field successfully.'
+              )
+              this.isChanged = false
+              return this.listFieldsState()
+            })
         }
 
         return Observable.of(state)
