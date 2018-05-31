@@ -41,9 +41,7 @@ export class PipelinesPage extends ReactivePage<State, UserAction> {
   }
 
   nameChanged(value: any): void {
-    console.log(value, '----', this.originalName)
     this.isChanged = this.originalName !== value ? true : false
-    console.log(this.isChanged)
     this.isChanged = this.isChanged || this.isStageChanged
   }
 
@@ -98,6 +96,7 @@ export class PipelinesPage extends ReactivePage<State, UserAction> {
   }
 
   editPipeline(pipeline: Pipeline): void {
+    this.originalName = pipeline.name
     this.uiActions.next({ name: 'edit', pipeline: pipeline })
   }
 
@@ -240,7 +239,6 @@ export class PipelinesPage extends ReactivePage<State, UserAction> {
             id: stage.id,
             name: stage.name
           }))
-        this.originalName = action.pipeline.name
         return {
           mode: 'edit',
           nameInput: new FormControl(action.pipeline.name, Validators.required),

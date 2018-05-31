@@ -21,7 +21,7 @@ import { initialState, State, UserAction } from './custom-fields.page.state'
 })
 export class CustomFieldsPage extends ReactivePage<State, UserAction> {
   isChanged: boolean
-  originalField: FieldDefinition
+  originalName: string
 
   constructor(
     public alertService: AlertService,
@@ -33,7 +33,7 @@ export class CustomFieldsPage extends ReactivePage<State, UserAction> {
   }
 
   nameChanged(value: string): void {
-    this.isChanged = this.originalField.name !== value ? true : false
+    this.isChanged = this.originalName !== value ? true : false
   }
 
   ionViewCanLeave(): Promise<boolean> {
@@ -97,6 +97,7 @@ export class CustomFieldsPage extends ReactivePage<State, UserAction> {
   }
 
   newField(): void {
+    this.originalName = ''
     this.uiActions.next({ name: 'new' })
   }
 
@@ -105,10 +106,7 @@ export class CustomFieldsPage extends ReactivePage<State, UserAction> {
   }
 
   editField(field: FieldDefinition): void {
-    this.originalField = new FieldDefinition({
-      id: field.id,
-      name: field.name
-    })
+    this.originalName = field.name
     this.uiActions.next({ name: 'edit', field: field })
   }
 
