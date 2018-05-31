@@ -1,6 +1,6 @@
 import { Component } from '@angular/core'
 import { FormControl, Validators } from '@angular/forms'
-import { IonicPage, ModalController } from 'ionic-angular'
+import { IonicPage, ModalController, ToastController } from 'ionic-angular'
 import { Observable } from 'rxjs'
 
 import { CurrentUserService } from '../auth/current-user.service'
@@ -9,6 +9,7 @@ import { SalesService } from '../crm/sales.service'
 import { Stage } from '../crm/stage.model'
 import { pageAccess } from '../utils/app-access'
 import { ReactivePage } from '../utils/reactive-page'
+import { showToast } from '../utils/toast'
 import { AlertService } from './alert.service'
 import {
   initialState,
@@ -33,12 +34,13 @@ export class PipelinesPage extends ReactivePage<State, UserAction> {
     public alertService: AlertService,
     private readonly modalCtrl: ModalController,
     private readonly salesService: SalesService,
-    private currentUserService: CurrentUserService
+    private currentUserService: CurrentUserService,
+    private readonly toastController: ToastController
   ) {
     super(initialState)
   }
 
-  nameChanged(value: string): void {
+  nameChanged(value: any): void {
     this.isChanged = this.originalPipeline.name !== value ? true : false
     this.isChanged = this.isChanged || this.isStageChanged
   }
@@ -103,6 +105,7 @@ export class PipelinesPage extends ReactivePage<State, UserAction> {
   }
 
   goBackToList(): void {
+    this.isChanged = false
     this.uiActions.next({ name: 'list' })
   }
 
@@ -111,10 +114,12 @@ export class PipelinesPage extends ReactivePage<State, UserAction> {
   }
 
   createPipeline(): void {
+    this.isChanged = false
     this.uiActions.next({ name: 'create' })
   }
 
   updatePipeline(): void {
+    this.isChanged = false
     this.uiActions.next({ name: 'update' })
   }
 
@@ -193,17 +198,24 @@ export class PipelinesPage extends ReactivePage<State, UserAction> {
         .concatMap((pipeline) =>
           this.saveStagesAndUpdatePipeline(state.stages, pipeline)
         )
-        .concatMap(() => listPipelines)
+        .concatMap(() => {
+          showToast(this.toastController, 'Created pipeline successfully.')
+          return listPipelines
+        })
     } else if (action.name === 'update' && state.mode === 'edit') {
       return this.saveStagesAndUpdatePipeline(state.stages, {
         ...state.pipeline,
         name: state.nameInput.value
-      }).concatMap(() => listPipelines)
+      }).concatMap(() => {
+        showToast(this.toastController, 'Updated pipeline successfully.')
+        return listPipelines
+      })
     } else if (
       action.name === 'add-stage' &&
       (state.mode === 'edit' || state.mode === 'new')
     ) {
       this.isStageChanged = true
+      this.isChanged = true
       return Observable.of({
         ...state,
         stages: state.stages.concat(action.stage)
@@ -213,6 +225,7 @@ export class PipelinesPage extends ReactivePage<State, UserAction> {
       (state.mode === 'edit' || state.mode === 'new')
     ) {
       this.isStageChanged = true
+      this.isChanged = true
       return Observable.of({
         ...state,
         stages: this.updateStageName(state.stages, action.stage, action.newName)

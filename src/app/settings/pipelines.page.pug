@@ -26,7 +26,7 @@ settings-page-with-menu(currentPage="PipelinesPage")
       ion-col
         form(autocomplete="off")
           ion-label(stacked) Pipeline Name
-          ion-input(name="name", type="text", [formControl]="currentPipelineNameInput | async", (change)='nameChanged($event.target.value)')
+          ion-input(name="name", type="text", [formControl]="currentPipelineNameInput | async", (ionChange)='nameChanged($event.value)')
     ion-row(align-items-end).stages-header
       ion-col
         h3 Stages
