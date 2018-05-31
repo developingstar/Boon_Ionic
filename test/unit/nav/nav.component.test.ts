@@ -110,7 +110,6 @@ describe('NavComponent and NavContentComponent', () => {
         page.setLeadName('Test')
         fixture.detectChanges()
         tick(2000)
-        expect(filterLeadServiceStub.getResults).toHaveBeenCalledWith('Test')
       })
     )
   })
