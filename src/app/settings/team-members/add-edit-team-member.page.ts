@@ -142,14 +142,14 @@ export class AddEditTeamMemberPage implements OnInit {
   }
 
   saveTeamMember(): void {
-    let currentEmail = ''
+    let userID = ''
     this.currentService.details.subscribe((details: any) => {
       if (details) {
-        currentEmail = details.email
+        userID = details.id
       }
     })
 
-    if (currentEmail !== this.myForm.value.email) {
+    if (userID !== this.myForm.value.id) {
       this.myForm.patchValue({ role: 'lead_owner' })
     }
 
