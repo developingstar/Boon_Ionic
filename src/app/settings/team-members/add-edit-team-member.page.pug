@@ -23,20 +23,20 @@ settings-page-with-menu.settings-page([currentPage]="'TeamMembersPage'")
             | update team member
       .scroll-spacer
       .settings-body
-        .member-photo-section
-          img.member-photo([src]="localUrl")
-          input.avatar-input(type="file", (change)="onFileChange($event)", name="file", id="file")
+        .member-photo-section()
+          img.member-photo([src]="localUrl", onError="this.src='../../assets/icon/settings/avatar.svg'")
+          input.avatar-input#file(type="file", (change)="onFileChange($event)", name="file")
           label.choose-file-label(for="file")
             | Update photo
         .form-row.name-row
           ion-label(stacked) Name
-          ion-input.user-name(formControlName="name", (input)='nameChanged($event.target.value)', type="text")
+          ion-input.user-name(formControlName="name", (ionChange)='nameChanged($event.value)', type="text")
         .form-row
           ion-label(stacked) Email
-          ion-input.email(formControlName="email", (input)='emailChanged($event.target.value)', type="email" )
+          ion-input.email(formControlName="email", (ionChange)='emailChanged($event.value)', type="email" )
         .form-row([hidden]="myForm.value.id")
           ion-label(stacked) Password
-          ion-input.password(formControlName="password", (input)='passwordChanged($event.target.value)', type="password" )
+          ion-input.password(formControlName="password", (ionChange)='passwordChanged($event.value)', type="password" )
         .form-row
           ion-label(stacked) Twilio Number
           ion-select.phone_number_select.select-lg(formControlName="phoneNumber" #phone_number)

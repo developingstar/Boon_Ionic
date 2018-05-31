@@ -14,7 +14,6 @@ import {
   phoneNumberValidator
 } from '../../utils/form-validators'
 
-import { CurrentUserService } from '../../auth/current-user.service'
 import { showToast } from '../../utils/toast'
 import { AlertService } from '../alert.service'
 import { PhoneNumber } from './phone_number.model'
@@ -31,13 +30,14 @@ export class AddEditTeamMemberPage implements OnInit {
   public readonly myForm: FormGroup
   public readonly phoneNumbers: Observable<ReadonlyArray<PhoneNumber>>
   public localUrl: string = ''
+  public readerUrl: string = ''
   public formData: FormData
   public originalMember: User
-  public isChanged: boolean
   public isNameChanged: boolean
   public isPasswordChanged: boolean
   public isEmailChanged: boolean
-
+  public serverImage = true
+  public uploadedImage = false
   constructor(
     public navCtrl: NavController,
     public navParams: NavParams,
@@ -45,8 +45,7 @@ export class AddEditTeamMemberPage implements OnInit {
     public teamMembersService: TeamMembersService,
     public changeDetector: ChangeDetectorRef,
     public alertService: AlertService,
-    private toastController: ToastController,
-    public currentService: CurrentUserService
+    private toastController: ToastController
   ) {
     this.myForm = this.formBuilder.group({
       avatarUrl: new FormControl(),
@@ -57,7 +56,9 @@ export class AddEditTeamMemberPage implements OnInit {
       phoneNumber: new FormControl('', phoneNumberValidator()),
       role: new FormControl()
     })
-    this.isChanged = false
+    this.isEmailChanged = false
+    this.isNameChanged = false
+    this.isPasswordChanged = false
     this.phoneNumbers = this.teamMembersService.getNumbers()
   }
 
@@ -77,7 +78,9 @@ export class AddEditTeamMemberPage implements OnInit {
             role: res.role
           })
           this.myForm.setValue(res)
-          this.localUrl = this.myForm.value.avatarUrl
+          this.localUrl = res.avatarUrl
+            ? res.avatarUrl
+            : '../../assets/icon/settings/avatar.svg'
         })
     }
   }
@@ -98,8 +101,6 @@ export class AddEditTeamMemberPage implements OnInit {
       if (newName !== '') this.isNameChanged = true
       else this.isNameChanged = false
     }
-    this.isChanged =
-      this.isNameChanged || this.isEmailChanged || this.isPasswordChanged
   }
 
   public emailChanged(newEmail: string): void {
@@ -110,23 +111,19 @@ export class AddEditTeamMemberPage implements OnInit {
       if (newEmail !== '') this.isEmailChanged = true
       else this.isEmailChanged = false
     }
-    this.isChanged =
-      this.isNameChanged || this.isEmailChanged || this.isPasswordChanged
   }
 
   public passwordChanged(newPassword: string): void {
     if (this.originalMember) {
       this.isPasswordChanged =
-        this.originalMember.name !== newPassword ? true : false
+        this.originalMember.password !== newPassword ? true : false
     } else {
       if (newPassword !== '') this.isPasswordChanged = true
       else this.isPasswordChanged = false
     }
-    this.isChanged =
-      this.isNameChanged || this.isEmailChanged || this.isPasswordChanged
   }
 
-  onFileChange(event: any): void {
+  public onFileChange(event: any): void {
     this.formData = new FormData()
     this.formData.append(
       'avatar',
@@ -139,34 +136,50 @@ export class AddEditTeamMemberPage implements OnInit {
       this.localUrl = reader.result
     }
     reader.readAsDataURL(event.target.files[0])
+    event.target.value = null
   }
 
   saveTeamMember(): void {
-    let userID = ''
-    this.currentService.details.subscribe((details: any) => {
-      if (details) {
-        userID = details.id
-      }
-    })
-
-    if (userID !== this.myForm.value.id) {
-      this.myForm.patchValue({ role: 'lead_owner' })
-    }
+    this.myForm.patchValue({ role: 'lead_owner' })
 
     if (this.myForm.value.id !== null) {
       this.teamMembersService
         .updateTeamMember(this.myForm.value)
         .subscribe((userRes: User) => {
           showToast(this.toastController, 'Updated team member successfully.')
+          this.isEmailChanged = false
+          this.isNameChanged = false
+          this.isPasswordChanged = false
           if (!userRes.avatarUrl) {
             this.uploadAvatar(userRes.id)
           }
+          this.originalMember = new User({
+            avatar_url: userRes.avatarUrl,
+            email: userRes.email,
+            id: userRes.id,
+            name: userRes.name,
+            password: userRes.password,
+            phone_number: userRes.phoneNumber,
+            role: userRes.role
+          })
         })
     } else {
       this.teamMembersService
         .addTeamMember(this.myForm.value)
         .subscribe((res: User) => {
           showToast(this.toastController, 'Created team member successfully.')
+          this.isEmailChanged = false
+          this.isNameChanged = false
+          this.isPasswordChanged = false
+          this.originalMember = new User({
+            avatar_url: res.avatarUrl,
+            email: res.email,
+            id: res.id,
+            name: res.name,
+            password: res.password,
+            phone_number: res.phoneNumber,
+            role: res.role
+          })
           this.uploadAvatar(res.id)
         })
     }
@@ -188,5 +201,9 @@ export class AddEditTeamMemberPage implements OnInit {
 
   private handleNo(): boolean {
     return false
+  }
+
+  get isChanged(): boolean {
+    return this.isNameChanged || this.isEmailChanged || this.isPasswordChanged
   }
 }
