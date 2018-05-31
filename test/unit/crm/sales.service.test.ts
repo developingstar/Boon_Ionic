@@ -37,7 +37,7 @@ describe('SalesService', () => {
           expect(result.items[0] instanceof Lead).toBeTruthy()
           expect(result.items.length).toEqual(1)
         })
-        const req = httpMock.expectOne('/api/leads')
+        const req = httpMock.expectOne('/api/leads?per_page=50')
         expect(req.request.method).toBe('GET')
         req.flush({
           data: {

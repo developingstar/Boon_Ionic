@@ -21,7 +21,7 @@ export class SalesService {
     options: IHttpRequestOptions = blankHttpRequestOptions
   ): Observable<PaginatedCollection<Lead>> {
     return this.http
-      .get(options.url || '/api/leads', { params: options.params })
+      .get(options.url || '/api/leads?per_page=50', { params: options.params })
       .map((response: Crm.API.ILeadsResponse) => {
         const page: PaginatedCollection<Lead> = {
           items: response.data.leads.map((raw) => new Lead(raw)),
