@@ -1,6 +1,6 @@
 import { Component } from '@angular/core'
 import { FormControl, Validators } from '@angular/forms'
-import { AlertController, IonicPage } from 'ionic-angular'
+import { AlertController, IonicPage, ToastController } from 'ionic-angular'
 import { Observable } from 'rxjs'
 
 import { CurrentUserService } from '../auth/current-user.service'
@@ -8,6 +8,7 @@ import { User } from '../auth/user.model'
 import { UsersService } from '../crm/users.service'
 import { pageAccess } from '../utils/app-access'
 import { ReactivePage } from '../utils/reactive-page'
+import { showToast } from '../utils/toast'
 import { AlertService } from './alert.service'
 import { Group } from './group.model'
 import {
@@ -28,7 +29,7 @@ import { GroupsService } from './groups.service'
 export class GroupsPage extends ReactivePage<State, UserAction> {
   readonly userID: number
   isChanged: boolean
-  originalGroup: Group
+  originalName: string
   selectedUser: User
 
   constructor(
@@ -36,6 +37,7 @@ export class GroupsPage extends ReactivePage<State, UserAction> {
     private readonly groupsService: GroupsService,
     private readonly usersService: UsersService,
     private currentUserService: CurrentUserService,
+    private readonly toastController: ToastController,
     public alertCtrl: AlertController
   ) {
     super(initialState)
@@ -51,23 +53,21 @@ export class GroupsPage extends ReactivePage<State, UserAction> {
   }
 
   nameChanged(value: string): void {
-    this.isChanged = this.originalGroup.name !== value ? true : false
+    this.isChanged = this.originalName !== value ? true : false
   }
 
   newGroup(): void {
+    this.originalName = ''
     this.uiActions.next({ name: 'new' })
   }
 
   editGroup(group: Group): void {
-    this.originalGroup = new Group({
-      id: group.id,
-      name: group.name
-    })
-
+    this.originalName = group.name
     this.uiActions.next({ name: 'edit', group: group })
   }
 
   goBackToList(): void {
+    this.isChanged = false
     this.uiActions.next({ name: 'list' })
   }
 
@@ -190,7 +190,11 @@ export class GroupsPage extends ReactivePage<State, UserAction> {
     } else if (action.name === 'create' && state.name === 'new') {
       return this.groupsService
         .createGroup({ name: state.nameInput.value })
-        .concatMap(() => listGroups)
+        .concatMap(() => {
+          showToast(this.toastController, 'Created new group successfully.')
+          this.isChanged = false
+          return listGroups
+        })
     } else if (action.name === 'edit') {
       const newC = Observable.combineLatest(
         this.groupsService.groupUsers(action.group.id),
@@ -213,10 +217,8 @@ export class GroupsPage extends ReactivePage<State, UserAction> {
         .updateGroup(state.groupId, { name: state.nameInput.value })
         .map<Group, State>((group) => {
           this.isChanged = false
-          this.originalGroup = new Group({
-            id: state.groupId,
-            name: state.nameInput.value
-          })
+          this.originalName = group.name
+          showToast(this.toastController, 'Updated group name successfully.')
           return state
         })
     } else if (action.name === 'add_user' && state.name === 'edit') {
@@ -232,10 +234,13 @@ export class GroupsPage extends ReactivePage<State, UserAction> {
             }
           },
           State
-        >((response) => ({
-          ...state,
-          groupUsers: state.groupUsers.concat(user)
-        }))
+        >((response) => {
+          showToast(this.toastController, 'Added user successfully.')
+          return {
+            ...state,
+            groupUsers: state.groupUsers.concat(user)
+          }
+        })
       }
     } else if (action.name === 'delete_user' && state.name === 'edit') {
       const userIndex = state.groupUsers.indexOf(action.user)
@@ -246,12 +251,15 @@ export class GroupsPage extends ReactivePage<State, UserAction> {
           }
         },
         State
-      >((response) => ({
-        ...state,
-        groupUsers: state.groupUsers.filter(
-          (user, index) => index !== userIndex
-        )
-      }))
+      >((response) => {
+        showToast(this.toastController, 'Removed user successfully.')
+        return {
+          ...state,
+          groupUsers: state.groupUsers.filter(
+            (user, index) => index !== userIndex
+          )
+        }
+      })
     } else {
       return Observable.of(state)
     }
