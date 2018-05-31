@@ -28,7 +28,7 @@ import {
 export class PipelinesPage extends ReactivePage<State, UserAction> {
   isChanged: boolean
   isStageChanged: boolean
-  originalPipeline: Pipeline
+  originalName: string
 
   constructor(
     public alertService: AlertService,
@@ -41,7 +41,9 @@ export class PipelinesPage extends ReactivePage<State, UserAction> {
   }
 
   nameChanged(value: any): void {
-    this.isChanged = this.originalPipeline.name !== value ? true : false
+    console.log(value, '----', this.originalName)
+    this.isChanged = this.originalName !== value ? true : false
+    console.log(this.isChanged)
     this.isChanged = this.isChanged || this.isStageChanged
   }
 
@@ -96,11 +98,6 @@ export class PipelinesPage extends ReactivePage<State, UserAction> {
   }
 
   editPipeline(pipeline: Pipeline): void {
-    this.originalPipeline = new Pipeline({
-      id: pipeline.id,
-      name: pipeline.name,
-      stage_order: pipeline.stageOrder
-    })
     this.uiActions.next({ name: 'edit', pipeline: pipeline })
   }
 
@@ -110,16 +107,15 @@ export class PipelinesPage extends ReactivePage<State, UserAction> {
   }
 
   newPipeline(): void {
+    this.originalName = ''
     this.uiActions.next({ name: 'new' })
   }
 
   createPipeline(): void {
-    this.isChanged = false
     this.uiActions.next({ name: 'create' })
   }
 
   updatePipeline(): void {
-    this.isChanged = false
     this.uiActions.next({ name: 'update' })
   }
 
@@ -200,6 +196,7 @@ export class PipelinesPage extends ReactivePage<State, UserAction> {
         )
         .concatMap(() => {
           showToast(this.toastController, 'Created pipeline successfully.')
+          this.isChanged = false
           return listPipelines
         })
     } else if (action.name === 'update' && state.mode === 'edit') {
@@ -208,6 +205,7 @@ export class PipelinesPage extends ReactivePage<State, UserAction> {
         name: state.nameInput.value
       }).concatMap(() => {
         showToast(this.toastController, 'Updated pipeline successfully.')
+        this.isChanged = false
         return listPipelines
       })
     } else if (
@@ -242,6 +240,7 @@ export class PipelinesPage extends ReactivePage<State, UserAction> {
             id: stage.id,
             name: stage.name
           }))
+        this.originalName = action.pipeline.name
         return {
           mode: 'edit',
           nameInput: new FormControl(action.pipeline.name, Validators.required),
