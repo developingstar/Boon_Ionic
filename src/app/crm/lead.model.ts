@@ -37,6 +37,14 @@ export class Lead {
     }
   }
 
+  public searchDisplayName(): string {
+    let displayName = ''
+    if (this.name) displayName = this.name
+    else if (this.email) displayName = this.email
+    else if (this.phoneNumber) displayName = this.phoneNumber
+    return displayName
+  }
+
   private fieldValueByName(name: string): string | undefined {
     const field: Field | undefined = this.fields.find((f) => f.name === name)
 
