@@ -20,14 +20,12 @@ export class LeadFilterService {
               const name = leadModel.searchDisplayName()
               if (index === 0) {
                 return {
-                  comment: '$13, 000',
-                  group_name: 'Group1',
+                  group_name: 'Contacts',
                   id: leadModel.id,
                   name: name
                 }
               } else {
                 return {
-                  comment: '$11, 000',
                   id: leadModel.id,
                   name: name
                 }
