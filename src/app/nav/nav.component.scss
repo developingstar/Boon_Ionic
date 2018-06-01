@@ -13,6 +13,7 @@ $nav-right-width: auto;
   height: $height;
   justify-content: center;
   width: $nav-left-width;
+  cursor: pointer;
 }
 
 @mixin nav-element {
