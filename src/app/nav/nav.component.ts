@@ -59,50 +59,18 @@ export class NavComponent {
   }
 
   public search(event: any): void {
-    // this.results = []
-    // this.filterService
-    //   .getResults(event.query)
-    //   .subscribe((results: Crm.API.ISearchDropdownItem[]) => {
-    //     this.results = results
-    //   })
-
-    const result = Observable.combineLatest(
-      this.filterService.getResults(event.query),
-      this.filterService.getTestResults(),
-      (getResults, getTestResults) => {
-        return {
-          group1: getResults,
-          group2: getTestResults
-        }
-      }
-    )
-
-    result.subscribe((data: any) => {
-      this.results = []
-      this.results =
-        data.group1.length > 3
-          ? this.results.concat(
-              data.group1.filter(
-                (group: Crm.API.ISearchDropdownItem, index: number) => index < 3
+    this.filterService
+      .getResults(event.query)
+      .subscribe((results: Crm.API.ISearchDropdownItem[]) => {
+        this.results =
+          results.length > 3
+            ? results.filter(
+                (result: Crm.API.ISearchDropdownItem, index: number) =>
+                  index < 3
               )
-            )
-          : this.results.concat(
-              data.group1.map(
-                (group: Crm.API.ISearchDropdownItem, index: number) => group
+            : results.map(
+                (result: Crm.API.ISearchDropdownItem, index: number) => result
               )
-            )
-      this.results =
-        data.group2.length > 3
-          ? this.results.concat(
-              data.group2.filter(
-                (group: Crm.API.ISearchDropdownItem, index: number) => index < 3
-              )
-            )
-          : this.results.concat(
-              data.group2.map(
-                (group: Crm.API.ISearchDropdownItem, index: number) => group
-              )
-            )
-    })
+      })
   }
 }
