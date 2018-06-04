@@ -67,6 +67,14 @@ export class CrmPage extends ReactivePage<IState, UserAction> {
     this.uiActions.next('newLead')
   }
 
+  public getDate(insertAt: Date): string {
+    let dateString = '-'
+    if (insertAt) {
+      dateString = (insertAt.getMonth() + 1) + '/' + insertAt.getDate() + ' ' + insertAt.getHours() + ':' + insertAt.getMinutes()
+    }
+    return dateString
+  }
+
   get areAllContactsVisible(): Observable<boolean> {
     return this.state.map(
       (state) => state.requestOptions.params.get('pipeline_id') === null
@@ -136,7 +144,9 @@ export class CrmPage extends ReactivePage<IState, UserAction> {
   }
 
   get leads(): Observable<ReadonlyArray<Lead>> {
-    return this.state.map((state) => state.leads.items)
+    return this.state.map((state) => {
+      return state.leads.items
+    })
   }
 
   public stageForLead(lead: Lead): Observable<Stage | undefined> {
