@@ -1,0 +1,21 @@
+.chat-index-header
+  .search((click)="searching = true", [inlineSVG]="'assets/icon/messages/lead-search.svg'")
+  .filter(*ngIf="searching")
+    ion-searchbar(mode="ios", (ionInput)="search($event)", [debounce]="400", placeholder="Search messages..." )
+  .close(*ngIf="searching", (click)="searching = false", [inlineSVG]="'assets/icon/messages/close.svg'")
+  .filter(*ngIf="!searching")
+    .dropdown-title((click)="filtering = !filtering")
+      | {{filter}}
+  .add-lead(*ngIf="!searching", (click)="addNew()", [inlineSVG]="'assets/icon/messages/add-lead.svg'")
+.dropdown-container(*ngIf="filtering")
+  .dropdown
+    .top-two
+      .all-messages((click)="setFilter()")
+        | All messages
+      .favorites((click)="setFilter('Favorites')")
+        | Favorites
+    .dropdown-header(*ngFor="let pipeline of (pipelines | async); let i = index")
+      .pipeline-name((click)="setFilter(pipeline)")
+        | {{pipeline.name}}
+      .dropdown-item(*ngFor="let stage of (getStage(pipeline.stageOrder) | async)", (click)="setFilter(stage)")
+        | {{stage.name}}

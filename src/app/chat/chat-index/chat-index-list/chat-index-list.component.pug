@@ -1,0 +1,16 @@
+.chat-index-list
+  .lead-list
+    button.thread-button( *ngFor="let thread of threads; let i = index", (click)="openConversation(thread, i)", [ngClass]="selectedClass(i)", detail-none )
+      .unread-dot-col
+        .unread-dot(*ngIf="!thread.read")
+      .info-col
+        .lead-name([ngClass]="selectedClass(i)")
+          | {{ thread.leadFirst }}
+        .thread-message(*ngIf="thread.lastMessage", [ngClass]="selectedClass(i)")
+          | {{ thread.lastMessage }}
+      .actions
+        .action-icons
+          .delete-icon((click)="confirmDeleteThread(thread, i); $event.stopPropagation();", [inlineSVG]="'assets/icon/messages/delete.svg'", [ngClass]="selectedClass(i)")
+          .favorite-icon(*ngIf="!thread.isBlank", (click)="thread.toggleFavorite(); $event.stopPropagation();", [ngClass]="getFavoritedAndSelected(i, thread.favorite)", [inlineSVG]="starType(thread.favorite)")
+        .date-column(*ngIf="thread.lastMessageDate")
+          | {{ thread.lastMessageDate | date:'h:mm a' }}
