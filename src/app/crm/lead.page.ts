@@ -13,7 +13,7 @@ import { Observable, Subject, Subscription } from 'rxjs'
 import { CurrentUserService } from '../auth/current-user.service'
 import { IPopoverResult } from '../popover/popover'
 import { emailValidator, phoneNumberValidator } from '../utils/form-validators'
-import { toastSuccessDefaults, toastWarningDefaults } from '../utils/toast'
+import { showToast, toastSuccessDefaults } from '../utils/toast'
 import { ISelectOption } from './field.component'
 import { Lead } from './lead.model'
 import { initialState, IPageData, State, UserAction } from './lead.page.state'
@@ -161,12 +161,15 @@ export class LeadPage implements OnDestroy, OnInit {
       }, initialState)
       .catch((error: any, observable: Observable<State>) => {
         if (error.status === 422) {
-          this.toastController
-            .create({
-              ...toastWarningDefaults,
-              message: 'The form is invalid.'
-            })
-            .present()
+          const errors = error.error.errors
+          if (errors) {
+            const detail = errors[0].detail
+            const title = errors[0].title
+            const pointers = errors[0].source.pointer.split('/')
+            showToast(this.toastController, title + ': The ' + pointers[pointers.length - 1] + ' ' + detail , 2000, false)
+          } else {
+            showToast(this.toastController, 'The form is invalid', 2000, false)
+          }
         }
 
         // return to the 'init' state
@@ -330,7 +333,7 @@ export class LeadPage implements OnDestroy, OnInit {
         return stages
       })
     }
-    this.toast('Lead updated successfully')
+    showToast(this.toastController, 'Lead updated successfully', 2000)
   }
   private buildForm(pageData: IPageData, editMode: boolean): FormGroup {
     const baseFields = {
