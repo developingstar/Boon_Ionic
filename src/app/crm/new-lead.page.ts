@@ -6,7 +6,7 @@ import { Observable } from 'rxjs'
 import { CurrentUserService } from '../auth/current-user.service'
 import { User } from '../auth/user.model'
 import { emailValidator, phoneNumberValidator } from '../utils/form-validators'
-import { toastWarningDefaults } from '../utils/toast'
+import { showToast } from '../utils/toast'
 import { ISelectOption } from './field.component'
 import { SalesService } from './sales.service'
 import { UsersService } from './users.service'
@@ -72,12 +72,15 @@ export class NewLeadPage {
         () => this.viewController.dismiss(),
         (error: any) => {
           if (error.status === 422) {
-            this.toastController
-              .create({
-                ...toastWarningDefaults,
-                message: 'The form is invalid.'
-              })
-              .present()
+            const errors = error.error.errors
+            if (errors) {
+              const detail = errors[0].detail
+              const title = errors[0].title
+              const pointers = errors[0].source.pointer.split('/')
+              showToast(this.toastController, title + ': The ' + pointers[pointers.length - 1] + ' ' + detail , 2000, false)
+            } else {
+              showToast(this.toastController, 'The form is invalid', 2000, false)
+            }
           }
         }
       )
