@@ -1,0 +1,41 @@
+@import 'theme/mixins';
+@import 'theme/shared-classes';
+@import 'theme/style-guide';
+@import 'theme/variables';
+
+page-chat {
+  $box-page-wrapper-padding: 30px;
+  .messaging-wrapper {
+    display: flex;
+    flex-direction: row;
+    height: calc(100vh - #{$nav-height-mobile});
+    position: relative;
+    @include md {
+      height: calc(100vh - #{$nav-height-large});
+    }
+  }
+  .message-index-wrapper {
+    border-top: 1px solid #f1f2f6;
+    border-right: 1px solid #f1f2f6;
+    width: 100%;
+    display: none;
+    @include md {
+      display: inline;
+      min-width: 341px;
+      width: 341px;
+    }
+    &.message-index-visible {
+      display: inline;
+    }
+  }
+  .conversation-wrapper {
+    width: 100%;
+    display: none;
+    @include md {
+      display: inline;
+    }
+    &.conversation-visible {
+      display: inline;
+    }
+  }
+}
