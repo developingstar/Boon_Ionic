@@ -1,0 +1,33 @@
+.lead-header-wrapper()
+  .info(*ngIf="threadData && !threadData.isBlank")
+    .info-header
+      | Contact:
+      .lead-header-content(*ngIf="threadData && !threadData.isBlank", (click)="nameNumberToggle = !nameNumberToggle")
+        .lead-name.transition-delay([ngClass]="{'reveal-name' : nameNumberToggle}") {{ threadData.leadFirst }}
+        .lead-number.transition-delay([ngClass]="{'reveal-number' : !nameNumberToggle}") {{ threadData.leadNumber }}
+    .info-header
+      | Pipeline:
+      .lead-header-content()
+        | {{pipeline}}
+    .info-header
+      | Stage:
+      .lead-header-content()
+        | {{stage}}
+  .lead-header-content(*ngIf="threadData && threadData.isBlank")
+    ion-input.new-lead-input( (ionBlur)="newLeadBlur($event)", placeholder="phone number", type="tel", [(ngModel)]="threadData.leadNumber")
+.message-show-wrapper(#messageScroll, [scrollTop]="messageScroll.scrollHeight")
+  .message-list(*ngIf="messages && messages.length > 0")
+    .message-item(*ngFor="let message of messages; let last = last; let i = index")
+      .message-date-separator(*ngIf="shouldShowDateSeparator(i)")
+        .separator-date {{ message.createdAt | date:'EEE, MMM d, ' }} &nbsp;
+        span {{ message.createdAt | date:'shortTime' }}
+      .message-wrapper([ngClass]="message.direction")
+        .message {{message.body}}
+      .message-date([ngClass]="message.direction")
+        | {{message.createdAt | date:'shortTime' }}
+.send-bar
+  .messages-input-wrapper
+    input.messages-input(type="text", (keydown.enter)="sendMsg(message)", placeholder="Type your message...", [(ngModel)]="message.body")
+  .send-wrapper
+    .send-button((click)="sendMsg(message)")
+      ion-icon(ios="md-send", md="md-send")

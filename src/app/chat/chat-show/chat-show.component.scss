@@ -1,0 +1,182 @@
+@import 'theme/mixins';
+@import 'theme/shared-classes';
+@import 'theme/style-guide';
+@import 'theme/variables';
+
+chat-show {
+  $send-bar-height: 55px;
+  $lead-header-height: 55px;
+  .lead-header-wrapper {
+    @extend .space-between;
+    padding: 10px;
+    z-index: 10;
+    width: 100%;
+    max-width: 100%;
+    height: $lead-header-height;
+    background: #f4f5f9;
+    overflow: hidden;
+    font-size: 14px;
+    font-weight: 500;
+    @include md {
+      justify-content: flex-start;
+    }
+    .transition-delay {
+      position: absolute;
+      transition-duration: 0.5s;
+      cursor: pointer;
+      opacity: 0;
+    }
+    .reveal-name {
+      opacity: 1;
+    }
+    .reveal-number {
+      opacity: 1;
+    }
+    .info {
+      @extend .flex;
+      flex-direction: row;
+      .info-header {
+        @extend .flex;
+        flex-direction: column;
+        color: $color-light-dark;
+        margin: 0 40px;
+        font-size: 10px;
+        font-weight: bold;
+        text-transform: uppercase;
+      }
+      .lead-header-content {
+        color: $color-primary;
+        font-weight: 500;
+        font-size: 15px;
+        text-transform: none;
+      }
+    }
+  }
+  .message-show-wrapper {
+    font-weight: 500;
+    height: calc(
+      100vh - (#{$nav-height-mobile} + #{$lead-header-height} + #{$send-bar-height})
+    );
+    overflow: scroll;
+    overflow-x: hidden;
+    background: #eaebf0;
+    width: 100%;
+    -webkit-overflow-scrolling: touch;
+    @include md {
+      height: calc(
+        100vh - (#{$nav-height-large} + #{$lead-header-height} + #{$send-bar-height})
+      );
+    }
+  }
+  .message-list {
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 30px;
+    .message-item {
+      margin: 10px 37px;
+      .message-date-separator {
+        display: flex;
+        justify-content: center;
+        font-size: $font-size-primary;
+        font-weight: 800;
+        color: $color-text-secondary;
+        margin: 30px 0;
+        span {
+          font-weight: 500;
+        }
+      }
+      .message-wrapper {
+        background: #fff;
+        float: left;
+        padding: 15px 15px;
+        margin-bottom: 5px;
+        border-radius: 16px 16px 16px 0;
+        position: relative;
+        color: $color-text-secondary;
+        max-width: 70%;
+        @include md {
+          max-width: 60%;
+        }
+        &.outbound-api {
+          float: right !important;
+          border-radius: 16px 16px 0 16px !important;
+          background-color: $color-primary;
+          color: #fff;
+        }
+        .message {
+          white-space: normal;
+          font-size: 14px;
+        }
+      }
+      .message-date {
+        display: flex;
+        width: 100%;
+        color: $color-text-secondary;
+        font-size: $font-size-primary;
+        &.outbound-api {
+          float: right;
+          justify-content: flex-end;
+        }
+      }
+    }
+  }
+
+  .send-bar {
+    color: #8f8fa4;
+    font-size: 14px;
+    font-weight: 500;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #f4f5f9;
+    height: $send-bar-height;
+    position: relative;
+    bottom: 0px;
+    z-index: 9999999;
+    padding: 8px 17px 5px;
+    .messages-input-wrapper {
+      background: #fff;
+      border: 1px solid #eaebf0;
+      border-right: none;
+      border-radius: 5px 0 0 5px;
+      width: 100%;
+      height: 100%;
+      ::-webkit-input-placeholder {
+        color: #8f8fa4;
+        font-size: 14px;
+        font-weight: 500;
+      }
+      .messages-input {
+        width: 100%;
+        height: 100%;
+        text-indent: 15px;
+        border: none;
+        border-radius: 5px 0 0 5px;
+      }
+    }
+    .send-wrapper {
+      background: #fff;
+      border: 1px solid #eaebf0;
+      border-left: none;
+      border-radius: 0px 5px 5px 0;
+      height: 100%;
+      padding: 0 15px;
+      display: flex;
+      align-items: center;
+      .send-button {
+        cursor: pointer;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        font-size: 22px;
+        height: 50px;
+        width: 50px;
+        color: #b8bec5;
+        .send-icon {
+          margin-left: 10px;
+        }
+      }
+    }
+  }
+}
