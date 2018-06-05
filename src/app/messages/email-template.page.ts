@@ -6,6 +6,7 @@ import {
   NavParams,
   ToastController
 } from 'ionic-angular'
+import * as $ from 'jquery'
 import { Observable } from 'rxjs'
 
 import { CurrentUserService } from '../auth/current-user.service'
@@ -20,6 +21,10 @@ import {
 import { IEmailTemplate } from './messages.api.model'
 import { MessagesService } from './messages.service'
 import { TemplatePage } from './template.page'
+
+window['$'] = $
+window['jQuery'] = $
+
 @IonicPage({
   segment: 'email-template/:id'
 })
