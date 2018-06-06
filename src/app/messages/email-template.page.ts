@@ -54,8 +54,9 @@ export class EmailTemplatePage extends TemplatePage<
       toastController
     )
 
+    this.content = ''
     this.ckeConfig = {
-      allowedContent: true,
+      allowedContent: true
     }
   }
 
@@ -69,7 +70,7 @@ export class EmailTemplatePage extends TemplatePage<
       const newTemplate: IEmailTemplate = {
         content: '',
         default_sender: '',
-        default_sender_name: null,
+        default_sender_name: '',
         name: '',
         subject: ''
       }
@@ -90,7 +91,7 @@ export class EmailTemplatePage extends TemplatePage<
       template: {
         content: this.content,
         default_sender: form.value.default_sender,
-        default_sender_name: form.value.defaultSenderName,
+        default_sender_name: form.value.default_sender_name,
         name: form.value.name,
         subject: form.value.subject
       }
@@ -117,12 +118,13 @@ export class EmailTemplatePage extends TemplatePage<
       (template: EmailTemplate, shortcodes) => {
         this.content = template.content
         return {
-        ...state,
-        form: this.createFormGroup(template.toApiRepresentation()),
-        mode: mode,
-        shortcodes: shortcodes,
-        template: template
-      }}
+          ...state,
+          form: this.createFormGroup(template.toApiRepresentation()),
+          mode: mode,
+          shortcodes: shortcodes,
+          template: template
+        }
+      }
     )
   }
 
@@ -134,7 +136,7 @@ export class EmailTemplatePage extends TemplatePage<
       template: {
         content: this.content,
         default_sender: form.value.default_sender,
-        default_sender_name: form.value.defaultSenderName,
+        default_sender_name: form.value.default_sender_name,
         name: form.value.name,
         subject: form.value.subject
       }

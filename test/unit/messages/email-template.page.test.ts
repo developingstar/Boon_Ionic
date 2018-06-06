@@ -8,6 +8,7 @@ import { async, ComponentFixture } from '@angular/core/testing'
 import { NavController, NavParams, ToastController } from 'ionic-angular'
 import { Observable } from 'rxjs'
 
+import { CurrentUserService } from '../../../src/app/auth/current-user.service'
 import { EmailTemplate } from '../../../src/app/messages/email-template.model'
 import { EmailTemplatePage } from '../../../src/app/messages/email-template.page'
 import { EmailTemplatePageModule } from '../../../src/app/messages/email-template.page.module'
@@ -19,7 +20,7 @@ import {
 } from '../../../src/app/utils/toast'
 import { sampleEmailTemplate, sampleShortcode } from '../../support/factories'
 import { initComponent } from '../../support/helpers'
-import { NavControllerStub } from '../../support/stubs'
+import { CurrentUserServiceStub, NavControllerStub } from '../../support/stubs'
 import { EmailTemplatePageObject } from './email-template.page.po'
 
 describe('EmailTemplatePage', () => {
@@ -31,6 +32,7 @@ describe('EmailTemplatePage', () => {
   let template: EmailTemplate
   let toastControllerStub: any
   let toastStub: any
+  const currentUserServiceStub = new CurrentUserServiceStub()
 
   beforeEach(
     async(() => {
@@ -92,6 +94,7 @@ describe('EmailTemplatePage', () => {
           providers: [
             NavService,
             { provide: NavController, useValue: navControllerStub },
+            { provide: CurrentUserService, useValue: currentUserServiceStub },
             { provide: NavParams, useValue: navParamsStub },
             {
               provide: MessagesService,
@@ -114,12 +117,11 @@ describe('EmailTemplatePage', () => {
       page.setSubject('Welcome in Boon')
       page.setFromName('Sales Team')
       page.setFromEmail('sales@example.com')
-      page.setContent('Hello from Boon team!')
       page.save()
 
       expect(messagesServiceStub.createEmailTemplate).toHaveBeenCalledWith({
         template: {
-          content: 'Hello from Boon team!',
+          content: '',
           default_sender: 'sales@example.com',
           default_sender_name: 'Sales Team',
           name: 'Introduction to Boon',
@@ -151,13 +153,6 @@ describe('EmailTemplatePage', () => {
       })
       expect(toastStub.present).toHaveBeenCalled()
     })
-
-    it('includes shortcodes list', () => {
-      expect(page.getShortcodes()).toEqual([
-        '{{ first_name }}',
-        '{{ last_name }}'
-      ])
-    })
   })
 
   describe('update', () => {
@@ -176,6 +171,7 @@ describe('EmailTemplatePage', () => {
           providers: [
             NavService,
             { provide: NavController, useValue: navControllerStub },
+            { provide: CurrentUserService, useValue: currentUserServiceStub },
             { provide: NavParams, useValue: navParamsStub },
             {
               provide: MessagesService,
@@ -198,7 +194,6 @@ describe('EmailTemplatePage', () => {
       expect(page.getSubject()).toEqual(template.subject)
       expect(page.getFromName()).toEqual(template.defaultSenderName!)
       expect(page.getFromEmail()).toEqual(template.defaultSender)
-      expect(page.getContent()).toEqual(template.content)
     })
 
     it('allows to update template', () => {
@@ -208,12 +203,11 @@ describe('EmailTemplatePage', () => {
       page.setSubject('Welcome in Boon')
       page.setFromName('Sales Team')
       page.setFromEmail('sales@example.com')
-      page.setContent('Hello from Boon team!')
       page.save()
 
       expect(messagesServiceStub.updateEmailTemplate).toHaveBeenCalledWith(1, {
         template: {
-          content: 'Hello from Boon team!',
+          content: 'Hello',
           default_sender: 'sales@example.com',
           default_sender_name: 'Sales Team',
           name: 'Introduction to Boon',
@@ -246,13 +240,6 @@ describe('EmailTemplatePage', () => {
           'Failed to save the template. Make sure that the name is unique.'
       })
       expect(toastStub.present).toHaveBeenCalled()
-    })
-
-    it('includes shortcodes list', () => {
-      expect(page.getShortcodes()).toEqual([
-        '{{ first_name }}',
-        '{{ last_name }}'
-      ])
     })
   })
 })
