@@ -6,7 +6,6 @@ import {
   NavParams,
   ToastController
 } from 'ionic-angular'
-import * as $ from 'jquery'
 import { Observable } from 'rxjs'
 
 import { CurrentUserService } from '../auth/current-user.service'
@@ -21,10 +20,6 @@ import {
 import { IEmailTemplate } from './messages.api.model'
 import { MessagesService } from './messages.service'
 import { TemplatePage } from './template.page'
-
-window['$'] = $
-window['jQuery'] = $
-
 @IonicPage({
   segment: 'email-template/:id'
 })
@@ -38,6 +33,8 @@ export class EmailTemplatePage extends TemplatePage<
   TemplateFormGroup
 > {
   public selectedShortCode: string = ''
+  public ckeConfig: any
+  public content: string
   protected readonly resourcesRootPage: string = 'EmailTemplatesPage'
 
   constructor(
@@ -55,6 +52,14 @@ export class EmailTemplatePage extends TemplatePage<
       messagesService,
       toastController
     )
+
+    this.ckeConfig = {
+      allowedContent: true,
+    }
+  }
+
+  onChange($event: any): void {
+    return
   }
 
   protected new(state: State): Observable<State> {
