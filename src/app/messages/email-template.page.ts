@@ -1,4 +1,4 @@
-import { Component, ElementRef } from '@angular/core'
+import { Component, ElementRef, ViewChild } from '@angular/core'
 import { FormControl, Validators } from '@angular/forms'
 import {
   IonicPage,
@@ -35,6 +35,7 @@ export class EmailTemplatePage extends TemplatePage<
   public selectedShortCode: string = ''
   public ckeConfig: any
   public content: string
+  @ViewChild('templateEditor') templateEditor: any
   protected readonly resourcesRootPage: string = 'EmailTemplatesPage'
 
   constructor(
@@ -86,7 +87,13 @@ export class EmailTemplatePage extends TemplatePage<
 
   protected createTemplate(form: TemplateFormGroup): Observable<EmailTemplate> {
     return this.messagesService.createEmailTemplate({
-      template: form.value
+      template: {
+        content: this.content,
+        default_sender: form.value.default_sender,
+        default_sender_name: form.value.defaultSenderName,
+        name: form.value.name,
+        subject: form.value.subject
+      }
     })
   }
 
@@ -95,24 +102,9 @@ export class EmailTemplatePage extends TemplatePage<
     shortcode: string = ''
   ): Observable<State> {
     if (state.mode === 'new' || state.mode === 'edit') {
-      const form = state.form as TemplateFormGroup
-      let content = form.controls.content.value
-      const position = document.getElementsByTagName('textarea')[0]
-        .selectionStart
-
-      content =
-        content.substr(0, position) +
-        shortcode +
-        content.substr(position, content.length)
-      form.controls.content.setValue(content)
-
-      return Observable.of({
-        ...state,
-        form: form
-      })
-    } else {
-      return Observable.of(state)
+      this.content += shortcode
     }
+    return Observable.of(state)
   }
 
   protected edit(state: State): Observable<State> {
