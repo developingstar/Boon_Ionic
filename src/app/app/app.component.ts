@@ -27,8 +27,7 @@ export class AppComponent {
   ngAfterViewInit(): void {
     this.currentUserService.isAuthenticated().subscribe((isAuthenticated) => {
       const activePage: ViewController | undefined = this.nav.getActive()
-
-      if (!isAuthenticated && activePage && activePage.name !== this.rootPage) {
+      if (!isAuthenticated) {
         this.nav.setRoot(this.rootPage)
       }
     })
