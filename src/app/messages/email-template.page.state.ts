@@ -8,14 +8,14 @@ export class TemplateFormGroup extends FormGroup {
   readonly controls: {
     readonly content: FormControl
     readonly default_sender: FormControl
-    readonly defaultSenderName: FormControl
+    readonly default_sender_name: FormControl
     readonly name: FormControl
     readonly subject: FormControl
   }
   readonly value: {
     readonly content: string
     readonly default_sender: string
-    readonly defaultSenderName: string
+    readonly default_sender_name: string
     readonly name: string
     readonly subject: string
   }
