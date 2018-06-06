@@ -119,17 +119,18 @@ export class EmailTemplatePage extends TemplatePage<
     const mode: State['mode'] = 'edit'
     const fetchShortcodes = this.messagesService.shortcodes()
     const fetchTemplate = this.messagesService.emailTemplate(this.templateID)
-
     return Observable.zip(
       fetchTemplate,
       fetchShortcodes,
-      (template: EmailTemplate, shortcodes) => ({
+      (template: EmailTemplate, shortcodes) => {
+        this.content = template.content
+        return {
         ...state,
         form: this.createFormGroup(template.toApiRepresentation()),
         mode: mode,
         shortcodes: shortcodes,
         template: template
-      })
+      }}
     )
   }
 
@@ -138,7 +139,13 @@ export class EmailTemplatePage extends TemplatePage<
     form: TemplateFormGroup
   ): Observable<EmailTemplate> {
     return this.messagesService.updateEmailTemplate(id, {
-      template: form.value
+      template: {
+        content: this.content,
+        default_sender: form.value.default_sender,
+        default_sender_name: form.value.defaultSenderName,
+        name: form.value.name,
+        subject: form.value.subject
+      }
     })
   }
 
