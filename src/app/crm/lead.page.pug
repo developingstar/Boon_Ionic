@@ -16,6 +16,8 @@ ion-content(padding)
     .lead(*ngIf="formGroup | async; let form")
       .base-fields
         .fields-container
+          field(type="input", [form]="form", formField="firstName", label="First Name")
+          field(type="input", [form]="form", formField="lastName", label="Last Name")
           field(type="input", [form]="form", formField="email", label="Email")
           field(type="input", [form]="form", formField="phoneNumber", label="Phone Number")
           field(type="select", [form]="form", formField="owner_id", label="Owner", [options]="owners | async")
@@ -49,8 +51,7 @@ ion-content(padding)
                 img(src='../../assets/icon/note.svg')
               div.note
                 div.note-content {{note.content}}
-                div.note-date
-                  | Sun, Apr 22, 10:20PM
+                div.note-date {{note.date | date:'EEEE, LLL d, h:ma'}}
 
           hr
           div.sends-group

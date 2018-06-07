@@ -58,11 +58,15 @@ declare namespace Crm {
       readonly created_by_service_id: number | null
       readonly created_by_user_id: number | null
       readonly email: string | null
+      readonly first_name: string | null
+      readonly last_name: string | null
       readonly fields: ReadonlyArray<IField>
       readonly id: number
       readonly owner: Auth.API.IUser | null
       readonly phone_number: string
       readonly stage_id: number
+      readonly inserted_at: string
+      readonly updated_at: string
     }
 
     interface ILeadsResponse {
@@ -77,6 +81,8 @@ declare namespace Crm {
 
     interface ILeadCreate {
       email?: string
+      first_name?: string
+      last_name?: string
       phone_number?: string
       stage_id?: number
       owner_id?: number | null
@@ -118,10 +124,18 @@ declare namespace Crm {
     interface INote {
       readonly id: number
       readonly content: string
+      readonly inserted_at: string
     }
 
     interface INoteCreate {
       readonly content: string
+    }
+
+    interface ISearchDropdownItem {
+      readonly group_name?: string
+      readonly id: number
+      readonly name: string
+      readonly comment?: string
     }
   }
 }

@@ -13,7 +13,7 @@ import { Observable, Subject, Subscription } from 'rxjs'
 import { CurrentUserService } from '../auth/current-user.service'
 import { IPopoverResult } from '../popover/popover'
 import { emailValidator, phoneNumberValidator } from '../utils/form-validators'
-import { showToast, toastSuccessDefaults } from '../utils/toast'
+import { showToast } from '../utils/toast'
 import { ISelectOption } from './field.component'
 import { Lead } from './lead.model'
 import { initialState, IPageData, State, UserAction } from './lead.page.state'
@@ -166,7 +166,12 @@ export class LeadPage implements OnDestroy, OnInit {
             const detail = errors[0].detail
             const title = errors[0].title
             const pointers = errors[0].source.pointer.split('/')
-            showToast(this.toastController, title + ': The ' + pointers[pointers.length - 1] + ' ' + detail , 2000, false)
+            showToast(
+              this.toastController,
+              title + ': The ' + pointers[pointers.length - 1] + ' ' + detail,
+              2000,
+              false
+            )
           } else {
             showToast(this.toastController, 'The form is invalid', 2000, false)
           }
@@ -253,6 +258,7 @@ export class LeadPage implements OnDestroy, OnInit {
       })
       this.newNote = ''
     }
+    showToast(this.toastController, 'Note added.', 2000)
   }
 
   public isNoteEmpty(): boolean {
@@ -316,14 +322,6 @@ export class LeadPage implements OnDestroy, OnInit {
       })
       .shareReplay(1)
   }
-  private toast(message: string): void {
-    this.toastController
-      .create({
-        ...toastSuccessDefaults,
-        message: message
-      })
-      .present()
-  }
   private handleUpdateStages(data: any, action: any, lead: Lead): void {
     this.currentStageId = lead.stageId
     const ids = data.stages.map((stage: Stage) => stage.id)
@@ -341,6 +339,8 @@ export class LeadPage implements OnDestroy, OnInit {
         { disabled: !editMode, value: pageData.lead.email },
         emailValidator()
       ],
+      firstName: [{ disabled: !editMode, value: pageData.lead.firstName }],
+      lastName: [{ disabled: !editMode, value: pageData.lead.lastName }],
       owner_id: {
         disabled: !editMode || pageData.role !== 'admin',
         value: pageData.lead.owner
@@ -371,6 +371,7 @@ export class LeadPage implements OnDestroy, OnInit {
   }
 
   private buildLeadUpdate(formModel: any): Crm.API.ILeadUpdate {
+    showToast(this.toastController, 'Updated lead successfully.', 2000)
     return {
       email: formModel.email === '' ? null : formModel.email,
       fields: Object.keys(formModel)
@@ -381,6 +382,8 @@ export class LeadPage implements OnDestroy, OnInit {
           }
         })
         .filter((field) => !isNaN(field.id) && field.value !== ''),
+      first_name: formModel.firstName === '' ? null : formModel.firstName,
+      last_name: formModel.lastName === '' ? null : formModel.lastName,
       owner_id:
         formModel.owner_id === UnassignedUserId
           ? null
