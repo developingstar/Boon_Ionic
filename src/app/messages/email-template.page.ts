@@ -56,7 +56,26 @@ export class EmailTemplatePage extends TemplatePage<
 
     this.content = ''
     this.ckeConfig = {
-      allowedContent: true
+      allowedContent: true,
+      toolbar: 'Basic',
+      toolbar_Basic: [
+        [
+          'Font',
+          '-',
+          'FontSize',
+          '-',
+          'Bold',
+          'Italic',
+          'Underline',
+          'TextColor',
+          'BGColor',
+          '-',
+          'JustifyLeft',
+          'JustifyCenter',
+          'JustifyRight',
+          'JustifyBlock'
+        ]
+      ]
     }
   }
 
