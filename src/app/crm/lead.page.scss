@@ -1,16 +1,26 @@
 @import 'theme/shared-classes';
 @import 'theme/style-guide';
-
 lead-page {
   &,
   .content {
     background-color: $color-content-background;
   }
-
+  .contactShowHeader {
+    padding: 16px 43px;
+    background-color: #4C4953;
+    color: white;
+    .header {
+      color: rgba(255,255,255,0.41);
+      font-size: 13px;
+    }
+    ion-col {
+      padding-left: 0;
+      font-size: 14px;
+    }
+  }
   #back-button {
     margin-left: -15px;
   }
-
   h1 {
     color: #1a173b;
     line-height: 30px;
@@ -18,12 +28,13 @@ lead-page {
     font-weight: bold;
     margin-bottom: 18px;
   }
-
-  button.update-stage-button {
+  .buttons button {
     float: right;
-    @extend .boon-button;
-    padding: 0 30px;
-    margin-bottom: 20px;
+    height: 38px;
+    width: 124px;
+    border-radius: 4px;
+    background-color: rgba(0,0,0,0.23);
+    color: white;
     cursor: pointer;
     &:disabled {
       background: white !important;
@@ -31,55 +42,37 @@ lead-page {
       border: 1px solid rgb(201, 198, 198);
     }
   }
-  .lead-more-button {
-    background: white !important;
-    @extend .update-stage-button;
-    border: 1px solid rgb(224, 232, 235) !important;
-    .bullets::before {
-      @include bullet(#d8d8d8, '\25CF\25CF\25CF');
-    }
-  }
-
   pipeline {
     margin-bottom: 28px;
   }
-
   .lead {
     @include border-radius($radius-size);
-
     background-color: #fff;
     border: 1px $color-border solid;
     padding: 8px;
-
     button {
       @extend .boon-button;
     }
-
     .base-fields,
     .custom-fields {
       margin: 30px 50px;
     }
-
     .base-fields {
       display: flex;
       justify-content: space-between;
-
       button {
         display: inline-block;
         margin-left: 6px;
         width: 124px;
       }
     }
-
     hr {
       border-top: 1px $color-border solid;
       height: 0;
       margin: 0 -8px;
     }
-
     .custom-fields {
       margin-bottom: 0px;
-
       h2 {
         color: #000000;
         font-size: 12px;
@@ -87,13 +80,11 @@ lead-page {
         margin-bottom: 5px;
         text-transform: uppercase;
       }
-
       field {
         margin-top: 15px;
         margin-bottom: 30px;
       }
     }
-
     field {
       display: inline-block;
       margin-right: 40px;
@@ -101,20 +92,17 @@ lead-page {
       width: 195px;
     }
   }
-
   .lead-comment {
     margin-top: 30px;
-
     .note-activity {
       border: 1px solid #d2d6e4;
       border-radius: 6px;
       background-color: #fff;
-
       .note-navbar {
         display: flex;
         height: 50px;
         border-bottom: 1px solid #d2d6e4;
-
+        overflow: hidden;
         .nav-item {
           font-size: 14px;
           font-weight: 600;
@@ -123,15 +111,14 @@ lead-page {
           line-height: 45px;
           cursor: pointer;
           color: #000;
-
           &:hover {
             color: #636c79;
             border-bottom: 2px solid #636c79;
           }
         }
         .nav-item-active {
-          color: #0077ff;
-          border-bottom: 2px solid #0077ff;
+          color: $color-primary;
+          border-bottom: 2px solid $color-primary;
           &:hover {
             color: #636c79;
             border-color: #636c79;
@@ -139,21 +126,17 @@ lead-page {
         }
       }
     }
-
     .notes-content {
       height: 300px;
       padding: 10px 30px;
       overflow-y: auto;
-
       .note-row {
         display: flex;
         margin-bottom: 15px;
-
         img {
           width: 35px;
           margin-top: 10px;
         }
-
         .note {
           margin-left: 10px;
           width: 100%;
@@ -164,7 +147,6 @@ lead-page {
           font-size: 14px;
           font-weight: 500;
           color: #3d484c;
-
           .note-date {
             margin-top: 15px;
             font-size: 13px;
@@ -173,7 +155,14 @@ lead-page {
         }
       }
     }
-
+    .details-content {
+      height: 300px;
+      padding: 10px 30px;
+      overflow-y: auto;
+      input {
+        margin-top: 4px;
+      }
+    }
     .sends-group {
       display: flex;
       height: 50px;
@@ -181,7 +170,6 @@ lead-page {
       padding: 0 10px;
       border: 1px solid #eaebf0;
       border-radius: 5px;
-
       input {
         width: 100%;
         height: 30px;
@@ -189,14 +177,12 @@ lead-page {
         padding: 0 10px;
         border: 0;
       }
-
       img {
         height: 30px;
         margin-top: 10px;
         margin-left: 10px;
       }
     }
-
     hr {
       background: #d2d6e4;
     }
