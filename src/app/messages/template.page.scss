@@ -1,60 +1,46 @@
 @import 'theme/shared-classes';
 @import 'theme/style-guide';
 @import 'theme/mixins';
-
 .template-page {
   &,
   .content {
     background-color: $color-content-background;
   }
-
   .form {
     .form-header {
       display: flex;
       padding: 10px 0;
-
       button {
         @extend .boon-button;
-
         margin: auto 0 auto auto;
         padding-left: 35px;
         padding-right: 35px;
       }
     }
-
     .form-body {
       @include border-radius($radius-size);
-
       background-color: #fff;
       border: 1px $color-border solid;
       padding: 8px 0;
-
       ion-grid,
       ion-grid ion-col {
         padding: 0;
       }
-
       ion-item {
         padding: 0;
-
         ion-label {
           padding: 0 20px;
           max-width: 160px;
-
-          color: $color-text-primary-dk;
+          color: $color-text-primary;
           font-weight: 800;
         }
-
         textarea {
           min-height: 250px;
           padding: 4px 12px;
         }
-
         div:last-child {
           flex: 1;
-        }
-
-        // Overwrite Ionic's green bottom border using the same selector
+        } // Overwrite Ionic's green bottom border using the same selector
         .item-inner,
         &.item-md.item-input.ng-valid.item-input-has-value:not(.input-has-focus):not(.item-input-has-focus)
           .item-inner,
@@ -63,7 +49,6 @@
           @include box-shadow(0, 0, 0, $color-content-background);
           border-bottom: 1px solid #dedede;
         }
-
         &.item-without-border {
           .item-inner,
           &.item-md.item-input.ng-valid.item-input-has-value:not(.input-has-focus):not(.item-input-has-focus)
@@ -73,7 +58,6 @@
             border-bottom: 0 none;
           }
         }
-
         &.shortcodes {
           ion-select {
             position: relative;
@@ -83,11 +67,9 @@
             border-top: 0;
             border-color: #dedede;
             padding: 13px 0;
-
             .select-text {
               text-align: center;
             }
-
             .select-icon {
               display: none;
             }
@@ -95,8 +77,140 @@
         }
       }
     }
+
+    .cke_top {
+      background: #fff;
+      border-color: #dedede;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      padding: 0;
+    }
+
+    .cke_bottom {
+      display: none;
+    }
+
+    .cke_chrome {
+      border: 0;
+      border-bottom: 1px solid #dedede;
+      box-shadow: none;
+    }
+
+    .cke_combo__styles,
+    .cke_combo__format,
+    #cke_15,
+    #cke_22,
+    #cke_30,
+    #cke_35,
+    #cke_49,
+    #cke_50,
+    #cke_51,
+    #cke_52,
+    #cke_54,
+    #cke_55,
+    #cke_56,
+    #cke_57,
+    #cke_58,
+    #cke_59,
+    #cke_64,
+    #cke_65,
+    #cke_66,
+    #cke_67,
+    #cke_71,
+    #cke_84,
+    #cke_87,
+    .cke_toolbar_break,
+    .cke_toolbar_separator {
+      display: none;
+    }
+
+    .cke_toolbox {
+      display: flex;
+      height: 50px;
+      align-items: center;
+    }
+
+    #cke_45 {
+      order: 2;
+      margin-left: 5px;
+    }
+
+    #cke_53 {
+      order: 4;
+      margin-left: 10px;
+    }
+
+    #cke_80 {
+      order: 1;
+    }
+
+    #cke_81 {
+      order: 3;
+      border-right: 1px solid #dedede;
+    }
+
+    .cke_combo {
+      border-right: 1px solid #dedede;
+      margin-left: 13px;
+    }
+
+    .transparent {
+      background: #fff;
+      border: 0;
+      box-shadow: none;
+    }
+
+    .cke_toolgroup {
+      @extend .transparent;
+
+      a.cke_button:hover {
+        background: #fff;
+      }
+
+      a.cke_button_on {
+        background: #fff;
+        border: 1px solid #c7baec;
+        box-shadow: 0 1px 5px rgb(193, 184, 184) inset,
+          0 1px 0 rgba(0, 0, 0, 0.2);
+      }
+    }
+
+    a.cke_combo_button {
+      @extend .transparent;
+      width: 150px;
+
+      &:hover,
+      &:active,
+      &:focus {
+        @extend .transparent;
+        color: #313942;
+        opacity: 1;
+      }
+
+      .cke_combo_open {
+        float: right;
+      }
+
+      .cke_combo_text {
+        width: 80%;
+        font-size: 16px;
+        color: #313942;
+        font-weight: 800;
+        padding-left: 7px;
+      }
+    }
+
+    .cke_combo__fontsize a.cke_combo_button {
+      width: 100px;
+
+      .cke_combo_text {
+        width: auto;
+      }
+    }
   }
 }
+
 .popover-md .popover-viewport {
   opacity: 1;
 }
