@@ -99,29 +99,7 @@
 
     .cke_combo__styles,
     .cke_combo__format,
-    #cke_15,
-    #cke_22,
-    #cke_30,
-    #cke_35,
-    #cke_49,
-    #cke_50,
-    #cke_51,
-    #cke_52,
-    #cke_54,
-    #cke_55,
-    #cke_56,
-    #cke_57,
-    #cke_58,
-    #cke_59,
-    #cke_64,
-    #cke_65,
-    #cke_66,
-    #cke_67,
-    #cke_71,
-    #cke_84,
-    #cke_87,
-    .cke_toolbar_break,
-    .cke_toolbar_separator {
+    .cke_toolbar_break {
       display: none;
     }
 
@@ -129,25 +107,6 @@
       display: flex;
       height: 50px;
       align-items: center;
-    }
-
-    #cke_45 {
-      order: 2;
-      margin-left: 5px;
-    }
-
-    #cke_53 {
-      order: 4;
-      margin-left: 10px;
-    }
-
-    #cke_80 {
-      order: 1;
-    }
-
-    #cke_81 {
-      order: 3;
-      border-right: 1px solid #dedede;
     }
 
     .cke_combo {
@@ -163,6 +122,7 @@
 
     .cke_toolgroup {
       @extend .transparent;
+      margin-left: 10px;
 
       a.cke_button:hover {
         background: #fff;
@@ -173,6 +133,11 @@
         border: 1px solid #c7baec;
         box-shadow: 0 1px 5px rgb(193, 184, 184) inset,
           0 1px 0 rgba(0, 0, 0, 0.2);
+      }
+
+      .cke_toolbar_separator {
+        height: 30px;
+        margin: 0 15px 0 10px;
       }
     }
 
