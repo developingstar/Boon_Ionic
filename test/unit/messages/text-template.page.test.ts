@@ -8,6 +8,7 @@ import { async, ComponentFixture } from '@angular/core/testing'
 import { NavController, NavParams, ToastController } from 'ionic-angular'
 import { Observable } from 'rxjs'
 
+import { CurrentUserService } from '../../../src/app/auth/current-user.service'
 import { MessagesService } from '../../../src/app/messages/messages.service'
 import { PhoneNumbersService } from '../../../src/app/messages/phone-numbers.service'
 import { TextTemplate } from '../../../src/app/messages/text-template.model'
@@ -20,7 +21,7 @@ import {
 } from '../../../src/app/utils/toast'
 import { sampleShortcode, sampleTextTemplate } from '../../support/factories'
 import { initComponent } from '../../support/helpers'
-import { NavControllerStub } from '../../support/stubs'
+import { CurrentUserServiceStub, NavControllerStub } from '../../support/stubs'
 import { TextTemplatePageObject } from './text-template.page.po'
 
 describe('TextTemplatePage', () => {
@@ -34,6 +35,7 @@ describe('TextTemplatePage', () => {
   let template: TextTemplate
   let toastControllerStub: any
   let toastStub: any
+  const currentUserServiceStub = new CurrentUserServiceStub()
 
   beforeEach(
     async(() => {
@@ -97,6 +99,7 @@ describe('TextTemplatePage', () => {
           providers: [
             NavService,
             { provide: NavController, useValue: navControllerStub },
+            { provide: CurrentUserService, useValue: currentUserServiceStub },
             { provide: NavParams, useValue: navParamsStub },
             {
               provide: MessagesService,
@@ -117,13 +120,12 @@ describe('TextTemplatePage', () => {
       spyOn(messagesServiceStub, 'createTextTemplate').and.callThrough()
 
       page.setName('Introduction to Boon')
-      page.setContent('Hello from Boon team!')
       page.selectPhoneNumber('+999222222')
       page.save()
 
       expect(messagesServiceStub.createTextTemplate).toHaveBeenCalledWith({
         template: {
-          content: 'Hello from Boon team!',
+          content: '',
           default_sender: '+999222222',
           name: 'Introduction to Boon'
         }
@@ -155,13 +157,6 @@ describe('TextTemplatePage', () => {
       })
       expect(toastStub.present).toHaveBeenCalled()
     })
-
-    it('includes shortcodes list', () => {
-      expect(page.getShortcodes()).toEqual([
-        '{{ first_name }}',
-        '{{ last_name }}'
-      ])
-    })
   })
 
   describe('update', () => {
@@ -180,6 +175,7 @@ describe('TextTemplatePage', () => {
           providers: [
             NavService,
             { provide: NavController, useValue: navControllerStub },
+            { provide: CurrentUserService, useValue: currentUserServiceStub },
             { provide: NavParams, useValue: navParamsStub },
             {
               provide: MessagesService,
@@ -201,20 +197,18 @@ describe('TextTemplatePage', () => {
 
       expect(page.getName()).toEqual(template.name)
       expect(page.getPhoneNumber()).toEqual(template.defaultSender)
-      expect(page.getContent()).toEqual(template.content)
     })
 
     it('allows to update template', () => {
       spyOn(messagesServiceStub, 'updateTextTemplate').and.callThrough()
 
       page.setName('Introduction to Boon')
-      page.setContent('Hello from Boon team!')
       page.selectPhoneNumber('+999222222')
       page.save()
 
       expect(messagesServiceStub.updateTextTemplate).toHaveBeenCalledWith(1, {
         template: {
-          content: 'Hello from Boon team!',
+          content: 'Welcome in Boon',
           default_sender: '+999222222',
           name: 'Introduction to Boon'
         }
@@ -245,13 +239,6 @@ describe('TextTemplatePage', () => {
           'Failed to save the template. Make sure that the name is unique.'
       })
       expect(toastStub.present).toHaveBeenCalled()
-    })
-
-    it('includes shortcodes list', () => {
-      expect(page.getShortcodes()).toEqual([
-        '{{ first_name }}',
-        '{{ last_name }}'
-      ])
     })
   })
 })
