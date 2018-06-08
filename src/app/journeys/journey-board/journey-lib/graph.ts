@@ -11,8 +11,12 @@ export class Graph {
     if (!this.drawService) this.drawService = new DrawService()
     return this.drawService
   }
-  static calcSnap(position: number): number {
-    const snapSize = 50
+  static calcSnapX(position: number): number {
+    const snapSize = Rectangle.BASE_WIDTH / 3 + 10
+    return Math.round(position / snapSize) * snapSize
+  }
+  static calcSnapY(position: number): number {
+    const snapSize = Rectangle.BASE_HEIGHT / 3 + 10
     return Math.round(position / snapSize) * snapSize
   }
 
@@ -72,8 +76,8 @@ export class Graph {
     const node = new Node(this, {
       draggable: true,
       id: id,
-      x: Graph.calcSnap(x),
-      y: Graph.calcSnap(y)
+      x: Graph.calcSnapX(x),
+      y: Graph.calcSnapY(y)
     })
     this.nodes.push(node)
     this.layer.add(node)

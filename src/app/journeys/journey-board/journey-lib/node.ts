@@ -68,36 +68,39 @@ export class Node extends Konva.Group {
     NodeValidation.checkNodeSizes(this.getHeight(), this.getWidth())
     NodeValidation.checkNodeSizes(target.getHeight(), target.getWidth())
     let positions: number[] = []
-    function calcSnap(position: number): any {
-      return dragend ? Graph.calcSnap(position) : position
+    function calcSnapX(position: number): any {
+      return dragend ? Graph.calcSnapX(position) : position
+    }
+    function calcSnapY(position: number): any {
+      return dragend ? Graph.calcSnapY(position) : position
     }
     if (this.isLeftOf(target)) {
       positions = [
-        calcSnap(this.x()) + this.getWidth(),
-        calcSnap(this.y()) + this.getHeight() / 2,
-        calcSnap(target.x()),
-        calcSnap(target.y()) + this.getHeight() / 2
+        calcSnapX(this.x()) + this.getWidth(),
+        calcSnapY(this.y()) + this.getHeight() / 2,
+        calcSnapX(target.x()),
+        calcSnapY(target.y()) + this.getHeight() / 2
       ]
     } else if (this.isRightOf(target)) {
       positions = [
-        calcSnap(this.x()),
-        calcSnap(this.y()) + this.getHeight() / 2,
-        calcSnap(target.x()) + target.width(),
-        calcSnap(target.y()) + target.height() / 2
+        calcSnapX(this.x()),
+        calcSnapY(this.y()) + this.getHeight() / 2,
+        calcSnapX(target.x()) + target.width(),
+        calcSnapY(target.y()) + target.height() / 2
       ]
     } else if (this.isCenterOver(target)) {
       positions = [
-        calcSnap(this.x()) + this.getWidth() / 2,
-        calcSnap(this.y()),
-        calcSnap(target.x()) + target.width() / 2,
-        calcSnap(target.y()) + target.height()
+        calcSnapX(this.x()) + this.getWidth() / 2,
+        calcSnapY(this.y()),
+        calcSnapX(target.x()) + target.width() / 2,
+        calcSnapY(target.y()) + target.height()
       ]
     } else if (this.isCenterBelow(target)) {
       positions = [
-        calcSnap(this.x()) + this.getWidth() / 2,
-        calcSnap(this.y()) + this.getHeight(),
-        calcSnap(target.x()) + target.width() / 2,
-        calcSnap(target.y())
+        calcSnapX(this.x()) + this.getWidth() / 2,
+        calcSnapY(this.y()) + this.getHeight(),
+        calcSnapX(target.x()) + target.width() / 2,
+        calcSnapY(target.y())
       ]
     }
     return positions
@@ -152,8 +155,8 @@ export class Node extends Konva.Group {
 
   private snapNode(): void {
     this.position({
-      x: Graph.calcSnap(this.x()),
-      y: Graph.calcSnap(this.y())
+      x: Graph.calcSnapX(this.x()),
+      y: Graph.calcSnapY(this.y())
     })
     Graph.getDrawService().redrawCanvas()
   }
