@@ -1,4 +1,4 @@
-import { Component } from '@angular/core'
+import { Component, ViewChild } from '@angular/core'
 import {
   IonicPage,
   NavController,
@@ -34,6 +34,9 @@ export class TextTemplatePage extends TemplatePage<
   ITextTemplate,
   TemplateFormGroup
 > {
+  public ckeConfig: any
+  public content: string
+  @ViewChild('templateEditor') templateEditor: any
   protected readonly resourcesRootPage: string = 'TextTemplatesPage'
 
   constructor(
@@ -51,6 +54,30 @@ export class TextTemplatePage extends TemplatePage<
       messagesService,
       toastController
     )
+
+    this.content = ''
+    this.ckeConfig = {
+      allowedContent: true,
+      toolbar: 'Basic',
+      toolbar_Basic: [
+        [
+          'Font',
+          '-',
+          'FontSize',
+          '-',
+          'Bold',
+          'Italic',
+          'Underline',
+          'TextColor',
+          'BGColor',
+          '-',
+          'JustifyLeft',
+          'JustifyCenter',
+          'JustifyRight',
+          'JustifyBlock'
+        ]
+      ]
+    }
   }
 
   get phoneNumbers(): Observable<ReadonlyArray<string>> {
@@ -107,14 +134,16 @@ export class TextTemplatePage extends TemplatePage<
       fetchPhoneNumbers,
       fetchShortcodes,
       fetchTemplate,
-      (phoneNumbers, shortcodes, template: TextTemplate) => ({
+      (phoneNumbers, shortcodes, template: TextTemplate) => {
+        this.content = template.content
+        return {
         ...state,
         form: this.createFormGroup(template.toApiRepresentation()),
         mode: mode,
         phoneNumbers: phoneNumbers,
         shortcodes: shortcodes,
         template: template
-      })
+      }}
     )
   }
 

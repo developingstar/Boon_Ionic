@@ -21,6 +21,5 @@ ion-content(padding)
         ion-label ShortCodes:
         ion-select([(ngModel)]='selectedShortCode', interface="popover", [ngModelOptions]="{standalone: true}", (ionChange)="itemSelected($event)", placeholder="Select Shortcode")
           ion-option(*ngFor="let name of shortcodeNames | async", [value]="name") {{name}}
-      ion-item
-        ion-textarea(name="content", formControlName="content")
+      ckeditor([(ngModel)]="content", #templateEditor, [config]="ckeConfig", debounce="500", [ngModelOptions]="{standalone: true}")
 
