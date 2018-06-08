@@ -8,6 +8,10 @@ import { TextTemplatePage } from './text-template.page'
 @NgModule({
   declarations: [TextTemplatePage],
   entryComponents: [TextTemplatePage],
-  imports: [IonicPageModule.forChild(TextTemplatePage), NavModule, CKEditorModule]
+  imports: [
+    IonicPageModule.forChild(TextTemplatePage),
+    NavModule,
+    CKEditorModule
+  ]
 })
 export class TextTemplatePageModule {}

@@ -141,13 +141,14 @@ export class TextTemplatePage extends TemplatePage<
       (phoneNumbers, shortcodes, template: TextTemplate) => {
         this.content = template.content
         return {
-        ...state,
-        form: this.createFormGroup(template.toApiRepresentation()),
-        mode: mode,
-        phoneNumbers: phoneNumbers,
-        shortcodes: shortcodes,
-        template: template
-      }}
+          ...state,
+          form: this.createFormGroup(template.toApiRepresentation()),
+          mode: mode,
+          phoneNumbers: phoneNumbers,
+          shortcodes: shortcodes,
+          template: template
+        }
+      }
     )
   }
 
