@@ -1,6 +1,7 @@
 import Konva, { Shape } from 'konva'
 import { Subject } from 'rxjs'
 
+import { DeleteIcon } from './delete-icon'
 import { DrawPoint } from './draw-point'
 import { INode } from './draw.service'
 import { Edge } from './edge'
@@ -9,27 +10,25 @@ import { NodeValidation } from './node.validations'
 import { Rectangle } from './rectangle'
 
 export class Node extends Konva.Group {
+  static MOUSEOVER_ZINDEX = 20
   onDrag: Subject<boolean> = new Subject()
   onDragEnd: Subject<boolean> = new Subject()
 
   private graph: Graph
   private baseRect: Rectangle
   private drawPoint: DrawPoint
-
+  private deleteIcon: DeleteIcon
   // then create layer
   constructor(graph: Graph, config: any = {}) {
     super(config)
     this.baseRect = new Rectangle()
     this.drawPoint = new DrawPoint(this)
+    this.deleteIcon = new DeleteIcon()
     this.add(this.baseRect)
     this.add(this.drawPoint)
+    this.add(this.deleteIcon)
     this.graph = graph
-    this.drawPoint.hide()
-    Graph.getDrawService().nodes.push({
-      id: this.id(),
-      x: this.x(),
-      y: this.y()
-    })
+    this.addNodeAsData()
 
     Graph.getDrawService().onDraw.subscribe(() => {
       this.draggable(false)
@@ -41,11 +40,16 @@ export class Node extends Konva.Group {
 
     this.on('mouseover', () => {
       this.drawPoint.show()
+      this.deleteIcon.show()
+      if (!Graph.getDrawService().isDrawing) {
+        this.setZIndex(Node.MOUSEOVER_ZINDEX)
+      }
       Graph.getDrawService().redrawCanvas()
     })
 
     this.on('mouseout', () => {
       this.drawPoint.hide()
+      this.deleteIcon.hide()
       Graph.getDrawService().redrawCanvas()
     })
 
@@ -54,14 +58,8 @@ export class Node extends Konva.Group {
       this.onDrag.next(true)
     })
 
-    // TODO: this will work to make it snap in place, needs work to attach arrows correctly if used
     this.on('dragend', () => {
-      const snapSize = 30
-      this.position({
-        x: Math.round(this.x() / snapSize) * snapSize,
-        y: Math.round(this.y() / snapSize) * snapSize
-      })
-      Graph.getDrawService().redrawCanvas()
+      this.snapNode()
       this.onDragEnd.next(true)
     })
   }
@@ -70,41 +68,36 @@ export class Node extends Konva.Group {
     NodeValidation.checkNodeSizes(this.getHeight(), this.getWidth())
     NodeValidation.checkNodeSizes(target.getHeight(), target.getWidth())
     let positions: number[] = []
-    const snapSize = 30
-    function calcPos(position: number): any {
-      if (dragend) {
-        return Math.round(position / snapSize) * snapSize
-      } else {
-        return position
-      }
+    function calcSnap(position: number): any {
+      return dragend ? Graph.calcSnap(position) : position
     }
     if (this.isLeftOf(target)) {
       positions = [
-        calcPos(this.x()) + this.getWidth(),
-        calcPos(this.y()) + this.getHeight() / 2,
-        calcPos(target.x()),
-        calcPos(target.y()) + this.getHeight() / 2
+        calcSnap(this.x()) + this.getWidth(),
+        calcSnap(this.y()) + this.getHeight() / 2,
+        calcSnap(target.x()),
+        calcSnap(target.y()) + this.getHeight() / 2
       ]
     } else if (this.isRightOf(target)) {
       positions = [
-        calcPos(this.x()),
-        calcPos(this.y()) + this.getHeight() / 2,
-        calcPos(target.x()) + target.width(),
-        calcPos(target.y()) + target.height() / 2
+        calcSnap(this.x()),
+        calcSnap(this.y()) + this.getHeight() / 2,
+        calcSnap(target.x()) + target.width(),
+        calcSnap(target.y()) + target.height() / 2
       ]
     } else if (this.isCenterOver(target)) {
       positions = [
-        calcPos(this.x()) + this.getWidth() / 2,
-        calcPos(this.y()),
-        calcPos(target.x()) + target.width() / 2,
-        calcPos(target.y()) + target.height()
+        calcSnap(this.x()) + this.getWidth() / 2,
+        calcSnap(this.y()),
+        calcSnap(target.x()) + target.width() / 2,
+        calcSnap(target.y()) + target.height()
       ]
     } else if (this.isCenterBelow(target)) {
       positions = [
-        calcPos(this.x()) + this.getWidth() / 2,
-        calcPos(this.y()) + this.getHeight(),
-        calcPos(target.x()) + target.width() / 2,
-        calcPos(target.y())
+        calcSnap(this.x()) + this.getWidth() / 2,
+        calcSnap(this.y()) + this.getHeight(),
+        calcSnap(target.x()) + target.width() / 2,
+        calcSnap(target.y())
       ]
     }
     return positions
@@ -147,5 +140,21 @@ export class Node extends Konva.Group {
     this.height(maxHeight)
     this.width(maxWidth)
     return this
+  }
+
+  private addNodeAsData(): void {
+    Graph.getDrawService().nodes.push({
+      id: this.id(),
+      x: this.x(),
+      y: this.y()
+    })
+  }
+
+  private snapNode(): void {
+    this.position({
+      x: Graph.calcSnap(this.x()),
+      y: Graph.calcSnap(this.y())
+    })
+    Graph.getDrawService().redrawCanvas()
   }
 }

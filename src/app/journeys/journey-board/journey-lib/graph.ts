@@ -11,6 +11,10 @@ export class Graph {
     if (!this.drawService) this.drawService = new DrawService()
     return this.drawService
   }
+  static calcSnap(position: number): number {
+    const snapSize = 50
+    return Math.round(position / snapSize) * snapSize
+  }
 
   private static drawService: DrawService
 
@@ -37,6 +41,7 @@ export class Graph {
     Graph.getDrawService().onDraw.subscribe((onDraw) => {
       this.currentEdge = onDraw.shape as Edge
       this.layer.add(this.currentEdge)
+      this.currentEdge.origin.setZIndex(this.currentEdge.getZIndex() + 1)
       Graph.getDrawService().redrawCanvas()
     })
 
@@ -64,19 +69,18 @@ export class Graph {
     x: number = 200,
     y: number = 200
   ): void {
-    const snapSize = 30
     const node = new Node(this, {
       draggable: true,
       id: id,
-      x: Math.round(x / snapSize) * snapSize,
-      y: Math.round(y / snapSize) * snapSize
+      x: Graph.calcSnap(x),
+      y: Graph.calcSnap(y)
     })
     this.nodes.push(node)
     this.layer.add(node)
     Graph.getDrawService().redrawCanvas()
   }
 
-  public addEdges(originId: string, targetId: string): void {
+  public addEdge(originId: string, targetId: string): void {
     const origin: Node = this.layer.find('#' + originId)[0]
     const target: Node = this.layer.find('#' + targetId)[0]
     if (origin && target) {
@@ -86,6 +90,19 @@ export class Graph {
       this.layer.add(edge)
       edge.setTarget(target)
       Graph.getDrawService().redrawCanvas()
+    }
+  }
+
+  public drawFromData(nodes: any, edges?: any): void {
+    if (nodes) {
+      nodes.forEach((node: any) => {
+        this.addNode(node.id, node.x, node.y)
+      })
+      if (edges) {
+        edges.forEach((edge: any) => {
+          this.addEdge(edge.origin, edge.target)
+        })
+      }
     }
   }
 

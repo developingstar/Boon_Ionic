@@ -6,7 +6,7 @@ import { Node } from './node'
 import { NodeValidation } from './node.validations'
 
 export class Edge extends Arrow {
-  private origin: Node
+  public origin: Node
   private target: Node | null
   private nearTarget: Node | null
 

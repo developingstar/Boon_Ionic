@@ -14,21 +14,13 @@ export class JourneyBoardPage {
   constructor(public navCtrl: NavController, public navParams: NavParams) {}
 
   ngOnInit(): void {
+    this.graph = new Graph()
+    // this is temporary until there is backend data
     const nodes = localStorage.getItem('nodes')
     const edges = localStorage.getItem('edges')
-    this.graph = new Graph()
-    if (nodes) {
-      const nodesArray = JSON.parse(nodes)
-      nodesArray.forEach((node: any) => {
-        this.graph.addNode(node.id, node.x, node.y)
-      })
-      if (edges) {
-        const edgesArray = JSON.parse(edges)
-        edgesArray.forEach((edge: any) => {
-          this.graph.addEdges(edge.origin, edge.target)
-        })
-      }
-    }
+    const nodesArray = JSON.parse(nodes!)
+    const edgesArray = JSON.parse(edges!)
+    this.graph.drawFromData(nodesArray, edgesArray)
   }
 
   addNode(): void {

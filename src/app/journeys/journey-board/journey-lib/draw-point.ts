@@ -14,6 +14,7 @@ export class DrawPoint extends Rectangle {
       height: DrawPoint.HEIGHT,
       shadowColor: 'black',
       strokeWidth: 0,
+      visible: false,
       width: DrawPoint.WIDTH,
       x: Rectangle.BASE_WIDTH - DrawPoint.WIDTH / 2,
       y: (Rectangle.BASE_HEIGHT - DrawPoint.HEIGHT) / 2,
@@ -24,7 +25,7 @@ export class DrawPoint extends Rectangle {
       this.draggable(false)
       const edge = new Edge(node, {
         points: [
-          this.x() + node.x(),
+          node.x() + node.getWidth() / 2,
           this.y() + node.y(),
           this.x() + node.x(),
           this.y() + node.y()
