@@ -120,7 +120,11 @@ export class TextTemplatePage extends TemplatePage<
 
   protected createTemplate(form: TemplateFormGroup): Observable<TextTemplate> {
     return this.messagesService.createTextTemplate({
-      template: form.value
+      template: {
+        content: this.content,
+        default_sender: form.value.default_sender,
+        name: form.value.name
+      }
     })
   }
 
@@ -152,24 +156,9 @@ export class TextTemplatePage extends TemplatePage<
     shortcode: string = ''
   ): Observable<State> {
     if (state.mode === 'new' || state.mode === 'edit') {
-      const form = state.form as TemplateFormGroup
-      let content = form.controls.content.value
-      const position = document.getElementsByTagName('textarea')[0]
-        .selectionStart
-
-      content =
-        content.substr(0, position) +
-        shortcode +
-        content.substr(position, content.length)
-      form.controls.content.setValue(content)
-
-      return Observable.of({
-        ...state,
-        form: form
-      })
-    } else {
-      return Observable.of(state)
+      this.content += shortcode
     }
+    return Observable.of(state)
   }
 
   protected updateTemplate(
@@ -177,7 +166,11 @@ export class TextTemplatePage extends TemplatePage<
     form: TemplateFormGroup
   ): Observable<TextTemplate> {
     return this.messagesService.updateTextTemplate(id, {
-      template: form.value
+      template: {
+        content: this.content,
+        default_sender: form.value.default_sender,
+        name: form.value.name
+      }
     })
   }
 
