@@ -23,20 +23,17 @@ export class Edge extends Arrow {
     }
     super(defaults)
     this.origin = origin
-    this.origin.onDrag.subscribe(this.onOriginDrag.bind(this))
+    this.origin.onDrag.subscribe(() => {
+      this.onNodeDrag()
+    })
+    this.origin.onDragEnd.subscribe(() => {
+      this.onNodeDrag(true)
+    })
   }
 
-  public onOriginDrag(): void {
+  public onNodeDrag(dragend?: boolean): void {
     if (this.target) {
-      const p = this.origin.getArrowToNode(this.target)
-      this.points(p)
-      Graph.getDrawService().redrawCanvas()
-    }
-  }
-
-  public onTargetDrag(): void {
-    if (this.target) {
-      const p = this.target.getArrowToNode(this.origin)
+      const p = this.origin.getArrowToNode(this.target, dragend)
       this.points(p)
       Graph.getDrawService().redrawCanvas()
     }
@@ -56,14 +53,19 @@ export class Edge extends Arrow {
     return !!this.nearTarget
   }
 
-  public setTarget(presetTarget: Node): void {
+  public setTarget(presetTarget?: Node): void {
     const target = presetTarget || this.nearTarget
     if (target) {
       this.target = target
       this.addEdgeAsData(this.target)
-      this.points(this.origin.getArrowToNode(this.target))
+      this.points(this.origin.getArrowToNode(this.target, true))
       this.setDefaultStyle()
-      this.target.onDrag.subscribe(this.onTargetDrag.bind(this))
+      this.target.onDrag.subscribe(() => {
+        this.onNodeDrag()
+      })
+      this.target.onDragEnd.subscribe(() => {
+        this.onNodeDrag(true)
+      })
     }
   }
 

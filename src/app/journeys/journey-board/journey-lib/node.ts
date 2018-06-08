@@ -2,14 +2,15 @@ import Konva, { Shape } from 'konva'
 import { Subject } from 'rxjs'
 
 import { DrawPoint } from './draw-point'
+import { INode } from './draw.service'
 import { Edge } from './edge'
 import { Graph } from './graph'
 import { NodeValidation } from './node.validations'
 import { Rectangle } from './rectangle'
-import { INode } from './draw.service'
 
 export class Node extends Konva.Group {
   onDrag: Subject<boolean> = new Subject()
+  onDragEnd: Subject<boolean> = new Subject()
 
   private graph: Graph
   private baseRect: Rectangle
@@ -40,51 +41,70 @@ export class Node extends Konva.Group {
 
     this.on('mouseover', () => {
       this.drawPoint.show()
-      this.getLayer().draw()
+      Graph.getDrawService().redrawCanvas()
     })
 
     this.on('mouseout', () => {
       this.drawPoint.hide()
-      this.getLayer().draw()
+      Graph.getDrawService().redrawCanvas()
     })
 
     this.on('dragmove', () => {
       this.updateNodeDataCoordinates()
       this.onDrag.next(true)
     })
+
+    // TODO: this will work to make it snap in place, needs work to attach arrows correctly if used
+    this.on('dragend', () => {
+      const snapSize = 30
+      this.position({
+        x: Math.round(this.x() / snapSize) * snapSize,
+        y: Math.round(this.y() / snapSize) * snapSize
+      })
+      Graph.getDrawService().redrawCanvas()
+      this.onDragEnd.next(true)
+    })
   }
 
-  public getArrowToNode(target: Node): number[] {
+  public getArrowToNode(target: Node, dragend?: boolean): number[] {
     NodeValidation.checkNodeSizes(this.getHeight(), this.getWidth())
     NodeValidation.checkNodeSizes(target.getHeight(), target.getWidth())
     let positions: number[] = []
+    const snapSize = 30
+    function calcPos(position: number): any {
+      if (dragend) {
+        return Math.round(position / snapSize) * snapSize
+      } else {
+        return position
+      }
+    }
     if (this.isLeftOf(target)) {
       positions = [
-        this.x() + this.getWidth(),
-        this.y() + this.getHeight() / 2,
-        target.x(),
-        target.y() + this.getHeight() / 2
+        calcPos(this.x()) + this.getWidth(),
+        calcPos(this.y()) + this.getHeight() / 2,
+        calcPos(target.x()),
+        calcPos(target.y()) + this.getHeight() / 2
       ]
     } else if (this.isRightOf(target)) {
       positions = [
-        this.x(),
-        this.y() + this.getHeight() / 2,
-        target.x() + target.width(),
-        target.y() + target.height() / 2
+        calcPos(this.x()),
+        calcPos(this.y()) + this.getHeight() / 2,
+        calcPos(target.x()) + target.width(),
+        calcPos(target.y()) + target.height() / 2
       ]
     } else if (this.isCenterOver(target)) {
       positions = [
-        this.x() + this.getWidth() / 2,
-        this.y(),
-        target.x() + target.width() / 2,
-        target.y() + target.height()
+        calcPos(this.x()) + this.getWidth() / 2,
+        calcPos(this.y()),
+        calcPos(target.x()) + target.width() / 2,
+        calcPos(target.y()) + target.height()
       ]
     } else if (this.isCenterBelow(target)) {
       positions = [
-        this.x() + this.getWidth() / 2,
-        this.y() + this.getHeight(),
-        target.x() + target.width() / 2,
-        target.y()
+        calcPos(this.x()) + this.getWidth() / 2,
+        calcPos(this.y()) + this.getHeight(),
+        calcPos(target.x()) + target.width() / 2,
+        calcPos(target.y())
       ]
     }
     return positions

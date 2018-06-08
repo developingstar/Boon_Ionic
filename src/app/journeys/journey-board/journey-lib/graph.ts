@@ -64,11 +64,12 @@ export class Graph {
     x: number = 200,
     y: number = 200
   ): void {
+    const snapSize = 30
     const node = new Node(this, {
       draggable: true,
       id: id,
-      x: x,
-      y: y
+      x: Math.round(x / snapSize) * snapSize,
+      y: Math.round(y / snapSize) * snapSize
     })
     this.nodes.push(node)
     this.layer.add(node)
