@@ -14,7 +14,7 @@ export class Edge extends Arrow {
     // TODO:  create/use typings
     const defaults = {
       fill: 'grey',
-      id: Math.random().toString(),
+      id: Graph.generateId(),
       pointerLength: 2,
       pointerWidth: 2,
       stroke: '#A5ACC0',

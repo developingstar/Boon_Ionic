@@ -1,11 +1,11 @@
 import Konva from 'konva'
+import { v4 as UUID } from 'uuid'
 import { DrawService, IOnDraw } from './draw.service'
 import { Edge } from './edge'
 import { EdgeValidation } from './edge.validations'
 import { Node } from './node'
 import { NodeValidation } from './node.validations'
 import { Rectangle } from './rectangle'
-
 export class Graph {
   static getDrawService(): DrawService {
     if (!this.drawService) this.drawService = new DrawService()
@@ -18,6 +18,9 @@ export class Graph {
   static calcSnapY(position: number): number {
     const snapSize = Rectangle.BASE_HEIGHT / 3 + 10
     return Math.round(position / snapSize) * snapSize
+  }
+  static generateId(): string {
+    return UUID()
   }
 
   private static drawService: DrawService
@@ -69,7 +72,7 @@ export class Graph {
   }
   //TODO: Change id generation to something better
   public addNode(
-    id: string = Math.random().toString(),
+    id: string = Graph.generateId(),
     x: number = 200,
     y: number = 200
   ): void {
