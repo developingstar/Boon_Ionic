@@ -5,6 +5,7 @@ import {
   NavParams,
   ToastController
 } from 'ionic-angular'
+import { CKEditorComponent } from 'ng2-ckeditor'
 import { Observable } from 'rxjs'
 
 import { FormControl, Validators } from '@angular/forms'
@@ -21,7 +22,7 @@ import {
   State,
   TemplateFormGroup
 } from './text-template.page.state'
-
+declare var CKEDITOR: any
 @IonicPage({
   segment: 'text-template/:id'
 })
@@ -36,7 +37,7 @@ export class TextTemplatePage extends TemplatePage<
 > {
   public ckeConfig: any
   public content: string
-  @ViewChild('templateEditor') templateEditor: any
+  @ViewChild('templateEditor') templateEditor: CKEditorComponent
   protected readonly resourcesRootPage: string = 'TextTemplatesPage'
 
   constructor(
@@ -54,10 +55,22 @@ export class TextTemplatePage extends TemplatePage<
       messagesService,
       toastController
     )
-
+    CKEDITOR.plugins.addExternal('strinsert', '/assets/ckeditor_plugin/', 'plugin.js')
     this.content = ''
+  }
+
+  public setCKEditorConfiguration(shortcodes: any): void {
+    const shortcodeList = shortcodes.map((shortcode: any) => {
+      return {
+        label: shortcode.name,
+        name: shortcode.name,
+        value: `{{ ${shortcode.shortcode} }}`
+      }
+    })
     this.ckeConfig = {
       allowedContent: true,
+      extraPlugins: 'strinsert',
+      strinsert_strings: shortcodeList,
       toolbar: 'Basic',
       toolbar_Basic: [
         [
@@ -74,9 +87,11 @@ export class TextTemplatePage extends TemplatePage<
           'JustifyLeft',
           'JustifyCenter',
           'JustifyRight',
-          'JustifyBlock'
+          'JustifyBlock',
+          '-',
+          'strinsert'
         ]
-      ]
+      ],
     }
   }
 
@@ -104,14 +119,16 @@ export class TextTemplatePage extends TemplatePage<
       return Observable.zip(
         fetchPhoneNumbers,
         fetchShortcodes,
-        (phoneNumbers, shortcodes) => ({
-          ...state,
-          form: this.createFormGroup(newTemplate),
-          mode: mode,
-          phoneNumbers: phoneNumbers,
-          shortcodes: shortcodes,
-          template: newTemplate
-        })
+        (phoneNumbers, shortcodes) => {
+          this.setCKEditorConfiguration(shortcodes)
+          return {
+            ...state,
+            form: this.createFormGroup(newTemplate),
+            mode: mode,
+            phoneNumbers: phoneNumbers,
+            shortcodes: shortcodes,
+            template: newTemplate
+        }}
       )
     } else {
       return Observable.of(state)
@@ -140,6 +157,7 @@ export class TextTemplatePage extends TemplatePage<
       fetchTemplate,
       (phoneNumbers, shortcodes, template: TextTemplate) => {
         this.content = template.content
+        this.setCKEditorConfiguration(shortcodes)
         return {
           ...state,
           form: this.createFormGroup(template.toApiRepresentation()),
@@ -150,16 +168,6 @@ export class TextTemplatePage extends TemplatePage<
         }
       }
     )
-  }
-
-  protected addShortCode(
-    state: State,
-    shortcode: string = ''
-  ): Observable<State> {
-    if (state.mode === 'new' || state.mode === 'edit') {
-      this.content += shortcode
-    }
-    return Observable.of(state)
   }
 
   protected updateTemplate(
@@ -187,13 +195,11 @@ export class TextTemplatePage extends TemplatePage<
     }
   ): TemplateFormGroup {
     return new TemplateFormGroup({
-      content: new FormControl(values.content, Validators.required),
       default_sender: new FormControl(values.default_sender, [
         phoneNumberValidator(),
         Validators.required
       ]),
-      name: new FormControl(values.name, Validators.required),
-      shortcode: new FormControl(null)
+      name: new FormControl(values.name, Validators.required)
     })
   }
 
