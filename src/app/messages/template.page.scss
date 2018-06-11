@@ -134,11 +134,15 @@
         box-shadow: 0 1px 5px rgb(193, 184, 184) inset,
           0 1px 0 rgba(0, 0, 0, 0.2);
       }
+    }
 
-      .cke_toolbar_separator {
-        height: 30px;
-        margin: 0 15px 0 10px;
-      }
+    .cke_toolbar {
+      margin-top: 10px;
+    }
+
+    .cke_toolbar_separator {
+      height: 30px;
+      margin: 0 15px 0 10px;
     }
 
     a.cke_combo_button {

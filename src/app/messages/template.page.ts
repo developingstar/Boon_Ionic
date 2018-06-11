@@ -39,10 +39,6 @@ export abstract class TemplatePage<
     }
   }
 
-  public itemSelected(value: string): void {
-    this.uiActions.next({ name: 'shortcode', value: `{{ ${value} }}` })
-  }
-
   public save(): void {
     if (this.initialMode === 'new') {
       this.uiActions.next({ name: 'create' })
@@ -63,14 +59,7 @@ export abstract class TemplatePage<
 
   get shortcodeNames(): Observable<ReadonlyArray<string>> {
     return this.state.flatMap((state) => {
-      if (state.mode === 'init') {
-        return Observable.empty()
-      } else {
-        const labels = state.shortcodes.map(
-          (shortcode) => `${shortcode.shortcode}`
-        )
-        return Observable.of(labels)
-      }
+      return Observable.empty()
     })
   }
 
@@ -99,8 +88,6 @@ export abstract class TemplatePage<
         return this.update(state)
           .do(this.redirectOnSuccess.bind(this))
           .do(this.toastOnSuccess.bind(this))
-      case 'shortcode':
-        return this.addShortCode(state, action.value)
     }
   }
 
@@ -119,11 +106,6 @@ export abstract class TemplatePage<
     form: TemplateFormGroup
   ): Observable<Model>
   protected abstract getTemplateId(template: Model): number
-
-  protected abstract addShortCode(
-    state: State<Model, IModel, TemplateFormGroup>,
-    shortcode: string
-  ): Observable<State<Model, IModel, TemplateFormGroup>>
 
   private create(
     state: State<Model, IModel, TemplateFormGroup>
