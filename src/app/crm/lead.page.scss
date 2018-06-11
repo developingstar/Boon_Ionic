@@ -5,19 +5,6 @@ lead-page {
   .content {
     background-color: $color-content-background;
   }
-  .contactShowHeader {
-    padding: 16px 43px;
-    background-color: #4C4953;
-    color: white;
-    .header {
-      color: rgba(255,255,255,0.41);
-      font-size: 13px;
-    }
-    ion-col {
-      padding-left: 0;
-      font-size: 14px;
-    }
-  }
   #back-button {
     margin-left: -15px;
   }
@@ -28,18 +15,24 @@ lead-page {
     font-weight: bold;
     margin-bottom: 18px;
   }
-  .buttons button {
+  button.update-stage-button {
     float: right;
-    height: 38px;
-    width: 124px;
-    border-radius: 4px;
-    background-color: rgba(0,0,0,0.23);
-    color: white;
+    @extend .boon-button;
+    padding: 0 30px;
+    margin-bottom: 20px;
     cursor: pointer;
     &:disabled {
       background: white !important;
       color: rgb(201, 198, 198);
       border: 1px solid rgb(201, 198, 198);
+    }
+  }
+  .lead-more-button {
+    background: white !important;
+    @extend .update-stage-button;
+    border: 1px solid rgb(224, 232, 235) !important;
+    .bullets::before {
+      @include bullet(#d8d8d8, '\25CF\25CF\25CF');
     }
   }
   pipeline {
@@ -102,7 +95,6 @@ lead-page {
         display: flex;
         height: 50px;
         border-bottom: 1px solid #d2d6e4;
-        overflow: hidden;
         .nav-item {
           font-size: 14px;
           font-weight: 600;
@@ -153,14 +145,6 @@ lead-page {
             color: #939393;
           }
         }
-      }
-    }
-    .details-content {
-      height: 300px;
-      padding: 10px 30px;
-      overflow-y: auto;
-      input {
-        margin-top: 4px;
       }
     }
     .sends-group {

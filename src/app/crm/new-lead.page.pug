@@ -3,6 +3,8 @@ h2 New Contact
 
 .form([formGroup]="newLeadForm")
   .base-fields
+    field(type="input", [form]="newLeadForm", formField="firstName", label="First Name")
+    field(type="input", [form]="newLeadForm", formField="lastName", label="Last Name")
     field(type="input", [form]="newLeadForm", formField="email", label="Email")
     field(type="input", [form]="newLeadForm", formField="phoneNumber", label="Phone Number")
     field(type="select", [form]="newLeadForm", formField="owner_id", label="Owner", [options]="owners | async")

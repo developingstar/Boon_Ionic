@@ -37,9 +37,9 @@ export class NewLeadPage {
   ngOnInit(): void {
     this.currentUserService.details.subscribe((user: User) => {
       this.setForm(user)
+      this.setOwners(user)
     })
     this.setPipelines()
-    this.setOwners()
     this.setFields()
   }
 
@@ -47,6 +47,8 @@ export class NewLeadPage {
     const userId = user ? user.id : undefined
     this.newLeadForm = this.formBuilder.group({
       email: ['', emailValidator()],
+      firstName: [''],
+      lastName: [''],
       owner_id: {
         disabled: !user || user.role !== 'admin',
         value: (userId || '').toString()
@@ -77,9 +79,19 @@ export class NewLeadPage {
               const detail = errors[0].detail
               const title = errors[0].title
               const pointers = errors[0].source.pointer.split('/')
-              showToast(this.toastController, title + ': The ' + pointers[pointers.length - 1] + ' ' + detail , 2000, false)
+              showToast(
+                this.toastController,
+                title + ': The ' + pointers[pointers.length - 1] + ' ' + detail,
+                2000,
+                false
+              )
             } else {
-              showToast(this.toastController, 'The form is invalid', 2000, false)
+              showToast(
+                this.toastController,
+                'The form is invalid',
+                2000,
+                false
+              )
             }
           }
         }
@@ -121,19 +133,30 @@ export class NewLeadPage {
       return options
     })
   }
-
-  public setOwners(): void {
-    this.owners = this.usersService.users().map((users: User[]) => {
-      const unassigned = { label: 'not assigned', value: UnassignedUserId }
-      const options = users.map((user: User) => ({
-        label: user.name,
-        value: user.id.toString()
-      }))
-      return [unassigned].concat(options)
-    })
+  public setOwners(user: User): void {
+    if (user.role !== 'admin') {
+      const options = [
+        {
+          label: user.name,
+          value: user.id.toString()
+        }
+      ]
+      this.owners = Observable.of(options)
+      this.newLeadForm.patchValue({ owner_id: options[0].value })
+    } else {
+      this.owners = this.usersService.users().map((users: User[]) => {
+        const unassigned = { label: 'not assigned', value: UnassignedUserId }
+        const options = users.map((admin: User) => ({
+          label: admin.name,
+          value: admin.id.toString()
+        }))
+        return [unassigned].concat(options)
+      })
+    }
   }
 
   private buildLeadCreate(formModel: any): Crm.API.ILeadCreate {
+    showToast(this.toastController, 'Lead created successfully.')
     return {
       email: formModel.email === '' ? null : formModel.email,
       fields: Object.keys(formModel)
@@ -144,6 +167,8 @@ export class NewLeadPage {
           }
         })
         .filter((field) => !isNaN(field.id) && field.value !== ''),
+      first_name: formModel.firstName,
+      last_name: formModel.lastName,
       owner_id:
         formModel.owner_id === UnassignedUserId
           ? null

@@ -29,6 +29,9 @@ import { Stage } from './stage.model'
 export class CrmPage extends ReactivePage<IState, UserAction> {
   readonly pipelines: Observable<ReadonlyArray<Pipeline>>
 
+  public showingLow: number = 1
+  public showingHigh: number = 50
+
   private readonly stages: Observable<ReadonlyArray<Stage>>
 
   constructor(
@@ -44,6 +47,12 @@ export class CrmPage extends ReactivePage<IState, UserAction> {
   }
 
   public onPipelineChange(id: number | undefined): void {
+    this.showingLow = 1
+    this.leadCount.subscribe((count: number) => {
+      count < this.salesService.limit
+        ? (this.showingHigh = count)
+        : (this.showingHigh = this.salesService.limit)
+    })
     this.onSetFilterChange('pipeline_id', id)
   }
 
@@ -52,10 +61,25 @@ export class CrmPage extends ReactivePage<IState, UserAction> {
   }
 
   public loadPrevPage(): void {
+    if (this.isPrevPageButtonDisabled) {
+      this.showingLow = 1
+      this.leadCount.subscribe((count: number) => {
+        count < this.salesService.limit
+          ? (this.showingHigh = count)
+          : (this.showingHigh = this.salesService.limit)
+      })
+    } else {
+      this.showingLow -= this.salesService.limit
+      this.showingHigh -= this.salesService.limit
+    }
     this.uiActions.next('prev')
   }
 
   public loadNextPage(): void {
+    this.showingLow += this.salesService.limit
+    this.isNextPageButtonDisabled
+      ? this.leadCount.subscribe((count: number) => (this.showingHigh = count))
+      : (this.showingHigh += this.salesService.limit)
     this.uiActions.next('next')
   }
 
@@ -65,14 +89,6 @@ export class CrmPage extends ReactivePage<IState, UserAction> {
 
   public newLead(): void {
     this.uiActions.next('newLead')
-  }
-
-  public getDate(insertAt: Date): string {
-    let dateString = '-'
-    if (insertAt) {
-      dateString = (insertAt.getMonth() + 1) + '/' + insertAt.getDate() + ' ' + insertAt.getHours() + ':' + insertAt.getMinutes()
-    }
-    return dateString
   }
 
   get areAllContactsVisible(): Observable<boolean> {
@@ -146,6 +162,18 @@ export class CrmPage extends ReactivePage<IState, UserAction> {
   get leads(): Observable<ReadonlyArray<Lead>> {
     return this.state.map((state) => {
       return state.leads.items
+    })
+  }
+
+  get leadCount(): any {
+    return this.state.map((state) => {
+      if (state.leads.count) {
+        return +state.leads.count
+          .toString()
+          .replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+      } else {
+        return 'Unknown'
+      }
     })
   }
 
@@ -282,5 +310,14 @@ export class CrmPage extends ReactivePage<IState, UserAction> {
       .first()
       .toPromise()
     return pageAccess(role).CrmPage !== undefined
+  }
+
+  private ionViewWillEnter(): void {
+    this.showingLow = 1
+    this.leadCount.subscribe((count: number) => {
+      count < this.salesService.limit
+        ? (this.showingHigh = count)
+        : (this.showingHigh = this.salesService.limit)
+    })
   }
 }

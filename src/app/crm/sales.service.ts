@@ -15,15 +15,20 @@ import { Stage } from './stage.model'
 
 @Injectable()
 export class SalesService {
+  public limit: number = 50
+
   constructor(private readonly http: HttpClient) {}
 
   public leads(
     options: IHttpRequestOptions = blankHttpRequestOptions
   ): Observable<PaginatedCollection<Lead>> {
     return this.http
-      .get(options.url || '/api/leads?per_page=50', { params: options.params })
+      .get(options.url || `/api/leads?per_page=${this.limit}`, {
+        params: options.params
+      })
       .map((response: Crm.API.ILeadsResponse) => {
         const page: PaginatedCollection<Lead> = {
+          count: response.metadata.count,
           items: response.data.leads.map((raw) => new Lead(raw)),
           nextPageLink: response.links.next,
           prevPageLink: response.links.prev

@@ -1,62 +1,67 @@
 @import 'theme/shared-classes';
 @import 'theme/style-guide';
-
 crm-page {
   .nav-pipelines {
-    background-color: #5f6c72;
-    color: $color-text-secondary;
+    background-color: #4c4953;
+    color: rgba(255, 255, 255, 0.41);
     font-size: $font-size-name;
     font-weight: $font-weight-headers;
     padding: 0px 16px;
-
     span {
       cursor: pointer;
       padding: 8px;
-
       &.active {
         color: #fff;
       }
     }
-
     @include md {
       padding: 12px 56px;
-
       span {
         padding: 8px 16px;
       }
     }
   }
-
   button.new-contact {
     @extend .boon-button;
-
     float: right;
     margin-bottom: 10px;
     width: 180px;
   }
-
   .nav-stages {
     margin: 8px 0 16px 0;
   }
-
   &,
   .content {
     background-color: $color-content-background;
   }
-
   .content {
     .table {
       @extend .boon-table;
     }
   }
-
   ion-row.lead {
     cursor: pointer;
   }
-
   .header-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    h2 {
+      color: $color-primary;
+      letter-spacing: 0.17px;
+      line-height: 30px;
+      font-size: 25px;
+    }
+  }
+
+  .showing-from,
+  .showing-to,
+  .showing-total {
+    padding: 0px 3px;
+    font-weight: $font-weight-headers;
+  }
+
+  .showing-color {
+    color: $color-text-secondary;
   }
 }

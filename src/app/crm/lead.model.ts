@@ -6,34 +6,40 @@ export class Lead {
   readonly createdByServiceId: number | null
   readonly createdByUserId: number | null
   readonly email: string | null
+  readonly firstName: string | null
+  readonly lastName: string | null
   readonly fields: ReadonlyArray<Field>
   readonly id: number
   readonly owner: User | null
   readonly phoneNumber: string
   readonly stageId: number
+  readonly insertedAt: Date
+  readonly updatedAt: Date
 
   constructor(data: Crm.API.ILead) {
     this.createdByServiceId = data.created_by_service_id
     this.createdByUserId = data.created_by_user_id
     this.email = data.email
+    this.firstName = data.first_name
+    this.lastName = data.last_name
+    this.email = data.email
     this.fields = data.fields.map((raw: Crm.API.IField) => new Field(raw))
     this.id = ensureNumber(data.id)
     this.phoneNumber = data.phone_number
     this.stageId = ensureNumber(data.stage_id)
+    this.insertedAt = new Date(data.inserted_at)
+    this.updatedAt = new Date(data.updated_at)
 
     if (data.owner) {
       this.owner = new User(data.owner)
     }
   }
 
-  get name(): string | undefined {
-    const firstName = this.fieldValueByName('First Name')
-    const lastName = this.fieldValueByName('Last Name')
-
-    if (firstName && lastName) {
-      return `${firstName} ${lastName}`
+  get name(): string | null {
+    if (this.firstName && this.lastName) {
+      return `${this.firstName} ${this.lastName}`
     } else {
-      return firstName || lastName
+      return this.firstName || this.lastName
     }
   }
 
@@ -43,15 +49,5 @@ export class Lead {
     else if (this.email) displayName = this.email
     else if (this.phoneNumber) displayName = this.phoneNumber
     return displayName
-  }
-
-  private fieldValueByName(name: string): string | undefined {
-    const field: Field | undefined = this.fields.find((f) => f.name === name)
-
-    if (field instanceof Field) {
-      return field.value
-    } else {
-      return undefined
-    }
   }
 }

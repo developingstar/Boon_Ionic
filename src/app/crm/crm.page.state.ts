@@ -24,6 +24,7 @@ export interface IState {
 
 export const initialState: IState = {
   leads: {
+    count: 0,
     items: [],
     nextPageLink: null,
     prevPageLink: null

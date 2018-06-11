@@ -2,91 +2,62 @@ nav-content
   nav-icons(right, currentPage="LeadPage")
 
 ion-content(padding)
-  div.contactShowHeader
-    button#back-button(ion-button, clear, (click)="goBack()")
-      | < Back
-    div(*ngIf="lead | async; let lead")
-      ion-row.header
-        | Contact
-      ion-row
-        h1 {{lead.name}}
-      ion-row
-        ion-col(col-12, col-md-8, no-padding)
-          ion-row.header
-            ion-col Email
-            ion-col Phone Number
-            ion-col Contact Owner
-            ion-col Mood
-          ion-row.contact
-            ion-col {{lead.email}}
-            ion-col {{lead.phoneNumber || "-"}}
-            ion-col {{lead.owner.name}}
-            ion-col {{lead.mood}}
-        ion-col(col-12, col-md-2).buttons
+  button#back-button(ion-button, clear, (click)="goBack()")
+    | < Back
+
+  div(*ngIf="lead | async; let lead")
+    h1 {{lead.name}}
+    button.lead-more-button(ion-button, clear, (click)="more($event)" )
+      .bullets
+    button.update-stage-button(ion-button, [disabled]="!canUpdateStage()", (click)="updateStage()") Update stage
+
+    pipeline([stages]="stages | async", type="progress", [currentStageId]="lead.stageId", (select)="onStageChange($event)")
+
+    .lead(*ngIf="formGroup | async; let form")
+      .base-fields
+        .fields-container
+          field(type="input", [form]="form", formField="firstName", label="First Name")
+          field(type="input", [form]="form", formField="lastName", label="Last Name")
+          field(type="input", [form]="form", formField="email", label="Email")
+          field(type="input", [form]="form", formField="phoneNumber", label="Phone Number")
+          field(type="select", [form]="form", formField="owner_id", label="Owner", [options]="owners | async")
+          
+        .buttons
           div(*ngIf="editMode | async; else editButton")
-            button((click)="cancel()", ion-button, outline) Cancel
-            button((click)="save(form.value)", [disabled]="!form.valid", ion-button) Save
+            button((click)="cancel()", ion-button, block, outline) Cancel
+            button((click)="save(form.value)", [disabled]="!form.valid", ion-button, block) Save
           ng-template(#editButton)
-            button((click)="edit()", ion-button) Edit
-        ion-col(col-12, col-md-2).buttons
-          button.update-stage-button(ion-button, [disabled]="!canUpdateStage()", (click)="updateStage()") Update stage
+            button((click)="edit()", ion-button, block) Edit
 
-      pipeline([stages]="stages | async", type="progress", [currentStageId]="lead.stageId", (select)="onStageChange($event)")
+      hr
 
-  ion-row.lead-comment
-    ion-col.note-activity(col-12, col-md-6)
-      div.note-navbar
-        div.nav-item([ngClass]="{'nav-item-active': selectedNavItem === 'details'}", (click)="setNavItem('details')") Details
-        div.nav-item([ngClass]="{'nav-item-active': selectedNavItem === 'deals'}", (click)="setNavItem('deals')") Deals
-        div.nav-item([ngClass]="{'nav-item-active': selectedNavItem === 'activity'}", (click)="setNavItem('activity')") Activity
-        div.nav-item([ngClass]="{'nav-item-active': selectedNavItem === 'notes'}", (click)="setNavItem('notes')") Notes
-      div.note-panel(*ngIf="selectedNavItem === 'notes'")
-        div.notes-content
-          div.note-row(*ngFor="let note of (notesList | async)")
-            div.note-icon
-              img(src='../../assets/icon/note.svg')
-            div.note
-              div.note-content {{note.content}}
-              div.note-date {{note.date | date:'EEEE, LLL d, h:mm a'}}
+      .custom-fields
+        h2 Details
+        field(*ngFor="let field of (fields | async)",
+              type="input",
+              [form]="form",
+              [formField]="field.id",
+              [label]="field.name")
 
-        hr
-        div.sends-group
-          ion-input.note(type="text", placeholder="Enter Note…", [(ngModel)]='newNote')
-          div.send-button
-            img(src='../../assets/icon/add_note.png', (click)="addNote()", disabled)
-      div.details-panel(*ngIf="selectedNavItem === 'details'")
-        div.details-content
-          ion-row
-            ion-col
-              ion-row Address
-              ion-row {{lead.address.street}}
-            ion-col
-              ion-row State
-              ion-row {{lead.address.state}}
-          ion-row
-            ion-col
-              ion-row City
-              ion-row {{lead.address.city}}
-            ion-col
-              ion-row Zip
-              ion-row {{lead.address.zip}}
-          ion-row
-            ion-col
-              ion-row Interested in Solar
-              ion-row
-                input(name="interested_in_solar", type="checkbox")
-            ion-col
-              ion-row Interested in Pest Control
-              ion-row
-                input(name="interested_in_pest_control", type="checkbox")
-          ion-row
-            ion-col
-              ion-row Interested in Dish
-              ion-row
-                input(name="interested_in_dish", type="checkbox")
-            ion-col
-              ion-row Interested in Security
-              ion-row
-                input(name="interested_in_security", type="checkbox")
-    ion-col.texting(col-12, col-md-6)
+    ion-row.lead-comment
+      ion-col.note-activity(col-12, col-md-6)
+        div.note-navbar
+          div.nav-item([ngClass]="{'nav-item-active': selectedNavItem === 'activity'}", (click)="setNavItem('activity')") Activity
+          div.nav-item([ngClass]="{'nav-item-active': selectedNavItem === 'notes'}", (click)="setNavItem('notes')") Notes
+        div.note-panel(*ngIf="selectedNavItem === 'notes'")
+          div.notes-content
+            div.note-row(*ngFor="let note of (notesList | async)")
+              div.note-icon
+                img(src='../../assets/icon/note.svg')
+              div.note
+                div.note-content {{note.content}}
+                div.note-date
+                  | Sun, Apr 22, 10:20PM
+
+          hr
+          div.sends-group
+            ion-input.note(type="text", placeholder="Enter Note…", [(ngModel)]='newNote')
+            div.send-button
+              img(src='../../assets/icon/add_note.png', (click)="addNote()", disabled)
+      ion-col.texting(col-12, col-md-6)
 

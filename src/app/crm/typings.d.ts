@@ -70,11 +70,15 @@ declare namespace Crm {
     }
 
     interface ILeadsResponse {
+      readonly metadata: {
+        count: number | null
+      }
       readonly links: {
         readonly prev: string | null
         readonly next: string | null
       }
       readonly data: {
+        readonly count: number | null
         readonly leads: ReadonlyArray<ILead>
       }
     }
@@ -124,7 +128,6 @@ declare namespace Crm {
     interface INote {
       readonly id: number
       readonly content: string
-      readonly inserted_at: string
     }
 
     interface INoteCreate {
