@@ -6,7 +6,6 @@ import * as Generic from './template.page.state'
 
 export class TemplateFormGroup extends FormGroup {
   readonly controls: {
-    readonly content: FormControl
     readonly default_sender: FormControl
     readonly default_sender_name: FormControl
     readonly name: FormControl

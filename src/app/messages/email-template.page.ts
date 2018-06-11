@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core'
+import { Component, ViewChild } from '@angular/core'
 import { FormControl, Validators } from '@angular/forms'
 import {
   IonicPage,
@@ -6,6 +6,7 @@ import {
   NavParams,
   ToastController
 } from 'ionic-angular'
+import { CKEditorComponent } from 'ng2-ckeditor'
 import { Observable } from 'rxjs'
 
 import { CurrentUserService } from '../auth/current-user.service'
@@ -20,6 +21,7 @@ import {
 import { IEmailTemplate } from './messages.api.model'
 import { MessagesService } from './messages.service'
 import { TemplatePage } from './template.page'
+declare var CKEDITOR: any
 @IonicPage({
   segment: 'email-template/:id'
 })
@@ -35,12 +37,11 @@ export class EmailTemplatePage extends TemplatePage<
   public selectedShortCode: string = ''
   public ckeConfig: any
   public content: string
-  @ViewChild('templateEditor') templateEditor: any
+  @ViewChild('templateEditor') templateEditor: CKEditorComponent
   protected readonly resourcesRootPage: string = 'EmailTemplatesPage'
 
   constructor(
     navParams: NavParams,
-    elRef: ElementRef,
     protected navController: NavController,
     protected messagesService: MessagesService,
     protected toastController: ToastController,
@@ -53,10 +54,22 @@ export class EmailTemplatePage extends TemplatePage<
       messagesService,
       toastController
     )
-
+    CKEDITOR.plugins.addExternal('strinsert', '/assets/ckeditor_plugin/', 'plugin.js')
     this.content = ''
+  }
+
+  public setCKEditorConfiguration(shortcodes: any): void {
+    const shortcodeList = shortcodes.map((shortcode: any) => {
+      return {
+        label: shortcode.name,
+        name: shortcode.name,
+        value: `{{ ${shortcode.shortcode} }}`
+      }
+    })
     this.ckeConfig = {
       allowedContent: true,
+      extraPlugins: 'strinsert',
+      strinsert_strings: shortcodeList,
       toolbar: 'Basic',
       toolbar_Basic: [
         [
@@ -73,14 +86,12 @@ export class EmailTemplatePage extends TemplatePage<
           'JustifyLeft',
           'JustifyCenter',
           'JustifyRight',
-          'JustifyBlock'
+          'JustifyBlock',
+          '-',
+          'strinsert'
         ]
-      ]
+      ],
     }
-  }
-
-  onChange($event: any): void {
-    return
   }
 
   protected new(state: State): Observable<State> {
@@ -93,13 +104,14 @@ export class EmailTemplatePage extends TemplatePage<
         name: '',
         subject: ''
       }
-      return this.messagesService.shortcodes().map((shortcodes) => ({
+      return this.messagesService.shortcodes().map((shortcodes) => {
+        this.setCKEditorConfiguration(shortcodes)
+        return {
         ...state,
         form: this.createFormGroup(newTemplate),
         mode: mode,
-        shortcodes: shortcodes,
         template: newTemplate
-      }))
+      }})
     } else {
       return Observable.of(state)
     }
@@ -117,16 +129,6 @@ export class EmailTemplatePage extends TemplatePage<
     })
   }
 
-  protected addShortCode(
-    state: State,
-    shortcode: string = ''
-  ): Observable<State> {
-    if (state.mode === 'new' || state.mode === 'edit') {
-      this.content += shortcode
-    }
-    return Observable.of(state)
-  }
-
   protected edit(state: State): Observable<State> {
     const mode: State['mode'] = 'edit'
     const fetchShortcodes = this.messagesService.shortcodes()
@@ -136,11 +138,11 @@ export class EmailTemplatePage extends TemplatePage<
       fetchShortcodes,
       (template: EmailTemplate, shortcodes) => {
         this.content = template.content
+        this.setCKEditorConfiguration(shortcodes)
         return {
           ...state,
           form: this.createFormGroup(template.toApiRepresentation()),
           mode: mode,
-          shortcodes: shortcodes,
           template: template
         }
       }
@@ -176,14 +178,12 @@ export class EmailTemplatePage extends TemplatePage<
     }
   ): TemplateFormGroup {
     return new TemplateFormGroup({
-      content: new FormControl(values.content, Validators.required),
       default_sender: new FormControl(values.default_sender, [
         emailValidator(),
         Validators.required
       ]),
       default_sender_name: new FormControl(values.default_sender_name || ''),
       name: new FormControl(values.name, Validators.required),
-      shortcode: new FormControl(null),
       subject: new FormControl(values.subject, Validators.required)
     })
   }
