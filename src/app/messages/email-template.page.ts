@@ -54,7 +54,11 @@ export class EmailTemplatePage extends TemplatePage<
       messagesService,
       toastController
     )
-    CKEDITOR.plugins.addExternal('strinsert', '/assets/ckeditor_plugin/', 'plugin.js')
+    CKEDITOR.plugins.addExternal(
+      'strinsert',
+      '/assets/ckeditor_plugin/',
+      'plugin.js'
+    )
     this.content = ''
   }
 
@@ -90,7 +94,7 @@ export class EmailTemplatePage extends TemplatePage<
           '-',
           'strinsert'
         ]
-      ],
+      ]
     }
   }
 
@@ -107,11 +111,13 @@ export class EmailTemplatePage extends TemplatePage<
       return this.messagesService.shortcodes().map((shortcodes) => {
         this.setCKEditorConfiguration(shortcodes)
         return {
-        ...state,
-        form: this.createFormGroup(newTemplate),
-        mode: mode,
-        template: newTemplate
-      }})
+          ...state,
+          form: this.createFormGroup(newTemplate),
+          mode: mode,
+          shortcodes: shortcodes,
+          template: newTemplate
+        }
+      })
     } else {
       return Observable.of(state)
     }
@@ -143,10 +149,18 @@ export class EmailTemplatePage extends TemplatePage<
           ...state,
           form: this.createFormGroup(template.toApiRepresentation()),
           mode: mode,
+          shortcodes: shortcodes,
           template: template
         }
       }
     )
+  }
+
+  protected addShortCode(
+    state: State,
+    shortcode: string = ''
+  ): Observable<State> {
+    return Observable.of(state)
   }
 
   protected updateTemplate(
