@@ -25,6 +25,17 @@ export class IntegrationsService {
       )
   }
 
+  createService(service?: Service): Observable<Service> {
+    return this.http
+      .post<API.IServiceResponse>(
+        `/api/services`,
+        JSON.stringify({ service: service })
+      )
+      .map(
+        (response: API.IServiceResponse) => new Service(response.data.service)
+      )
+  }
+
   updateService(id: number, service?: Service): Observable<Service> {
     return this.http
       .patch<API.IServiceResponse>(
