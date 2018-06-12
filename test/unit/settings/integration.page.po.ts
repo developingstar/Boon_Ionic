@@ -3,15 +3,15 @@ import { PageObject } from '../../support/page.po'
 
 export class IntegrationPageObject extends PageObject<IntegrationPage> {
   get updateServiceButtonVisible(): boolean {
-    return this.elementVisible('button', 'Update Info')
+    return this.elementVisible('button', 'Update Token')
   }
 
   get updateServiceButtonEnabled(): boolean {
-    return this.inputEnabled('button', 'Update Info')
+    return this.inputEnabled('button', 'Update Token')
   }
 
   clickUpdateButton(): void {
-    this.clickButton('Update Info')
+    this.clickButton('Update Token')
   }
 
   get header(): string {
