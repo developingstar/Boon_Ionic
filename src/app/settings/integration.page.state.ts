@@ -3,6 +3,7 @@ import { Service } from './service.model'
 export type UserAction =
   | { readonly name: 'edit' }
   | { readonly name: 'update_service' }
+  | { readonly name: 'create_service' }
 
 export interface IState {
   readonly name: string

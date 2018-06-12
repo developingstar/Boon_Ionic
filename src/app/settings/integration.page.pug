@@ -13,4 +13,4 @@ settings-page-with-menu(currentPage="IntegrationPage")
     ion-row
       ion-col(col-4)
         button.boon-button(ion-button, full, type="submit", (click)="updateService()", [disabled]="!integrationForm.form.valid")
-          | Update Info
+          | {{buttonName | async }}
