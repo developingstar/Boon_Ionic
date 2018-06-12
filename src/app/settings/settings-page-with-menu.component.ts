@@ -10,7 +10,8 @@ interface IMenuEntry {
   readonly label: string
   readonly link?: string
   readonly params?: {
-    readonly id: number
+    readonly id?: number
+    readonly name?: string
   }
 }
 
@@ -50,11 +51,15 @@ export class SettingsPageWithMenuComponent {
 
   goTo(
     page: string | undefined,
-    params: { readonly id: number } | undefined
+    params: { readonly id?: number; readonly name?: string } | undefined
   ): void {
     if (page) {
       if (params) {
-        this.nav.setRoot(page, { id: params.id })
+        if (params.id) {
+          this.nav.setRoot(page, { id: params.id })
+        } else {
+          this.nav.setRoot(page, { name: params.name })
+        }
       } else {
         this.nav.setRoot(page)
       }
@@ -63,51 +68,61 @@ export class SettingsPageWithMenuComponent {
 
   isActive(entry: IMenuEntry): boolean {
     const pageSubId = Number(this.navParams.get('id'))
+    const pageSubName = this.navParams.get('name')
     return (
       (this.currentPage === entry.link &&
-        (entry.params === undefined || entry.params.id === pageSubId)) ||
+        (entry.params === undefined ||
+          entry.params.id === pageSubId ||
+          entry.params.name === pageSubName)) ||
       (entry.children !== undefined &&
         entry.children.some((child) => this.isActive(child)))
     )
   }
 
   get menu(): Observable<ReadonlyArray<IMenuEntry>> {
-    return this.integrationsChildren.map(
-      (integrationsChildren: ReadonlyArray<IMenuEntry>) => {
-        const firstChild = integrationsChildren[0]
-        const childId =
-          firstChild !== undefined && firstChild.params !== undefined
-            ? firstChild.params.id
-            : 1
-        return [
-          { label: 'Account Settings', link: 'AccountSettingsPage' },
-          { label: 'Billing Settings' },
+    return Observable.of([
+      { label: 'Account Settings', link: 'AccountSettingsPage' },
+      { label: 'Billing Settings' },
+      {
+        children: [
+          { label: 'Team members', link: 'TeamMembersPage' },
+          { label: 'Sales groups', link: 'GroupsPage' }
+        ],
+        label: 'Team Settings',
+        link: 'GroupsPage'
+      },
+      {
+        children: [
           {
-            children: [
-              { label: 'Team members', link: 'TeamMembersPage' },
-              { label: 'Sales groups', link: 'GroupsPage' }
-            ],
-            label: 'Team Settings',
-            link: 'GroupsPage'
-          },
-          {
-            children: integrationsChildren,
-            label: 'Integrations',
+            label: 'Twilio',
             link: 'IntegrationPage',
-            params: {
-              id: childId
-            }
+            params: { name: 'twilio' }
           },
           {
-            children: [
-              { label: 'Pipelines', link: 'PipelinesPage' },
-              { label: 'Custom Fields', link: 'CustomFieldsPage' }
-            ],
-            label: 'CRM Settings',
-            link: 'PipelinesPage'
+            label: 'Sendgrid',
+            link: 'IntegrationPage',
+            params: { name: 'sendgrid' }
+          },
+          {
+            label: 'Zapier',
+            link: 'IntegrationPage',
+            params: { name: 'zapier' }
           }
-        ]
+        ],
+        label: 'Integrations',
+        link: 'IntegrationPage',
+        params: {
+          name: 'twilio'
+        }
+      },
+      {
+        children: [
+          { label: 'Pipelines', link: 'PipelinesPage' },
+          { label: 'Custom Fields', link: 'CustomFieldsPage' }
+        ],
+        label: 'CRM Settings',
+        link: 'PipelinesPage'
       }
-    )
+    ])
   }
 }
