@@ -1,6 +1,7 @@
 import { FormControl, FormGroup } from '@angular/forms'
 
 import { ITextTemplate } from './messages.api.model'
+import { Shortcode } from './shortcode.model'
 import { TextTemplate } from './text-template.model'
 
 export class TemplateFormGroup extends FormGroup {
@@ -23,12 +24,14 @@ export type State =
   | {
       readonly form: TemplateFormGroup
       readonly phoneNumbers: ReadonlyArray<string>
+      readonly shortcodes: ReadonlyArray<Shortcode>
       readonly template: ITextTemplate
       readonly mode: 'new'
     }
   | {
       readonly form: TemplateFormGroup
       readonly phoneNumbers: ReadonlyArray<string>
+      readonly shortcodes: ReadonlyArray<Shortcode>
       readonly template: TextTemplate | undefined
       readonly mode: 'edit'
     }

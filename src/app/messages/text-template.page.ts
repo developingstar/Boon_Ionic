@@ -1,11 +1,10 @@
-import { Component, ViewChild } from '@angular/core'
+import { Component } from '@angular/core'
 import {
   IonicPage,
   NavController,
   NavParams,
   ToastController
 } from 'ionic-angular'
-import { CKEditorComponent } from 'ng2-ckeditor'
 import { Observable } from 'rxjs'
 
 import { FormControl, Validators } from '@angular/forms'
@@ -22,7 +21,7 @@ import {
   State,
   TemplateFormGroup
 } from './text-template.page.state'
-declare var CKEDITOR: any
+
 @IonicPage({
   segment: 'text-template/:id'
 })
@@ -35,9 +34,6 @@ export class TextTemplatePage extends TemplatePage<
   ITextTemplate,
   TemplateFormGroup
 > {
-  public ckeConfig: any
-  public content: string
-  @ViewChild('templateEditor') templateEditor: CKEditorComponent
   protected readonly resourcesRootPage: string = 'TextTemplatesPage'
 
   constructor(
@@ -55,44 +51,6 @@ export class TextTemplatePage extends TemplatePage<
       messagesService,
       toastController
     )
-    CKEDITOR.plugins.addExternal('strinsert', '/assets/ckeditor_plugin/', 'plugin.js')
-    this.content = ''
-  }
-
-  public setCKEditorConfiguration(shortcodes: any): void {
-    const shortcodeList = shortcodes.map((shortcode: any) => {
-      return {
-        label: shortcode.name,
-        name: shortcode.name,
-        value: `{{ ${shortcode.shortcode} }}`
-      }
-    })
-    this.ckeConfig = {
-      allowedContent: true,
-      extraPlugins: 'strinsert',
-      strinsert_strings: shortcodeList,
-      toolbar: 'Basic',
-      toolbar_Basic: [
-        [
-          'Font',
-          '-',
-          'FontSize',
-          '-',
-          'Bold',
-          'Italic',
-          'Underline',
-          'TextColor',
-          'BGColor',
-          '-',
-          'JustifyLeft',
-          'JustifyCenter',
-          'JustifyRight',
-          'JustifyBlock',
-          '-',
-          'strinsert'
-        ]
-      ],
-    }
   }
 
   get phoneNumbers(): Observable<ReadonlyArray<string>> {
@@ -119,16 +77,14 @@ export class TextTemplatePage extends TemplatePage<
       return Observable.zip(
         fetchPhoneNumbers,
         fetchShortcodes,
-        (phoneNumbers, shortcodes) => {
-          this.setCKEditorConfiguration(shortcodes)
-          return {
-            ...state,
-            form: this.createFormGroup(newTemplate),
-            mode: mode,
-            phoneNumbers: phoneNumbers,
-            shortcodes: shortcodes,
-            template: newTemplate
-        }}
+        (phoneNumbers, shortcodes) => ({
+          ...state,
+          form: this.createFormGroup(newTemplate),
+          mode: mode,
+          phoneNumbers: phoneNumbers,
+          shortcodes: shortcodes,
+          template: newTemplate
+        })
       )
     } else {
       return Observable.of(state)
@@ -137,11 +93,7 @@ export class TextTemplatePage extends TemplatePage<
 
   protected createTemplate(form: TemplateFormGroup): Observable<TextTemplate> {
     return this.messagesService.createTextTemplate({
-      template: {
-        content: this.content,
-        default_sender: form.value.default_sender,
-        name: form.value.name
-      }
+      template: form.value
     })
   }
 
@@ -155,19 +107,40 @@ export class TextTemplatePage extends TemplatePage<
       fetchPhoneNumbers,
       fetchShortcodes,
       fetchTemplate,
-      (phoneNumbers, shortcodes, template: TextTemplate) => {
-        this.content = template.content
-        this.setCKEditorConfiguration(shortcodes)
-        return {
-          ...state,
-          form: this.createFormGroup(template.toApiRepresentation()),
-          mode: mode,
-          phoneNumbers: phoneNumbers,
-          shortcodes: shortcodes,
-          template: template
-        }
-      }
+      (phoneNumbers, shortcodes, template: TextTemplate) => ({
+        ...state,
+        form: this.createFormGroup(template.toApiRepresentation()),
+        mode: mode,
+        phoneNumbers: phoneNumbers,
+        shortcodes: shortcodes,
+        template: template
+      })
     )
+  }
+
+  protected addShortCode(
+    state: State,
+    shortcode: string = ''
+  ): Observable<State> {
+    if (state.mode === 'new' || state.mode === 'edit') {
+      const form = state.form as TemplateFormGroup
+      let content = form.controls.content.value
+      const position = document.getElementsByTagName('textarea')[0]
+        .selectionStart
+
+      content =
+        content.substr(0, position) +
+        shortcode +
+        content.substr(position, content.length)
+      form.controls.content.setValue(content)
+
+      return Observable.of({
+        ...state,
+        form: form
+      })
+    } else {
+      return Observable.of(state)
+    }
   }
 
   protected updateTemplate(
@@ -175,11 +148,7 @@ export class TextTemplatePage extends TemplatePage<
     form: TemplateFormGroup
   ): Observable<TextTemplate> {
     return this.messagesService.updateTextTemplate(id, {
-      template: {
-        content: this.content,
-        default_sender: form.value.default_sender,
-        name: form.value.name
-      }
+      template: form.value
     })
   }
 
@@ -195,11 +164,13 @@ export class TextTemplatePage extends TemplatePage<
     }
   ): TemplateFormGroup {
     return new TemplateFormGroup({
+      content: new FormControl(values.content, Validators.required),
       default_sender: new FormControl(values.default_sender, [
         phoneNumberValidator(),
         Validators.required
       ]),
-      name: new FormControl(values.name, Validators.required)
+      name: new FormControl(values.name, Validators.required),
+      shortcode: new FormControl(null)
     })
   }
 
