@@ -31,7 +31,7 @@ import { StageAssignedModalComponent } from './modals/stage-assigned-modal.compo
 
 import { CurrentUserService } from '../auth/current-user.service'
 import { pageAccess } from '../utils/app-access'
-import { toastWarningDefaults } from '../utils/toast'
+import { showToast } from '../utils/toast'
 import { AssignLeadOwnerModalComponent } from './modals/assign-lead-owner-modal.component'
 import { AssignStageModalComponent } from './modals/assign-stage-modal.component'
 import { SendEmailModalComponent } from './modals/send-email-modal.component'
@@ -385,12 +385,7 @@ export class JourneyPage implements OnInit, OnDestroy {
           }))
           .catch((error) => {
             if (error.status === 422) {
-              this.toastController
-                .create({
-                  ...toastWarningDefaults,
-                  message: 'Failed to update the journey.'
-                })
-                .present()
+              showToast(this.toastController, 'Failed to update the journey.', 2000, false)
             }
 
             return this.loadJourneyState(state)

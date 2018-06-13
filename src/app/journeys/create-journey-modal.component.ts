@@ -2,7 +2,7 @@ import { Component } from '@angular/core'
 import { FormControl, Validators } from '@angular/forms'
 import { IonicPage, ToastController, ViewController } from 'ionic-angular'
 import { BehaviorSubject } from 'rxjs'
-import { toastWarningDefaults } from '../utils/toast'
+import { showToast } from '../utils/toast'
 import { JourneysService } from './journeys.service'
 
 @IonicPage()
@@ -41,12 +41,7 @@ export class CreateJourneyModalComponent {
         },
         (error) => {
           if (error.status === 422) {
-            this.toastController
-              .create({
-                ...toastWarningDefaults,
-                message: 'The journey name must be unique.'
-              })
-              .present()
+            showToast(this.toastController, 'The journey name must be unique.', 2000, false)
           }
         }
       )
