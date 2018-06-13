@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core'
 import { IonicPage, NavController, ToastController } from 'ionic-angular'
 import { BehaviorSubject } from 'rxjs'
 
-import { toastWarningDefaults } from '../utils/toast'
+import { showToast } from '../utils/toast'
 import { AuthService } from './auth.service'
 
 @IonicPage({
@@ -41,22 +41,12 @@ export class NewPasswordPage implements OnInit {
         },
         (error: any) => {
           if (error.status === 422) {
-            this.toastController
-              .create({
-                ...toastWarningDefaults,
-                message: 'Invalid or expired token'
-              })
-              .present()
+            showToast(this.toastController, 'Invalid or expired token', 2000, false)
           }
         }
       )
     } else {
-      this.toastController
-        .create({
-          ...toastWarningDefaults,
-          message: 'Password is invalid.'
-        })
-        .present()
+      showToast(this.toastController, 'Password is invalid.', 2000, false)
     }
   }
 
