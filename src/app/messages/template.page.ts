@@ -2,7 +2,7 @@ import { NavController, NavParams, ToastController } from 'ionic-angular'
 import { BehaviorSubject, Observable } from 'rxjs'
 
 import { ReactivePage } from '../utils/reactive-page'
-import { toastSuccessDefaults, toastWarningDefaults } from '../utils/toast'
+import { showToast } from '../utils/toast'
 import { MessagesService } from './messages.service'
 import { State, UserAction } from './template.page.state'
 
@@ -179,24 +179,13 @@ export abstract class TemplatePage<
 
   private toastOnSuccess(): void {
     if (!this.saveFailed.getValue()) {
-      this.toastController
-        .create({
-          ...toastSuccessDefaults,
-          message: 'Template has been successfully saved.'
-        })
-        .present()
+      showToast(this.toastController, 'Template has been successfully saved.')
     }
   }
 
   private handleRequestError<T>(error: any, defaultValue: T): Observable<T> {
     if (error.status === 422) {
-      this.toastController
-        .create({
-          ...toastWarningDefaults,
-          message:
-            'Failed to save the template. Make sure that the name is unique.'
-        })
-        .present()
+      showToast(this.toastController, 'Failed to save the template. Make sure that the name is unique.', 2000, false)
     }
 
     return Observable.of(defaultValue)
