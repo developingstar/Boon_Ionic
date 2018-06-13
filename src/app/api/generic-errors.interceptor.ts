@@ -10,7 +10,7 @@ import { ToastController } from 'ionic-angular'
 import { Observable } from 'rxjs'
 
 import { AuthService } from '../auth/auth.service'
-import { toastWarningDefaults } from '../utils/toast'
+import { showToast } from '../utils/toast'
 import { ApiError } from './error.model'
 
 @Injectable()
@@ -43,12 +43,7 @@ export class GenericErrorsInterceptor implements HttpInterceptor {
      */
     if (error.status !== 422) {
       this.extractErrorDetails(error).forEach((message) => {
-        this.toast
-          .create({
-            ...toastWarningDefaults,
-            message: message
-          })
-          .present()
+        showToast(this.toast, message, 2000, false)
       })
     }
 
