@@ -14,6 +14,7 @@ import {
 import { Observable } from 'rxjs'
 import { JourneyPageModule } from './../../../src/app/journeys/journey.page.module'
 
+import { CurrentUserService } from '../../../src/app/auth/current-user.service'
 import { User } from '../../../src/app/auth/user.model'
 import { Pipeline } from '../../../src/app/crm/pipeline.model'
 import { SalesService } from '../../../src/app/crm/sales.service'
@@ -35,7 +36,7 @@ import {
   sampleUser
 } from '../../support/factories'
 import { initComponent } from '../../support/helpers'
-import { NavControllerStub } from '../../support/stubs'
+import { CurrentUserServiceStub, NavControllerStub } from '../../support/stubs'
 import { Journey } from './../../../src/app/journeys/journey.model'
 import { JourneyPageObject } from './journey.page.po'
 
@@ -249,7 +250,7 @@ describe('JourneyPage', () => {
       navControllerStub = new NavControllerStub({
         name: 'JourneyPage'
       })
-
+      const currentUserServiceStub = new CurrentUserServiceStub()
       fixture = initComponent(JourneyPage, {
         imports: [JourneyPageModule, HttpClientTestingModule],
         providers: [
@@ -258,6 +259,7 @@ describe('JourneyPage', () => {
           { provide: MessagesService, useValue: messagesServiceStub },
           { provide: ModalController, useValue: modalControllerStub },
           { provide: NavController, useValue: navControllerStub },
+          { provide: CurrentUserService, useValue: currentUserServiceStub },
           { provide: NavParams, useValue: navParamsStub },
           { provide: SalesService, useValue: salesServiceStub },
           { provide: ToastController, useValue: toastControllerStub },
@@ -511,6 +513,7 @@ describe('JourneyPage', () => {
 
         expect(toastControllerStub.create).toHaveBeenCalledWith({
           ...toastWarningDefaults,
+          duration: 2000,
           message: 'Failed to update the journey.'
         })
         expect(toastStub.present).toHaveBeenCalled()
