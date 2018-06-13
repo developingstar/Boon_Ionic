@@ -2,16 +2,24 @@ import { IntegrationPage } from '../../../src/app/settings/integration.page'
 import { PageObject } from '../../support/page.po'
 
 export class IntegrationPageObject extends PageObject<IntegrationPage> {
+  get createServiceButtonVisible(): boolean {
+    return this.elementVisible('button', 'Create Token')
+  }
+
   get updateServiceButtonVisible(): boolean {
     return this.elementVisible('button', 'Update Token')
+  }
+
+  get createServiceButtonEnabled(): boolean {
+    return this.inputEnabled('button', 'Create Token')
   }
 
   get updateServiceButtonEnabled(): boolean {
     return this.inputEnabled('button', 'Update Token')
   }
 
-  clickUpdateButton(): void {
-    this.clickButton('Update Token')
+  clickActionButton(text: string): void {
+    this.clickButton(text)
   }
 
   get header(): string {

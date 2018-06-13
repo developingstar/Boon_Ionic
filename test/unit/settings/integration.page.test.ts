@@ -31,6 +31,15 @@ describe('IntegrationPage', () => {
       ]
 
       integrationsServiceStub = {
+        createService: (params: Service) => {
+          const service = new Service({
+            id: 3,
+            name: params.name,
+            token: params.token
+          })
+          services.push(service)
+          return Observable.of(service)
+        },
         service: (id: number) => {
           const service = services.find((s) => s.id === id)
           return Observable.of(service)
@@ -51,6 +60,7 @@ describe('IntegrationPage', () => {
 
       spyOn(integrationsServiceStub, 'service').and.callThrough()
       spyOn(integrationsServiceStub, 'updateService').and.callThrough()
+      spyOn(integrationsServiceStub, 'createService').and.callThrough()
 
       toastStub = {
         present: () => {
@@ -62,44 +72,109 @@ describe('IntegrationPage', () => {
       }
       spyOn(toastStub, 'present').and.callThrough()
       spyOn(toastControllerStub, 'create').and.callThrough()
-
-      const navParamsStub = {
-        get: (prop: string) => 'twilio'
-      }
-
-      const currentUserServiceStub = new CurrentUserServiceStub()
-
-      fixture = initComponent(IntegrationPage, {
-        imports: [IntegrationPageModule, HttpClientTestingModule],
-        providers: [
-          NavService,
-          { provide: NavController, useValue: new NavControllerStub() },
-          { provide: CurrentUserService, useValue: currentUserServiceStub },
-          { provide: NavParams, useValue: navParamsStub },
-          { provide: IntegrationsService, useValue: integrationsServiceStub },
-          { provide: ToastController, useValue: toastControllerStub }
-        ]
-      })
-
-      page = new IntegrationPageObject(fixture)
-
-      fixture.detectChanges()
     })
   )
 
-  describe('show service', () => {
+  describe('create a new service', () => {
+    beforeEach(
+      async(() => {
+        const navParamsStub = {
+          get: (prop: string) => 'zapier'
+        }
+
+        const currentUserServiceStub = new CurrentUserServiceStub()
+        fixture = initComponent(IntegrationPage, {
+          imports: [IntegrationPageModule, HttpClientTestingModule],
+          providers: [
+            NavService,
+            { provide: NavController, useValue: new NavControllerStub() },
+            { provide: CurrentUserService, useValue: currentUserServiceStub },
+            { provide: NavParams, useValue: navParamsStub },
+            { provide: IntegrationsService, useValue: integrationsServiceStub },
+            { provide: ToastController, useValue: toastControllerStub }
+          ]
+        })
+
+        page = new IntegrationPageObject(fixture)
+
+        fixture.detectChanges()
+      })
+    )
+
+    it('shows a service token', () => {
+      expect(page.header).toEqual('zapier')
+      expect(page.token).toEqual('')
+    })
+
+    it('shows the create button', () => {
+      expect(page.createServiceButtonVisible).toBe(true)
+      expect(page.updateServiceButtonVisible).toBe(false)
+    })
+
+    it('create a service token after clicking the create button', () => {
+      page.setToken('created-token')
+      fixture.detectChanges()
+      page.clickActionButton('Create Token')
+      fixture.detectChanges()
+
+      expect(integrationsServiceStub.createService).toHaveBeenCalledWith({
+        id: 0,
+        name: 'zapier',
+        token: 'created-token'
+      })
+      expect(page.header).toEqual('zapier')
+      expect(page.token).toEqual('created-token')
+      expect(toastControllerStub.create).toHaveBeenCalledWith({
+        ...toastSuccessDefaults,
+        duration: 2000,
+        message: 'Created token successfully.'
+      })
+
+      expect(page.createServiceButtonVisible).toBe(false)
+      expect(page.updateServiceButtonVisible).toBe(true)
+    })
+  })
+
+  describe('update a existing service', () => {
+    beforeEach(
+      async(() => {
+        const navParamsStub = {
+          get: (prop: string) => 'twilio'
+        }
+
+        const currentUserServiceStub = new CurrentUserServiceStub()
+        fixture = initComponent(IntegrationPage, {
+          imports: [IntegrationPageModule, HttpClientTestingModule],
+          providers: [
+            NavService,
+            { provide: NavController, useValue: new NavControllerStub() },
+            { provide: CurrentUserService, useValue: currentUserServiceStub },
+            { provide: NavParams, useValue: navParamsStub },
+            { provide: IntegrationsService, useValue: integrationsServiceStub },
+            { provide: ToastController, useValue: toastControllerStub }
+          ]
+        })
+
+        page = new IntegrationPageObject(fixture)
+
+        fixture.detectChanges()
+      })
+    )
+
     it('shows a service token', () => {
       expect(page.header).toEqual('twilio')
       expect(page.token).toEqual('token:secret')
     })
+
     it('shows the update button', () => {
+      expect(page.createServiceButtonVisible).toBe(false)
       expect(page.updateServiceButtonVisible).toBe(true)
     })
 
     it('updates a service token after clicking the update button', () => {
       page.setToken('updated-token:secret')
       fixture.detectChanges()
-      page.clickUpdateButton()
+      page.clickActionButton('Update Token')
       fixture.detectChanges()
 
       expect(integrationsServiceStub.updateService).toHaveBeenCalledWith(1, {
