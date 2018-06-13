@@ -385,7 +385,12 @@ export class JourneyPage implements OnInit, OnDestroy {
           }))
           .catch((error) => {
             if (error.status === 422) {
-              showToast(this.toastController, 'Failed to update the journey.', 2000, false)
+              showToast(
+                this.toastController,
+                'Failed to update the journey.',
+                2000,
+                false
+              )
             }
 
             return this.loadJourneyState(state)

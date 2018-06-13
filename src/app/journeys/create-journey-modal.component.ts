@@ -41,7 +41,12 @@ export class CreateJourneyModalComponent {
         },
         (error) => {
           if (error.status === 422) {
-            showToast(this.toastController, 'The journey name must be unique.', 2000, false)
+            showToast(
+              this.toastController,
+              'The journey name must be unique.',
+              2000,
+              false
+            )
           }
         }
       )

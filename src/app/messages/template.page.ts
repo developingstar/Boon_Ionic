@@ -185,7 +185,12 @@ export abstract class TemplatePage<
 
   private handleRequestError<T>(error: any, defaultValue: T): Observable<T> {
     if (error.status === 422) {
-      showToast(this.toastController, 'Failed to save the template. Make sure that the name is unique.', 2000, false)
+      showToast(
+        this.toastController,
+        'Failed to save the template. Make sure that the name is unique.',
+        2000,
+        false
+      )
     }
 
     return Observable.of(defaultValue)

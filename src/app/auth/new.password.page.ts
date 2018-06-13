@@ -41,7 +41,12 @@ export class NewPasswordPage implements OnInit {
         },
         (error: any) => {
           if (error.status === 422) {
-            showToast(this.toastController, 'Invalid or expired token', 2000, false)
+            showToast(
+              this.toastController,
+              'Invalid or expired token',
+              2000,
+              false
+            )
           }
         }
       )
