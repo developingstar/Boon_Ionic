@@ -85,6 +85,31 @@ describe('IntegrationsService', () => {
     )
   })
 
+  describe('createService', () => {
+    it(
+      'returns the created service',
+      async(() => {
+        const twilioService = sampleService()
+
+        integrationService.createService(twilioService).subscribe((service) => {
+          expect(service.name).toEqual('Twilio')
+          expect(service.token).toEqual('secret:token')
+        })
+
+        const req = httpMock.expectOne('/api/services')
+        expect(req.request.method).toBe('POST')
+
+        req.flush({
+          data: {
+            service: twilioService
+          }
+        })
+
+        httpMock.verify()
+      })
+    )
+  })
+
   describe('updateService', () => {
     it(
       'returns the updated service',
