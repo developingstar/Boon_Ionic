@@ -120,14 +120,16 @@ describe('TextTemplatePage', () => {
       spyOn(messagesServiceStub, 'createTextTemplate').and.callThrough()
 
       page.setName('Introduction to Boon')
+      page.setContent('Hello from Boon team!')
       page.selectPhoneNumber('+999222222')
       page.save()
 
       expect(messagesServiceStub.createTextTemplate).toHaveBeenCalledWith({
         template: {
-          content: '',
+          content: 'Hello from Boon team!',
           default_sender: '+999222222',
-          name: 'Introduction to Boon'
+          name: 'Introduction to Boon',
+          shortcode: null
         }
       })
 
@@ -137,6 +139,7 @@ describe('TextTemplatePage', () => {
 
       expect(toastControllerStub.create).toHaveBeenCalledWith({
         ...toastSuccessDefaults,
+        duration: 2000,
         message: 'Template has been successfully saved.'
       })
       expect(toastStub.present).toHaveBeenCalled()
@@ -152,6 +155,7 @@ describe('TextTemplatePage', () => {
 
       expect(toastControllerStub.create).toHaveBeenCalledWith({
         ...toastWarningDefaults,
+        duration: 2000,
         message:
           'Failed to save the template. Make sure that the name is unique.'
       })
@@ -197,20 +201,23 @@ describe('TextTemplatePage', () => {
 
       expect(page.getName()).toEqual(template.name)
       expect(page.getPhoneNumber()).toEqual(template.defaultSender)
+      expect(page.getContent()).toEqual(template.content)
     })
 
     it('allows to update template', () => {
       spyOn(messagesServiceStub, 'updateTextTemplate').and.callThrough()
 
       page.setName('Introduction to Boon')
+      page.setContent('Hello from Boon team!')
       page.selectPhoneNumber('+999222222')
       page.save()
 
       expect(messagesServiceStub.updateTextTemplate).toHaveBeenCalledWith(1, {
         template: {
-          content: 'Welcome in Boon',
+          content: 'Hello from Boon team!',
           default_sender: '+999222222',
-          name: 'Introduction to Boon'
+          name: 'Introduction to Boon',
+          shortcode: null
         }
       })
 
@@ -220,6 +227,7 @@ describe('TextTemplatePage', () => {
 
       expect(toastControllerStub.create).toHaveBeenCalledWith({
         ...toastSuccessDefaults,
+        duration: 2000,
         message: 'Template has been successfully saved.'
       })
       expect(toastStub.present).toHaveBeenCalled()
@@ -235,6 +243,7 @@ describe('TextTemplatePage', () => {
 
       expect(toastControllerStub.create).toHaveBeenCalledWith({
         ...toastWarningDefaults,
+        duration: 2000,
         message:
           'Failed to save the template. Make sure that the name is unique.'
       })
