@@ -47,12 +47,20 @@ export class IntegrationPage extends ReactivePage<IState, UserAction> {
   public updateService(): void {
     let validationFlag = true
     this.service.subscribe((service: Service) => {
-      if (service.name === 'twilio' && !this.twilioPattern.test(service.token)) {
+      if (
+        service.name === 'twilio' &&
+        !this.twilioPattern.test(service.token)
+      ) {
         validationFlag = false
       }
     })
     if (!validationFlag) {
-      showToast(this.toastController, 'The token/secret provided does not match the required format of "token:secret"', 4000, false)
+      showToast(
+        this.toastController,
+        'The token/secret provided does not match the required format of "token:secret"',
+        4000,
+        false
+      )
       return
     }
     if (this.originalService) {
