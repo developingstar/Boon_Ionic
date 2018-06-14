@@ -31,7 +31,7 @@ ion-content(padding)
       ion-col(*ngIf="isStageColumnVisible | async") {{(stageForLead(lead) | async)?.name}}
       ion-col {{lead.phoneNumber || "-"}}
       ion-col {{lead.owner?.name || "-"}}
-      ion-col {{lead.insertedAt | date:'MM/dd hh:mm' || "-"}}
+      ion-col {{lead.insertedAt | date:'MM/dd hh:mm a' || "-"}}
   ion-row.footer
     ion-col.center-y
       .showing-color Showing

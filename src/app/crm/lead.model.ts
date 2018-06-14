@@ -27,8 +27,8 @@ export class Lead {
     this.id = ensureNumber(data.id)
     this.phoneNumber = data.phone_number
     this.stageId = ensureNumber(data.stage_id)
-    this.insertedAt = new Date(data.inserted_at)
-    this.updatedAt = new Date(data.updated_at)
+    this.insertedAt = new Date(data.inserted_at + 'Z')
+    this.updatedAt = new Date(data.updated_at + 'Z')
 
     if (data.owner) {
       this.owner = new User(data.owner)
