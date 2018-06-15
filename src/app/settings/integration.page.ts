@@ -59,7 +59,12 @@ export class IntegrationPage extends ReactivePage<IState, UserAction> {
         this.uiActions.next({ name: 'create_service' })
       }
     } else {
-      showToast(this.toastController, 'The token/secret provided does not match the required format of "token:secret"')
+      showToast(
+        this.toastController,
+        'The token/secret provided does not match the required format of "token:secret"',
+        4000,
+        false
+      )
     }
   }
 
