@@ -22,7 +22,7 @@ export class IntegrationPage extends ReactivePage<IState, UserAction> {
   navSubscribe: any
   originalService: Service
   isChanged: boolean
-  readonly twilioPattern = /^[a-zA-Z0-9]{2,30}\:[a-zA-Z0-9]{2,30}$/
+  readonly pattern: any = /^[0-9A-z-!$%^&*()_+|~=`{}\[\]";'<>?,.\/]{2,}:[0-9A-z-!$%^&*()_+|~=`{}\[\]";'<>?,.\/]{2,}?$/
 
   constructor(
     public navParams: NavParams,
@@ -45,28 +45,21 @@ export class IntegrationPage extends ReactivePage<IState, UserAction> {
   }
 
   public updateService(): void {
-    let validationFlag = true
+    let isValidate = true
     this.service.subscribe((service: Service) => {
-      if (
-        service.name === 'twilio' &&
-        !this.twilioPattern.test(service.token)
-      ) {
-        validationFlag = false
+      if (service.name === 'twilio' && !this.pattern.test(service.token)) {
+        isValidate = false
       }
     })
-    if (!validationFlag) {
-      showToast(
-        this.toastController,
-        'The token/secret provided does not match the required format of "token:secret"',
-        4000,
-        false
-      )
-      return
-    }
-    if (this.originalService) {
-      this.uiActions.next({ name: 'update_service' })
+
+    if (isValidate) {
+      if (this.originalService) {
+        this.uiActions.next({ name: 'update_service' })
+      } else {
+        this.uiActions.next({ name: 'create_service' })
+      }
     } else {
-      this.uiActions.next({ name: 'create_service' })
+      showToast(this.toastController, 'The token/secret provided does not match the required format of "token:secret"')
     }
   }
 
