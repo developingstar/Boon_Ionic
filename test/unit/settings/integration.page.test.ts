@@ -186,6 +186,17 @@ describe('IntegrationPage', () => {
           'The token/secret provided does not match the required format of "token:secret"'
       })
 
+      page.setToken('token:')
+      page.clickActionButton('Update Token')
+      fixture.detectChanges()
+
+      expect(toastControllerStub.create).toHaveBeenCalledWith({
+        ...toastWarningDefaults,
+        duration: 4000,
+        message:
+          'The token/secret provided does not match the required format of "token:secret"'
+      })
+
       page.setToken('updated-token:secret')
       fixture.detectChanges()
       page.clickActionButton('Update Token')
