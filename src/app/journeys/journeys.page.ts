@@ -27,6 +27,7 @@ export class JourneysPage implements OnInit, OnDestroy {
   readonly state: Observable<IState>
   private readonly uiActions: Subject<UserAction> = new Subject()
   private readonly stateSubscription: Subscription
+  private selectedNavItem: string
 
   constructor(
     private journeysService: JourneysService,
@@ -41,7 +42,8 @@ export class JourneysPage implements OnInit, OnDestroy {
     this.stateSubscription = this.state.subscribe()
   }
   ngOnInit(): void {
-    this.uiActions.next({ name: 'init' })
+    this.selectedNavItem = 'contact'
+    this.uiActions.next({ name: 'init', category: 'contact' })
   }
 
   ngOnDestroy(): void {
@@ -92,6 +94,20 @@ export class JourneysPage implements OnInit, OnDestroy {
     })
   }
 
+  public setNavItem(item: string): void {
+    this.selectedNavItem = item
+    this.uiActions.next({ name: 'init', category: this.selectedNavItem })
+  }
+
+  get buttonName(): Observable<string> {
+    return this.state.flatMap(
+      (state) =>
+        state.category === 'contact'
+          ? Observable.of('New Contact Journey')
+          : Observable.of('New Deal Journey')
+    )
+  }
+
   get isPrevPageButtonDisabled(): Observable<boolean> {
     return this.state.map((state) => {
       return state.isLoading || state.journeys.prevPageLink === null
@@ -112,33 +128,33 @@ export class JourneysPage implements OnInit, OnDestroy {
     switch (action.name) {
       case 'init':
         return this.setLoading(state).concat(
-          this.getJourneys(state.requestOptions)
+          this.getJourneys(state.requestOptions, action.category)
         )
       case 'prev':
         return this.setLoading(state).concat(
           this.getJourneys({
             ...state.requestOptions,
             url: state.journeys.prevPageLink
-          })
+          }, state.category)
         )
       case 'next':
         return this.setLoading(state).concat(
           this.getJourneys({
             ...state.requestOptions,
             url: state.journeys.nextPageLink
-          })
+          }, state.category)
         )
       case 'publish_journey':
         return this.setLoading(state).concat(
           this.journeysService
             .publishJourney(action.journey.id)
-            .flatMap((journey) => this.getJourneys(state.requestOptions))
+            .flatMap((journey) => this.getJourneys(state.requestOptions, state.category))
         )
       case 'stop_journey':
         return this.setLoading(state).concat(
           this.journeysService
             .stopJourney(action.journey.id)
-            .flatMap((journey) => this.getJourneys(state.requestOptions))
+            .flatMap((journey) => this.getJourneys(state.requestOptions, state.category))
         )
     }
   }
@@ -147,8 +163,9 @@ export class JourneysPage implements OnInit, OnDestroy {
     return Observable.of({ ...state, isLoading: true })
   }
 
-  private getJourneys(requestOptions: IHttpRequestOptions): Observable<IState> {
+  private getJourneys(requestOptions: IHttpRequestOptions, category: string = 'contact'): Observable<IState> {
     return this.journeysService.journeys(requestOptions).map((newJourneys) => ({
+      category: category,
       isLoading: false,
       journeys: newJourneys,
       requestOptions: requestOptions

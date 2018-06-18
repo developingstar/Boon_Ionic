@@ -9,7 +9,9 @@ interface IAction<T extends string> {
   readonly name: T
 }
 
-interface IInitAction extends IAction<'init'> {}
+interface IInitAction extends IAction<'init'> {
+  readonly category: string
+}
 interface IPrevAction extends IAction<'prev'> {}
 interface INextAction extends IAction<'next'> {}
 
@@ -29,14 +31,17 @@ export type UserAction =
   | IPublishJourneyAction
 
 export interface IState {
+  readonly category: string
   readonly isLoading: boolean
   readonly journeys: PaginatedCollection<Journey>
   readonly requestOptions: IHttpRequestOptions
 }
 
 export const initialState: IState = {
+  category: 'contact',
   isLoading: false,
   journeys: {
+    count: 0,
     items: [],
     nextPageLink: null,
     prevPageLink: null
