@@ -43,4 +43,54 @@ journeys-page {
     margin-bottom: 10px;
     width: 180px;
   }
+
+  .top-bar {
+    height: 80px;
+    margin-bottom: 10px;
+    background-color: #F8FAFB;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    padding-top: 10px;
+
+    .title {
+      position: absolute;
+      left: 20px;
+      color: $color-text-primary;
+      font-size: 25px;
+      margin-top: -5px;
+    }
+
+    .category-navbar {
+      display: flex;
+      align-items: center;
+
+      .nav-item {
+        cursor: pointer;
+        font-size: 15px;
+        color: $color-text-primary;
+        font-weight: 600;
+        letter-spacing: 0.12px;
+        height: 100%;
+        line-height: 70px;
+        padding: 0 20px;
+        margin: 0 10px;
+
+        &:hover {
+          color: #636c79;
+        }
+      }
+
+      .nav-item-active {
+        color: $color-primary;
+        border-bottom: 2px solid $color-primary;
+
+        &:hover {
+          color: #636c79;
+          border-color: #636c79;
+        }
+      }
+    }
+  }
 }

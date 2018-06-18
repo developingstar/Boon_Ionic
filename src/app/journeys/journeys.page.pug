@@ -2,7 +2,12 @@ nav-content
   nav-icons(right, [currentPage]="'JourneysPage'")
 
 ion-content(padding)
-  button.new-journey(ion-button, (click)="openNewJourneyModal($event)") New Journey
+  ion-row.top-bar
+    div.title Automation
+    div.category-navbar
+      div.nav-item([ngClass]="{'nav-item-active': selectedNavItem === 'contact'}", (click)="setNavItem('contact')") Contact Journeys
+      div.nav-item([ngClass]="{'nav-item-active': selectedNavItem === 'deal'}", (click)="setNavItem('deal')") Deal Journeys
+  button.new-journey(ion-button, (click)="openNewJourneyModal($event)") {{buttonName | async }}
 
   ion-grid.table
     ion-row.header
