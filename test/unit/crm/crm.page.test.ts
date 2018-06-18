@@ -2,7 +2,7 @@ import { HttpParams } from '@angular/common/http'
 import { HttpClientTestingModule } from '@angular/common/http/testing'
 import { async, ComponentFixture } from '@angular/core/testing'
 import { ModalController, NavController } from 'ionic-angular'
-import { BehaviorSubject, Observable } from 'rxjs'
+import { Observable } from 'rxjs'
 
 import { PaginatedCollection } from '../../../src/app/api/paginated-collection'
 import { CurrentUserService } from '../../../src/app/auth/current-user.service'
@@ -21,7 +21,7 @@ import {
 } from '../../support/factories'
 import { initComponent } from '../../support/helpers'
 import { assertTableRow } from '../../support/matchers'
-import { NavControllerStub } from '../../support/stubs'
+import { CurrentUserServiceStub, NavControllerStub } from '../../support/stubs'
 import { CrmPageObject } from './crm.page.po'
 
 describe('CrmPage', () => {
@@ -39,13 +39,16 @@ describe('CrmPage', () => {
           name: 'Tom'
         })
       )
+
       collection = {
+        count: 1,
         items: [
           new Lead(
             sampleLead({
               email: 'john@example.com',
-              firstName: 'John',
-              lastName: 'Boon',
+              first_name: 'John',
+              last_name: 'Boon',
+              name: 'John Boon',
               phone_number: '+999111111',
               stage_id: 2
             })
@@ -53,8 +56,9 @@ describe('CrmPage', () => {
           new Lead(
             sampleLead({
               email: 'susan@example.com',
-              firstName: 'Susan',
-              lastName: 'Boon',
+              first_name: 'Susan',
+              last_name: 'Boon',
+              name: 'Susan Boon',
               phone_number: '+999222222',
               stage_id: 2
             })
@@ -62,8 +66,9 @@ describe('CrmPage', () => {
           new Lead(
             sampleLead({
               email: null,
-              firstName: null,
-              lastName: null,
+              first_name: null,
+              last_name: null,
+              name: null,
               owner: user,
               phone_number: '+999333333',
               stage_id: 1
@@ -75,6 +80,7 @@ describe('CrmPage', () => {
       }
       salesServiceStub = {
         leads: () => Observable.of(collection),
+        limit: 50,
         pipelines: () =>
           Observable.of([
             new Pipeline(
@@ -82,6 +88,8 @@ describe('CrmPage', () => {
             ),
             new Pipeline(samplePipeline({ id: 2, name: 'Without response' }))
           ]),
+        showingHigh: 50,
+        showingLow: 1,
         stages: () =>
           Observable.of([
             sampleStage({ id: 1, name: 'Closed - Won', pipeline_id: 1 }),
@@ -90,11 +98,9 @@ describe('CrmPage', () => {
           ])
       }
       spyOn(salesServiceStub, 'leads').and.callThrough()
-      const currentUserServiceStub = {
-        details: new BehaviorSubject(user)
-      }
+      const currentUserServiceStub = new CurrentUserServiceStub(user)
       navControllerStub = new NavControllerStub()
-      spyOn(navControllerStub, 'setRoot').and.callThrough()
+      spyOn(navControllerStub, 'push').and.callThrough()
       modalStub = {
         present: () => {
           return
@@ -123,34 +129,38 @@ describe('CrmPage', () => {
   describe('table', () => {
     it('includes leads', () => {
       const table = page.leadsTable()
-      expect(table.children.length).toBe(5)
+      expect(table.children.length).toBe(4)
       assertTableRow(table.children.item(0), [
         'Name',
         'Email',
         'Stage',
         'Phone number',
-        'Contact owner'
+        'Contact owner',
+        'Created at'
       ])
       assertTableRow(table.children.item(1), [
         'John Boon',
         'john@example.com',
         'Introduction',
         '+999111111',
-        '-'
+        '-',
+        '12/01 12:00'
       ])
       assertTableRow(table.children.item(2), [
         'Susan Boon',
         'susan@example.com',
         'Introduction',
         '+999222222',
-        '-'
+        '-',
+        '12/01 12:00'
       ])
       assertTableRow(table.children.item(3), [
         '-',
         '-',
         'Closed - Won',
         '+999333333',
-        'Tom'
+        'Tom',
+        '12/01 12:00'
       ])
     })
     it('allows to load leads from different pages', () => {
@@ -168,6 +178,14 @@ describe('CrmPage', () => {
         params: jasmine.any(HttpParams),
         url: 'http://example.com/prev'
       })
+    })
+  })
+  describe('showing from(x) to(y) of toatl(z) contacts', () => {
+    it('shows correct x(from), y(to) and z(number of total contacts)', () => {
+      expect(page.showingFrom().textContent).toEqual('1')
+      expect(page.showingTo().textContent).toEqual('50')
+      expect(page.showingTotal().textContent).toEqual('1 contacts')
+      page.clickNextPageButton()
     })
   })
   describe('pipelines nav', () => {
@@ -276,36 +294,38 @@ describe('CrmPage', () => {
           'Email',
           'Stage',
           'Phone number',
-          'Contact owner'
+          'Contact owner',
+          'Created at'
         ])
         assertTableRow(table.children.item(1), [
           'John Boon',
           'john@example.com',
           'Introduction',
           '+999111111',
-          '-'
+          '-',
+          '12/01 12:00'
         ])
         page.selectStage(2)
         assertTableRow(table.children.item(0), [
           'Name',
           'Email',
           'Phone number',
-          'Contact owner'
+          'Contact owner',
+          'Created at'
         ])
         assertTableRow(table.children.item(1), [
           'John Boon',
           'john@example.com',
           '+999111111',
-          '-'
+          '-',
+          '12/01 12:00'
         ])
       })
     })
   })
   it('opens the lead page after clicking an entry in the table', () => {
     page.click(page.findDebugByCss('ion-row.lead'))
-    expect(navControllerStub.setRoot).toHaveBeenCalledWith('LeadPage', {
-      id: collection.items[0].id
-    })
+    expect(navControllerStub.push).toHaveBeenCalled()
   })
   it('presents the new lead modal after clicking the new contact button', () => {
     page.selectPipeline(2)
