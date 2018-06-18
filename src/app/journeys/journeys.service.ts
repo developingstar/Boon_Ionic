@@ -15,13 +15,18 @@ export class JourneysService {
   constructor(private readonly http: HttpClient) {}
 
   journeys(
-    options: IHttpRequestOptions = blankHttpRequestOptions
+    options: IHttpRequestOptions = blankHttpRequestOptions,
+    category: string = 'contact'
   ): Observable<PaginatedCollection<Journey>> {
     return this.http
-      .get<API.IJourneysResponse>(options.url || '/api/journeys', {
-        params: options.params
-      })
+      .get<API.IJourneysResponse>(
+        options.url || '/api/journeys?type=' + category,
+        {
+          params: options.params
+        }
+      )
       .map((response) => ({
+        count: 1,
         items: response.data.journeys.map((raw) => new Journey(raw)),
         nextPageLink: response.links.next,
         prevPageLink: response.links.prev

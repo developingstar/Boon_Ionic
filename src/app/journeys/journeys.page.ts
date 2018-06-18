@@ -132,29 +132,39 @@ export class JourneysPage implements OnInit, OnDestroy {
         )
       case 'prev':
         return this.setLoading(state).concat(
-          this.getJourneys({
-            ...state.requestOptions,
-            url: state.journeys.prevPageLink
-          }, state.category)
+          this.getJourneys(
+            {
+              ...state.requestOptions,
+              url: state.journeys.prevPageLink
+            },
+            state.category
+          )
         )
       case 'next':
         return this.setLoading(state).concat(
-          this.getJourneys({
-            ...state.requestOptions,
-            url: state.journeys.nextPageLink
-          }, state.category)
+          this.getJourneys(
+            {
+              ...state.requestOptions,
+              url: state.journeys.nextPageLink
+            },
+            state.category
+          )
         )
       case 'publish_journey':
         return this.setLoading(state).concat(
           this.journeysService
             .publishJourney(action.journey.id)
-            .flatMap((journey) => this.getJourneys(state.requestOptions, state.category))
+            .flatMap((journey) =>
+              this.getJourneys(state.requestOptions, state.category)
+            )
         )
       case 'stop_journey':
         return this.setLoading(state).concat(
           this.journeysService
             .stopJourney(action.journey.id)
-            .flatMap((journey) => this.getJourneys(state.requestOptions, state.category))
+            .flatMap((journey) =>
+              this.getJourneys(state.requestOptions, state.category)
+            )
         )
     }
   }
@@ -163,13 +173,18 @@ export class JourneysPage implements OnInit, OnDestroy {
     return Observable.of({ ...state, isLoading: true })
   }
 
-  private getJourneys(requestOptions: IHttpRequestOptions, category: string = 'contact'): Observable<IState> {
-    return this.journeysService.journeys(requestOptions).map((newJourneys) => ({
-      category: category,
-      isLoading: false,
-      journeys: newJourneys,
-      requestOptions: requestOptions
-    }))
+  private getJourneys(
+    requestOptions: IHttpRequestOptions,
+    category: string = 'contact'
+  ): Observable<IState> {
+    return this.journeysService
+      .journeys(requestOptions, category)
+      .map((newJourneys) => ({
+        category: category,
+        isLoading: false,
+        journeys: newJourneys,
+        requestOptions: requestOptions
+      }))
   }
 
   private async ionViewCanEnter(): Promise<boolean> {
