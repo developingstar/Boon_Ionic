@@ -5,6 +5,7 @@ import { NavController } from 'ionic-angular'
 import { Observable } from 'rxjs'
 
 import { PaginatedCollection } from '../../../src/app/api/paginated-collection'
+import { CurrentUserService } from '../../../src/app/auth/current-user.service'
 import { Journey } from '../../../src/app/journeys/journey.model'
 import { JourneysPage } from '../../../src/app/journeys/journeys.page'
 import { JourneysPageModule } from '../../../src/app/journeys/journeys.page.module'
@@ -13,7 +14,7 @@ import { NavService } from '../../../src/app/nav/nav.service'
 import { sampleJourney } from '../../support/factories'
 import { initComponent } from '../../support/helpers'
 import { assertTableRow } from '../../support/matchers'
-import { NavControllerStub } from '../../support/stubs'
+import { CurrentUserServiceStub, NavControllerStub } from '../../support/stubs'
 import { JourneysPageObject } from './journeys.page.po'
 
 describe('JourneysPage', () => {
@@ -26,6 +27,7 @@ describe('JourneysPage', () => {
   beforeEach(
     async(() => {
       collection = {
+        count: 0,
         items: [
           new Journey(
             sampleJourney({
@@ -68,6 +70,7 @@ describe('JourneysPage', () => {
       spyOn(journeysServiceStub, 'journeys').and.callThrough()
 
       navControllerStub = new NavControllerStub({ name: 'JourneysPage' })
+      const currentUserServiceStub = new CurrentUserServiceStub()
 
       spyOn(navControllerStub, 'setRoot').and.callThrough()
 
@@ -76,6 +79,7 @@ describe('JourneysPage', () => {
         providers: [
           NavService,
           { provide: NavController, useValue: navControllerStub },
+          { provide: CurrentUserService, useValue: currentUserServiceStub },
           { provide: JourneysService, useValue: journeysServiceStub }
         ]
       })
@@ -118,24 +122,33 @@ describe('JourneysPage', () => {
     })
 
     it('allows to load journeys from different pages', () => {
-      expect(journeysServiceStub.journeys).toHaveBeenCalledWith({
-        params: jasmine.any(HttpParams),
-        url: null
-      })
+      expect(journeysServiceStub.journeys).toHaveBeenCalledWith(
+        {
+          params: jasmine.any(HttpParams),
+          url: null
+        },
+        'contact'
+      )
 
       page.clickNextPageButton()
 
-      expect(journeysServiceStub.journeys).toHaveBeenCalledWith({
-        params: jasmine.any(HttpParams),
-        url: 'http://example.com/next'
-      })
+      expect(journeysServiceStub.journeys).toHaveBeenCalledWith(
+        {
+          params: jasmine.any(HttpParams),
+          url: 'http://example.com/next'
+        },
+        'contact'
+      )
 
       page.clickPrevPageButton()
 
-      expect(journeysServiceStub.journeys).toHaveBeenCalledWith({
-        params: jasmine.any(HttpParams),
-        url: 'http://example.com/prev'
-      })
+      expect(journeysServiceStub.journeys).toHaveBeenCalledWith(
+        {
+          params: jasmine.any(HttpParams),
+          url: 'http://example.com/prev'
+        },
+        'contact'
+      )
     })
   })
 
