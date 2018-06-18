@@ -230,7 +230,7 @@ export class LeadPage implements OnDestroy, OnInit {
   }
 
   public goBack(): void {
-    this.navController.setRoot('CrmPage')
+    this.navController.pop()
   }
 
   public edit(): void {

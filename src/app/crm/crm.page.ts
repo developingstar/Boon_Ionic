@@ -84,7 +84,7 @@ export class CrmPage extends ReactivePage<IState, UserAction> {
   }
 
   public showLead(lead: Lead): void {
-    this.navController.setRoot('LeadPage', { id: lead.id })
+    this.navController.push('LeadPage', { id: lead.id })
   }
 
   public newLead(): void {
