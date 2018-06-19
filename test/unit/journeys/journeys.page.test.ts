@@ -99,7 +99,16 @@ describe('JourneysPage', () => {
     })
   )
 
-  describe('show journeys', () => {
+  describe('show journeys with contact type', () => {
+    it('show buttons', () => {
+      expect(page.contactButtonVisible).toBe(true)
+      expect(page.dealButtonVisible).toBe(true)
+      expect(page.createContactJourneyButtonVisible).toBe(true)
+      expect(page.createDealJourneyButtonVisible).toBe(false)
+      expect(page.hasClass('Contact Journeys', '.nav-item-active')).toBe(true)
+      expect(page.hasClass('Deal Journeys', '.nav-item-active')).toBe(false)
+    })
+
     it('table', () => {
       const table = page.journeysTable()
 
@@ -151,6 +160,62 @@ describe('JourneysPage', () => {
           url: 'http://example.com/prev'
         },
         'contact'
+      )
+    })
+  })
+
+  describe('show journeys with deal type', () => {
+    beforeEach(
+      async(() => {
+        page.clickActionButton('Deal Journeys')
+        fixture.detectChanges()
+      })
+    )
+
+    it('show buttons', () => {
+      expect(page.createContactJourneyButtonVisible).toBe(false)
+      expect(page.createDealJourneyButtonVisible).toBe(true)
+      expect(page.hasClass('Contact Journeys', '.nav-item-active')).toBe(false)
+      expect(page.hasClass('Deal Journeys', '.nav-item-active')).toBe(true)
+    })
+
+    it('table', () => {
+      const table = page.journeysTable()
+
+      expect(table.children.length).toBe(3)
+      assertTableRow(table.children.item(0), [
+        'Name',
+        'Published',
+        'Status',
+        ''
+      ])
+      assertTableRow(table.children.item(1), [
+        'motivating introduction 2',
+        '-',
+        'Draft',
+        ''
+      ])
+    })
+
+    it('allows to load journeys from different pages', () => {
+      page.clickNextPageButton()
+
+      expect(journeysServiceStub.journeys).toHaveBeenCalledWith(
+        {
+          params: jasmine.any(HttpParams),
+          url: 'http://example.com/next'
+        },
+        'deal'
+      )
+
+      page.clickPrevPageButton()
+
+      expect(journeysServiceStub.journeys).toHaveBeenCalledWith(
+        {
+          params: jasmine.any(HttpParams),
+          url: 'http://example.com/prev'
+        },
+        'deal'
       )
     })
   })
