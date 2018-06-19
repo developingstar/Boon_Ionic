@@ -1,12 +1,18 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing'
 import { async, ComponentFixture } from '@angular/core/testing'
-import { NavController, NavParams } from 'ionic-angular'
+import {
+  AlertController,
+  NavController,
+  NavParams,
+  ToastController
+} from 'ionic-angular'
 import { Observable } from 'rxjs'
 
 import { initComponent } from '../../support/helpers'
-import { NavControllerStub } from '../../support/stubs'
+import { CurrentUserServiceStub, NavControllerStub } from '../../support/stubs'
 import { GroupsPageObject } from './groups.page.po'
 
+import { CurrentUserService } from '../../../src/app/auth/current-user.service'
 import { User } from '../../../src/app/auth/user.model'
 import { UsersService } from '../../../src/app/crm/users.service'
 import { NavService } from '../../../src/app/nav/nav.service'
@@ -15,6 +21,7 @@ import * as API from '../../../src/app/settings/groups.api.model'
 import { GroupsPage } from '../../../src/app/settings/groups.page'
 import { GroupsPageModule } from '../../../src/app/settings/groups.page.module'
 import { GroupsService } from '../../../src/app/settings/groups.service'
+import { toastSuccessDefaults } from '../../../src/app/utils/toast'
 
 describe('GroupsPage', () => {
   let fixture: ComponentFixture<GroupsPage>
@@ -24,16 +31,33 @@ describe('GroupsPage', () => {
   let usersServiceStub: any
   let groupUsers: User[]
   let userLists: User[]
+  let toastControllerStub: any
+  let toastStub: any
+  let alertStub: any
+  let alertControllerStub: any
 
   beforeEach(
     async(() => {
-      groups = [{ id: 1, name: 'Group1' }, { id: 2, name: 'Group2' }]
+      groups = [
+        new Group({
+          id: 1,
+          name: 'Group1',
+          user_count: 5
+        }),
+        new Group({
+          id: 2,
+          name: 'Group2',
+          user_count: 3
+        })
+      ]
 
       groupUsers = [
         new User({
           avatar_url: null,
           email: 'john@example.com',
+          first_name: 'John',
           id: 11,
+          last_name: 'Boon',
           name: 'John Boon',
           password: '',
           phone_number: '',
@@ -42,7 +66,9 @@ describe('GroupsPage', () => {
         new User({
           avatar_url: null,
           email: 'mark@example.com',
+          first_name: 'Mark',
           id: 12,
+          last_name: 'Boon',
           name: 'Mark Boon',
           password: '',
           phone_number: '',
@@ -54,7 +80,9 @@ describe('GroupsPage', () => {
         new User({
           avatar_url: null,
           email: 'john@example.com',
+          first_name: 'John',
           id: 11,
+          last_name: 'Boon',
           name: 'John Boon',
           password: '',
           phone_number: '',
@@ -63,7 +91,9 @@ describe('GroupsPage', () => {
         new User({
           avatar_url: null,
           email: 'mark@example.com',
+          first_name: 'Mark',
           id: 12,
+          last_name: 'Boon',
           name: 'Mark Boon',
           password: '',
           phone_number: '',
@@ -72,7 +102,9 @@ describe('GroupsPage', () => {
         new User({
           avatar_url: null,
           email: 'alekxis@example.com',
+          first_name: 'Alekxis',
           id: 13,
+          last_name: 'Boon',
           name: 'Alekxis Boon',
           password: '',
           phone_number: '',
@@ -81,7 +113,9 @@ describe('GroupsPage', () => {
         new User({
           avatar_url: null,
           email: 'petr@example.com',
+          first_name: 'Petr',
           id: 14,
+          last_name: 'Boon',
           name: 'Petr Boon',
           password: '',
           phone_number: '',
@@ -100,7 +134,8 @@ describe('GroupsPage', () => {
         createGroup: (groupData: API.IGroupCreate) => {
           const newGroup = new Group({
             id: 3,
-            name: groupData.name
+            name: groupData.name,
+            user_count: 5
           })
           groups.push(newGroup)
           return Observable.of(groups)
@@ -140,14 +175,45 @@ describe('GroupsPage', () => {
       spyOn(groupsServiceStub, 'deleteUser').and.callThrough()
       spyOn(groupsServiceStub, 'addUser').and.callThrough()
 
+      const currentUserServiceStub = new CurrentUserServiceStub()
+      toastStub = {
+        present: () => {
+          return
+        }
+      }
+      toastControllerStub = {
+        create: () => toastStub
+      }
+      spyOn(toastStub, 'present').and.callThrough()
+      spyOn(toastControllerStub, 'create').and.callThrough()
+
+      alertStub = {
+        onDidDismiss: () => {
+          return
+        },
+        present: () => {
+          return
+        }
+      }
+
+      alertControllerStub = {
+        create: () => alertStub
+      }
+
+      spyOn(alertStub, 'present').and.callThrough()
+      spyOn(alertControllerStub, 'create').and.callThrough()
+
       fixture = initComponent(GroupsPage, {
         imports: [GroupsPageModule, HttpClientTestingModule],
         providers: [
           NavService,
           { provide: NavController, useValue: new NavControllerStub() },
+          { provide: CurrentUserService, useValue: currentUserServiceStub },
           { provide: NavParams, useValue: navParamsStub },
           { provide: UsersService, useValue: usersServiceStub },
-          { provide: GroupsService, useValue: groupsServiceStub }
+          { provide: GroupsService, useValue: groupsServiceStub },
+          { provide: ToastController, useValue: toastControllerStub },
+          { provide: AlertController, useValue: alertControllerStub }
         ]
       })
 
@@ -193,6 +259,11 @@ describe('GroupsPage', () => {
       })
       expect(page.header).toEqual('Sales Groups')
       expect(page.groups).toEqual(['Group1', 'Group2', 'NewGroup'])
+      expect(toastControllerStub.create).toHaveBeenCalledWith({
+        ...toastSuccessDefaults,
+        duration: 2000,
+        message: 'Created new group successfully.'
+      })
     })
 
     it('returns to the listing after clicking the back button', () => {
@@ -236,6 +307,11 @@ describe('GroupsPage', () => {
       expect(groupsServiceStub.updateGroup).toHaveBeenCalledWith(1, {
         name: 'UpdatedGroup'
       })
+      expect(toastControllerStub.create).toHaveBeenCalledWith({
+        ...toastSuccessDefaults,
+        duration: 2000,
+        message: 'Updated group name successfully.'
+      })
     })
 
     it('add a group user', () => {
@@ -245,15 +321,17 @@ describe('GroupsPage', () => {
       expect(page.groupUsers.length).toEqual(3)
       expect(page.groupUsers).toEqual(['John Boon', 'Mark Boon', 'Petr Boon'])
       expect(page.users).toEqual(['Alekxis Boon'])
+      expect(toastControllerStub.create).toHaveBeenCalledWith({
+        ...toastSuccessDefaults,
+        duration: 2000,
+        message: 'Added user successfully.'
+      })
     })
 
     it('delete a group user', () => {
       page.deleteEvent(2)
       fixture.detectChanges()
-      expect(groupsServiceStub.deleteUser).toHaveBeenCalledWith(1, 12)
-      expect(page.groupUsers.length).toEqual(1)
-      expect(page.groupUsers).toEqual(['John Boon'])
-      expect(page.users).toEqual(['Mark Boon', 'Alekxis Boon', 'Petr Boon'])
+      expect(alertControllerStub.create).toHaveBeenCalled()
     })
   })
 })

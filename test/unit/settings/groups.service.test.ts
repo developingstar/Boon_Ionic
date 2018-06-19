@@ -5,6 +5,7 @@ import {
 import { async, TestBed } from '@angular/core/testing'
 
 import { Group } from '../../../src/app/settings/group.model'
+// import * as API from '../../../src/app/settings/groups.api.model'
 import { GroupsService } from '../../../src/app/settings/groups.service'
 import { sampleGroup } from '../../support/factories'
 
@@ -28,16 +29,20 @@ describe('GroupsService', () => {
     it(
       'returns an array',
       async(() => {
-        const group1 = sampleGroup({
-          id: 1,
-          name: 'Group1'
-        })
-
-        const group2 = sampleGroup({
-          id: 2,
-          name: 'Group2'
-        })
-
+        const group1 = new Group(
+          sampleGroup({
+            id: 1,
+            name: 'Group1',
+            user_count: 5
+          })
+        )
+        const group2 = new Group(
+          sampleGroup({
+            id: 2,
+            name: 'Group2',
+            user_count: 3
+          })
+        )
         groupsService.groups().subscribe((result: ReadonlyArray<Group>) => {
           expect(result.length).toEqual(2)
           expect(result).toEqual([group1, group2])
@@ -49,8 +54,16 @@ describe('GroupsService', () => {
         req.flush({
           data: {
             groups: [
-              JSON.parse(JSON.stringify(group1)),
-              JSON.parse(JSON.stringify(group2))
+              {
+                id: 1,
+                name: 'Group1',
+                user_count: 5
+              },
+              {
+                id: 2,
+                name: 'Group2',
+                user_count: 3
+              }
             ]
           }
         })
@@ -64,10 +77,16 @@ describe('GroupsService', () => {
     it(
       'returns a group',
       async(() => {
-        const group = sampleGroup()
+        const group3 = new Group(
+          sampleGroup({
+            id: 1,
+            name: 'Group3',
+            user_count: 5
+          })
+        )
 
         groupsService.group(1).subscribe((result: Group | undefined) => {
-          expect(result).toEqual(group)
+          expect(result).toEqual(group3)
         })
 
         const req = httpMock.expectOne('/api/groups/1')
@@ -75,10 +94,13 @@ describe('GroupsService', () => {
 
         req.flush({
           data: {
-            group: group
+            group: {
+              id: 1,
+              name: 'Group3',
+              user_count: 5
+            }
           }
         })
-
         httpMock.verify()
       })
     )
@@ -101,7 +123,8 @@ describe('GroupsService', () => {
           data: {
             group: {
               id: 1,
-              name: 'CreateGroup'
+              name: 'CreateGroup',
+              user_count: 5
             }
           }
         })
