@@ -30,7 +30,7 @@ export class GroupsService {
       .map(
         (response: {
           readonly data: {
-            readonly group: Group
+            readonly group: API.IGroup
           }
         }) => new Group(response.data.group)
       )
@@ -45,7 +45,7 @@ export class GroupsService {
       .map(
         (response: {
           readonly data: {
-            readonly group: Group
+            readonly group: API.IGroup
           }
         }) => new Group(response.data.group)
       )
