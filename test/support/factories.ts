@@ -16,9 +16,11 @@ export function sampleUser(
   return {
     avatar_url: null,
     email: 'john@example.com',
+    first_name: 'John',
     id: 100,
+    last_name: 'Boon',
     name: 'John Boon',
-    password: '',
+    password: 'secret',
     phone_number: '',
     role: 'admin',
     ...values
@@ -57,10 +59,31 @@ export function sampleLead(
     created_by_user_id: null,
     email: 'john@example.com',
     fields: fields,
+    first_name: 'First Name',
     id: 1,
+    inserted_at: '2017-12-01T07:00:00.000Z',
+    last_name: 'Last Name',
     owner: null,
     phone_number: '+999123456',
     stage_id: 1,
+    updated_at: '2017-12-01T07:00:00.000Z',
+    ...values
+  }
+}
+export function sampleDeal(
+  values: { readonly [key: string]: any } = {}
+): Deal.API.IDeals {
+  return {
+    contact: null,
+    created_by_service_id: 1,
+    created_by_user_id: 1,
+    email: 'john@example.com',
+    id: 1,
+    name: 'Sample Deal',
+    owner: null,
+    pipeline: 'New',
+    stage_id: 1,
+    value: 10000,
     ...values
   }
 }
@@ -183,6 +206,7 @@ export function sampleJourney(
         type: 'field_updated'
       }
     ],
+    type: 'contact',
     ...values
   }
 }
