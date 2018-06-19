@@ -2,20 +2,8 @@ import { JourneysPage } from '../../../src/app/journeys/journeys.page'
 import { PageObject } from '../../support/page.po'
 
 export class JourneysPageObject extends PageObject<JourneysPage> {
-  get createContactJourneyButtonVisible(): boolean {
-    return this.elementVisible('button', 'New Contact Journey')
-  }
-
-  get createDealJourneyButtonVisible(): boolean {
-    return this.elementVisible('button', 'New Deal Journey')
-  }
-
-  get contactButtonVisible(): boolean {
-    return this.elementVisible('button', 'Contact Journeys')
-  }
-
-  get dealButtonVisible(): boolean {
-    return this.elementVisible('button', 'Deal Journeys')
+  isButtonVisible(label: string): boolean {
+    return this.elementVisible('button', label)
   }
 
   hasClass(label: string, className: string): boolean {

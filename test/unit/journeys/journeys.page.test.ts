@@ -101,10 +101,10 @@ describe('JourneysPage', () => {
 
   describe('show journeys with contact type', () => {
     it('show buttons', () => {
-      expect(page.contactButtonVisible).toBe(true)
-      expect(page.dealButtonVisible).toBe(true)
-      expect(page.createContactJourneyButtonVisible).toBe(true)
-      expect(page.createDealJourneyButtonVisible).toBe(false)
+      expect(page.isButtonVisible('New Contact Journey')).toBe(true)
+      expect(page.isButtonVisible('New Deal Journey')).toBe(false)
+      expect(page.isButtonVisible('Contact Journeys')).toBe(true)
+      expect(page.isButtonVisible('Deal Journeys')).toBe(true)
       expect(page.hasClass('Contact Journeys', '.nav-item-active')).toBe(true)
       expect(page.hasClass('Deal Journeys', '.nav-item-active')).toBe(false)
     })
@@ -173,8 +173,8 @@ describe('JourneysPage', () => {
     )
 
     it('show buttons', () => {
-      expect(page.createContactJourneyButtonVisible).toBe(false)
-      expect(page.createDealJourneyButtonVisible).toBe(true)
+      expect(page.isButtonVisible('New Contact Journey')).toBe(false)
+      expect(page.isButtonVisible('New Deal Journey')).toBe(true)
       expect(page.hasClass('Contact Journeys', '.nav-item-active')).toBe(false)
       expect(page.hasClass('Deal Journeys', '.nav-item-active')).toBe(true)
     })
