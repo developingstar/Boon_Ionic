@@ -43,6 +43,7 @@ export interface IJourney {
   readonly published_at: string | null
   readonly actions: ReadonlyArray<IAction>
   readonly triggers: ReadonlyArray<ITrigger>
+  readonly type: string
 }
 
 export interface IAction {

@@ -9,6 +9,7 @@ export class Journey {
   readonly publishedAt: string | null
   readonly actions: ReadonlyArray<Action>
   readonly triggers: ReadonlyArray<Trigger>
+  readonly type: string
 
   constructor(data: API.IJourney) {
     this.id = data.id
@@ -17,6 +18,7 @@ export class Journey {
     this.publishedAt = data.published_at
     this.actions = data.actions.map((action) => new Action(action))
     this.triggers = data.triggers.map((trigger) => new Trigger(trigger))
+    this.type = data.type
   }
 
   public toApiRepresentation(): API.IJourney {
@@ -30,7 +32,8 @@ export class Journey {
       state: this.state,
       triggers: this.triggers.map((trigger) => {
         return trigger.toApiRepresentation()
-      })
+      }),
+      type: this.type
     }
   }
 }
