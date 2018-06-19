@@ -1,6 +1,6 @@
 import { Stage } from '../../src/app/crm/stage.model'
 import * as JourneysAPI from '../../src/app/journeys/journeys.api.model'
-import { Group } from '../../src/app/settings/group.model'
+import * as API from '../../src/app/settings/groups.api.model'
 import { FieldDefinition } from './../../src/app/crm/field-definition.model'
 import { Field } from './../../src/app/crm/field.model'
 import {
@@ -206,7 +206,6 @@ export function sampleJourney(
         type: 'field_updated'
       }
     ],
-    type: 'contact',
     ...values
   }
 }
@@ -234,10 +233,11 @@ export function sampleShortcode(
 
 export function sampleGroup(
   values: { readonly [key: string]: any } = {}
-): Group {
-  return new Group({
+): API.IGroup {
+  return {
     id: 1,
     name: 'Group Name',
+    user_count: 5,
     ...values
-  })
+  }
 }
