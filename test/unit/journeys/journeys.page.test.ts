@@ -1,9 +1,13 @@
-import { HttpClient, HttpHandler, HttpParams } from '@angular/common/http'
+import { HttpParams } from '@angular/common/http'
 import { HttpClientTestingModule } from '@angular/common/http/testing'
 import { async, ComponentFixture } from '@angular/core/testing'
 import { NavController } from 'ionic-angular'
 import { Observable } from 'rxjs'
 
+import {
+  blankHttpRequestOptions,
+  IHttpRequestOptions
+} from '../../../src/app/api/http-request-options'
 import { PaginatedCollection } from '../../../src/app/api/paginated-collection'
 import { CurrentUserService } from '../../../src/app/auth/current-user.service'
 import { Journey } from '../../../src/app/journeys/journey.model'
@@ -21,51 +25,56 @@ describe('JourneysPage', () => {
   let collection: PaginatedCollection<Journey>
   let fixture: ComponentFixture<JourneysPage>
   let page: JourneysPageObject
-  let journeysServiceStub: JourneysService
+  let journeysServiceStub: any
   let navControllerStub: any
-
+  let items: any
   beforeEach(
     async(() => {
-      collection = {
-        count: 0,
-        items: [
-          new Journey(
-            sampleJourney({
-              id: 1,
-              name: 'motivating introduction 1',
-              published_at: '2018-03-11T11:07:48Z',
-              state: 'active'
-            })
-          ),
-          new Journey(
-            sampleJourney({
-              id: 2,
-              name: 'motivating introduction 2'
-            })
-          ),
-          new Journey(
-            sampleJourney({
-              id: 3,
-              name: 'motivating introduction 3',
-              published_at: '2018-03-12T09:16:32Z',
-              state: 'active'
-            })
+      items = [
+        new Journey(
+          sampleJourney({
+            id: 1,
+            name: 'motivating introduction 1',
+            published_at: '2018-03-11T11:07:48Z',
+            state: 'active',
+            type: 'contact'
+          })
+        ),
+        new Journey(
+          sampleJourney({
+            id: 2,
+            name: 'motivating introduction 2',
+            type: 'deal'
+          })
+        ),
+        new Journey(
+          sampleJourney({
+            id: 3,
+            name: 'motivating introduction 3',
+            published_at: '2018-03-12T09:16:32Z',
+            state: 'active',
+            type: 'contact'
+          })
+        )
+      ]
+
+      journeysServiceStub = {
+        journeys: (
+          options: IHttpRequestOptions = blankHttpRequestOptions,
+          category: string = 'contact'
+        ) => {
+          const journeys = items.filter(
+            (journey: Journey) => journey.type === category
           )
-        ],
-        nextPageLink: 'http://example.com/next',
-        prevPageLink: 'http://example.com/prev'
-      }
-
-      const httpClient = new HttpClient(
-        new class extends HttpHandler {
-          handle(req: any): Observable<any> {
-            return Observable.never()
+          collection = {
+            count: 0,
+            items: journeys,
+            nextPageLink: 'http://example.com/next',
+            prevPageLink: 'http://example.com/prev'
           }
-        }()
-      )
-
-      journeysServiceStub = new JourneysService(httpClient)
-      journeysServiceStub.journeys = () => Observable.of(collection)
+          return Observable.of(collection)
+        }
+      }
 
       spyOn(journeysServiceStub, 'journeys').and.callThrough()
 
@@ -90,11 +99,11 @@ describe('JourneysPage', () => {
     })
   )
 
-  describe('table', () => {
-    it('includes journeys', () => {
+  describe('show journeys', () => {
+    it('table', () => {
       const table = page.journeysTable()
 
-      expect(table.children.length).toBe(5)
+      expect(table.children.length).toBe(4)
       assertTableRow(table.children.item(0), [
         'Name',
         'Published',
@@ -108,12 +117,6 @@ describe('JourneysPage', () => {
         ''
       ])
       assertTableRow(table.children.item(2), [
-        'motivating introduction 2',
-        '-',
-        'Draft',
-        ''
-      ])
-      assertTableRow(table.children.item(3), [
         'motivating introduction 3',
         '03-12-2018',
         'Published',
