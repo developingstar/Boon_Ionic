@@ -1,26 +1,6 @@
 @import 'theme/shared-classes';
 @import 'theme/style-guide';
 crm-page {
-  .nav-pipelines {
-    background-color: #4c4953;
-    color: rgba(255, 255, 255, 0.41);
-    font-size: $font-size-name;
-    font-weight: $font-weight-headers;
-    padding: 0px 16px;
-    span {
-      cursor: pointer;
-      padding: 8px;
-      &.active {
-        color: #fff;
-      }
-    }
-    @include md {
-      padding: 12px 56px;
-      span {
-        padding: 8px 16px;
-      }
-    }
-  }
   button.new-contact {
     @extend .boon-button;
     float: right;
@@ -37,6 +17,44 @@ crm-page {
   .content {
     .table {
       @extend .boon-table;
+      border: 0 !important;
+      padding: 0 !important;
+      .header {
+        background: $color-content-background
+      }
+    }
+  }
+  ion-row {
+    ion-col:first-child{
+      padding-left: 25px;
+    }
+    .action {
+      display: flex;
+      max-width: 100px;
+      justify-content: center;
+      align-items: center;
+      padding: 0;
+      button {
+        margin-bottom: 0;
+        background: #FFF !important;
+        color: $color-primary !important;
+        &:hover {
+          background: #d1d1d1;
+        }
+      }
+    }
+    .dot {
+      height: 4px;
+      width: 4px;
+      border-radius: 4px;
+      margin-right: 5px;
+      background: $color-text-secondary;
+    }
+  }
+  .header {
+    ion-col {
+      display: flex;
+      align-items: flex-end;
     }
   }
   ion-row.lead {
