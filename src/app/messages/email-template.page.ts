@@ -54,11 +54,6 @@ export class EmailTemplatePage extends TemplatePage<
       messagesService,
       toastController
     )
-    CKEDITOR.plugins.addExternal(
-      'strinsert',
-      '/assets/ckeditor_plugin/',
-      'plugin.js'
-    )
     this.content = ''
   }
 
@@ -72,7 +67,6 @@ export class EmailTemplatePage extends TemplatePage<
     })
     this.ckeConfig = {
       allowedContent: true,
-      extraPlugins: 'strinsert',
       strinsert_strings: shortcodeList,
       toolbar: 'Basic',
       toolbar_Basic: [
@@ -160,6 +154,7 @@ export class EmailTemplatePage extends TemplatePage<
     state: State,
     shortcode: string = ''
   ): Observable<State> {
+    this.content += shortcode
     return Observable.of(state)
   }
 
