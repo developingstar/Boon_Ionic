@@ -13,17 +13,21 @@ ion-content(padding)
       ion-col Phone number
       ion-col Created at
       ion-col Contact owner
-      ion-col Action
+      ion-col.action
+        button(ion-button, small, (click)="loadPrevPage()", [disabled]="isPrevPageButtonDisabled | async")
+          ion-icon(name="md-arrow-dropleft")
+        button(ion-button, small, (click)="loadNextPage()", [disabled]="isNextPageButtonDisabled | async")
+          ion-icon(name="md-arrow-dropright")
     ion-row.lead(*ngFor="let lead of (leads | async)", (click)="showLead(lead)")
       ion-col {{lead.name || "-"}}
       ion-col {{lead.email || "-"}}
       ion-col {{lead.phoneNumber || "-"}}
       ion-col {{lead.insertedAt | date:'MM/dd hh:mm a' || "-"}}
       ion-col {{lead.owner?.name || "-"}}
-      ion-col
-        span.dot
-        span.dot
-        span.dot
+      ion-col.action
+        div.dot
+        div.dot
+        div.dot
   ion-row.footer
     ion-col.center-y
       .showing-color Showing
