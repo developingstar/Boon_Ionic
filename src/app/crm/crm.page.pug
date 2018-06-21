@@ -3,7 +3,15 @@ nav-content
 
 ion-content(padding)
   div.header-row
-    h2 All Contacts
+    div.center-y
+      h2 All Contacts
+      div.showing-total {{leadCount | async}} Total
+      div.sort
+        ion-label.sort-label Sort by:
+        ion-select(interface="popover", (ionChange)="itemSelected($event)", placeholder="Sort")
+          ion-option(value="sort1") sort1
+          ion-option(value="sort2") sort2
+            //- ion-option(*ngFor="let name of shortcodeNames | async", [value]="name") {{name}}
     button.new-contact(ion-button, (click)="newLead()") New Contact
 
   ion-grid.table
@@ -22,24 +30,9 @@ ion-content(padding)
       ion-col {{lead.name || "-"}}
       ion-col {{lead.email || "-"}}
       ion-col {{lead.phoneNumber || "-"}}
-      ion-col {{lead.insertedAt | date:'MM/dd hh:mm a' || "-"}}
+      ion-col {{lead.insertedAt | date:'dd MMM yyyy' || "-"}}
       ion-col {{lead.owner?.name || "-"}}
       ion-col.action
         div.dot
         div.dot
         div.dot
-  ion-row.footer
-    ion-col.center-y
-      .showing-color Showing
-      .showing-from {{showingLow}}
-      .showing-color to
-      .showing-to {{showingHigh}}
-      .showing-color of
-      .showing-total {{leadCount | async}} contacts
-    ion-col(col-auto)
-      button(ion-button, small, (click)="loadPrevPage()", [disabled]="isPrevPageButtonDisabled | async")
-        ion-icon(name="ios-arrow-back-outline")
-        span Prev
-      button(ion-button, small, (click)="loadNextPage()", [disabled]="isNextPageButtonDisabled | async")
-        span Next
-        ion-icon(name="ios-arrow-forward-outline")
