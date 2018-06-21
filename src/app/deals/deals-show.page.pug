@@ -1,0 +1,11 @@
+nav-content
+  nav-icons(right, currentPage="DealsShowPage")
+
+//- header content goes here
+div
+  | deals show
+
+//- two tabing sections
+div
+  tab-selector([tabs]="leftTabs", [selectedTab]='leftSelected')
+  tab-selector([tabs]="rightTabs", [selectedTab]='rightSelected')

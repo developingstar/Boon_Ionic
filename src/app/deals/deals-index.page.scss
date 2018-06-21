@@ -1,0 +1,137 @@
+@import 'theme/shared-classes';
+@import 'theme/style-guide';
+
+deals-index-page {
+  .content-md {
+    background-color: #f1f2f6 !important;
+  }
+  .header-info-group {
+    align-self: flex-end;
+    .deals-index-title {
+      padding-right: 15px;
+      .title {
+        color: $color-primary;
+        margin-left: 41px;
+        height: 25px;
+        letter-spacing: 0.17px;
+        line-height: 30px;
+        font-size: 25px;
+        padding-right: 5px;
+      }
+      .arrow {
+        color: #90a4ae;
+        height: 8px;
+        width: 5px;
+        padding-left: 10px;
+      }
+    }
+    .deals-index-total {
+      height: 16px;
+      width: 70px;
+      color: #90a4ae;
+      font-size: 14px;
+      letter-spacing: 0.07px;
+      line-height: 16px;
+      padding-right: 17px;
+    }
+    .deals-index-sort {
+      .title {
+        height: 16px;
+        width: 70px;
+        color: #90a4ae;
+        font-size: 14px;
+        letter-spacing: 0.07px;
+        line-height: 16px;
+        padding-right: 2px;
+      }
+      .sort {
+        height: 16px;
+        width: 125px;
+        color: #313942;
+        font-size: 14px;
+        letter-spacing: 0.07px;
+        line-height: 16px;
+      }
+      .arrow {
+        color: #90a4ae;
+        height: 8px;
+        width: 5px;
+        padding-left: 4px;
+        margin-top: 2px;
+      }
+    }
+  }
+
+  .new-deal {
+    width: 179px;
+    height: 38px;
+    font-size: 11px;
+  }
+  ion-row.deal {
+    cursor: pointer;
+    background: white;
+    height: 80px;
+    margin: 1.5px 40px;
+    border-radius: 4px;
+    height: 44px;
+  }
+  ion-col.deal {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    margin-left: 10px;
+    color: #313942;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 16px;
+  }
+  ion-col.deal-header {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    margin-left: 10px;
+    color: #90a4ae;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.57px;
+    line-height: 13px;
+  }
+  .deal-end {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 10px;
+    width: 60px;
+    button {
+      background: white !important;
+      border-radius: 4px;
+      box-shadow: none;
+    }
+    .arrow {
+      color: #90a4ae;
+      font-size: 1.5em;
+    }
+    .more {
+      color: #90a4ae;
+      font-size: 2em;
+    }
+  }
+  ion-col.header-row {
+    display: flex;
+    justify-content: flex-end;
+  }
+  .header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    justify-content: flex-start;
+    margin: -4px 40px;
+    h2 {
+      color: $color-primary;
+      letter-spacing: 0.17px;
+      line-height: 30px;
+      font-size: 25px;
+    }
+  }
+}
