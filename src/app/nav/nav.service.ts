@@ -12,6 +12,6 @@ export class NavService {
   public readonly navBarVisible = new BehaviorSubject<boolean>(false)
 
   public readonly contentUpdated = new BehaviorSubject<
-    [NavContent, NavContent]
-  >([undefined, undefined])
+    [NavContent, NavContent, NavContent]
+  >([undefined, undefined, undefined])
 }

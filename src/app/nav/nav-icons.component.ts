@@ -23,14 +23,31 @@ export class NavIconsComponent {
   currentUserRole: Auth.API.Role | undefined
 
   readonly navGroups: ReadonlyArray<INavGroup> = [
-    { name: 'Crm', icon: 'crm.svg', pages: ['CrmPage', 'LeadPage'] },
+    {
+      icon: 'Dashboard.svg',
+      name: 'Crm',
+      pages: ['CrmPage', 'LeadPage']
+    },
+    {
+      icon: 'crm.svg',
+      name: 'Deals',
+      pages: ['DealsShowPage', 'DealsIndexPage']
+    },
     {
       icon: 'automation.svg',
       name: 'Automation',
       pages: ['JourneysPage', 'JourneyPage']
     },
-    { name: 'Text', icon: 'text.svg', pages: ['TextTemplatesPage'] },
-    { name: 'Email', icon: 'email.svg', pages: ['EmailTemplatesPage'] },
+    {
+      icon: 'text.svg',
+      name: 'Text',
+      pages: ['TextTemplatesPage']
+    },
+    {
+      icon: 'email.svg',
+      name: 'Email',
+      pages: ['EmailTemplatesPage']
+    },
     {
       icon: 'settings.svg',
       name: 'Settings',

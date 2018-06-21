@@ -2,6 +2,7 @@ import { Component, ViewEncapsulation } from '@angular/core'
 import { App } from 'ionic-angular'
 import { Observable } from 'rxjs'
 
+import { AuthService } from './../auth/auth.service'
 import { CurrentUserService } from './../auth/current-user.service'
 import { LeadFilterService } from './lead.filter.service'
 import { NavContent, NavService } from './nav.service'
@@ -21,17 +22,23 @@ export class NavComponent {
   readonly centerContent: Observable<NavContent>
   readonly navClass: Observable<string>
   readonly rightContent: Observable<NavContent>
+  readonly iconsLeftContent: Observable<NavContent>
+  public logoutclicks: number = 0
   selectedItem: any
   results: Crm.API.ISearchDropdownItem[]
 
   constructor(
     protected app: App,
+    private readonly authService: AuthService,
     private readonly currentUserService: CurrentUserService,
     public readonly filterService: LeadFilterService,
     navService: NavService
   ) {
     this.centerContent = navService.contentUpdated.map((portals) => portals[0])
-    this.rightContent = navService.contentUpdated.map((portals) => portals[1])
+    this.iconsLeftContent = navService.contentUpdated.map(
+      (portals) => portals[1]
+    )
+    this.rightContent = navService.contentUpdated.map((portals) => portals[2])
     this.navClass = navService.navBarVisible.map(
       (value) => (value ? 'visible' : 'hidden')
     )
@@ -49,6 +56,11 @@ export class NavComponent {
 
   public onCancel(event: any): void {
     return
+  }
+
+  public goToCrm(): void {
+    const navHome = this.app.getRootNav()
+    navHome.setRoot('CrmPage')
   }
 
   public itemSelected(event: any): void {
@@ -72,5 +84,15 @@ export class NavComponent {
                 (result: Crm.API.ISearchDropdownItem, index: number) => result
               )
       })
+  }
+
+  public logoutOn3(): void {
+    this.logoutclicks++
+    setTimeout(() => {
+      this.logoutclicks = 0
+    }, 1000)
+    if (this.logoutclicks === 3) {
+      this.authService.logout()
+    }
   }
 }

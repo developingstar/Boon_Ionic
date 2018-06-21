@@ -2,11 +2,9 @@
 @import 'theme/shared-classes';
 @import 'theme/style-guide';
 @import 'theme/variables';
-
-$nav-left-width: 77px;
-$nav-center-width: auto;
+$nav-left-width: 62px;
+$nav-center-width: 53%;
 $nav-right-width: auto;
-
 @mixin nav-logo($height) {
   align-items: center;
   display: flex;
@@ -24,42 +22,48 @@ $nav-right-width: auto;
 }
 
 @mixin nav-center($height, $min-width) {
-  border-left: 1px solid #dfe3eb;
-  border-right: 1px solid #dfe3eb;
-  flex-grow: 2;
-  height: $height;
+  border: 1px solid #dfe3eb;
+  border-radius: 3px;
+  height: calc(#{$height} / 1.5);
   min-width: $min-width;
   width: $nav-center-width;
-
+  background: rgb(241, 242, 246);
   *[center] {
     @include nav-element;
   }
 }
 
+@mixin nav-icons-left($height) {
+  border-right: 1px solid #dfe3eb;
+  position: absolute;
+  top: $height;
+  left: 0;
+  width: calc(#{$nav-left-width} - 3px);
+  height: 100vh;
+  background: $color-nav-background;
+  padding-top: 15px;
+}
+
 @mixin nav-right($height) {
   display: flex;
   height: $height;
-  padding-left: 40px;
   width: $nav-right-width;
-
   *[right],
+  .avatar,
+  .arrow,
   .username {
     @include nav-element;
-
-    padding-right: 28px;
+    padding-right: 10px;
   }
 }
 
 nav {
   .nav-container {
     @extend .center-y;
-
     height: $nav-height-mobile;
-
     @include md {
       height: $nav-height-large;
     }
-
     background: white;
     border-bottom: 1px solid #dfe3eb;
     margin: 0px;
@@ -67,76 +71,114 @@ nav {
     top: 0px;
     width: 100%;
     z-index: 100;
-
+    justify-content: space-between;
     @include xs {
       .nav-logo {
         @include nav-logo($nav-height-mobile);
-
-        min-width: 77px;
+        min-width: $nav-left-width;
       }
-
       .nav-center {
         @include nav-center($nav-height-mobile, 0px);
         display: flex;
         border-right: none;
       }
-
       .nav-right {
         @include nav-right($nav-height-mobile);
-
         justify-content: flex-end;
       }
+      .nav-icons-left {
+        @include nav-icons-left($nav-height-mobile);
+      }
     }
-
     @include md {
       .nav-logo {
         @include nav-logo($nav-height-large);
       }
-
       .nav-center {
         @include nav-center($nav-height-large, 300px);
       }
-
       .nav-right {
         @include nav-right($nav-height-large);
       }
+      .nav-icons-left {
+        @include nav-icons-left($nav-height-large);
+      }
     }
-
     .search-bar {
       position: relative;
       display: flex;
       align-items: center;
       width: 100%;
-      padding-left: 30px;
-      padding-right: 30px;
-
-      ul {
-        left: 30px;
-        right: 30px;
-        width: auto;
+      padding-left: 15px;
+      padding-right: 15px;
+      .search-icon {
+        width: 25px;
       }
-
-      .searchbar-input {
-        box-shadow: none;
+      .search-list {
+        width: 100%;
+        padding: 15px;
+        .ui-autocomplete {
+          width: 100%;
+          input {
+            width: 100%;
+            font-size: 15px;
+            border: 0;
+            box-shadow: none;
+            background: rgb(241, 242, 246);
+          }
+        }
+        .ui-autocomplete-panel {
+          max-height: 425px !important;
+        }
+        .ui-state-highlight {
+          background-color: $color-content-background;
+          color: $color-dark;
+        }
+        .search-item {
+          margin-left: 20px;
+          padding-bottom: 10px;
+          border-bottom: 1px solid $color-card-border;
+          .group-name {
+            font-size: 16px;
+            padding-bottom: 10px;
+            color: $color-primary;
+            font-weight: bold;
+          }
+          .item-name {
+            font-size: 14px;
+            font-weight: bold;
+            padding-bottom: 5px;
+          }
+          .item-comment {
+            color: $color-light-dark;
+          }
+        }
       }
     }
   }
-
   .username {
     white-space: nowrap;
+    font-size: 14px;
+    font-weight: 600;
   }
-
+  .avatar svg {
+    fill: #c1adee;
+    height: 28px;
+    width: 28px;
+  }
+  .arrow svg {
+    height: 20px;
+    width: 20px;
+    fill: #c1adee;
+  }
   .nav-container.hidden {
     display: none;
   }
-
   .spacing {
     height: $nav-height-mobile;
-
     @include md {
       height: $nav-height-large;
     }
-
     width: 100%;
   }
 }

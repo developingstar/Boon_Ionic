@@ -1,13 +1,24 @@
 //- Use ngClass instead of ngIf so that the content can be always rendered.
 .nav-container([ngClass]="navClass | async")
-  .nav-logo([inlineSVG]="'assets/icon/boon.svg'")
+  .nav-logo([inlineSVG]="'assets/icon/boon.svg'", (click)="goToCrm()")
   .nav-center
     div([cdkPortalOutlet]="centerContent | async")
     div.search-bar
-      ion-auto-complete([dataProvider]='filterService', [options]="{ placeholder : 'Search all contacts' }", (itemSelected)="itemSelected($event)")
-  .nav-right
-    div([cdkPortalOutlet]="rightContent | async")
-    span.username(*ngIf="username | async") Hello, {{username | async}}
+      //- ion-auto-complete([dataProvider]='filterService', [options]="{ placeholder : 'Search contacts, deals, users' }", (itemSelected)="itemSelected($event)")
+      img.search-icon(src='../../assets/icon/search-icon.png')
+      p-autoComplete.search-list([(ngModel)]="selectedItem", [suggestions]="results", (completeMethod)="search($event)", placeholder="Search contacts, deals, users", (ngModelChange)="itemSelected($event)", field="name")
+        ng-template(pTemplate="item", let-item)
+          div.search-item
+            div.group-name {{item.group_name}}
+            div.item-name {{item.name}}
+            div.item-comment {{item.comment}}
+  .nav-right((click)='logoutOn3()')
+    span.avatar([inlineSVG]="'assets/icon/settings/avatar.svg'")
+    span.username(*ngIf="username | async") {{username | async}}
+    span.arrow([inlineSVG]="'assets/icon/settings/arrow.svg'")
+  .nav-icons-left
+    div([cdkPortalOutlet]="iconsLeftContent | async")
+
 
 //- Extra spacing for the content that follows the nav bar. With this, the parent component
 //- doesn't have to juggle margins depending on the visibility state of the nav bar.
