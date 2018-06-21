@@ -8,10 +8,13 @@
       img.search-icon(src='../../assets/icon/search-icon.png')
       p-autoComplete.search-list([(ngModel)]="selectedItem", [suggestions]="results", (completeMethod)="search($event)", placeholder="Search contacts, deals, users", (ngModelChange)="itemSelected($event)", field="name")
         ng-template(pTemplate="item", let-item)
-          div.search-item
+          div.search-item(*ngIf="item.id !== 0")
             div.group-name {{item.group_name}}
-            div.item-name {{item.name}}
+            div.item-name {{item.name}} - {{item.type}}
             div.item-comment {{item.comment}}
+          div.see_results(*ngIf="item.id === 0")
+            span See all Results
+            ion-icon(name="md-arrow-round-forward")
   .nav-right((click)='logoutOn3()')
     span.avatar([inlineSVG]="'assets/icon/settings/avatar.svg'")
     span.username(*ngIf="username | async") {{username | async}}

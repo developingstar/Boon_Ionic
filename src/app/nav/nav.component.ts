@@ -81,8 +81,14 @@ export class NavComponent {
                   index < 3
               )
             : results.map(
-                (result: Crm.API.ISearchDropdownItem, index: number) => result
+                (result: Crm.API.ISearchDropdownItem) => result
               )
+        if (this.results.length !== 0) {
+          this.results.push({
+            id: 0,
+            name: 'See all results',
+          })
+        }
       })
   }
 
