@@ -26,6 +26,11 @@ import { SalesService } from './sales.service'
 export class CrmPage extends ReactivePage<IState, UserAction> {
   public showingLow: number = 1
   public showingHigh: number = 50
+  readonly sortList = [     // TODO: Update
+    {label: 'Date Added', value: 'added'},
+    {label: 'Date Created', value: 'created'},
+    {label: 'Name', value: 'name'},
+  ]
 
   constructor(
     private readonly salesService: SalesService,
@@ -34,6 +39,10 @@ export class CrmPage extends ReactivePage<IState, UserAction> {
     private readonly currentUserService: CurrentUserService
   ) {
     super(initialState)
+  }
+
+  public sortSelected(value: string): void {
+    return
   }
 
   public loadPrevPage(): void {

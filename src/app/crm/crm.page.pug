@@ -8,9 +8,8 @@ ion-content(padding)
       div.showing-total {{leadCount | async}} Total
       div.sort
         ion-label.sort-label Sort by:
-        ion-select(interface="popover", (ionChange)="itemSelected($event)", placeholder="Sort")
-          ion-option(value="sort1") sort1
-          ion-option(value="sort2") sort2
+        ion-select(interface="popover", (ionChange)="sortSelected($event)", placeholder="Sort Condition")
+          ion-option(*ngFor="let sort of sortList", [value]="sort.value") {{sort.label}}
             //- ion-option(*ngFor="let name of shortcodeNames | async", [value]="name") {{name}}
     button.new-contact(ion-button, (click)="newLead()") New Contact
 
