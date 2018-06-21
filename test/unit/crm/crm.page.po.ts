@@ -20,12 +20,16 @@ export class CrmPageObject extends PageObject<CrmPage> {
     return this.findByCss<HTMLElement>('.table')!
   }
 
+  showingTotal(): HTMLElement {
+    return this.findByCss<HTMLElement>('.showing-total')!
+  }
+
   clickPrevPageButton(): void {
-    this.clickButton('.footer button:first-of-type')
+    this.clickButton('.action button:first-of-type')
   }
 
   clickNextPageButton(): void {
-    this.clickButton('.footer button:last-of-type')
+    this.clickButton('.action button:last-of-type')
   }
 
   clickNewContactButton(): void {
