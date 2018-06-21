@@ -7,16 +7,8 @@ lead-page {
   }
   .contactShowHeader {
     padding: 16px 43px;
-    background-color: #4C4953;
+    background-color: #4c4953;
     color: white;
-    .header {
-      color: rgba(255,255,255,0.41);
-      font-size: 13px;
-    }
-    ion-col {
-      padding-left: 0;
-      font-size: 14px;
-    }
   }
   #back-button {
     margin-left: -15px;
@@ -33,7 +25,7 @@ lead-page {
     height: 38px;
     width: 124px;
     border-radius: 4px;
-    background-color: rgba(0,0,0,0.23);
+    background-color: rgba(0, 0, 0, 0.23);
     color: white;
     cursor: pointer;
     &:disabled {
@@ -43,53 +35,32 @@ lead-page {
     }
   }
   pipeline {
+    margin-top: 20px;
     margin-bottom: 28px;
   }
   .lead {
-    @include border-radius($radius-size);
-    background-color: #fff;
-    border: 1px $color-border solid;
-    padding: 8px;
-    button {
-      @extend .boon-button;
-    }
-    .base-fields,
-    .custom-fields {
-      margin: 30px 50px;
-    }
+    display: flex;
+    justify-content: space-between;
     .base-fields {
+      flex: 1;
       display: flex;
       justify-content: space-between;
+      padding-right: 40px;
       button {
         display: inline-block;
         margin-left: 6px;
         width: 124px;
       }
     }
-    hr {
-      border-top: 1px $color-border solid;
-      height: 0;
-      margin: 0 -8px;
+    .field_label {
+      color: rgba(255,255,255,0.41);
     }
-    .custom-fields {
-      margin-bottom: 0px;
-      h2 {
-        color: #000000;
-        font-size: 12px;
-        font-weight: bold;
-        margin-bottom: 5px;
-        text-transform: uppercase;
-      }
-      field {
-        margin-top: 15px;
-        margin-bottom: 30px;
-      }
+    .field-value {
+      color: white;
     }
     field {
       display: inline-block;
-      margin-right: 40px;
       vertical-align: top;
-      width: 195px;
     }
   }
   .lead-comment {

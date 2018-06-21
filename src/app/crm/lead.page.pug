@@ -6,30 +6,21 @@ ion-content(padding)
     button#back-button(ion-button, clear, (click)="goBack()")
       | < Back
     div(*ngIf="lead | async; let lead")
-      ion-row.header
-        | Contact
-      ion-row
-        h1 {{lead.name}}
-      ion-row
-        ion-col(col-12, col-md-8, no-padding)
-          ion-row.header
-            ion-col Email
-            ion-col Phone Number
-            ion-col Contact Owner
-            ion-col Mood
-          ion-row.contact
-            ion-col {{lead.email}}
-            ion-col {{lead.phoneNumber || "-"}}
-            ion-col {{lead.owner.name}}
-            ion-col {{lead.mood}}
-        ion-col(col-12, col-md-2).buttons
-          div(*ngIf="editMode | async; else editButton")
-            button((click)="cancel()", ion-button, outline) Cancel
-            button((click)="save(form.value)", [disabled]="!form.valid", ion-button) Save
-          ng-template(#editButton)
-            button((click)="edit()", ion-button) Edit
-        ion-col(col-12, col-md-2).buttons
-          button.update-stage-button(ion-button, [disabled]="!canUpdateStage()", (click)="updateStage()") Update stage
+      div.header
+        div.lead(*ngIf="formGroup | async; let form")
+          div.base-fields
+            field(type="input", [form]="form", formField="firstName", label="First Name")
+            field(type="input", [form]="form", formField="lastName", label="Last Name")
+            field(type="input", [form]="form", formField="email", label="Email")
+            field(type="input", [form]="form", formField="phoneNumber", label="Phone Number")
+            field(type="select", [form]="form", formField="owner_id", label="Owner", [options]="owners | async")
+          div.buttons
+            div(*ngIf="editMode | async; else editButton")
+              button((click)="cancel()", ion-button, outline) Cancel
+              button((click)="save(form.value)", [disabled]="!form.valid", ion-button) Save
+            ng-template(#editButton)
+              button((click)="edit()", ion-button) Edit
+            button.update-stage-button(ion-button, [disabled]="!canUpdateStage()", (click)="updateStage()") Update stage
 
       pipeline([stages]="stages | async", type="progress", [currentStageId]="lead.stageId", (select)="onStageChange($event)")
 
