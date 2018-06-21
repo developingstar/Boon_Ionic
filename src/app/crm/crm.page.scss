@@ -71,15 +71,28 @@ crm-page {
       font-size: 25px;
     }
   }
-
-  .showing-from,
-  .showing-to,
-  .showing-total {
-    padding: 0px 3px;
-    font-weight: $font-weight-headers;
-  }
-
   .showing-color {
+    font-size: 14px;
     color: $color-text-secondary;
+  }
+  .showing-total {
+    @extend .showing-color;
+    margin-left: 2rem;
+    margin-bottom: 0.3rem;
+  }
+  .sort {
+    display: flex;
+    margin-left: 3rem;
+    margin-top: -0.3rem;
+
+    ion-label {
+      max-width: 50px;
+      text-align: right;
+    }
+
+    ion-select {
+      width: 200px;
+      padding-left: 10px;
+    }
   }
 }
