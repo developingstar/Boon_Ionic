@@ -5,7 +5,7 @@ import {
 import { PaginatedCollection } from '../api/paginated-collection'
 import { Lead } from './lead.model'
 
-export type FilterType = 'pipeline_id' | 'stage_id'
+export type FilterType = 'sort'
 
 export interface ISetFilter {
   readonly name: 'setFilter'
@@ -17,9 +17,7 @@ export type UserAction = 'init' | 'prev' | 'next' | ISetFilter | 'newLead'
 
 export interface IState {
   readonly leads: PaginatedCollection<Lead>
-  readonly pipelineId: string | undefined
   readonly requestOptions: IHttpRequestOptions
-  readonly stageId: string | undefined
 }
 
 export const initialState: IState = {
@@ -29,7 +27,5 @@ export const initialState: IState = {
     nextPageLink: null,
     prevPageLink: null
   },
-  pipelineId: undefined,
   requestOptions: blankHttpRequestOptions,
-  stageId: undefined
 }

@@ -10,14 +10,11 @@ import { ReactivePage } from '../utils/reactive-page'
 import {
   FilterType,
   initialState,
-  ISetFilter,
   IState,
   UserAction
 } from './crm.page.state'
 import { Lead } from './lead.model'
-import { Pipeline } from './pipeline.model'
 import { SalesService } from './sales.service'
-import { Stage } from './stage.model'
 
 @IonicPage({
   segment: 'crm'
@@ -27,12 +24,8 @@ import { Stage } from './stage.model'
   templateUrl: 'crm.page.html'
 })
 export class CrmPage extends ReactivePage<IState, UserAction> {
-  readonly pipelines: Observable<ReadonlyArray<Pipeline>>
-
   public showingLow: number = 1
   public showingHigh: number = 50
-
-  private readonly stages: Observable<ReadonlyArray<Stage>>
 
   constructor(
     private readonly salesService: SalesService,
@@ -41,9 +34,6 @@ export class CrmPage extends ReactivePage<IState, UserAction> {
     private readonly currentUserService: CurrentUserService
   ) {
     super(initialState)
-
-    this.pipelines = this.salesService.pipelines().shareReplay(1)
-    this.stages = this.salesService.stages().shareReplay(1)
   }
 
   public loadPrevPage(): void {
@@ -109,25 +99,15 @@ export class CrmPage extends ReactivePage<IState, UserAction> {
 
   protected reduce(state: IState, action: UserAction): Observable<IState> {
     if (action === 'newLead') {
-      this.showNewLeadModal(state.stageId)
+      this.showNewLeadModal()
       return Observable.of(state)
     } else {
       const newRequestOptions = this.actionToRequestOptions(state, action)
       return this.salesService.leads(newRequestOptions).map((newLeads) => ({
         leads: newLeads,
-        pipelineId: this.nextPipelineId(state, action),
         requestOptions: newRequestOptions,
-        stageId: this.nextStageId(state, action)
       }))
     }
-  }
-
-  private onSetFilterChange(type: FilterType, id: number | undefined): void {
-    this.uiActions.next({
-      name: 'setFilter',
-      type: type,
-      value: typeof id === 'number' ? id.toString() : undefined
-    })
   }
 
   // Changes options based on the action peformed by the user.
@@ -163,17 +143,11 @@ export class CrmPage extends ReactivePage<IState, UserAction> {
     value: string | undefined
   ): HttpParams {
     switch (type) {
-      case 'pipeline_id':
+      case 'sort':
         if (value === undefined) {
           return new HttpParams()
         } else {
           return new HttpParams().set(type, value)
-        }
-      case 'stage_id':
-        if (value === undefined) {
-          return params.delete(type)
-        } else {
-          return params.set('stage_id', value)
         }
       default:
         if (value === undefined) {
@@ -184,31 +158,10 @@ export class CrmPage extends ReactivePage<IState, UserAction> {
     }
   }
 
-  private isSetFilter(action: UserAction): action is ISetFilter {
-    return (action as ISetFilter).name === 'setFilter'
-  }
-
-  private nextPipelineId(
-    state: IState,
-    action: UserAction
-  ): string | undefined {
-    return this.isSetFilter(action) && action.type === 'pipeline_id'
-      ? action.value
-      : state.pipelineId
-  }
-
-  private nextStageId(state: IState, action: UserAction): string | undefined {
-    if (this.isSetFilter(action)) {
-      return action.type === 'pipeline_id' ? undefined : action.value
-    } else {
-      return state.stageId
-    }
-  }
-
-  private showNewLeadModal(stageId: string | undefined): void {
+  private showNewLeadModal(): void {
     const modal = this.modalController.create(
       'NewLeadPage',
-      { stageId: stageId ? +stageId : undefined },
+      { stageId: undefined },
       {
         cssClass: 'new-lead-page-modal'
       }
