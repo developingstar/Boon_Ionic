@@ -7,12 +7,7 @@ import { IHttpRequestOptions } from '../api/http-request-options'
 import { CurrentUserService } from '../auth/current-user.service'
 import { pageAccess } from '../utils/app-access'
 import { ReactivePage } from '../utils/reactive-page'
-import {
-  FilterType,
-  initialState,
-  IState,
-  UserAction
-} from './crm.page.state'
+import { FilterType, initialState, IState, UserAction } from './crm.page.state'
 import { Lead } from './lead.model'
 import { SalesService } from './sales.service'
 
@@ -26,10 +21,11 @@ import { SalesService } from './sales.service'
 export class CrmPage extends ReactivePage<IState, UserAction> {
   public showingLow: number = 1
   public showingHigh: number = 50
-  readonly sortList = [     // TODO: Update
-    {label: 'Date Added', value: 'added'},
-    {label: 'Date Created', value: 'created'},
-    {label: 'Name', value: 'name'},
+  readonly sortList = [
+    // TODO: Update
+    { label: 'Date Added', value: 'added' },
+    { label: 'Date Created', value: 'created' },
+    { label: 'Name', value: 'name' }
   ]
 
   constructor(
@@ -114,7 +110,7 @@ export class CrmPage extends ReactivePage<IState, UserAction> {
       const newRequestOptions = this.actionToRequestOptions(state, action)
       return this.salesService.leads(newRequestOptions).map((newLeads) => ({
         leads: newLeads,
-        requestOptions: newRequestOptions,
+        requestOptions: newRequestOptions
       }))
     }
   }

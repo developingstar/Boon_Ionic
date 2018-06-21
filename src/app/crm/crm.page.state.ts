@@ -27,5 +27,5 @@ export const initialState: IState = {
     nextPageLink: null,
     prevPageLink: null
   },
-  requestOptions: blankHttpRequestOptions,
+  requestOptions: blankHttpRequestOptions
 }
