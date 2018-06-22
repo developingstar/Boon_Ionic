@@ -29,7 +29,7 @@ ion-content(padding)
       ion-col {{lead.name || "-"}}
       ion-col {{lead.email || "-"}}
       ion-col {{lead.phoneNumber || "-"}}
-      ion-col {{lead.insertedAt | date:'dd MMM yyyy' || "-"}}
+      ion-col {{lead.insertedAt | date:'dd MMM yyyy hh:mm a' || "-"}}
       ion-col {{lead.owner?.name || "-"}}
       ion-col.action
         div.dot
