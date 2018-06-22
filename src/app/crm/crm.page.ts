@@ -22,10 +22,11 @@ export class CrmPage extends ReactivePage<IState, UserAction> {
   public showingLow: number = 1
   public showingHigh: number = 50
   readonly sortList = [
-    // TODO: Update
-    { label: 'Date Added', value: 'added' },
-    { label: 'Date Created', value: 'created' },
-    { label: 'Name', value: 'name' }
+    { label: 'Name', value: 'name' },
+    { label: 'Email', value: 'email' },
+    { label: 'Phone Number', value: 'phoneNumber' },
+    { label: 'Created At', value: 'createdAt' },
+    { label: 'Contact Owner', value: 'contactOwner' },
   ]
 
   constructor(
