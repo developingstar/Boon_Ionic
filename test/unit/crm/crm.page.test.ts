@@ -142,7 +142,7 @@ describe('CrmPage', () => {
         'John Boon',
         'john@example.com',
         '+999111111',
-        '01 Dec 2017',
+        '01 Dec 2017 12:00 AM',
         '-',
         ''
       ])
@@ -150,7 +150,7 @@ describe('CrmPage', () => {
         'Susan Boon',
         'susan@example.com',
         '+999222222',
-        '01 Dec 2017',
+        '01 Dec 2017 12:00 AM',
         '-',
         ''
       ])
@@ -158,7 +158,7 @@ describe('CrmPage', () => {
         '-',
         '-',
         '+999333333',
-        '01 Dec 2017',
+        '01 Dec 2017 12:00 AM',
         'Tom',
         ''
       ])
