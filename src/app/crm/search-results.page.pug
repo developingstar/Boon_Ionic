@@ -1,0 +1,30 @@
+nav-content
+  nav-icons(right, currentPage="LeadPage")
+ion-header.top-bar
+  ion-row
+    div.type-navbar
+      button.nav-item([ngClass]="{'nav-item-active': selectedNavItem === 'contact'}", (click)="setNavItem('contact')") Contacts
+      button.nav-item([ngClass]="{'nav-item-active': selectedNavItem === 'deal'}", (click)="setNavItem('deal')") Deals
+      button.nav-item([ngClass]="{'nav-item-active': selectedNavItem === 'referrer'}", (click)="setNavItem('referrer')") Referrers
+
+ion-content(padding)
+  ion-grid.table
+    ion-row.header
+      ion-col Name
+      ion-col Email
+      ion-col Phone number
+      ion-col Created at
+      ion-col.action
+        button(ion-button, small, (click)="loadPrevPage()", [disabled]="isPrevPageButtonDisabled | async")
+          ion-icon(name="md-arrow-dropleft")
+        button(ion-button, small, (click)="loadNextPage()", [disabled]="isNextPageButtonDisabled | async")
+          ion-icon(name="md-arrow-dropright")
+    ion-row.lead(*ngFor="let item of results")
+      ion-col {{item.name || "-"}}
+      ion-col {{item.email || "-"}}
+      ion-col {{item.phoneNumber || "-"}}
+      ion-col {{item.insertedAt | date:'dd MMM yyyy hh:mm a' || "-"}}
+      ion-col.action
+        div.dot
+        div.dot
+        div.dot
