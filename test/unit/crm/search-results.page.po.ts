@@ -20,47 +20,24 @@ export class SearchResultsPageObject extends PageObject<SearchResultsPage> {
     this.clickButton('.action button:last-of-type')
   }
 
-  leadsTable(): HTMLElement {
+  clickActionButton(text: string): void {
+    this.clickButtonByText(text)
+  }
+
+  resultsTable(): HTMLElement {
     return this.findByCss<HTMLElement>('.table')!
-  }
-
-  showingFrom(): HTMLElement {
-    return this.findByCss<HTMLElement>('.showing-from')!
-  }
-
-  showingTo(): HTMLElement {
-    return this.findByCss<HTMLElement>('.showing-to')!
-  }
-
-  showingTotal(): HTMLElement {
-    return this.findByCss<HTMLElement>('.showing-total')!
-  }
-
-  clickNewContactButton(): void {
-    this.clickButton('button.new-contact')
-  }
-
-  selectPipeline(position: number): void {
-    const selector = `.nav-pipelines ion-row ion-col:nth-child(${position}) span`
-    const item = this.findDebugByCss(selector)
-    this.click(item!)
-    this.fixture.detectChanges()
-  }
-
-  selectStage(position: number): void {
-    const selector = `.nav-stages .item-container:nth-child(${position})`
-    const item = this.findDebugByCss(selector)
-    this.click(item!)
-    this.fixture.detectChanges()
-  }
-
-  getHeader(): string {
-    const h2 = this.findByCss<HTMLHeadingElement>('h2')
-    return h2 ? h2.textContent || '' : ''
   }
 
   private clickButton(selector: string): void {
     const button = this.findDebugByCss(selector)
+    this.click(button!)
+  }
+
+  private clickButtonByText(label: string): void {
+    const button = this.findAllDebugByCss('button').find(
+      (b) => b.nativeElement.textContent === label
+    )
+    expect(button).toBeTruthy()
     this.click(button!)
   }
 }

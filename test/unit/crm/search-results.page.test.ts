@@ -34,7 +34,7 @@ describe('SearchResultsPage', () => {
       const lead: Crm.API.ILead = sampleLead({
         email: 'leeess@gmail.com',
         name: 'Lisa Newman',
-        phoneNUmber: '234332111'
+        phone_number: '234332111'
       })
 
       const user: User = new User(
@@ -110,8 +110,8 @@ describe('SearchResultsPage', () => {
             })
           )
         ],
-        nextPageLink: 'http://example.com/next',
-        prevPageLink: 'http://example.com/prev'
+        nextPageLink: 'http://example.com/next?query=mar',
+        prevPageLink: 'http://example.com/prev?query=mar'
       }
       salesServiceStub = {
         leads: () => Observable.of(leadsCollection),
@@ -161,7 +161,7 @@ describe('SearchResultsPage', () => {
 
   describe('contact filter', () => {
     it('table shows leads', () => {
-      const table = page.leadsTable()
+      const table = page.resultsTable()
       expect(table.children.length).toBe(4)
       assertTableRow(table.children.item(0), [
         'Name',
@@ -174,21 +174,21 @@ describe('SearchResultsPage', () => {
         'John Boon',
         'john@example.com',
         '+999111111',
-        '01 Dec 2017 08:00 AM',
+        '01 Dec 2017 12:00 AM',
         ''
       ])
       assertTableRow(table.children.item(2), [
         'Susan Boon',
         'susan@example.com',
         '+999222222',
-        '01 Dec 2017 08:00 AM',
+        '01 Dec 2017 12:00 AM',
         ''
       ])
       assertTableRow(table.children.item(3), [
         '-',
         '-',
         '+999333333',
-        '01 Dec 2017 08:00 AM',
+        '01 Dec 2017 12:00 AM',
         ''
       ])
     })
@@ -207,6 +207,51 @@ describe('SearchResultsPage', () => {
         params: jasmine.any(HttpParams),
         url: 'http://example.com/prev?query=mar'
       })
+    })
+  })
+  describe('contact deals', () => {
+    beforeEach(
+      async(() => {
+        page.clickActionButton('Deals')
+        fixture.detectChanges()
+      })
+    )
+
+    it('show buttons', () => {
+      expect(page.hasClass('Contacts', '.nav-item-active')).toBe(false)
+      expect(page.hasClass('Deals', '.nav-item-active')).toBe(true)
+      expect(page.hasClass('Referrers', '.nav-item-active')).toBe(false)
+    })
+
+    it('table shows deals', () => {
+      const table = page.resultsTable()
+      expect(table.children.length).toBe(4)
+      assertTableRow(table.children.item(0), [
+        'Name',
+        'Email',
+        'Phone number',
+        'Created at',
+        ''
+      ])
+      assertTableRow(table.children.item(1), ['Sample Deal', '-', '-', '', ''])
+      assertTableRow(table.children.item(2), [
+        'Another Deal',
+        'leeess@gmail.com',
+        '234332111',
+        '01 Dec 2017 08:00 AM',
+        ''
+      ])
+      assertTableRow(table.children.item(3), ['-', '-', '-', '', ''])
+    })
+    it('allows to load leads from different pages', () => {
+      page.clickNextPageButton()
+      expect(dealsServiceStub.deals).toHaveBeenCalledWith(
+        '/api/deals?per_page=50&query=mar'
+      )
+      page.clickPrevPageButton()
+      expect(dealsServiceStub.deals).toHaveBeenCalledWith(
+        '/api/deals?per_page=50&query=mar'
+      )
     })
   })
   it('opens the lead page after clicking an entry in the table', () => {
