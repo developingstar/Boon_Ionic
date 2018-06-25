@@ -1,22 +1,23 @@
 import { HttpParams } from '@angular/common/http'
 import { Component } from '@angular/core'
-import { IonicPage, NavController } from 'ionic-angular'
+import { IonicPage, NavParams, NavController } from 'ionic-angular'
 import { Observable } from 'rxjs'
 import {
-  FilterType,
   initialState,
-  ISetFilter,
   IState,
   UserAction
 } from './search-results.page.state'
 
+import { IHttpRequestOptions } from '../api/http-request-options'
 import { CurrentUserService } from '../auth/current-user.service'
 import { pageAccess } from '../utils/app-access'
 import { ReactivePage } from '../utils/reactive-page'
 import { SalesService } from './sales.service'
+import { Lead } from './lead.model'
+import { Deal } from '../deals/deal.model'
 
 @IonicPage({
-  segment: 'search-results/:query'
+  segment: 'search-results'
 })
 @Component({
   selector: 'search-results-page',
@@ -24,9 +25,10 @@ import { SalesService } from './sales.service'
 })
 export class SearchResultsPage extends ReactivePage<IState, UserAction> {
   public selectedNavItem: string
-  public results: any[]
+  private query: string
 
   constructor(
+    public navParams: NavParams,
     private readonly salesService: SalesService,
     private readonly navController: NavController,
     private readonly currentUserService: CurrentUserService
@@ -36,20 +38,76 @@ export class SearchResultsPage extends ReactivePage<IState, UserAction> {
 
   ngOnInit(): void {
     this.selectedNavItem = 'contact'
-    // this.uiActions.next({ name: 'init', category: 'contact' })
+    this.query = this.navParams.get('query')
+    this.uiActions.next({ name: 'init', category: 'contact' })
   }
 
   public setNavItem(item: string): void {
     this.selectedNavItem = item
-    // this.uiActions.next({ name: 'init', category: this.selectedNavItem })
+    this.uiActions.next({ name: 'init', category: this.selectedNavItem })
+  }
+
+  public loadPrevPage(): void {
+    this.uiActions.next({ name: 'prev' })
+  }
+
+  public loadNextPage(): void {
+    this.uiActions.next({ name: 'next' })
+  }
+
+  get isPrevPageButtonDisabled(): Observable<boolean> {
+    return this.state.map((state) => state.results.prevPageLink === null)
+  }
+
+  get isNextPageButtonDisabled(): Observable<boolean> {
+    return this.state.map((state) => state.results.nextPageLink === null)
+  }
+
+  get results(): Observable<ReadonlyArray<Lead> | ReadonlyArray<Deal>> {
+    return this.state.map((state) => {
+      return state.results.items
+    })
   }
 
   protected initialAction(): UserAction {
-    return 'init'
+    return { name: 'init', category: 'contact' }
   }
 
   protected reduce(state: IState, action: UserAction): Observable<IState> {
-    return Observable.of(state)
+    const newRequestOptions = this.actionToRequestOptions(state, action)
+    return this.salesService.leads(newRequestOptions).map((newLeads) => ({
+      results: newLeads,
+      type: 'contact',
+      requestOptions: newRequestOptions,
+    }))
+  }
+
+  // Changes options based on the action peformed by the user.
+  private actionToRequestOptions(
+    state: IState,
+    action: UserAction
+  ): IHttpRequestOptions {
+    switch (action.name) {
+      case 'init':
+        return {
+          params: this.paramsWithFilter(
+            state.requestOptions.params,
+            this.query,
+          ),
+          url: null
+        }
+      case 'prev':
+        return { ...state.requestOptions, url: state.results.prevPageLink }
+      case 'next':
+        return { ...state.requestOptions, url: state.results.nextPageLink }
+    }
+  }
+
+  private paramsWithFilter(
+    params: HttpParams,
+    value: string
+  ): HttpParams {
+    return params.set('query', value)
   }
 
   private async ionViewCanEnter(): Promise<boolean> {

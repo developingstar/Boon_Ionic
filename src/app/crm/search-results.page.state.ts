@@ -25,5 +25,5 @@ export const initialState: IState = {
     prevPageLink: null
   },
   requestOptions: blankHttpRequestOptions,
-  type: 'deal'
+  type: 'deal',
 }
