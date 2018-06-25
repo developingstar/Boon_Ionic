@@ -26,6 +26,7 @@ export class NavComponent {
   public logoutclicks: number = 0
   selectedItem: any
   results: Crm.API.ISearchDropdownItem[]
+  query: string
 
   constructor(
     protected app: App,
@@ -71,6 +72,7 @@ export class NavComponent {
   }
 
   public search(event: any): void {
+    this.query = event.query
     this.filterService
       .getResults(event.query)
       .subscribe((results: Crm.API.ISearchDropdownItem[]) => {
@@ -80,13 +82,11 @@ export class NavComponent {
                 (result: Crm.API.ISearchDropdownItem, index: number) =>
                   index < 3
               )
-            : results.map(
-                (result: Crm.API.ISearchDropdownItem) => result
-              )
+            : results.map((result: Crm.API.ISearchDropdownItem) => result)
         if (this.results.length !== 0) {
           this.results.push({
             id: 0,
-            name: 'See all results',
+            name: 'See all results'
           })
         }
       })
@@ -100,5 +100,10 @@ export class NavComponent {
     if (this.logoutclicks === 3) {
       this.authService.logout()
     }
+  }
+
+  public gotoResultPage(): void {
+    const navHome = this.app.getRootNav()
+    navHome.setRoot('SearchResultsPage', {query: this.query})
   }
 }
