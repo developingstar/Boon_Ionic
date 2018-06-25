@@ -21,9 +21,9 @@ ion-content(padding)
           ion-icon(name="md-arrow-dropright")
     ion-row.lead(*ngFor="let item of (results | async)")
       ion-col {{item.name || "-"}}
-      ion-col {{item.email || "-"}}
-      ion-col {{item.phoneNumber || "-"}}
-      ion-col {{item.insertedAt | date:'dd MMM yyyy hh:mm a' || "-"}}
+      ion-col {{item.email || (item.contact && item.contact.email) || "-"}}
+      ion-col {{item.phoneNumber || (item.contact && item.contact.phoneNumber) || "-"}}
+      ion-col {{ (item.insertedAt || (item.contact && item.contact.insertedAt)) | date:'dd MMM yyyy hh:mm a' || "-"}}
       ion-col.action
         div.dot
         div.dot
