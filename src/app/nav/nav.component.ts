@@ -104,6 +104,6 @@ export class NavComponent {
 
   public gotoResultPage(): void {
     const navHome = this.app.getRootNav()
-    navHome.setRoot('SearchResultsPage', {query: this.query})
+    navHome.setRoot('SearchResultsPage', { query: this.query })
   }
 }
