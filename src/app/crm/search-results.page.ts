@@ -2,11 +2,7 @@ import { HttpParams } from '@angular/common/http'
 import { Component } from '@angular/core'
 import { IonicPage, NavController, NavParams } from 'ionic-angular'
 import { Observable } from 'rxjs'
-import {
-  initialState,
-  IState,
-  UserAction
-} from './search-results.page.state'
+import { initialState, IState, UserAction } from './search-results.page.state'
 
 import { IHttpRequestOptions } from '../api/http-request-options'
 import { CurrentUserService } from '../auth/current-user.service'
@@ -59,7 +55,7 @@ export class SearchResultsPage extends ReactivePage<IState, UserAction> {
 
   public showDetail(item: Lead | Deal): void {
     let type = 'contact'
-    this.state.subscribe(state => (type === state.type))
+    this.state.subscribe((state) => (type = state.type))
     if (type === 'contact') {
       this.navController.push('LeadPage', { id: item.id })
     } else {
@@ -88,36 +84,38 @@ export class SearchResultsPage extends ReactivePage<IState, UserAction> {
   protected reduce(state: IState, action: UserAction): Observable<IState> {
     const newRequestOptions = this.actionToRequestOptions(state, action)
     switch (action.name) {
-      case 'init':
-      {
+      case 'init': {
         if (action.category === 'contact') {
           return this.salesService.leads(newRequestOptions).map((leads) => ({
             requestOptions: newRequestOptions,
             results: leads,
-            type: 'contact',
+            type: 'contact'
           }))
         } else if (action.category === 'deal') {
-          return this.dealsService.deals('/api/deals?per_page=50&query=' + this.query).map((deals) => ({
-            requestOptions: newRequestOptions,
-            results: deals,
-            type: 'deal',
-          }))
+          return this.dealsService
+            .deals('/api/deals?per_page=50&query=' + this.query)
+            .map((deals) => ({
+              requestOptions: newRequestOptions,
+              results: deals,
+              type: 'deal'
+            }))
         }
       }
-      default:
-      {
+      default: {
         if (state.type === 'contact') {
           return this.salesService.leads(newRequestOptions).map((leads) => ({
             requestOptions: newRequestOptions,
             results: leads,
-            type: 'contact',
+            type: 'contact'
           }))
         } else {
-          return this.dealsService.deals(newRequestOptions.url || undefined).map((deals) => ({
-            requestOptions: newRequestOptions,
-            results: deals,
-            type: 'deal',
-          }))
+          return this.dealsService
+            .deals(newRequestOptions.url || undefined)
+            .map((deals) => ({
+              requestOptions: newRequestOptions,
+              results: deals,
+              type: 'deal'
+            }))
         }
       }
     }
@@ -133,21 +131,24 @@ export class SearchResultsPage extends ReactivePage<IState, UserAction> {
         return {
           params: this.paramsWithFilter(
             state.requestOptions.params,
-            this.query,
+            this.query
           ),
           url: null
         }
       case 'prev':
-        return { ...state.requestOptions, url: state.results.prevPageLink || null }
+        return {
+          ...state.requestOptions,
+          url: state.results.prevPageLink || null
+        }
       case 'next':
-        return { ...state.requestOptions, url: state.results.nextPageLink || null }
+        return {
+          ...state.requestOptions,
+          url: state.results.nextPageLink || null
+        }
     }
   }
 
-  private paramsWithFilter(
-    params: HttpParams,
-    value: string
-  ): HttpParams {
+  private paramsWithFilter(params: HttpParams, value: string): HttpParams {
     return params.set('query', value)
   }
 
