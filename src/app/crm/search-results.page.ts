@@ -14,6 +14,7 @@ import { pageAccess } from '../utils/app-access'
 import { ReactivePage } from '../utils/reactive-page'
 import { SalesService } from './sales.service'
 import { Lead } from './lead.model'
+import { DealsService } from '../deals/deals.service'
 import { Deal } from '../deals/deal.model'
 
 @IonicPage({
@@ -30,6 +31,7 @@ export class SearchResultsPage extends ReactivePage<IState, UserAction> {
   constructor(
     public navParams: NavParams,
     private readonly salesService: SalesService,
+    private readonly dealsService: DealsService,
     private readonly navController: NavController,
     private readonly currentUserService: CurrentUserService
   ) {
@@ -38,7 +40,7 @@ export class SearchResultsPage extends ReactivePage<IState, UserAction> {
 
   ngOnInit(): void {
     this.selectedNavItem = 'contact'
-    this.query = this.navParams.get('query')
+    this.query = this.navParams.get('query') ? this.navParams.get('query') : ''
     this.uiActions.next({ name: 'init', category: 'contact' })
   }
 
@@ -75,11 +77,40 @@ export class SearchResultsPage extends ReactivePage<IState, UserAction> {
 
   protected reduce(state: IState, action: UserAction): Observable<IState> {
     const newRequestOptions = this.actionToRequestOptions(state, action)
-    return this.salesService.leads(newRequestOptions).map((newLeads) => ({
-      results: newLeads,
-      type: 'contact',
-      requestOptions: newRequestOptions,
-    }))
+    switch (action.name) {
+      case 'init':
+      {
+        if (action.category === 'contact') {
+          return this.salesService.leads(newRequestOptions).map((leads) => ({
+            requestOptions: newRequestOptions,
+            results: leads,
+            type: 'contact',
+          }))
+        } else if (action.category === 'deal') {
+          return this.dealsService.deals('/api/deals?per_page=50&query=' + this.query).map((deals) => ({
+            requestOptions: newRequestOptions,
+            results: deals,
+            type: 'deal',
+          }))
+        }
+      }
+      default:
+      {
+        if (state.type === 'contact') {
+          return this.salesService.leads(newRequestOptions).map((leads) => ({
+            requestOptions: newRequestOptions,
+            results: leads,
+            type: 'contact',
+          }))
+        } else {
+          return this.dealsService.deals(newRequestOptions.url || undefined).map((deals) => ({
+            requestOptions: newRequestOptions,
+            results: deals,
+            type: 'deal',
+          }))
+        }
+      }
+    }
   }
 
   // Changes options based on the action peformed by the user.
@@ -97,9 +128,9 @@ export class SearchResultsPage extends ReactivePage<IState, UserAction> {
           url: null
         }
       case 'prev':
-        return { ...state.requestOptions, url: state.results.prevPageLink }
+        return { ...state.requestOptions, url: state.results.prevPageLink || null }
       case 'next':
-        return { ...state.requestOptions, url: state.results.nextPageLink }
+        return { ...state.requestOptions, url: state.results.nextPageLink || null }
     }
   }
 
