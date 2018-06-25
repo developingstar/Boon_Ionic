@@ -4,8 +4,8 @@ import {
 } from '../api/http-request-options'
 import { PaginatedCollection } from '../api/paginated-collection'
 import { PaginatedList } from '../api/paginated-list'
-import { Lead } from './lead.model'
 import { Deal } from '../deals/deal.model'
+import { Lead } from './lead.model'
 
 export type UserAction =
   | { readonly name: 'init'; readonly category: string }
@@ -19,12 +19,12 @@ export interface IState {
 }
 
 export const initialState: IState = {
+  requestOptions: blankHttpRequestOptions,
   results: {
     count: 0,
     items: [],
     nextPageLink: null,
     prevPageLink: null
   },
-  requestOptions: blankHttpRequestOptions,
   type: 'deal'
 }

@@ -110,7 +110,11 @@ export class SearchResultsPage extends ReactivePage<IState, UserAction> {
           }))
         } else {
           return this.dealsService
-            .deals(newRequestOptions.url || undefined)
+            .deals(
+              action.name === 'next'
+                ? state.results.nextPageLink || undefined
+                : state.results.prevPageLink || undefined
+            )
             .map((deals) => ({
               requestOptions: newRequestOptions,
               results: deals,
