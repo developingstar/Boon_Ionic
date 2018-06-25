@@ -1,6 +1,6 @@
 import { HttpParams } from '@angular/common/http'
 import { Component } from '@angular/core'
-import { IonicPage, NavParams, NavController } from 'ionic-angular'
+import { IonicPage, NavController, NavParams } from 'ionic-angular'
 import { Observable } from 'rxjs'
 import {
   initialState,
@@ -10,12 +10,12 @@ import {
 
 import { IHttpRequestOptions } from '../api/http-request-options'
 import { CurrentUserService } from '../auth/current-user.service'
+import { Deal } from '../deals/deal.model'
+import { DealsService } from '../deals/deals.service'
 import { pageAccess } from '../utils/app-access'
 import { ReactivePage } from '../utils/reactive-page'
-import { SalesService } from './sales.service'
 import { Lead } from './lead.model'
-import { DealsService } from '../deals/deals.service'
-import { Deal } from '../deals/deal.model'
+import { SalesService } from './sales.service'
 
 @IonicPage({
   segment: 'search-results'
@@ -55,6 +55,16 @@ export class SearchResultsPage extends ReactivePage<IState, UserAction> {
 
   public loadNextPage(): void {
     this.uiActions.next({ name: 'next' })
+  }
+
+  public showDetail(item: Lead | Deal): void {
+    let type = 'contact'
+    this.state.subscribe(state => (type === state.type))
+    if (type === 'contact') {
+      this.navController.push('LeadPage', { id: item.id })
+    } else {
+      this.navController.push('DealsShowPage', { id: item.id })
+    }
   }
 
   get isPrevPageButtonDisabled(): Observable<boolean> {

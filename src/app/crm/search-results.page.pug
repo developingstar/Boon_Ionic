@@ -19,7 +19,7 @@ ion-content(padding)
           ion-icon(name="md-arrow-dropleft")
         button(ion-button, small, (click)="loadNextPage()", [disabled]="isNextPageButtonDisabled | async")
           ion-icon(name="md-arrow-dropright")
-    ion-row.lead(*ngFor="let item of (results | async)")
+    ion-row.lead(*ngFor="let item of (results | async)", (click)="showDetail(item)")
       ion-col {{item.name || "-"}}
       ion-col {{item.email || (item.contact && item.contact.email) || "-"}}
       ion-col {{item.phoneNumber || (item.contact && item.contact.phoneNumber) || "-"}}
