@@ -31,7 +31,7 @@ export class NavIconsComponent {
     {
       icon: 'crm.svg',
       name: 'Deals',
-      pages: ['DealsShowPage', 'DealsIndexPage']
+      pages: ['DealsIndexPage', 'DealsShowPage']
     },
     {
       icon: 'automation.svg',
