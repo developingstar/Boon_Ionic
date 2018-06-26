@@ -10,14 +10,19 @@ ion-content(padding)
     ion-row
       ion-col
         ion-label(stacked) Password
-        ion-input(name="password", type="password", [(ngModel)]="passwordModel", required)
+        ion-item
+          ion-input(name="password", type="password", [(ngModel)]="passwordModel", required)
+          button(clear, item-right, type="button", (click)="gotoForgot()") Forgot
     ion-row
       ion-col
 
     ion-row
       ion-col
         hr
-    ion-row
-      ion-col(col-4, offset-8)
+    ion-row.login
+      div.label-comment
+        label No account?
+        a.signup((click)="goToSignup()") Sign up for a free trial!
+      ion-col
         button(ion-button, full, type="submit", [disabled]="!loginForm.form.valid")
           | Login
