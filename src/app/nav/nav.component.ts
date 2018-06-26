@@ -68,6 +68,11 @@ export class NavComponent {
     if (event.id) {
       const nav = this.app.getRootNav()
       nav.setRoot('LeadPage', { id: event.id })
+    } else if (event.id === 0) {
+      this.selectedItem = {
+        id: 0,
+        name: this.query
+      }
     }
   }
 
