@@ -238,7 +238,7 @@ describe('SearchResultsPage', () => {
         'Another Deal',
         'leeess@gmail.com',
         '234332111',
-        '01 Dec 2017 08:00 AM',
+        '01 Dec 2017 12:00 AM',
         ''
       ])
       assertTableRow(table.children.item(3), ['-', '-', '-', '', ''])
