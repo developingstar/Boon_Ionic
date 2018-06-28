@@ -32,10 +32,12 @@ ion-content
             ion-icon.arrow(name="md-arrow-dropright")
       ion-row.deal(*ngFor="let deal of deals", (click)="showDeal(deal)")
         ion-col.deal {{deal.name || '-'}}
-        ion-col.deal {{deal.email || '-'}}
+        ion-col.deal {{deal.contact?.email || '-'}}
         ion-col.deal {{deal.pipline || '-'}}
         ion-col.deal {{deal.stage || '-'}}
         ion-col.deal {{deal.value || '-'}}
-        ion-col.deal {{deal.owner?.name || '-'}}
+        ion-col.deal
+          img.owner-picture(src="{{ deal.owner?.avatarUrl }}", onError="this.src='../../assets/icon/settings/avatar.svg'")
+          span {{deal.owner?.name || '-'}}
         .deal-end
           ion-icon.more(name="ios-more")

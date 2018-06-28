@@ -134,4 +134,17 @@ deals-index-page {
       font-size: 25px;
     }
   }
+
+  .owner-picture {
+    width: 35px;
+    padding-right: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    img {
+      border-radius: 20px;
+      height: 40px;
+      width: 40px;
+    }
+  }
 }

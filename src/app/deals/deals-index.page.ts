@@ -1,5 +1,5 @@
 import { Component } from '@angular/core'
-import { IonicPage } from 'ionic-angular'
+import { IonicPage, NavController } from 'ionic-angular'
 import { PaginatedList } from '../api/paginated-list'
 import { CurrentUserService } from '../auth/current-user.service'
 import { pageAccess } from '../utils/app-access'
@@ -21,7 +21,8 @@ export class DealsIndexPage {
 
   constructor(
     private dealsService: DealsService,
-    private currentUserService: CurrentUserService
+    private currentUserService: CurrentUserService,
+    private navController: NavController
   ) {}
 
   ngOnInit(): void {
@@ -43,9 +44,9 @@ export class DealsIndexPage {
     this.getDeals(this.pageData.prevPageLink)
   }
 
-  // public showDeal(deal: Deals): void {
-  //   this.navController.setRoot('DealPage', { id: this.dealId })
-  // }
+  public showDeal(deal: Deal): void {
+    this.navController.push('DealsShowPage', { id: deal.id })
+  }
 
   public newDeal(): void {
     // this.uiActions.next('newDeal')

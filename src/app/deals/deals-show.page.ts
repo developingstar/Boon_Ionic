@@ -15,6 +15,7 @@ import { SalesService } from '../crm/sales.service'
 import { Stage } from '../crm/stage.model'
 import { DealsService } from '../deals/deals.service'
 import { TabTypes } from '../show-tabs/tab-selector.component'
+import { TabService } from '../show-tabs/tab.service'
 import { pageAccess } from '../utils/app-access'
 import { emailValidator, phoneNumberValidator } from '../utils/form-validators'
 import { showToast } from '../utils/toast'
@@ -45,11 +46,12 @@ export class DealsShowPage implements OnInit {
   constructor(
     private currentUserService: CurrentUserService,
     private dealsService: DealsService,
-    public  salesService: SalesService,
+    public salesService: SalesService,
     private formBuilder: FormBuilder,
     private navController: NavController,
     private navParams: NavParams,
-    private toastController: ToastController
+    private toastController: ToastController,
+    private tabService: TabService
   ) {}
 
   ngOnInit(): void {
@@ -67,10 +69,12 @@ export class DealsShowPage implements OnInit {
     this.getDeal = this.dealsService.getDeal(dealId)
     this.getDeal.subscribe((res: Deal) => {
       this.currentDeal = res
-      this.stages = this.salesService.stage(this.currentDeal.stageId).switchMap((stage) => {
-        this.currentStageId = stage.id
-        return this.salesService.stages(stage.pipelineId)
-      })
+      this.stages = this.salesService
+        .stage(this.currentDeal.stageId)
+        .switchMap((stage) => {
+          this.currentStageId = stage.id
+          return this.salesService.stages(stage.pipelineId)
+        })
     })
   }
 
@@ -81,7 +85,10 @@ export class DealsShowPage implements OnInit {
 
   updateDeal(): void {
     const formValueInput = this.dealDataForm.get('value')
-    const value = this.state === 'edit' ? (formValueInput ? formValueInput.value : 0) : this.currentDeal.value
+    const value =
+      this.state === 'edit'
+        ? formValueInput ? formValueInput.value : 0
+        : this.currentDeal.value
     const dealUpdate = {
       stage_id: this.newStageId,
       value: value ? parseInt(value, 0) : 0
@@ -98,16 +105,6 @@ export class DealsShowPage implements OnInit {
     this.state = 'view'
   }
 
-  setFormData(dealResponse: Deal): void {
-    this.dealDataForm.patchValue({
-      email: dealResponse.contact ? dealResponse.contact.email : '',
-      name: dealResponse.contact ? dealResponse.contact.name : '',
-      phoneNumber: dealResponse.contact ? dealResponse.contact.phoneNumber : '',
-      referralOwner: dealResponse.owner ? dealResponse.owner.name : '',
-      value: dealResponse.value || ''
-    })
-  }
-
   cancel(): void {
     this.state = 'view'
   }
@@ -120,8 +117,22 @@ export class DealsShowPage implements OnInit {
     return this.state === 'edit'
   }
 
+  setFormData(dealResponse: Deal): void {
+    this.dealDataForm.patchValue({
+      email: dealResponse.contact ? dealResponse.contact.email : '',
+      name: dealResponse.contact ? dealResponse.contact.name : '',
+      phoneNumber: dealResponse.contact ? dealResponse.contact.phoneNumber : '',
+      referralOwner: dealResponse.owner ? dealResponse.owner.name : '',
+      value: dealResponse.value || ''
+    })
+  }
+
   goToDeals(): void {
-    this.navController.pop()
+    if (this.navController.canGoBack()) {
+      this.navController.pop()
+    } else {
+      this.navController.setRoot('DealsIndexPage')
+    }
   }
 
   public onStageChange(event: any): void {

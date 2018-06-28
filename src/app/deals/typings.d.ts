@@ -1,25 +1,30 @@
 declare namespace Deal {
   namespace API {
-    interface IDeals {
+    interface IDeal {
       readonly name: string | null
       readonly value: number | null
       readonly contact: Crm.API.ILead | null
       readonly created_by_service_id: number | null
       readonly created_by_user_id: number | null
-      readonly email: string | null
       readonly id: number | null
       readonly owner: Auth.API.IUser | null
       readonly pipeline: string | null
       readonly stage_id: number | null
     }
 
-    interface IDealResponse {
+    interface IDealsResponse {
       readonly links: {
         readonly prev?: string
         readonly next?: string
       }
       readonly data: {
-        readonly deals: Array<IDeals>
+        readonly deals: Array<IDeal>
+      }
+    }
+
+    interface IDealResponse {
+      data: {
+        readonly deal: IDeal
       }
     }
   }

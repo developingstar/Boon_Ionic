@@ -57,6 +57,6 @@ div.deals-header-section
             | Cancel
     pipeline([stages]="stages | async", type="progress", [currentStageId]="currentDeal.stageId", (select)="onStageChange($event)")
 //- two tabing sections
-div
+div.tabs-wrapper
   tab-selector([tabs]="leftTabs", [selectedTab]='leftSelected')
-  tab-selector([tabs]="rightTabs", [selectedTab]='rightSelected')
+  .space-holder
