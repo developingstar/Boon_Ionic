@@ -1,32 +1,98 @@
 @import 'theme/shared-classes';
 @import 'theme/style-guide';
-lead-page {
+
+deals-show-page {
   &,
   .content {
     background-color: $color-content-background;
   }
+  .deals-header-section {
+    background-color: #4c4953;
+    display: flex;
+    justify-content: center;
+    height: 250px;
+  }
+  .deal-content-wrapper {
+    width: 90%;
+    height: 160px;
+    margin-top: 15px;
+  }
   #back-button {
-    margin-left: -15px;
-  }
-  h1 {
-    color: #1a173b;
-    line-height: 30px;
-    font-size: 25px;
-    font-weight: bold;
-    margin-bottom: 18px;
-  }
-  button.update-stage-button {
-    float: right;
-    @extend .boon-button;
-    padding: 0 30px;
-    margin-bottom: 20px;
-    cursor: pointer;
-    &:disabled {
-      background: white !important;
-      color: rgb(201, 198, 198);
-      border: 1px solid rgb(201, 198, 198);
+    height: 17px;
+    width: 17px;
+    border-radius: 50%;
+    background-color: $color-primary;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    i {
+      color: white;
+      height: 12px;
+      font-size: 11px;
+      margin: 0 0 0 3px;
     }
   }
+  h2 {
+    font-size: 13px;
+    font-weight: 500;
+    color: $color-light-dark;
+    text-transform: uppercase;
+    margin: 10px 0 10px 0;
+  }
+  h1 {
+    color: #fff;
+    line-height: 30px;
+    font-size: 25px;
+    font-weight: 500;
+    margin-bottom: 18px;
+    margin: 0 0 17px 0;
+  }
+  .contact-form {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  .contact-details {
+    height: 65px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 75%;
+  }
+  .contact-detail-item {
+    display: flex;
+    flex-direction: column;
+    width: 18%;
+    label {
+      font-size: 13px;
+      color: $color-light-dark;
+      font-weight: 500;
+    }
+    input {
+    }
+    .display-value {
+      margin: 12px;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 500;
+    }
+  }
+  .deal-buttons-section {
+    width: 20%;
+    display: flex;
+    justify-content: space-between;
+    button {
+      height: 38px;
+      width: 45%;
+      border-radius: 4px;
+      background-color: #3a373f;
+      color: #fff;
+    }
+    button:hover {
+      background-color: #231f28;
+    }
+  }
+
   .lead-more-button {
     background: white !important;
     @extend .update-stage-button;
@@ -35,8 +101,9 @@ lead-page {
       @include bullet(#d8d8d8, '\25CF\25CF\25CF');
     }
   }
+
   pipeline {
-    margin-bottom: 28px;
+    margin-top: 20px;
   }
   .lead {
     @include border-radius($radius-size);
