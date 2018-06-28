@@ -2,14 +2,14 @@ import { NgModule } from '@angular/core'
 import { IonicPageModule } from 'ionic-angular'
 import { InlineSVGModule } from 'ng-inline-svg'
 
-import { CrmComponentsModule } from './crm.components.module'
+import { CommonComponentsModule } from '../common.components.module'
 import { NewLeadPage } from './new-lead.page'
 
 @NgModule({
   declarations: [NewLeadPage],
   entryComponents: [NewLeadPage],
   imports: [
-    CrmComponentsModule,
+    CommonComponentsModule,
     InlineSVGModule,
     IonicPageModule.forChild(NewLeadPage)
   ]

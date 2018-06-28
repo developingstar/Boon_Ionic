@@ -2,20 +2,20 @@ import { NgModule } from '@angular/core'
 import { IonicPageModule } from 'ionic-angular'
 import { InlineSVGModule } from 'ng-inline-svg'
 
-import { PipelineComponent } from '../crm/pipeline.component'
+import { CommonComponentsModule } from '../common.components.module'
 import { NavModule } from '../nav.module'
 import { ShowTabsComponentsModule } from '../show-tabs/show-tabs.components.module'
 import { DealsShowPage } from './deals-show.page'
 import { DealsComponentsModule } from './deals.components.module'
 @NgModule({
-  declarations: [DealsShowPage, PipelineComponent],
+  declarations: [DealsShowPage],
   entryComponents: [DealsShowPage],
-  exports: [PipelineComponent],
   imports: [
     InlineSVGModule,
     IonicPageModule.forChild(DealsShowPage),
     NavModule,
     DealsComponentsModule,
+    CommonComponentsModule,
     ShowTabsComponentsModule
   ]
 })
