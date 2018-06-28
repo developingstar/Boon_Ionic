@@ -11,7 +11,7 @@ export class DealsService {
   public deals(url?: string): Observable<PaginatedList<Deal>> {
     return this.http
       .get(url || '/api/deals?per_page=50')
-      .map((response: Deal.API.IDealResponse) => {
+      .map((response: Deal.API.IDealsResponse) => {
         const page: PaginatedList<Deal> = {
           items: response.data.deals.map((raw) => new Deal(raw)),
           nextPageLink: response.links.next,
@@ -19,5 +19,17 @@ export class DealsService {
         }
         return page
       })
+  }
+
+  public getDeal(dealId: string): Observable<Deal> {
+    return this.http
+      .get(`api/deals/${dealId}`)
+      .map((response: Deal.API.IDealResponse) => new Deal(response.data.deal))
+  }
+
+  public updateDeal(dealId: number | null, dealUpdate: any): Observable<Deal> {
+    return this.http
+      .patch(`api/deals/${dealId}`, JSON.stringify({ deal: dealUpdate }))
+      .map((response: Deal.API.IDealResponse) => new Deal(response.data.deal))
   }
 }
