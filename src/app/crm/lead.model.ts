@@ -26,9 +26,8 @@ export class Lead {
     this.fields = data.fields.map((raw: Crm.API.IField) => new Field(raw))
     this.id = ensureNumber(data.id)
     this.phoneNumber = data.phone_number
-    this.stageId = ensureNumber(data.stage_id)
-    this.insertedAt = new Date(data.inserted_at)
-    this.updatedAt = new Date(data.updated_at)
+    this.insertedAt = this.formatDate(data.inserted_at)
+    this.updatedAt = this.formatDate(data.updated_at)
 
     if (data.owner) {
       this.owner = new User(data.owner)
@@ -49,5 +48,15 @@ export class Lead {
     else if (this.email) displayName = this.email
     else if (this.phoneNumber) displayName = this.phoneNumber
     return displayName
+  }
+
+  public formatDate(strDate: string): Date {
+    if (strDate) {
+      return strDate.substr(-1) === 'Z' || strDate.substr(-1) === 'z'
+        ? new Date(strDate)
+        : new Date(strDate + 'Z')
+    } else {
+      return new Date()
+    }
   }
 }
