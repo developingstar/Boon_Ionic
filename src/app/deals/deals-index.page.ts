@@ -30,6 +30,14 @@ export class DealsIndexPage {
   public httpParams: HttpParams = new HttpParams()
 
   public pageState: 'All Deals' | 'Pipeline Selected'
+  public sortList = [
+    { label: 'Name', value: 'name' },
+    { label: 'Email', value: 'owner.email' },
+    { label: 'Pipeline', value: 'pipelineId' },
+    { label: 'Stage', value: 'stageId' },
+    { label: 'Deal Value', value: 'value' },
+    { label: 'Deal Owner', value: 'owner.name' }
+  ]
 
   constructor(
     private dealsService: DealsService,
