@@ -20,6 +20,9 @@ declare namespace Deal {
       readonly data: {
         readonly deals: Array<IDeal>
       }
+      readonly metadata: {
+        readonly count?: number
+      }
     }
 
     interface IDealResponse {
