@@ -137,7 +137,11 @@ export class DealsIndexPage {
   }
 
   public sortSelected(value: string): void {
-    this.httpParams = this.buildParams(this.httpParams, 'order_by', value + ':desc')
+    this.httpParams = this.buildParams(
+      this.httpParams,
+      'order_by',
+      value + ':desc'
+    )
     const options: IHttpRequestOptions = {
       params: this.httpParams,
       url: null
