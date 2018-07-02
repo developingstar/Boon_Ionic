@@ -54,7 +54,8 @@ search-results-page {
     }
   }
 
-  ion-row {
+  ion-row.result {
+    cursor: pointer;
     ion-col:first-child {
       padding-left: 25px;
     }
