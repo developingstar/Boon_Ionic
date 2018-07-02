@@ -7,7 +7,7 @@ import { IHttpRequestOptions } from '../api/http-request-options'
 import { CurrentUserService } from '../auth/current-user.service'
 import { pageAccess } from '../utils/app-access'
 import { ReactivePage } from '../utils/reactive-page'
-import { FilterType, initialState, IState, UserAction } from './crm.page.state'
+import { initialState, IState, SortType, UserAction } from './crm.page.state'
 import { Lead } from './lead.model'
 import { SalesService } from './sales.service'
 
@@ -26,7 +26,7 @@ export class CrmPage extends ReactivePage<IState, UserAction> {
     { label: 'Email', value: 'email' },
     { label: 'Phone Number', value: 'phoneNumber' },
     { label: 'Created At', value: 'createdAt' },
-    { label: 'Contact Owner', value: 'contactOwner' },
+    { label: 'Contact Owner', value: 'contactOwner' }
   ]
 
   constructor(
@@ -39,7 +39,11 @@ export class CrmPage extends ReactivePage<IState, UserAction> {
   }
 
   public sortSelected(value: string): void {
-    return
+    this.uiActions.next({
+      name: 'setSorter',
+      type: 'order_by',
+      value: value
+    })
   }
 
   public loadPrevPage(): void {
@@ -66,7 +70,7 @@ export class CrmPage extends ReactivePage<IState, UserAction> {
   }
 
   public showLead(lead: Lead): void {
-    this.navController.push('LeadPage', { id: lead.id })
+    this.navController.push('ContactShowPage', { id: lead.id })
   }
 
   public newLead(): void {
@@ -145,11 +149,11 @@ export class CrmPage extends ReactivePage<IState, UserAction> {
 
   private paramsWithFilter(
     params: HttpParams,
-    type: FilterType,
+    type: SortType,
     value: string | undefined
   ): HttpParams {
     switch (type) {
-      case 'sort':
+      case 'order_by':
         if (value === undefined) {
           return new HttpParams()
         } else {
