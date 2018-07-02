@@ -89,6 +89,7 @@ export class DealsIndexPage {
     this.dealsService.deals(options).subscribe((res) => {
       this.pageData = res
       this.deals = this.pageData.items
+      this.count = this.pageData.totalCount
     })
   }
 
@@ -122,16 +123,31 @@ export class DealsIndexPage {
     this.dealsService.deals(options).subscribe((res) => {
       this.pageData = res
       this.deals = this.pageData.items
+      this.count = this.pageData.totalCount
     })
   }
 
   buildParams(
     params: HttpParams,
     type: string,
-    value: number | undefined
+    value: number | string | undefined
   ): HttpParams {
     if (value) return params.set(type, `${value}`)
     else return params.delete(type)
+  }
+
+  public sortSelected(value: string): void {
+    this.httpParams = this.buildParams(this.httpParams, 'order_by', value + ':desc')
+    const options: IHttpRequestOptions = {
+      params: this.httpParams,
+      url: null
+    }
+    this.dealsService.deals(options).subscribe((res) => {
+      this.pageData = res
+      this.deals = this.pageData.items
+      this.count = this.pageData.totalCount
+    })
+    return
   }
 
   public goToNext(): void {
