@@ -6,38 +6,88 @@ deals-index-page {
     background-color: #f1f2f6 !important;
   }
   .header-info-group {
-    align-self: flex-end;
-    .deals-index-title {
-      padding-right: 15px;
-      .title {
+    display: flex;
+    align-items: flex-end;
+    padding-left: 40px;
+
+    ng-select {
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      text-indent: 1px;
+      text-overflow: '';
+      resize: horizontal;
+      background-color: transparent;
+      color: $color-primary;
+      input.select-dropdown:focus {
+        text-indent: -9999999em;
+      }
+      .ng-value {
         color: $color-primary;
-        margin-left: 41px;
-        height: 25px;
         letter-spacing: 0.17px;
         line-height: 30px;
         font-size: 25px;
         padding-right: 5px;
       }
-      .arrow {
-        color: #90a4ae;
-        height: 8px;
-        width: 5px;
-        padding-left: 10px;
+      .ng-value-container {
+        width: fit-content;
+      }
+      .ng-clear-wrapper {
+        display: none;
+      }
+      .pipeline-dropdown {
+        height: 192px;
+        width: 379px;
+        border: 1px solid #dfe3eb;
+        border-radius: 4px;
+        background-color: #ffffff;
+        box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.1);
+        margin-left: -15px;
+        color: #4c4953;
+        font-size: 16px;
+
+        .ng-dropdown-panel-items {
+          padding: 20px 0px 0px 18px;
+          .ng-option {
+            padding-top: 5px;
+            height: 32px;
+            z-index: 9999;
+          }
+          .ng-option.ng-option-selected {
+            border-bottom: 1px solid #dbe2e5;
+            padding-bottom: 8px;
+          }
+          .ng-option.ng-option-marked {
+            height: 32px;
+            width: 356px;
+            border-radius: 4px;
+            background-color: rgba(219, 226, 229, 0.3);
+            color: $color-primary;
+            margin-left: -7px;
+            .ng-option-label {
+              margin-left: 7px;
+            }
+          }
+        }
       }
     }
+    .arrow {
+      color: #90a4ae;
+      margin: 0px 10px 3px 0px;
+    }
     .deals-index-total {
-      height: 16px;
-      width: 70px;
+      width: fit-content;
       color: #90a4ae;
       font-size: 14px;
       letter-spacing: 0.07px;
-      line-height: 16px;
       padding-right: 17px;
+      margin-bottom: 2px;
     }
     .deals-index-sort {
+      display: flex;
+      margin-bottom: 4px;
       .title {
         height: 16px;
-        width: 70px;
+        width: fit-content;
         color: #90a4ae;
         font-size: 14px;
         letter-spacing: 0.07px;
@@ -46,13 +96,14 @@ deals-index-page {
       }
       .sort {
         height: 16px;
-        width: 125px;
+        width: fit-content;
         color: #313942;
         font-size: 14px;
         letter-spacing: 0.07px;
         line-height: 16px;
       }
       .arrow {
+        padding-top: 1px;
         color: #90a4ae;
         height: 8px;
         width: 5px;
@@ -101,12 +152,15 @@ deals-index-page {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-left: 10px;
+    // margin-left: 10px;
     width: 60px;
     button {
       background: white !important;
       border-radius: 4px;
       box-shadow: none;
+      height: 24px;
+      width: 24px;
+      margin: 0 2px 8px 4px;
     }
     .arrow {
       color: #90a4ae;
@@ -145,6 +199,36 @@ deals-index-page {
       border-radius: 20px;
       height: 40px;
       width: 40px;
+    }
+  }
+  .nav-stages {
+    margin: 8px 0 16px 0;
+    padding: 0 47px 0px 44px;
+  }
+  .sort {
+    display: flex;
+    margin-left: 1rem;
+
+    ion-label {
+      text-align: right;
+      font-size: 14px;
+      max-width: 50px;
+      color: $color-text-secondary;
+      margin: 0;
+    }
+
+    ion-select {
+      position: relative;
+      width: 300px;
+      padding: 0 10px;
+
+      .select-text {
+        font-size: 14px;
+      }
+
+      .select-icon {
+        margin-top: 4px;
+      }
     }
   }
 }
