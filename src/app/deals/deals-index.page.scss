@@ -117,6 +117,7 @@ deals-index-page {
     width: 179px;
     height: 38px;
     font-size: 11px;
+    border-radius: 4px;
   }
   ion-row.deal {
     cursor: pointer;
@@ -204,31 +205,5 @@ deals-index-page {
   .nav-stages {
     margin: 8px 0 16px 0;
     padding: 0 47px 0px 44px;
-  }
-  .sort {
-    display: flex;
-    margin-left: 1rem;
-
-    ion-label {
-      text-align: right;
-      font-size: 14px;
-      max-width: 50px;
-      color: $color-text-secondary;
-      margin: 0;
-    }
-
-    ion-select {
-      position: relative;
-      width: 300px;
-      padding: 0 10px;
-
-      .select-text {
-        font-size: 14px;
-      }
-
-      .select-icon {
-        margin-top: 4px;
-      }
-    }
   }
 }

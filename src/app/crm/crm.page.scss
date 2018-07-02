@@ -6,6 +6,7 @@ crm-page {
     float: right;
     margin-bottom: 10px;
     width: 180px;
+    border-radius: 4px !important;
   }
   .nav-stages {
     margin: 8px 0 16px 0;
@@ -97,7 +98,7 @@ crm-page {
       padding-left: 10px;
 
       .select-text {
-        font-size: 14px;
+        font-size: 16px;
       }
 
       .select-icon {
