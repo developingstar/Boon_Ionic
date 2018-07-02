@@ -5,15 +5,15 @@ import {
 import { PaginatedCollection } from '../api/paginated-collection'
 import { Lead } from './lead.model'
 
-export type FilterType = 'sort'
+export type SortType = 'order_by'
 
-export interface ISetFilter {
-  readonly name: 'setFilter'
-  readonly type: FilterType
+export interface ISetSorter {
+  readonly name: 'setSorter'
+  readonly type: SortType
   readonly value: string | undefined
 }
 
-export type UserAction = 'init' | 'prev' | 'next' | ISetFilter | 'newLead'
+export type UserAction = 'init' | 'prev' | 'next' | ISetSorter | 'newLead'
 
 export interface IState {
   readonly leads: PaginatedCollection<Lead>
