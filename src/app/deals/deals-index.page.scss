@@ -117,7 +117,6 @@ deals-index-page {
     width: 179px;
     height: 38px;
     font-size: 11px;
-    border-radius: 4px;
   }
   ion-row.deal {
     cursor: pointer;
@@ -136,6 +135,12 @@ deals-index-page {
     font-size: 13px;
     font-weight: 500;
     line-height: 16px;
+    .email {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 200px;
+    }
   }
   ion-col.deal-header {
     display: flex;

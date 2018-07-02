@@ -6,7 +6,6 @@ crm-page {
     float: right;
     margin-bottom: 10px;
     width: 180px;
-    border-radius: 4px !important;
   }
   .nav-stages {
     margin: 8px 0 16px 0;
@@ -105,5 +104,11 @@ crm-page {
         margin-top: 4px;
       }
     }
+  }
+  .email {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 250px;
   }
 }

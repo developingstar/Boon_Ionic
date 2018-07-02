@@ -13,15 +13,17 @@ ion-content
                   )
         ion-icon.arrow(name='md-arrow-dropdown')
         div.deals-index-total {{count}} Total
-        div.sort
-          ion-label.sort-label Sort by:
-          ion-select(interface="popover", (ionChange)="sortSelected($event)", placeholder="Sort Condition")
-            ion-option(*ngFor="let sort of sortList", [value]="sort.value") {{sort.label}}
+        div.deals-index-sort
+          span.title Sort by:
+          span.sort Date Added
+          ion-icon.arrow(name='md-arrow-dropdown')
       ion-col.header-row
         button.new-deal(ion-button, (click)="newDeal()") New Deal
 
   div.nav-stages([hidden]="isAllDeals()")
     pipeline([stages]="stages", type="select", (select)="onSelect($event)")
+  
+
 
   ion-grid.table
       ion-row.header-row
@@ -38,7 +40,8 @@ ion-content
             ion-icon.arrow(name="md-arrow-dropright")
       ion-row.deal(*ngFor="let deal of deals", (click)="showDeal(deal)")
         ion-col.deal {{deal.name || '-'}}
-        ion-col.deal {{deal.contact?.email || '-'}}
+        ion-col.deal
+          div.email {{deal.contact?.email || '-'}}
         ion-col.deal(*ngIf="isAllDeals()") {{getPipelineName(deal.stageId) || '-'}}
         ion-col.deal(*ngIf="allStages") {{getStageName(deal.stageId) || '-'}}
         ion-col.deal {{deal.value || '-'}}
