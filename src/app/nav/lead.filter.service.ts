@@ -22,12 +22,14 @@ export class LeadFilterService {
                 return {
                   group_name: 'Contacts',
                   id: leadModel.id,
-                  name: name
+                  name: name,
+                  type: 'contact',
                 }
               } else {
                 return {
                   id: leadModel.id,
-                  name: name
+                  name: name,
+                  type: 'contact',
                 }
               }
             }

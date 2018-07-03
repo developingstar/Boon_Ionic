@@ -54,7 +54,7 @@ declare namespace Crm {
       readonly value: string
     }
 
-    interface ILead {
+    export interface ILead {
       readonly created_by_service_id: number | null
       readonly created_by_user_id: number | null
       readonly email: string | null
@@ -128,6 +128,7 @@ declare namespace Crm {
     interface INote {
       readonly id: number
       readonly content: string
+      readonly inserted_at: string
     }
 
     interface INoteCreate {
@@ -139,6 +140,7 @@ declare namespace Crm {
       readonly id: number
       readonly name: string
       readonly comment?: string
+      readonly type?: string
     }
   }
 }
