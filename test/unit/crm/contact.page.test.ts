@@ -183,4 +183,27 @@ describe('ContactPage', () => {
       expect(editValues.length).toEqual(4)
     })
   })
+
+  describe('editing contact', () => {
+    beforeEach(() => {
+      page.clickEditButton()
+      fixture.detectChanges()
+    })
+
+    it('shows the save and cancel button', () => {
+      expect(page.isButtonVisible('Save')).toEqual(true)
+      expect(page.isButtonVisible('Cancel')).toEqual(true)
+    })
+
+    it('allows to cancel the changes', () => {
+      const editValues = page.getEditVales()
+      const contactFirstName = editValues[0] as HTMLInputElement
+      contactFirstName.value = 'Martin'
+      page.clickCancelButton()
+
+      fixture.detectChanges()
+
+      expect(page.contactName).toEqual(contact.name)
+    })
+  })
 })
