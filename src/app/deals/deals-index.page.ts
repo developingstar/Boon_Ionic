@@ -32,11 +32,11 @@ export class DealsIndexPage {
   public pageState: 'All Deals' | 'Pipeline Selected'
   public sortList = [
     { label: 'Name', value: 'name' },
-    { label: 'Email', value: 'owner.email' },
-    { label: 'Pipeline', value: 'pipelineId' },
-    { label: 'Stage', value: 'stageId' },
+    { label: 'Email', value: 'email' },
+    { label: 'Pipeline', value: 'pipeline_id' },
+    { label: 'Stage', value: 'stage_id' },
     { label: 'Deal Value', value: 'value' },
-    { label: 'Deal Owner', value: 'owner.name' }
+    { label: 'Deal Owner', value: 'owner_id' }
   ]
 
   constructor(

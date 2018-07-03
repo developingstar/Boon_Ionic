@@ -22,11 +22,11 @@ export class CrmPage extends ReactivePage<IState, UserAction> {
   public showingLow: number = 1
   public showingHigh: number = 50
   readonly sortList = [
-    { label: 'Name', value: 'name' },
+    { label: 'Name', value: 'first_name' },
     { label: 'Email', value: 'email' },
-    { label: 'Phone Number', value: 'phoneNumber' },
-    { label: 'Created At', value: 'createdAt' },
-    { label: 'Contact Owner', value: 'contactOwner' }
+    { label: 'Phone Number', value: 'phone_number' },
+    { label: 'Created At', value: 'inserted_at' },
+    { label: 'Contact Owner', value: 'owner_id' }
   ]
 
   constructor(
@@ -42,7 +42,7 @@ export class CrmPage extends ReactivePage<IState, UserAction> {
     this.uiActions.next({
       name: 'setSorter',
       type: 'order_by',
-      value: value
+      value: value + ':desc'
     })
   }
 
@@ -129,9 +129,9 @@ export class CrmPage extends ReactivePage<IState, UserAction> {
       case 'init':
         return state.requestOptions
       case 'prev':
-        return { ...state.requestOptions, url: state.leads.prevPageLink }
+        return { params: new HttpParams(), url: state.leads.prevPageLink }
       case 'next':
-        return { ...state.requestOptions, url: state.leads.nextPageLink }
+        return { params: new HttpParams(), url: state.leads.nextPageLink }
       case 'newLead':
         return state.requestOptions
       default:
