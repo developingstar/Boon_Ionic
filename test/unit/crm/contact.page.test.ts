@@ -157,4 +157,30 @@ describe('ContactPage', () => {
     page.clickBackButton()
     expect(navControllerStub.pop).toHaveBeenCalled()
   })
+
+  describe('showing contact', () => {
+    it('includes name', () => {
+      expect(page.contactName).toEqual(contact.name)
+    })
+
+    it('includes base fields', () => {
+      expect(page.baseFieldValues).toEqual([
+        contact.email!,
+        contact.phoneNumber!,
+        contact.owner!.name.toString()
+      ])
+    })
+
+    it('shows the edit button', () => {
+      expect(page.isButtonVisible('Edit')).toEqual(true)
+    })
+
+    it('switches to edit mode after clicking the edit button', () => {
+      page.clickEditButton()
+      fixture.detectChanges()
+
+      const editValues = page.getEditVales()
+      expect(editValues.length).toEqual(4)
+    })
+  })
 })
