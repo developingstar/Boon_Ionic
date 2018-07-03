@@ -1,7 +1,6 @@
 import { Component, ViewEncapsulation } from '@angular/core'
 import { App } from 'ionic-angular'
 import { Observable } from 'rxjs'
-
 import { AuthService } from './../auth/auth.service'
 import { CurrentUserService } from './../auth/current-user.service'
 import { LeadFilterService } from './lead.filter.service'
@@ -24,6 +23,7 @@ export class NavComponent {
   readonly rightContent: Observable<NavContent>
   readonly iconsLeftContent: Observable<NavContent>
   public logoutclicks: number = 0
+  public active: boolean
   selectedItem: any
   results: Crm.API.ISearchDropdownItem[]
   query: string
@@ -59,15 +59,17 @@ export class NavComponent {
     return
   }
 
-  public goToCrm(): void {
+  public goToPage(page: string): void {
     const navHome = this.app.getRootNav()
-    navHome.setRoot('CrmPage')
+    navHome.setRoot(page)
   }
 
   public itemSelected(event: any): void {
     if (event.id) {
       const nav = this.app.getRootNav()
-      nav.setRoot('LeadPage', { id: event.id })
+      if (event.type === 'contact') {
+        nav.push('ContactShowPage', { id: event.id })
+      }
     } else if (event.id === 0) {
       this.selectedItem = {
         id: 0,
@@ -97,14 +99,15 @@ export class NavComponent {
       })
   }
 
-  public logoutOn3(): void {
-    this.logoutclicks++
-    setTimeout(() => {
-      this.logoutclicks = 0
-    }, 1000)
-    if (this.logoutclicks === 3) {
-      this.authService.logout()
-    }
+  public logout(): void {
+    this.authService.logout()
+  }
+
+  detectClick(click: any): void {
+    if (this.active === true && click === true)
+      // tslint:disable-next-line:no-parameter-reassignment
+      click = false
+    this.active = click
   }
 
   public gotoResultPage(): void {
