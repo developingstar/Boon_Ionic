@@ -57,7 +57,7 @@ export class SearchResultsPage extends ReactivePage<IState, UserAction> {
     let type = 'contact'
     this.state.subscribe((state) => (type = state.type))
     if (type === 'contact') {
-      this.navController.push('LeadPage', { id: item.id })
+      this.navController.push('ContactShowPage', { id: item.id })
     } else {
       this.navController.push('DealsShowPage', { id: item.id })
     }
@@ -83,6 +83,17 @@ export class SearchResultsPage extends ReactivePage<IState, UserAction> {
 
   protected reduce(state: IState, action: UserAction): Observable<IState> {
     const newRequestOptions = this.actionToRequestOptions(state, action)
+    const switchOptions: IHttpRequestOptions = {
+      params: new HttpParams(),
+      url: '/api/deals?per_page=50&query=' + this.query
+    }
+    const defaultOptions: IHttpRequestOptions = {
+      params: new HttpParams(),
+      url:
+        action.name === 'next'
+          ? state.results.nextPageLink || null
+          : state.results.prevPageLink || null
+    }
     switch (action.name) {
       case 'init': {
         if (action.category === 'contact') {
@@ -92,13 +103,11 @@ export class SearchResultsPage extends ReactivePage<IState, UserAction> {
             type: 'contact'
           }))
         } else if (action.category === 'deal') {
-          return this.dealsService
-            .deals('/api/deals?per_page=50&query=' + this.query)
-            .map((deals) => ({
-              requestOptions: newRequestOptions,
-              results: deals,
-              type: 'deal'
-            }))
+          return this.dealsService.deals(switchOptions).map((deals) => ({
+            requestOptions: newRequestOptions,
+            results: deals,
+            type: 'deal'
+          }))
         }
       }
       default: {
@@ -109,17 +118,11 @@ export class SearchResultsPage extends ReactivePage<IState, UserAction> {
             type: 'contact'
           }))
         } else {
-          return this.dealsService
-            .deals(
-              action.name === 'next'
-                ? state.results.nextPageLink || undefined
-                : state.results.prevPageLink || undefined
-            )
-            .map((deals) => ({
-              requestOptions: newRequestOptions,
-              results: deals,
-              type: 'deal'
-            }))
+          return this.dealsService.deals(defaultOptions).map((deals) => ({
+            requestOptions: newRequestOptions,
+            results: deals,
+            type: 'deal'
+          }))
         }
       }
     }
