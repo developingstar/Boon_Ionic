@@ -17,18 +17,19 @@ import { SalesService } from '../../../src/app/crm/sales.service'
 import { UsersService } from '../../../src/app/crm/users.service'
 import { NavService } from '../../../src/app/nav/nav.service'
 import { TabService } from '../../../src/app/show-tabs/tab.service'
-// import { toastSuccessDefaults } from '../../../src/app/utils/toast'
+import { toastSuccessDefaults } from '../../../src/app/utils/toast'
 
 describe('ContactPage', () => {
   let fixture: ComponentFixture<ContactShowPage>
   let page: ContactPageObject
   let contact: Lead
-  // let leadUpdate: Crm.API.ILeadUpdate
+  let contactUpdate: Crm.API.ILeadUpdate
   let navControllerStub: any
   let users: ReadonlyArray<User>
   let toastControllerStub: any
   let toastStub: any
   let contactSubject: Subject<Lead>
+  let salesServiceStub: any
   const userRole: BehaviorSubject<string> = new BehaviorSubject<string>('admin')
 
   beforeEach(
@@ -88,9 +89,22 @@ describe('ContactPage', () => {
       })
       contactSubject = new Subject<Lead>()
 
-      const salesServiceStub = {
-        lead: (id: number) => Observable.of(contact)
+      salesServiceStub = {
+        lead: (id: number) => Observable.of(contact),
+        updateLead: (id: number, data: Crm.API.ILeadUpdate) => {
+          contactUpdate = data
+          return Observable.of({
+            ...contact,
+            ...contactUpdate,
+            owner: contactUpdate.owner_id
+              ? users.find((user) => user.id === contactUpdate.owner_id)
+              : null
+          })
+        }
       }
+
+      spyOn(salesServiceStub, 'lead').and.callThrough()
+      spyOn(salesServiceStub, 'updateLead').and.callThrough()
 
       const currentUserServiceStub = {
         details: Observable.of(users[0]),
@@ -204,6 +218,31 @@ describe('ContactPage', () => {
       fixture.detectChanges()
 
       expect(page.contactName).toEqual(contact.name)
+    })
+
+    it('allows to save the changes', () => {
+      page.setInputByName('firstName', 'Martin')
+      page.setInputByName('lastName', 'Stoyanov')
+      page.setInputByName('email', 'martin@gmail.com')
+      page.setInputByName('phoneNumber', '1111122222')
+
+      page.clickSaveButton()
+      fixture.detectChanges()
+      expect(salesServiceStub.updateLead).toHaveBeenCalledWith(contact.id, {
+        email: 'martin@gmail.com',
+        first_name: 'Martin',
+        last_name: 'Stoyanov',
+        owner_id: undefined,
+        phone_number: '1111122222'
+      })
+      expect(toastControllerStub.create).toHaveBeenCalledWith({
+        ...toastSuccessDefaults,
+        duration: 2000,
+        message: 'Successfully updated contact'
+      })
+
+      const editValues2 = page.getEditVales()
+      expect(editValues2.length).toEqual(0)
     })
   })
 })
