@@ -27,6 +27,18 @@ export class PageObject<T> {
     }
   }
 
+  detectClick(element: any): void {
+    if (typeof element.click === 'function') {
+      element.click()
+    } else {
+      // button: 0 stands for left click
+      element.triggerEventHandler('detectClick', {
+        button: 0,
+        stopPropagation: () => true
+      })
+    }
+  }
+
   elementVisible(tagName: string, label: string): boolean {
     return this.findElementByTextContent(tagName, label) !== undefined
   }
@@ -96,6 +108,11 @@ export class PageObject<T> {
   setSelectByName(name: string, value: string): void {
     const element = this.findByCss<HTMLSelectElement>(`select[name="${name}"]`)!
     this.setSelect(element, value)
+  }
+
+  setSelectByObject(select: HTMLSelectElement, value: any): void {
+    select.value = value
+    select.dispatchEvent(new Event('change'))
   }
 
   setTextarea(input: HTMLTextAreaElement, value: string): void {

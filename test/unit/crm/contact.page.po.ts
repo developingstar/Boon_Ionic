@@ -16,6 +16,16 @@ export class ContactPageObject extends PageObject<ContactShowPage> {
     )
   }
 
+  setInputValue(name: string, value: string): void {
+    this.setInputByName(name, value)
+  }
+
+  selectOwner(value: any): void {
+    const element = this.findByCss<HTMLSelectElement>('select')!
+    element.selectedValue = value.id
+    this.setSelect(element, value)
+  }
+
   getEditVales(): HTMLElement[] {
     return this.findAllByCss<HTMLElement>('.boon-input')!
   }
@@ -34,11 +44,6 @@ export class ContactPageObject extends PageObject<ContactShowPage> {
 
   clickCancelButton(): void {
     this.clickButton('Cancel')
-  }
-
-  openPopover(): void {
-    const button = this.findDebugByCss('.lead-more-button')
-    this.click(button!)
   }
 
   private clickButton(name: string): void {
