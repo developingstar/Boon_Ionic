@@ -1,0 +1,58 @@
+nav-content
+  nav-icons(right, currentPage="ContactShowPage")
+
+//- header content goes here
+div.deals-header-section
+  .deal-content-wrapper
+    div.deal-page-back-section
+      #back-button((click)="goToContacts()")
+        i.fa.fa-arrow-left
+    .deal-header-section
+      h2
+        | contact
+    .deal-details-section
+      form.contact-form([formGroup]='contactDataForm')
+        .contact-header
+          h1(*ngIf='viewMode()')
+            | {{contact?.name}}
+          .contact-detail-item
+            label(*ngIf='editMode()', for='firstName')
+              | First Name
+            input.boon-input(*ngIf='editMode()', formControlName="firstName", type='text', name='firstName')
+          .contact-detail-item
+            label(*ngIf='editMode()', for='lastName')
+              | Last Name
+            input.boon-input(*ngIf='editMode()', formControlName="lastName", type='text', name='lastName')
+
+        .contact-details
+          .contact-detail-item
+            label(for='email')
+              | Email
+            input.boon-input(*ngIf='editMode()', formControlName="email", type='text', name='email')
+            .display-value(*ngIf='viewMode()')
+              | {{contact?.email}}
+          .contact-detail-item
+            label(for='phoneNumber')
+              | Phone Number
+            input.boon-input(*ngIf='editMode()', formControlName="phoneNumber", type="text", name='phoneNumber')
+            .display-value(*ngIf='viewMode()')
+              | {{contact?.phoneNumber}}
+          .contact-detail-item
+            label(for='contactOwner')
+              | Contact Owner
+            select.boon-select(*ngIf='editMode()', formControlName="contactOwner", type="text", name='contactOwner')
+              option(*ngFor='let contactOwner of contactOwners', [ngValue]='contactOwner', [attr.selected]="contactOwner.id == contact?.owner?.id")
+                | {{ contactOwner.name }}
+            .display-value(*ngIf='viewMode()')
+              | {{ contact?.owner?.name }}
+          .contact-detail-item
+          .deal-buttons-section
+            button.edit-button(*ngIf='viewMode()', (click)='enterEditMode()')
+              | Edit
+            button(*ngIf='editMode()', (click)="updateLead()")
+              | Save
+            button(*ngIf='editMode()', (click)='cancel()')
+              | Cancel
+div.tab-selector-wrapper
+  tab-selector([tabs]="leftTabs", [selectedTab]='leftSelected')
+  .space-holder

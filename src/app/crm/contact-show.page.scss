@@ -1,0 +1,117 @@
+@import 'theme/shared-classes';
+@import 'theme/style-guide';
+
+contact-show {
+  overflow-y: auto;
+  &,
+  .content {
+    background-color: $color-content-background;
+  }
+  .deals-header-section {
+    background-color: #4c4953;
+    display: flex;
+    justify-content: center;
+    height: $deal-contact-header-height;
+  }
+  .deal-content-wrapper {
+    width: 90%;
+    height: 160px;
+    margin-top: 15px;
+  }
+  #back-button {
+    height: 17px;
+    width: 17px;
+    border-radius: 50%;
+    background-color: $color-primary;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    i {
+      color: white;
+      height: 12px;
+      font-size: 11px;
+      margin: 0 0 0 3px;
+    }
+  }
+  h2 {
+    font-size: 13px;
+    font-weight: 500;
+    color: $color-light-dark;
+    text-transform: uppercase;
+    margin: 10px 0 10px 0;
+  }
+  h1 {
+    color: #fff;
+    line-height: 30px;
+    font-size: 25px;
+    font-weight: 500;
+    margin-bottom: 18px;
+    margin: 0 0 17px 0;
+  }
+  .contact-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .contact-header {
+    display: flex;
+    flex-basis: row nowrap;
+    width: 100%;
+  }
+  .contact-details {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+  }
+  .contact-detail-item {
+    display: flex;
+    flex-direction: column;
+    margin-right: 20px;
+    width: 18%;
+    label {
+      font-size: 13px;
+      color: $color-light-dark;
+      font-weight: 500;
+    }
+    input {
+    }
+    .display-value {
+      color: #fff;
+      font-size: 15px;
+      font-weight: 500;
+    }
+  }
+  .deal-buttons-section {
+    display: flex;
+    justify-content: space-between;
+    align-self: flex-end;
+    width: 180px;
+    button {
+      height: 38px;
+      border-radius: 4px;
+      flex: 1;
+      margin-right: 20px;
+      background-color: #3a373f;
+      color: #fff;
+    }
+    button:hover {
+      background-color: #231f28;
+    }
+  }
+
+  pipeline {
+    margin-bottom: 28px;
+  }
+  .tab-selector-wrapper {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: stretch;
+    background-color: $color-tab-background;
+    width: 100%;
+    height: calc(100% - #{$deal-contact-header-height});
+  }
+  .space-holder {
+    flex: 1 0 50%;
+    background-color: $color-content-background;
+  }
+}
