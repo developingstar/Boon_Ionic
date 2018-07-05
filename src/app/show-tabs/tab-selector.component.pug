@@ -1,0 +1,10 @@
+.tab-wrapper
+  .tab-buttons
+    button.nav-item(*ngFor="let tab of tabs", (click)="selectTab(tab)", [ngClass]="{'nav-item-active' : isSelected}")
+      | {{tab}}
+  .tab-content
+    tab-deals(*ngIf="isSelected('Deals')")
+    tab-notes(*ngIf="isSelected('Notes')")
+    tab-activity(*ngIf="isSelected('Activity')")
+    tab-text(*ngIf="isSelected('Texting')")
+    tab-email(*ngIf="isSelected('Email')")
