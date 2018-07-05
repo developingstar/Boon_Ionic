@@ -11,6 +11,10 @@ declare namespace Auth {
       readonly password: string
       readonly role: Role
     }
+    interface ISignupOrganization {
+      readonly user: IUser
+      readonly name: string
+    }
   }
 
   interface IRolesAccess {
@@ -32,6 +36,8 @@ declare namespace Auth {
 
   interface IPageAccess {
     AccountSettingsPage?: boolean
+    DealsIndexPage?: boolean
+    DealsShowPage?: boolean
     CrmPage?: boolean
     CustomFieldsPage?: boolean
     EmailTemplatePage?: boolean
@@ -51,6 +57,7 @@ declare namespace Auth {
     Automation?: boolean
     Chat?: boolean
     Crm?: boolean
+    Deals?: boolean
     Email?: boolean
     Settings?: boolean
     Text?: boolean
