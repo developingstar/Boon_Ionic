@@ -30,7 +30,7 @@ export class TabNotesComponent implements OnInit {
     this.contactObs.subscribe((contact) => {
       this.contact = contact
       this.salesService.notes(contact.id).subscribe((notes) => {
-        this.notes = notes.reverse()
+        this.notes = notes
       })
     })
   }
