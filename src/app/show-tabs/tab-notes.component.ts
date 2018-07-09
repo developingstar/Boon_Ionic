@@ -41,6 +41,7 @@ export class TabNotesComponent implements OnInit {
       .subscribe((note) => {
         this.notes.push(note)
         showToast(this.toastController, 'Note Added', 2000)
+        this.newNote = ''
       })
   }
 }
