@@ -1,10 +1,12 @@
 declare namespace TeamSettings {
-  type Role = 'admin' | 'lead_owner'
+  type Role = 'admin' | 'sales_rep'
 
   interface ISomething {
     readonly avatar_url: string
     readonly email: string
+    readonly first_name: string
     readonly id: number
+    readonly last_name: string
     readonly name: string
     readonly phone_number: string
     readonly password: string

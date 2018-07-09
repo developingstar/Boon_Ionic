@@ -10,7 +10,7 @@ export class User {
   readonly name: string
   readonly password: string
   readonly phoneNumber: string
-  readonly role: 'admin' | 'lead_owner' | 'sales_rep'
+  readonly role: 'admin' | 'sales_rep'
   readonly avatarUrl: string | null
 
   constructor(data: Auth.API.IUser) {
@@ -21,7 +21,6 @@ export class User {
     this.phoneNumber = data.phone_number || ''
     this.role = ensureInclusionOf<Auth.API.Role>(data.role, [
       'admin',
-      'lead_owner',
       'sales_rep'
     ])
     this.avatarUrl = data.avatar_url || null

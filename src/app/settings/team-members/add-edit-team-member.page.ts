@@ -14,6 +14,7 @@ import {
   phoneNumberValidator
 } from '../../utils/form-validators'
 
+import { CurrentUserService } from '../../auth/current-user.service'
 import { showToast } from '../../utils/toast'
 import { AlertService } from '../alert.service'
 import { PhoneNumber } from './phone_number.model'
@@ -45,7 +46,8 @@ export class AddEditTeamMemberPage implements OnInit {
     public teamMembersService: TeamMembersService,
     public changeDetector: ChangeDetectorRef,
     public alertService: AlertService,
-    private toastController: ToastController
+    private toastController: ToastController,
+    public currentService: CurrentUserService
   ) {
     this.myForm = this.formBuilder.group({
       avatarUrl: new FormControl(),
@@ -68,19 +70,11 @@ export class AddEditTeamMemberPage implements OnInit {
       this.teamMembersService
         .getTeamMember(teamMemberId)
         .subscribe((res: User) => {
-          this.originalMember = new User({
-            avatar_url: res.avatarUrl,
-            email: res.email,
-            id: res.id,
-            name: res.name,
-            password: res.password,
-            phone_number: res.phoneNumber,
-            role: res.role
-          })
+          this.originalMember = res
           this.myForm.setValue(res)
           this.localUrl = res.avatarUrl
             ? res.avatarUrl
-            : '../../assets/icon/settings/avatar.svg'
+            : '../../../assets/icon/settings/avatar.svg'
         })
     }
   }
@@ -140,7 +134,16 @@ export class AddEditTeamMemberPage implements OnInit {
   }
 
   saveTeamMember(): void {
-    this.myForm.patchValue({ role: 'lead_owner' })
+    let userID = ''
+    this.currentService.details.subscribe((details: any) => {
+      if (details) {
+        userID = details.id
+      }
+    })
+
+    if (userID !== this.myForm.value.id) {
+      this.myForm.patchValue({ role: 'sales_rep' })
+    }
 
     if (this.myForm.value.id !== null) {
       this.teamMembersService
@@ -153,15 +156,7 @@ export class AddEditTeamMemberPage implements OnInit {
           if (!userRes.avatarUrl) {
             this.uploadAvatar(userRes.id)
           }
-          this.originalMember = new User({
-            avatar_url: userRes.avatarUrl,
-            email: userRes.email,
-            id: userRes.id,
-            name: userRes.name,
-            password: userRes.password,
-            phone_number: userRes.phoneNumber,
-            role: userRes.role
-          })
+          this.originalMember = userRes
         })
     } else {
       this.teamMembersService
@@ -171,15 +166,7 @@ export class AddEditTeamMemberPage implements OnInit {
           this.isEmailChanged = false
           this.isNameChanged = false
           this.isPasswordChanged = false
-          this.originalMember = new User({
-            avatar_url: res.avatarUrl,
-            email: res.email,
-            id: res.id,
-            name: res.name,
-            password: res.password,
-            phone_number: res.phoneNumber,
-            role: res.role
-          })
+          this.originalMember = res
           this.uploadAvatar(res.id)
         })
     }

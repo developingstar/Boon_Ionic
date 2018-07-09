@@ -1,6 +1,6 @@
 declare namespace Auth {
   namespace API {
-    type Role = 'admin' | 'lead_owner' | 'sales_rep'
+    type Role = 'admin' | 'sales_rep'
 
     interface IUser {
       readonly avatar_url: string | null

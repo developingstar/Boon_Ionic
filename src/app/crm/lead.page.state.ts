@@ -15,7 +15,7 @@ export type UserAction =
 export interface IPageData {
   readonly fields: ReadonlyArray<FieldDefinition>
   readonly lead: Lead
-  readonly role: 'admin' | 'lead_owner' | 'sales_rep' | undefined
+  readonly role: 'admin' | 'sales_rep' | undefined
   readonly stages: ReadonlyArray<Stage>
   readonly notes: ReadonlyArray<Note>
 }
