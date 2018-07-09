@@ -1,4 +1,10 @@
-import { AfterViewChecked, Component, ElementRef, OnInit, ViewChild } from '@angular/core'
+import {
+  AfterViewChecked,
+  Component,
+  ElementRef,
+  OnInit,
+  ViewChild
+} from '@angular/core'
 import { ToastController } from 'ionic-angular'
 import { Observable } from 'rxjs'
 
@@ -12,7 +18,6 @@ import { TabService } from './tab.service'
   selector: 'tab-notes',
   templateUrl: 'tab-notes.component.html'
 })
-
 export class TabNotesComponent implements OnInit, AfterViewChecked {
   @ViewChild('notes_list') notesList: ElementRef
   public notes: Note[]
@@ -53,7 +58,7 @@ export class TabNotesComponent implements OnInit, AfterViewChecked {
 
   scrollToBottom(): void {
     try {
-        this.notesList.nativeElement.scrollTop = this.notesList.nativeElement.scrollHeight
+      this.notesList.nativeElement.scrollTop = this.notesList.nativeElement.scrollHeight
     } catch (error) {
       return
     }

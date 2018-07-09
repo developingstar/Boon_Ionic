@@ -22,7 +22,7 @@ export class User {
     this.role = ensureInclusionOf<Auth.API.Role>(data.role, [
       'admin',
       'lead_owner',
-      'sales_rep',
+      'sales_rep'
     ])
     this.avatarUrl = data.avatar_url || null
   }
