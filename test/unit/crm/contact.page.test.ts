@@ -38,9 +38,7 @@ describe('ContactPage', () => {
         new User({
           avatar_url: null,
           email: 'john@example.com',
-          first_name: 'John',
           id: 100,
-          last_name: 'Boon',
           name: 'John Boon',
           password: '',
           phone_number: '',
@@ -49,13 +47,11 @@ describe('ContactPage', () => {
         new User({
           avatar_url: null,
           email: 'mark@example.com',
-          first_name: 'Mark',
           id: 101,
-          last_name: 'Boon',
           name: 'Mark Boon',
           password: '',
           phone_number: '',
-          role: 'lead_owner'
+          role: 'sales_rep'
         })
       ]
 
@@ -75,9 +71,7 @@ describe('ContactPage', () => {
         owner: {
           avatar_url: '',
           email: 'john@example.com',
-          first_name: 'John',
           id: 100,
-          last_name: 'Boon',
           name: 'John Boon',
           password: '',
           phone_number: '',
@@ -228,6 +222,7 @@ describe('ContactPage', () => {
 
       page.clickSaveButton()
       fixture.detectChanges()
+
       expect(salesServiceStub.updateLead).toHaveBeenCalledWith(contact.id, {
         email: 'martin@gmail.com',
         first_name: 'Martin',
@@ -235,6 +230,7 @@ describe('ContactPage', () => {
         owner_id: undefined,
         phone_number: '1111122222'
       })
+
       expect(toastControllerStub.create).toHaveBeenCalledWith({
         ...toastSuccessDefaults,
         duration: 2000,

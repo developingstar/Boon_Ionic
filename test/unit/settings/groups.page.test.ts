@@ -55,9 +55,7 @@ describe('GroupsPage', () => {
         new User({
           avatar_url: null,
           email: 'john@example.com',
-          first_name: 'John',
           id: 11,
-          last_name: 'Boon',
           name: 'John Boon',
           password: '',
           phone_number: '',
@@ -66,13 +64,11 @@ describe('GroupsPage', () => {
         new User({
           avatar_url: null,
           email: 'mark@example.com',
-          first_name: 'Mark',
           id: 12,
-          last_name: 'Boon',
           name: 'Mark Boon',
           password: '',
           phone_number: '',
-          role: 'lead_owner'
+          role: 'sales_rep'
         })
       ]
 
@@ -80,9 +76,7 @@ describe('GroupsPage', () => {
         new User({
           avatar_url: null,
           email: 'john@example.com',
-          first_name: 'John',
           id: 11,
-          last_name: 'Boon',
           name: 'John Boon',
           password: '',
           phone_number: '',
@@ -91,20 +85,16 @@ describe('GroupsPage', () => {
         new User({
           avatar_url: null,
           email: 'mark@example.com',
-          first_name: 'Mark',
           id: 12,
-          last_name: 'Boon',
           name: 'Mark Boon',
           password: '',
           phone_number: '',
-          role: 'lead_owner'
+          role: 'sales_rep'
         }),
         new User({
           avatar_url: null,
           email: 'alekxis@example.com',
-          first_name: 'Alekxis',
           id: 13,
-          last_name: 'Boon',
           name: 'Alekxis Boon',
           password: '',
           phone_number: '',
@@ -113,13 +103,11 @@ describe('GroupsPage', () => {
         new User({
           avatar_url: null,
           email: 'petr@example.com',
-          first_name: 'Petr',
           id: 14,
-          last_name: 'Boon',
           name: 'Petr Boon',
           password: '',
           phone_number: '',
-          role: 'lead_owner'
+          role: 'sales_rep'
         })
       ]
 
@@ -148,6 +136,7 @@ describe('GroupsPage', () => {
           const group = groups.find((g) => g.id === id)
           return Observable.of(group)
         },
+        groupMembers: () => Observable.of(groups),
         groupUsers: () => Observable.of(groupUsers),
         groups: () => Observable.of(groups),
         updateGroup: (id: number, groupData: API.IGroupUpdate) => {
@@ -227,8 +216,8 @@ describe('GroupsPage', () => {
     it('shows a list of groups', () => {
       expect(page.header).toEqual('Sales Groups')
       expect(page.groups).toEqual(['Group1', 'Group2'])
+      expect(page.groupMembers).toEqual(['5 Team Members', '3 Team Members'])
     })
-
     it('shows the create group button', () => {
       expect(page.createGroupButtonVisible).toBe(true)
     })

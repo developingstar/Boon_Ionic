@@ -29,13 +29,11 @@ describe('UsersService', () => {
         service.users().subscribe((users) => {
           expect(users.length).toEqual(2)
           expect(users[0].id).toEqual(11)
-          expect(users[0].name).toEqual('John Boon')
           expect(users[0].email).toEqual('john@example.com')
           expect(users[0].role).toEqual('admin')
           expect(users[1].id).toEqual(12)
-          expect(users[1].name).toEqual('Mark Boon')
           expect(users[1].email).toEqual('mark@example.com')
-          expect(users[1].role).toEqual('lead_owner')
+          expect(users[1].role).toEqual('sales_rep')
         })
 
         const req = httpMock.expectOne('/api/users')
@@ -46,15 +44,19 @@ describe('UsersService', () => {
             users: [
               {
                 email: 'john@example.com',
+                first_name: 'John',
                 id: 11,
+                last_name: 'Boon',
                 name: 'John Boon',
                 role: 'admin'
               },
               {
                 email: 'mark@example.com',
+                first_name: 'Mark',
                 id: 12,
+                last_name: 'Boon',
                 name: 'Mark Boon',
-                role: 'lead_owner'
+                role: 'sales_rep'
               }
             ]
           }
@@ -83,7 +85,9 @@ describe('UsersService', () => {
           data: {
             user: {
               email: 'john@example.com',
+              first_name: 'John',
               id: 11,
+              last_name: 'Boon',
               name: 'John Boon',
               role: 'admin'
             }

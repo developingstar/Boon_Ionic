@@ -38,10 +38,10 @@ describe('Field', () => {
 
     it('ensures valid role', () => {
       expect(() => new User(sampleUser({ role: null }))).toThrow(
-        new Error('Expected null to be one of admin,lead_owner')
+        new Error('Expected null to be one of admin,sales_rep')
       )
       expect(() => new User(sampleUser({ role: 'guest' }))).toThrow(
-        new Error('Expected guest to be one of admin,lead_owner')
+        new Error('Expected guest to be one of admin,sales_rep')
       )
     })
   })

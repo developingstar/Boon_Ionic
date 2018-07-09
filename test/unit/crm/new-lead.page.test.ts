@@ -1,6 +1,6 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing'
 import { async, ComponentFixture } from '@angular/core/testing'
-import { NavParams, ViewController } from 'ionic-angular'
+import { NavParams, ToastController, ViewController } from 'ionic-angular'
 import { BehaviorSubject, Observable } from 'rxjs'
 
 import { initComponent } from '../../support/helpers'
@@ -15,6 +15,7 @@ import { Pipeline } from '../../../src/app/crm/pipeline.model'
 import { SalesService } from '../../../src/app/crm/sales.service'
 import { Stage } from '../../../src/app/crm/stage.model'
 import { UsersService } from '../../../src/app/crm/users.service'
+import { toastSuccessDefaults } from '../../../src/app/utils/toast'
 import { samplePipeline, sampleStage } from '../../support/factories'
 
 describe('NewLeadPage', () => {
@@ -30,6 +31,8 @@ describe('NewLeadPage', () => {
   let pipelines: Pipeline[]
   let salesServiceStub: any
   let viewControllerStub: any
+  let toastControllerStub: any
+  let toastStub: any
   beforeEach(
     async(() => {
       users = [
@@ -49,7 +52,7 @@ describe('NewLeadPage', () => {
           name: 'Mark Boon',
           password: '',
           phone_number: '',
-          role: 'lead_owner'
+          role: 'sales_rep'
         })
       ]
       pipelines = [
@@ -65,21 +68,17 @@ describe('NewLeadPage', () => {
         )
       ]
       stages = [
-        sampleStage({ id: 1, name: 'Stage One', pipeline_id: 1 }),
-        sampleStage({ id: 2, name: 'Stage Two', pipeline_id: 1 }),
-        sampleStage({ id: 3, name: 'Stage Three', pipeline_id: 1 })
+        new Stage(sampleStage({ id: 1, name: 'Stage One', pipeline_id: 1 })),
+        new Stage(sampleStage({ id: 2, name: 'Stage Two', pipeline_id: 1 })),
+        new Stage(sampleStage({ id: 3, name: 'Stage Three', pipeline_id: 1 }))
       ]
       stages2 = [
-        sampleStage({ id: 4, name: 'Stage Four', pipeline_id: 2 }),
-        sampleStage({ id: 5, name: 'Stage Five', pipeline_id: 2 }),
-        sampleStage({ id: 6, name: 'Stage Six', pipeline_id: 2 })
+        new Stage(sampleStage({ id: 4, name: 'Stage Four', pipeline_id: 2 })),
+        new Stage(sampleStage({ id: 5, name: 'Stage Five', pipeline_id: 2 })),
+        new Stage(sampleStage({ id: 6, name: 'Stage Six', pipeline_id: 2 }))
       ]
       currentUser = new BehaviorSubject<User | undefined>(users[0])
-      fields = [
-        { id: 300, name: 'First Name' },
-        { id: 301, name: 'Last Name' },
-        { id: 302, name: 'Website' }
-      ]
+      fields = [{ id: 302, name: 'Website' }]
       salesServiceStub = {
         createLead: (data: Crm.API.ILeadCreate) => {
           leadCreate = data
@@ -109,7 +108,19 @@ describe('NewLeadPage', () => {
           return
         }
       }
+      toastStub = {
+        onDidDismiss: () => {
+          return
+        },
+        present: () => {
+          return
+        }
+      }
+      toastControllerStub = {
+        create: () => toastStub
+      }
       spyOn(viewControllerStub, 'dismiss').and.callThrough()
+      spyOn(toastControllerStub, 'create').and.callThrough()
       const navParamsStub = {
         get: (param: string) => (param === 'stageId' ? stageId : undefined)
       }
@@ -120,6 +131,7 @@ describe('NewLeadPage', () => {
           { provide: SalesService, useValue: salesServiceStub },
           { provide: UsersService, useValue: usersServiceStub },
           { provide: ViewController, useValue: viewControllerStub },
+          { provide: ToastController, useValue: toastControllerStub },
           { provide: NavParams, useValue: navParamsStub }
         ]
       })
@@ -130,6 +142,8 @@ describe('NewLeadPage', () => {
 
   it('contains inputs for base fields', () => {
     expect(page.baseFieldLabels).toEqual([
+      'First Name',
+      'Last Name',
       'Email',
       'Phone Number',
       'Owner',
@@ -138,11 +152,7 @@ describe('NewLeadPage', () => {
     ])
   })
   it('contains inputs for custom fields', () => {
-    expect(page.customFieldLabels).toEqual([
-      'First Name',
-      'Last Name',
-      'Website'
-    ])
+    expect(page.customFieldLabels).toEqual(['Website'])
   })
   it('sets pipelines value as the first pipeline', () => {
     expect(page.pipelineFieldValue).toEqual(pipelines[0].id.toString())
@@ -165,22 +175,26 @@ describe('NewLeadPage', () => {
     expect(page.isOwnerFieldEnabled).toBe(false)
   })
   it('creates a lead in the specified stage after clicking the create button', () => {
+    page.setField('First Name', 'John')
+    page.setField('Last Name', 'Example')
     page.setField('Email', 'john@example.com')
     page.setField('Phone Number', '100200300')
     page.setField('Owner', users[1].id)
     page.setField('Pipeline', pipelines[0].id)
     page.setField('Stage', stages[0].id)
-    page.setField('First Name', 'John')
-    page.setField('Last Name', 'Example')
     fixture.detectChanges()
     page.clickCreateButton()
+    expect(toastControllerStub.create).toHaveBeenCalledWith({
+      ...toastSuccessDefaults,
+      duration: 2000,
+      message: 'Lead created successfully.'
+    })
     expect(salesServiceStub.createLead).toHaveBeenCalled()
     expect(leadCreate).toEqual({
       email: 'john@example.com',
-      fields: [
-        { id: fields[0].id, value: 'John' },
-        { id: fields[1].id, value: 'Example' }
-      ],
+      fields: [],
+      first_name: 'John',
+      last_name: 'Example',
       owner_id: users[1].id,
       phone_number: '100200300',
       pipeline_id: pipelines[0].id,

@@ -31,6 +31,7 @@ describe('SalesService', () => {
       async(() => {
         const lead = sampleLead()
         service.leads().subscribe((result: PaginatedCollection<Lead>) => {
+          expect(result.count).toEqual(1)
           expect(result.nextPageLink).toEqual('http://example.com/next')
           expect(result.prevPageLink).toEqual('http://example.com/prev')
           expect(result.items[0]).toEqual(new Lead(lead))
@@ -46,6 +47,9 @@ describe('SalesService', () => {
           links: {
             next: 'http://example.com/next',
             prev: 'http://example.com/prev'
+          },
+          metadata: {
+            count: 1
           }
         })
         httpMock.verify()
@@ -66,6 +70,9 @@ describe('SalesService', () => {
           links: {
             next: null,
             prev: null
+          },
+          metadata: {
+            count: 1
           }
         })
         httpMock.verify()
@@ -77,7 +84,7 @@ describe('SalesService', () => {
         const emptyParams = new HttpParams()
         const params = emptyParams.set('pipeline_id', '1')
         service.leads({ url: null, params: params }).subscribe()
-        const req = httpMock.expectOne('/api/leads?pipeline_id=1')
+        const req = httpMock.expectOne('/api/leads?per_page=50&pipeline_id=1')
         expect(req.request.method).toBe('GET')
         req.flush({
           data: {
@@ -86,6 +93,9 @@ describe('SalesService', () => {
           links: {
             next: null,
             prev: null
+          },
+          metadata: {
+            count: 1
           }
         })
         httpMock.verify()
@@ -257,10 +267,9 @@ describe('SalesService', () => {
           expect(lead.id).toEqual(1)
           expect(lead.email).toEqual('lead@example.com')
           expect(lead.phoneNumber).toEqual('+999100200300')
-          expect(lead.stageId).toEqual(14)
           expect(lead.owner).not.toBeNull()
           expect(lead.owner!.id).toEqual(100)
-          expect(lead.owner!.role).toEqual('lead_owner')
+          expect(lead.owner!.role).toEqual('sales_rep')
           expect(lead.owner!.name).toEqual('John Boon')
           expect(lead.owner!.email).toEqual('john@example.com')
           expect(lead.createdByUserId).toEqual(101)
@@ -284,7 +293,7 @@ describe('SalesService', () => {
                 email: 'john@example.com',
                 id: 100,
                 name: 'John Boon',
-                role: 'lead_owner'
+                role: 'sales_rep'
               },
               phone_number: '+999100200300',
               stage_id: 14
@@ -303,10 +312,9 @@ describe('SalesService', () => {
           expect(lead.id).toEqual(1)
           expect(lead.email).toEqual('lead@example.com')
           expect(lead.phoneNumber).toEqual('+999100200300')
-          expect(lead.stageId).toEqual(14)
           expect(lead.owner).not.toBeNull()
           expect(lead.owner!.id).toEqual(100)
-          expect(lead.owner!.role).toEqual('lead_owner')
+          expect(lead.owner!.role).toEqual('sales_rep')
           expect(lead.owner!.name).toEqual('John Boon')
           expect(lead.owner!.email).toEqual('john@example.com')
           expect(lead.createdByUserId).toEqual(101)
@@ -330,7 +338,7 @@ describe('SalesService', () => {
                 email: 'john@example.com',
                 id: 100,
                 name: 'John Boon',
-                role: 'lead_owner'
+                role: 'sales_rep'
               },
               phone_number: '+999100200300',
               stage_id: 14
@@ -349,10 +357,9 @@ describe('SalesService', () => {
           expect(lead.id).toEqual(2)
           expect(lead.email).toEqual('lead@example.com')
           expect(lead.phoneNumber).toEqual('+999100200300')
-          expect(lead.stageId).toEqual(14)
           expect(lead.owner).not.toBeNull()
           expect(lead.owner!.id).toEqual(100)
-          expect(lead.owner!.role).toEqual('lead_owner')
+          expect(lead.owner!.role).toEqual('sales_rep')
           expect(lead.owner!.name).toEqual('John Boon')
           expect(lead.owner!.email).toEqual('john@example.com')
           expect(lead.createdByUserId).toEqual(101)
@@ -376,7 +383,7 @@ describe('SalesService', () => {
                 email: 'john@example.com',
                 id: 100,
                 name: 'John Boon',
-                role: 'lead_owner'
+                role: 'sales_rep'
               },
               phone_number: '+999100200300',
               stage_id: 14

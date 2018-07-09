@@ -5,7 +5,6 @@ import {
 import { async, TestBed } from '@angular/core/testing'
 
 import { Group } from '../../../src/app/settings/group.model'
-// import * as API from '../../../src/app/settings/groups.api.model'
 import { GroupsService } from '../../../src/app/settings/groups.service'
 import { sampleGroup } from '../../support/factories'
 
@@ -172,7 +171,7 @@ describe('GroupsService', () => {
           expect(users[1].id).toEqual(12)
           expect(users[1].name).toEqual('Mark Boon')
           expect(users[1].email).toEqual('mark@example.com')
-          expect(users[1].role).toEqual('lead_owner')
+          expect(users[1].role).toEqual('sales_rep')
         })
 
         const req = httpMock.expectOne('/api/groups/1/users')
@@ -191,7 +190,7 @@ describe('GroupsService', () => {
                 email: 'mark@example.com',
                 id: 12,
                 name: 'Mark Boon',
-                role: 'lead_owner'
+                role: 'sales_rep'
               }
             ]
           }
