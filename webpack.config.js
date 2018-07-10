@@ -1,4 +1,3 @@
-const CompressionPlugin = require('compression-webpack-plugin')
 const deepClone = require('clone-deep')
 const ionicConfig = require('@ionic/app-scripts/config/webpack.config.js')
 const path = require('path')
@@ -29,19 +28,10 @@ function withInjectedEnv(initial, env) {
   return config
 }
 
-function withCompressionPlugin(initial) {
-  const config = deepClone(initial)
-
-  config.plugins.push(new CompressionPlugin())
-
-  return config
-}
 
 devConfig = withInjectedEnv(ionicConfig.dev, 'dev')
-devConfig = withCompressionPlugin(devConfig)
 
 prodConfig = withInjectedEnv(ionicConfig.prod, productionEnv)
-prodConfig = withCompressionPlugin(prodConfig)
 
 module.exports = {
   dev: devConfig,

@@ -21,8 +21,7 @@
       "@angular/core",
       "@angular/core/testing",
       "@angular/platform-browser",
-      "primeng/autocomplete",
-      "froala-editor/js/froala_editor.pkgd.min.js"
+      "primeng/autocomplete"
     ],
     "no-unused-variable": [
       true,
