@@ -1,42 +1,36 @@
 @import 'theme/shared-classes';
 @import 'theme/style-guide';
 @import 'mixins';
-
 groups-page {
   .groups-header {
     @include settings-page-header;
   }
-
   .groups-list {
     .item-md.item-block {
       .item-inner {
         border-bottom: 0;
       }
     }
-
     .group {
       @extend .center-y;
       @extend .space-between;
       margin-top: 10px;
       height: 70px;
-      border: 1px solid #d2d6e4;
+      border: 1px solid $color-card-border;
       border-radius: 8px;
       background-color: #fcfcfd;
       padding: 15px 20px;
       font-size: 14px;
       cursor: pointer;
-
       .group-title {
         color: #354052;
       }
-
       .group-members {
         color: #b4bac6;
         margin-top: 5px;
       }
     }
   }
-
   .field-value {
     background-color: #fbfbfb;
     border: 1px solid #d0d0d0;
@@ -47,7 +41,6 @@ groups-page {
     padding: 0 12px;
     width: 100%;
     margin-top: 13px;
-
     &:disabled {
       background-color: transparent;
       border: 0;
@@ -55,83 +48,68 @@ groups-page {
       height: 16px;
       padding: 0;
     }
-
     &.ng-invalid {
       border: 1px solid $color-invalid-primary;
     }
   }
-
   select.field-value:disabled {
     // Remove the dropdown arrow
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
     text-indent: 0px;
-    text-overflow: '';
-
-    // IE10
+    text-overflow: ''; // IE10
     &::-ms-expand {
       display: none;
     }
   }
-
   form {
     ion-input input.text-input {
       @extend .boon-input;
     }
-
     .label {
       @extend .boon-uppercase-label;
     }
   }
-
   .users-header {
     margin-top: 10px;
     font-size: 12px;
-
     span.description {
       color: $color-light-dark;
       text-transform: uppercase;
     }
   }
-
   .user-row {
     @extend .center-y;
     height: 50px;
     border-bottom: 1px solid #f2f4f5;
-
     .remove-user {
       @extend .center;
       cursor: pointer;
-      background: #0077ff;
+      background: $color-primary;
       width: 21px;
       height: 21px;
       border-radius: 50%;
       margin-right: 15px;
-
       &:hover {
         background: #96bce8;
       }
-
       span {
         font-size: 20px;
         color: #fff;
       }
     }
-
     .avatar-image {
       width: 24px;
       height: 24px;
       border-radius: 50%;
       margin-right: 15px;
     }
-
     .default-avatar {
       font-size: 32px;
       margin-right: 15px;
     }
   }
-
   settings-page-with-menu ion-content.content.content-md {
     .fixed-content,
     .scroll-content {

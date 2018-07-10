@@ -5,7 +5,7 @@ import {
 import { PaginatedCollection } from '../api/paginated-collection'
 import { PaginatedList } from '../api/paginated-list'
 import { Deal } from '../deals/deal.model'
-import { Lead } from './lead.model'
+import { Contact } from './contact.model'
 
 export type UserAction =
   | { readonly name: 'init'; readonly category: string }
@@ -13,7 +13,7 @@ export type UserAction =
   | { readonly name: 'next' }
 
 export interface IState {
-  readonly results: PaginatedCollection<Lead> | PaginatedList<Deal>
+  readonly results: PaginatedCollection<Contact> | PaginatedList<Deal>
   readonly type: string
   readonly requestOptions: IHttpRequestOptions
 }

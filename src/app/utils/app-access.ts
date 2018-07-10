@@ -33,6 +33,8 @@ const allPages: Auth.IPageAccess = {
   AccountSettingsPage: true,
   CrmPage: true,
   CustomFieldsPage: true,
+  DealsIndexPage: true,
+  DealsShowPage: true,
   EmailTemplatePage: true,
   EmailTemplatesPage: true,
   GroupsPage: true,
@@ -49,6 +51,7 @@ const allNavs: Auth.INavAccess = {
   Automation: true,
   Chat: true,
   Crm: true,
+  Deals: true,
   Email: true,
   Settings: true,
   Text: true
@@ -60,13 +63,16 @@ const roles: Auth.IRoles = {
     navAccess: allNavs,
     pageAccess: allPages
   },
-  lead_owner: {
+  sales_rep: {
     functionalityAccess: {},
     navAccess: {
-      Crm: true
+      Crm: true,
+      Deals: true
     },
     pageAccess: {
-      CrmPage: true
+      CrmPage: true,
+      DealsIndexPage: true,
+      DealsShowPage: true
     }
   }
 }

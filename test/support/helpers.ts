@@ -1,11 +1,16 @@
 import { ErrorHandler, Type } from '@angular/core'
 import { ComponentFixture, TestBed } from '@angular/core/testing'
 import { IonicModule } from 'ionic-angular'
+import * as moment from 'moment-timezone'
 
 class CustomErrorHandler {
   handleError(error: any): void {
     throw error
   }
+}
+
+export function setTimeZone(): void {
+  moment.tz.setDefault('America/Denver')
 }
 
 export function initComponent<T>(

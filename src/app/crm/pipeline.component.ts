@@ -13,12 +13,12 @@ interface IStageViewModel {
 
 // Displays list of stages of a pipeline.
 //
-// The component displays either a selectable list of stages or the progress of the lead through
+// The component displays either a selectable list of stages or the progress of the contact through
 // the pipeline.
 //
 // Example usage:
 //
-//    pipeline([stages]="stages", type="progress", [currentStageId]="lead.stageId")
+//    pipeline([stages]="stages", type="progress", [currentStageId]="contact.stageId")
 //
 //    pipeline([stages]="stages", type="select", (select)="onSelect($event)")
 @Component({

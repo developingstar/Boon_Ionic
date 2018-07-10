@@ -1,11 +1,19 @@
 @import 'theme/shared-classes';
 @import 'theme/style-guide';
 crm-page {
+  .title {
+    padding-left: 5px;
+    color: $color-text-primary;
+    font-size: 25px;
+    font-weight: 500;
+    letter-spacing: 0.17px;
+  }
   button.new-contact {
     @extend .boon-button;
     float: right;
-    margin-bottom: 10px;
+    margin-right: 5px;
     width: 180px;
+    border-radius: 4px !important;
   }
   .nav-stages {
     margin: 8px 0 16px 0;
@@ -15,13 +23,8 @@ crm-page {
     background-color: $color-content-background;
   }
   .content {
-    .table {
-      @extend .boon-table;
-      border: 0 !important;
-      padding: 0 !important;
-      .header {
-        background: $color-content-background;
-      }
+    .header {
+      background: $color-content-background;
     }
   }
   ion-row {
@@ -31,13 +34,21 @@ crm-page {
     .action {
       display: flex;
       max-width: 100px;
-      justify-content: center;
       align-items: center;
-      padding: 0;
+      justify-content: flex-end;
+      padding-right: 14px;
       button {
+        padding: 0;
+        border-radius: 4px;
+        justify-content: flex-end;
         margin-bottom: 0;
+        box-shadow: none;
+        height: 24px;
+        width: 24px;
         background: #fff !important;
-        color: $color-primary !important;
+        color: $color-text-secondary !important;
+        font-size: 1.4em;
+        margin-left: 4px;
         &:hover {
           background: #d1d1d1;
         }
@@ -52,18 +63,39 @@ crm-page {
     }
   }
   .header {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    color: $color-text-secondary;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.57px;
+    padding: 0px;
+    margin-bottom: 5px;
     ion-col {
       display: flex;
       align-items: flex-end;
     }
+    ion-col.action {
+      padding: 0;
+    }
   }
-  ion-row.lead {
+  ion-row.contact {
+    display: flex;
+    align-items: center;
+    background: white;
     cursor: pointer;
+    border-radius: 4px;
+    margin-bottom: 3px;
+    height: 44px;
   }
   .header-row {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
+    padding: 13px 0 12px 0px;
+
     h2 {
       color: $color-primary;
       letter-spacing: 0.17px;
@@ -78,9 +110,10 @@ crm-page {
   .showing-total {
     @extend .showing-color;
     margin-left: 2rem;
-    margin-bottom: 0.5rem;
+    margin-top: 7px;
   }
   .sort {
+    display: none !important;
     display: flex;
     margin-left: 3rem;
 
@@ -97,7 +130,7 @@ crm-page {
       padding-left: 10px;
 
       .select-text {
-        font-size: 16px;
+        font-size: 14px;
       }
 
       .select-icon {

@@ -1,0 +1,68 @@
+@import 'theme/shared-classes';
+
+signup-page {
+  .app-root &.ion-page {
+    top: initial;
+  }
+  .signup-page-wrapper {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    form {
+      padding-top: 50px;
+      width: 85vw;
+      @include md {
+        width: 40vw;
+      }
+      label {
+        @extend .boon-label;
+        margin: 13px 8px 13px 0 !important;
+        font-size: 0.8em;
+      }
+      input {
+        @extend .boon-input;
+      }
+      &.ng-invalid.ng-touched input {
+        @extend .boon-invalid-input;
+      }
+      .label-comment {
+        display: flex;
+        height: 100%;
+        align-items: center;
+      }
+
+      .info-wrapper {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        .info {
+          margin-top: 5px;
+        }
+      }
+      .passwords-wrapper {
+        @extend .space-between;
+        .password {
+          display: flex;
+          flex-direction: column;
+          width: 49%;
+        }
+      }
+      .line-break {
+        border-bottom: 1px solid #dfe3eb;
+        padding-top: 29px;
+        margin-bottom: 15px;
+      }
+      .continue {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      button {
+        @extend .boon-button;
+        width: 45% !important;
+        color: white !important;
+        height: 38px !important;
+      }
+    }
+  }
+}

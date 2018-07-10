@@ -1,4 +1,3 @@
-import { Stage } from '../../src/app/crm/stage.model'
 import * as JourneysAPI from '../../src/app/journeys/journeys.api.model'
 import * as API from '../../src/app/settings/groups.api.model'
 import { FieldDefinition } from './../../src/app/crm/field-definition.model'
@@ -16,13 +15,21 @@ export function sampleUser(
   return {
     avatar_url: null,
     email: 'john@example.com',
-    first_name: 'John',
     id: 100,
-    last_name: 'Boon',
     name: 'John Boon',
     password: 'secret',
     phone_number: '',
     role: 'admin',
+    ...values
+  }
+}
+
+export function sampleSignupOrganization(
+  values: { readonly [key: string]: any } = {}
+): Auth.API.ISignupOrganization {
+  return {
+    name: values.name || 'Boon',
+    user: sampleUser(),
     ...values
   }
 }
@@ -40,18 +47,18 @@ export function samplePipeline(
 
 export function sampleStage(
   values: { readonly [key: string]: any } = {}
-): Stage {
-  return new Stage({
+): Crm.API.IStage {
+  return {
     id: 1,
     name: 'Converted',
     pipeline_id: 1,
     ...values
-  })
+  }
 }
 
-export function sampleLead(
+export function sampleContact(
   values: { readonly [key: string]: any } = {}
-): Crm.API.ILead {
+): Crm.API.IContact {
   const fields = nameFields(values.firstName, values.lastName)
 
   return {
@@ -72,12 +79,11 @@ export function sampleLead(
 }
 export function sampleDeal(
   values: { readonly [key: string]: any } = {}
-): Deal.API.IDeals {
+): Deal.API.IDeal {
   return {
     contact: null,
     created_by_service_id: 1,
     created_by_user_id: 1,
-    email: 'john@example.com',
     id: 1,
     name: 'Sample Deal',
     owner: null,
@@ -206,6 +212,7 @@ export function sampleJourney(
         type: 'field_updated'
       }
     ],
+    type: 'contact',
     ...values
   }
 }
@@ -238,6 +245,17 @@ export function sampleGroup(
     id: 1,
     name: 'Group Name',
     user_count: 5,
+    ...values
+  }
+}
+
+export function sampleNote(
+  values: { readonly [key: string]: any } = {}
+): Crm.API.INote {
+  return {
+    content: 'Test Content',
+    id: 1,
+    inserted_at: '2017-12-01T07:00:00.000Z',
     ...values
   }
 }

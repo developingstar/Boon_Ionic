@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core'
-import { NavController, ViewController } from 'ionic-angular'
+import { NavController } from 'ionic-angular'
 import { Observable } from 'rxjs'
 
 import { LoaderService } from '../api/loader.service'
@@ -26,7 +26,6 @@ export class AppComponent {
 
   ngAfterViewInit(): void {
     this.currentUserService.isAuthenticated().subscribe((isAuthenticated) => {
-      const activePage: ViewController | undefined = this.nav.getActive()
       if (!isAuthenticated) {
         this.nav.setRoot(this.rootPage)
       }

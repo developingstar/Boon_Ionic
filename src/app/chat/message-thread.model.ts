@@ -14,10 +14,10 @@ export class MessageThread {
   favorite: boolean
   lastMessage: string
   lastMessageDate: string
-  leadId: number
-  leadFirst: string
-  leadLast: string
-  leadNumber: string
+  contactId: number
+  contactFirst: string
+  contactLast: string
+  contactNumber: string
   messageCount: string
   read: boolean
   isBlank: boolean
@@ -27,30 +27,30 @@ export class MessageThread {
     this.favorite = data.favorite
     this.lastMessage = data.last_message
     this.lastMessageDate = data.last_message_date
-    this.leadId = data.lead_id
-    this.leadFirst = data.lead_first
-    this.leadLast = data.lead_last
-    this.leadNumber = data.lead_number
+    this.contactId = data.contact_id
+    this.contactFirst = data.contact_first
+    this.contactLast = data.contact_last
+    this.contactNumber = data.contact_number
     this.messageCount = data.message_count
     this.read = data.read
     this.isBlank = data.is_blank || false
   }
 
-  getLeadName(): string | undefined {
-    if (this.leadFirst && this.leadLast) {
-      return `${this.leadFirst} ${this.leadLast}`
-    } else if (this.leadFirst || this.leadLast) {
-      return this.leadFirst || this.leadLast
+  getContactName(): string | undefined {
+    if (this.contactFirst && this.contactLast) {
+      return `${this.contactFirst} ${this.contactLast}`
+    } else if (this.contactFirst || this.contactLast) {
+      return this.contactFirst || this.contactLast
     } else {
       return undefined
     }
   }
 
-  getLeadDisplayName(): string | undefined {
-    if (this.leadFirst || this.leadLast) {
-      return this.getLeadName()
+  getContactDisplayName(): string | undefined {
+    if (this.contactFirst || this.contactLast) {
+      return this.getContactName()
     } else {
-      return this.leadNumber
+      return this.contactNumber
     }
   }
 

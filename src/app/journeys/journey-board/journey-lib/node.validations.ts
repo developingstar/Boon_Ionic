@@ -1,5 +1,3 @@
-import Konva from 'konva'
-
 export class NodeValidation {
   static checkNodeSizes(height: number, width: number): void {
     if (!height || !width) {

@@ -16,8 +16,8 @@ import { DealsIndexPageModule } from '../../../src/app/deals/deals-index.page.mo
 import { DealsService } from '../../../src/app/deals/deals.service'
 import { NavService } from '../../../src/app/nav/nav.service'
 import {
+  sampleContact,
   sampleDeal,
-  sampleLead,
   samplePipeline,
   sampleStage,
   sampleUser
@@ -40,7 +40,7 @@ describe('DealsIndexPage', () => {
           name: 'Tom'
         })
       )
-      const lead: Crm.API.ILead = sampleLead({
+      const contact: Crm.API.IContact = sampleContact({
         email: 'leeess@gmail.com',
         name: 'Lisa Newman',
         phoneNUmber: '234332111'
@@ -92,7 +92,6 @@ describe('DealsIndexPage', () => {
           })
         )
       ]
-
       collection = {
         items: [
           new Deal(
@@ -106,7 +105,7 @@ describe('DealsIndexPage', () => {
           ),
           new Deal(
             sampleDeal({
-              contact: lead,
+              contact: contact,
               name: 'Another Deal',
               owner: null,
               pipline: 'New',

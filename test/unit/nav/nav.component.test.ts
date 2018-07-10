@@ -2,10 +2,11 @@ import { HttpClientTestingModule } from '@angular/common/http/testing'
 import { async, ComponentFixture, fakeAsync, tick } from '@angular/core/testing'
 import { BehaviorSubject } from 'rxjs'
 
+import { NavController } from 'ionic-angular'
 import { CurrentUserService } from '../../../src/app/auth/current-user.service'
 import { User } from '../../../src/app/auth/user.model'
 import { NavModule } from '../../../src/app/nav.module'
-import { LeadFilterService } from '../../../src/app/nav/lead.filter.service'
+import { ContactFilterService } from '../../../src/app/nav/contact.filter.service'
 import { NavService } from '../../../src/app/nav/nav.service'
 import { initComponent } from '../../support/helpers'
 import { TestHostComponent } from './test-host.component'
@@ -13,37 +14,46 @@ import { TestHostPageObject } from './test-host.component.po'
 
 describe('NavComponent and NavContentComponent', () => {
   let fixture: ComponentFixture<TestHostComponent>
-  let filterLeadServiceStub: any
+  let filterContactServiceStub: any
   let navService: NavService
   let page: TestHostPageObject
   const user: BehaviorSubject<User | undefined> = new BehaviorSubject(undefined)
-  let filteredLeads: any[]
+  let filteredContacts: any[]
+  let nextPage: string | undefined
+  let navControllerStub: any
 
   beforeEach(
     async(() => {
+      nextPage = undefined
+
+      navControllerStub = {
+        setRoot: (newRoot: string) => (nextPage = newRoot)
+      }
+
       user.next(undefined)
-      filteredLeads = [
-        { id: 1, name: 'Test Lead' },
-        { id: 2, name: 'Lead Test' }
+      filteredContacts = [
+        { id: 1, name: 'Test Contact' },
+        { id: 2, name: 'Contact Test' }
       ]
       const currentUserServiceStub = {
         details: user
       }
 
-      filterLeadServiceStub = {
-        getResults: (leadName: string) => {
-          return filteredLeads
+      filterContactServiceStub = {
+        getResults: (contactName: string) => {
+          return filteredContacts
         }
       }
 
-      spyOn(filterLeadServiceStub, 'getResults').and.callThrough()
+      spyOn(filterContactServiceStub, 'getResults').and.callThrough()
 
       fixture = initComponent(TestHostComponent, {
         declarations: [TestHostComponent],
         imports: [HttpClientTestingModule, NavModule],
         providers: [
           { provide: CurrentUserService, useValue: currentUserServiceStub },
-          { provide: LeadFilterService, useValue: filterLeadServiceStub },
+          { provide: ContactFilterService, useValue: filterContactServiceStub },
+          { provide: NavController, useValue: navControllerStub },
           NavService
         ]
       })
@@ -62,7 +72,7 @@ describe('NavComponent and NavContentComponent', () => {
 
   it('renders the right content in the nav', () => {
     fixture.detectChanges()
-    expect(page.getNavContent('right')).toBe('right content')
+    expect(page.getNavContent('icons-left')).toBe('right content')
   })
 
   it('can toggle nav bar visibility', () => {
@@ -91,7 +101,7 @@ describe('NavComponent and NavContentComponent', () => {
 
       fixture.detectChanges()
 
-      expect(page.getUsername()).toBe('Hello, John Boon')
+      expect(page.getUsername()).toBe('John Boon')
     })
   })
 
@@ -103,14 +113,21 @@ describe('NavComponent and NavContentComponent', () => {
     })
   })
 
-  describe('filter lead', () => {
+  describe('filter contact', () => {
     it(
-      'shows a list of filtered leads',
+      'shows a list of filtered contacts',
       fakeAsync(() => {
-        page.setLeadName('Test')
+        page.setContactName('Test')
         fixture.detectChanges()
         tick(2000)
       })
     )
+  })
+  describe('logout', () => {
+    it('click on user name to activate logout popover', () => {
+      page.clickNavRight(name)
+      fixture.detectChanges()
+      expect(page.logOutButtonVisisble()).toBe(true)
+    })
   })
 })

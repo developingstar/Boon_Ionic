@@ -1,6 +1,11 @@
 import { Component } from '@angular/core'
 import { FormControl, Validators } from '@angular/forms'
-import { IonicPage, ToastController, ViewController } from 'ionic-angular'
+import {
+  IonicPage,
+  NavParams,
+  ToastController,
+  ViewController
+} from 'ionic-angular'
 import { BehaviorSubject } from 'rxjs'
 import { showToast } from '../utils/toast'
 import { JourneysService } from './journeys.service'
@@ -13,21 +18,29 @@ import { JourneysService } from './journeys.service'
 export class CreateJourneyModalComponent {
   public readonly name: FormControl
   public readonly isSaving: BehaviorSubject<boolean>
+  public readonly type: string
 
   constructor(
+    public navParams: NavParams,
     private viewController: ViewController,
     private toastController: ToastController,
     private journeysService: JourneysService
   ) {
     this.name = new FormControl('', Validators.required)
     this.isSaving = new BehaviorSubject(false)
+    this.type = this.navParams.get('type')
   }
 
   public create(): void {
     this.isSaving.next(true)
     const subscription = this.journeysService
       .createJourney({
-        journey: { name: this.name.value, actions: [], triggers: [] }
+        journey: {
+          actions: [],
+          name: this.name.value,
+          triggers: [],
+          type: this.type
+        }
       })
       .finally(() => {
         subscription.unsubscribe()

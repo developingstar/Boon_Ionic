@@ -1,6 +1,6 @@
 .single-team-member(*ngFor="let teamMember of (teamMembers | async)", (click)="goToTeamMember(teamMember.id)")
   .member-picture
-    img(src="{{ teamMember.avatarUrl }}", alt="profile")
+    img(src="{{ teamMember.avatarUrl }}", onError="this.src='../../assets/icon/settings/avatar.svg'")
   .member-details
     h3.member-name
       | {{teamMember.name}}

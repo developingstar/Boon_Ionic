@@ -14,17 +14,25 @@
   cursor: pointer;
   margin-bottom: 2px;
   svg {
-    fill: #90a4ae;
     height: 22px;
     width: 20px;
+  }
+  .nav-icon-svg-outer {
+    fill: #90a4ae !important;
+  }
+  .nav-icon-svg-inner {
+    fill: #dbe2e5 !important;
   }
 }
 
 .nav-icon-link-active {
   @extend .nav-icon-link;
   margin-bottom: 0;
-  svg {
-    fill: #835cdd;
+  .nav-icon-svg-outer {
+    fill: #835cdd !important;
+  }
+  .nav-icon-svg-inner {
+    fill: #c1adee !important;
   }
   &:hover,
   &:active {

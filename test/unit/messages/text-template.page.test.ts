@@ -201,7 +201,6 @@ describe('TextTemplatePage', () => {
 
       expect(page.getName()).toEqual(template.name)
       expect(page.getPhoneNumber()).toEqual(template.defaultSender)
-      expect(page.getContent()).toEqual(template.content)
     })
 
     it('allows to update template', () => {

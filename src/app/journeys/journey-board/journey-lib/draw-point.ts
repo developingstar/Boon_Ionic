@@ -4,16 +4,15 @@ import { Graph } from './graph'
 import { Node } from './node'
 import { Rectangle } from './rectangle'
 
-export class DrawPoint extends Rectangle {
-  static HEIGHT = 20
-  static WIDTH = 20
-  constructor(node: Node, config: Konva.RectConfig = {}) {
-    const defaults: Konva.RectConfig = {
-      cornerRadius: 6,
-      fill: 'blue',
+export class DrawPoint extends Konva.Image {
+  static HEIGHT = 30
+  static WIDTH = 30
+  constructor(node: Node, config: any = {}) {
+    const imageObj = new Image()
+    imageObj.src = '/assets/icon/journey/draw-point.svg'
+    const defaults: Konva.ImageConfig = {
       height: DrawPoint.HEIGHT,
-      shadowColor: 'black',
-      strokeWidth: 0,
+      image: imageObj,
       visible: false,
       width: DrawPoint.WIDTH,
       x: Rectangle.BASE_WIDTH - DrawPoint.WIDTH / 2,
@@ -26,7 +25,7 @@ export class DrawPoint extends Rectangle {
       const edge = new Edge(node, {
         points: [
           node.x() + node.getWidth() / 2,
-          this.y() + node.y(),
+          node.y() + node.getHeight() / 2,
           this.x() + node.x(),
           this.y() + node.y()
         ]

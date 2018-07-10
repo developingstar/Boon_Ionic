@@ -3,7 +3,7 @@ chat-index {
     fill: $color-primary;
     stroke: $color-primary;
   }
-  .lead-list {
+  .contact-list {
     overflow: scroll;
     overflow-x: hidden;
     &::-webkit-scrollbar {
@@ -39,7 +39,7 @@ chat-index {
     flex-direction: column;
     align-items: flex-start;
     width: 70%;
-    .lead-name {
+    .contact-name {
       font-weight: bold;
       color: $color-dark;
       font-size: $font-size-name;

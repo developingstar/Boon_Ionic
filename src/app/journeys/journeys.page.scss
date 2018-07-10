@@ -5,6 +5,10 @@ journeys-page {
   &,
   .content {
     background-color: $color-content-background;
+
+    .scroll-content {
+      padding-top: 0 !important;
+    }
   }
 
   .content {

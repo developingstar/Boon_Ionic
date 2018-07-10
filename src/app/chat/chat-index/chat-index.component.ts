@@ -113,8 +113,8 @@ export class ChatIndexComponent {
   findThreadByPhone(thread: MessageThread): MessageThread | undefined {
     return undefined
     // const find = this.threads.find((mappedThread, index) => {
-    //   const parsedNumber = thread.lead_number.slice(-10)
-    //   const parsedMapNumber = mappedThread.lead_number.slice(-10)
+    //   const parsedNumber = thread.contact_number.slice(-10)
+    //   const parsedMapNumber = mappedThread.contact_number.slice(-10)
 
     //   if (parsedNumber === parsedMapNumber && index !== 0) {
     //     this.threads.splice(0, 1)
@@ -128,16 +128,16 @@ export class ChatIndexComponent {
     // return find
   }
 
-  // creates a lead and loads conversation
+  // creates a contact and loads conversation
   // TODO: modify to work with readonly observable array
   createAndLoadConversation(thread: MessageThread): void {
-    // const leadData = { phone_number: thread.lead_number }
+    // const contactData = { phone_number: thread.contact_number }
     // const loader = this.loadingCtrl.create({
-    //   content: 'Creating lead...'
+    //   content: 'Creating contact...'
     // })
     // loader.present().then(() => {
-    //   this.salesService.createLead(leadData).subscribe(
-    //     (response: Lead) => {
+    //   this.salesService.createContact(contactData).subscribe(
+    //     (response: Contact) => {
     //       if (response) {
     //         this.threads.splice(0, 1)
     //         this.threads.unshift(new MessageThread(response))

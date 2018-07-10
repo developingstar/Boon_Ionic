@@ -1,8 +1,5 @@
-// import { DebugElement } from '@angular/core'
-
 import { AddEditTeamMemberPage } from '../../../src/app/settings/team-members/add-edit-team-member.page'
 import { PageObject } from '../../support/page.po'
-// import { FieldPageObject } from '../crm/field.component.po'
 
 export class AddTeamMembersPageObject extends PageObject<
   AddEditTeamMemberPage
@@ -25,5 +22,29 @@ export class AddTeamMembersPageObject extends PageObject<
 
   get value(): string {
     return this.findByCss<HTMLInputElement>('input')!.value
+  }
+
+  setUserName(name: string): void {
+    const element = this.findByCss<HTMLInputElement>('.user-name input')
+    expect(element).toBeTruthy()
+    this.setInput(element!, name)
+  }
+
+  setUserEmail(email: string): void {
+    const element = this.findByCss<HTMLInputElement>('.email input')
+    expect(element).toBeTruthy()
+    this.setInput(element!, email)
+  }
+
+  clickUpdateTeamMemberButton(): void {
+    this.clickButton('update team member')
+  }
+
+  private clickButton(label: string): void {
+    const button = this.findAllDebugByCss('button').find(
+      (b) => b.nativeElement.textContent === label
+    )
+    expect(button).toBeTruthy()
+    this.click(button!)
   }
 }

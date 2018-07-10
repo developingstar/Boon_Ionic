@@ -1,18 +1,25 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing'
 import { async, ComponentFixture } from '@angular/core/testing'
-import { ModalController, NavController, NavParams } from 'ionic-angular'
+import {
+  ModalController,
+  NavController,
+  NavParams,
+  ToastController
+} from 'ionic-angular'
 import { Observable } from 'rxjs'
 
 import { initComponent } from '../../support/helpers'
-import { NavControllerStub } from '../../support/stubs'
+import { CurrentUserServiceStub, NavControllerStub } from '../../support/stubs'
 import { PipelinesPageObject } from './pipelines.page.po'
 
+import { CurrentUserService } from '../../../src/app/auth/current-user.service'
 import { Pipeline } from '../../../src/app/crm/pipeline.model'
 import { SalesService } from '../../../src/app/crm/sales.service'
 import { Stage } from '../../../src/app/crm/stage.model'
 import { NavService } from '../../../src/app/nav/nav.service'
 import { PipelinesPage } from '../../../src/app/settings/pipelines.page'
 import { PipelinesPageModule } from '../../../src/app/settings/pipelines.page.module'
+import { toastSuccessDefaults } from '../../../src/app/utils/toast'
 
 describe('PipelinesPage', () => {
   let fixture: ComponentFixture<PipelinesPage>
@@ -22,6 +29,8 @@ describe('PipelinesPage', () => {
   let pipelines: Pipeline[]
   let salesServiceStub: any
   let stages: Stage[]
+  let toastControllerStub: any
+  let toastStub: any
 
   beforeEach(
     async(() => {
@@ -84,14 +93,28 @@ describe('PipelinesPage', () => {
 
       spyOn(modalControllerStub, 'create').and.callThrough()
 
+      const currentUserServiceStub = new CurrentUserServiceStub()
+      toastStub = {
+        present: () => {
+          return
+        }
+      }
+      toastControllerStub = {
+        create: () => toastStub
+      }
+      spyOn(toastStub, 'present').and.callThrough()
+      spyOn(toastControllerStub, 'create').and.callThrough()
+
       fixture = initComponent(PipelinesPage, {
         imports: [PipelinesPageModule, HttpClientTestingModule],
         providers: [
           NavService,
           { provide: NavController, useValue: new NavControllerStub() },
+          { provide: CurrentUserService, useValue: currentUserServiceStub },
           { provide: NavParams, useValue: navParamsStub },
           { provide: SalesService, useValue: salesServiceStub },
-          { provide: ModalController, useValue: modalControllerStub }
+          { provide: ModalController, useValue: modalControllerStub },
+          { provide: ToastController, useValue: toastControllerStub }
         ]
       })
       page = new PipelinesPageObject(fixture)
@@ -127,6 +150,11 @@ describe('PipelinesPage', () => {
       })
       expect(page.header).toEqual('Pipelines')
       expect(page.pipelines).toEqual(['New', 'Converted', 'Without Response'])
+      expect(toastControllerStub.create).toHaveBeenCalledWith({
+        ...toastSuccessDefaults,
+        duration: 2000,
+        message: 'Created pipeline successfully.'
+      })
     })
     it('returns to the listing after clicking the back button', () => {
       page.clickBack()
@@ -184,6 +212,11 @@ describe('PipelinesPage', () => {
       })
       expect(page.header).toEqual('Pipelines')
       expect(page.pipelines).toEqual(['New', 'Converted/Archived'])
+      expect(toastControllerStub.create).toHaveBeenCalledWith({
+        ...toastSuccessDefaults,
+        duration: 2000,
+        message: 'Updated pipeline successfully.'
+      })
     })
   })
 })

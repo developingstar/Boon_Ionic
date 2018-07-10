@@ -1,20 +1,20 @@
-.lead-header-wrapper()
+.contact-header-wrapper()
   .info(*ngIf="threadData && !threadData.isBlank")
     .info-header
       | Contact:
-      .lead-header-content(*ngIf="threadData && !threadData.isBlank", (click)="nameNumberToggle = !nameNumberToggle")
-        .lead-name.transition-delay([ngClass]="{'reveal-name' : nameNumberToggle}") {{ threadData.leadFirst }}
-        .lead-number.transition-delay([ngClass]="{'reveal-number' : !nameNumberToggle}") {{ threadData.leadNumber }}
+      .contact-header-content(*ngIf="threadData && !threadData.isBlank", (click)="nameNumberToggle = !nameNumberToggle")
+        .contact-name.transition-delay([ngClass]="{'reveal-name' : nameNumberToggle}") {{ threadData.contactFirst }}
+        .contact-number.transition-delay([ngClass]="{'reveal-number' : !nameNumberToggle}") {{ threadData.contactNumber }}
     .info-header
       | Pipeline:
-      .lead-header-content()
+      .contact-header-content()
         | {{pipeline}}
     .info-header
       | Stage:
-      .lead-header-content()
+      .contact-header-content()
         | {{stage}}
-  .lead-header-content(*ngIf="threadData && threadData.isBlank")
-    ion-input.new-lead-input( (ionBlur)="newLeadBlur($event)", placeholder="phone number", type="tel", [(ngModel)]="threadData.leadNumber")
+  .contact-header-content(*ngIf="threadData && threadData.isBlank")
+    ion-input.new-contact-input( (ionBlur)="newContactBlur($event)", placeholder="phone number", type="tel", [(ngModel)]="threadData.contactNumber")
 .message-show-wrapper(#messageScroll, [scrollTop]="messageScroll.scrollHeight")
   .message-list(*ngIf="messages && messages.length > 0")
     .message-item(*ngFor="let message of messages; let last = last; let i = index")

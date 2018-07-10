@@ -16,7 +16,7 @@ export class CrmPageObject extends PageObject<CrmPage> {
     return nav.querySelectorAll('.item-container')
   }
 
-  leadsTable(): HTMLElement {
+  contactsTable(): HTMLElement {
     return this.findByCss<HTMLElement>('.table')!
   }
 

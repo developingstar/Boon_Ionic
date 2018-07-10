@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core'
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms'
 import {
   IonicPage,
+  ModalController,
   NavController,
   NavParams,
   ToastController
@@ -9,15 +10,12 @@ import {
 import { Observable } from 'rxjs'
 
 import { CurrentUserService } from '../auth/current-user.service'
-import { Field } from '../crm/field.model'
-import { Lead } from '../crm/lead.model'
 import { SalesService } from '../crm/sales.service'
 import { Stage } from '../crm/stage.model'
 import { DealsService } from '../deals/deals.service'
 import { TabTypes } from '../show-tabs/tab-selector.component'
 import { TabService } from '../show-tabs/tab.service'
 import { pageAccess } from '../utils/app-access'
-import { emailValidator, phoneNumberValidator } from '../utils/form-validators'
 import { showToast } from '../utils/toast'
 import { Deal } from './deal.model'
 
@@ -29,19 +27,12 @@ import { Deal } from './deal.model'
   templateUrl: 'deals-show.page.html'
 })
 export class DealsShowPage implements OnInit {
-  public leftTabs: TabTypes[] = ['Deals', 'Notes', 'Activity']
-  public rightTabs: TabTypes[] = ['Texting', 'Email']
-  public leftSelected: TabTypes = 'Deals'
-  public rightSelected: TabTypes = 'Texting'
-  public currentDeal: Deal
-  public contactTest: Lead
+  public leftTabs: TabTypes[] = ['Notes']
+  public leftSelected: TabTypes = 'Notes'
+  public deal: Deal
   public state: 'view' | 'edit'
-  public fieldsTest: ReadonlyArray<Field>
-  public dealDataForm: FormGroup
-  public getDeal: Observable<Deal>
-  public currentStageId: number
-  public newStageId: number
-  public stages: Observable<ReadonlyArray<Stage>>
+  public dealForm: FormGroup
+  public stages: Observable<Stage[]>
 
   constructor(
     private currentUserService: CurrentUserService,
@@ -51,58 +42,72 @@ export class DealsShowPage implements OnInit {
     private navController: NavController,
     private navParams: NavParams,
     private toastController: ToastController,
+    private modalController: ModalController,
     private tabService: TabService
   ) {}
 
   ngOnInit(): void {
     this.state = 'view'
 
-    this.dealDataForm = this.formBuilder.group({
-      email: new FormControl('', emailValidator()),
+    this.dealForm = this.formBuilder.group({
       name: new FormControl(),
-      phoneNumber: new FormControl('', phoneNumberValidator()),
-      referralOwner: new FormControl(),
       value: new FormControl()
     })
-
     const dealId = this.navParams.get('id')
-    this.getDeal = this.dealsService.getDeal(dealId)
-    this.getDeal.subscribe((res: Deal) => {
-      this.currentDeal = res
-      this.stages = this.salesService
-        .stage(this.currentDeal.stageId)
-        .switchMap((stage) => {
-          this.currentStageId = stage.id
-          return this.salesService.stages(stage.pipelineId)
-        })
+    this.dealsService.getDeal(dealId).subscribe(async (res: Deal) => {
+      this.deal = res
+      if (this.deal) this.tabService.setDeal(this.deal)
+      if (this.deal.contact) this.tabService.setContact(this.deal.contact)
+      this.setPipelineSelect()
     })
+  }
+
+  async setPipelineSelect(): Promise<void> {
+    const stage = await this.salesService.stage(this.deal.stageId).toPromise()
+    this.stages = this.salesService.stages(stage.pipelineId)
   }
 
   enterEditMode(): void {
     this.state = 'edit'
-    this.setFormData(this.currentDeal)
+    this.setFormData(this.deal)
   }
 
-  updateDeal(): void {
-    const formValueInput = this.dealDataForm.get('value')
-    const value =
-      this.state === 'edit'
-        ? formValueInput ? formValueInput.value : 0
-        : this.currentDeal.value
+  updateDeal(stageId?: number): void {
+    const name = this.dealForm.get('name')!.value
+    const value = this.dealForm.get('value')!.value
     const dealUpdate = {
-      stage_id: this.newStageId,
-      value: value ? parseInt(value, 0) : 0
+      name: !!name ? name : this.deal.name,
+      stage_id: !!stageId ? stageId : this.deal.stageId,
+      value: !!value ? parseInt(value, 0) : this.deal.value
     }
     // may also need to update the concact here
     this.dealsService
-      .updateDeal(this.currentDeal.id, dealUpdate)
+      .updateDeal(this.deal.id, dealUpdate)
       .subscribe((res: Deal) => {
         showToast(this.toastController, 'Successfully updated the deal')
-        this.currentDeal = res
+        this.deal = res
         this.setFormData(res)
+        this.setPipelineSelect()
       })
 
     this.state = 'view'
+  }
+
+  public changePipelineModal(): void {
+    const modal = this.modalController.create(
+      'AssignStageModalComponent',
+      {
+        action: { data: { stage_id: this.deal.stageId } },
+        isPipeline: true
+      },
+      { cssClass: 'assign-stage-modal-component' }
+    )
+    modal.present()
+    modal.onDidDismiss((data: any) => {
+      if (data && data.stage_id) {
+        this.updateDeal(data.stage_id)
+      }
+    })
   }
 
   cancel(): void {
@@ -117,30 +122,23 @@ export class DealsShowPage implements OnInit {
     return this.state === 'edit'
   }
 
-  setFormData(dealResponse: Deal): void {
-    this.dealDataForm.patchValue({
-      email: dealResponse.contact ? dealResponse.contact.email : '',
-      name: dealResponse.contact ? dealResponse.contact.name : '',
-      phoneNumber: dealResponse.contact ? dealResponse.contact.phoneNumber : '',
-      referralOwner: dealResponse.owner ? dealResponse.owner.name : '',
-      value: dealResponse.value || ''
+  setFormData(deal: Deal): void {
+    this.dealForm.patchValue({
+      name: deal ? deal.name : '',
+      value: deal.value || ''
     })
   }
 
-  goToDeals(): void {
+  onStageSelect(stageId: number): void {
+    if (stageId) this.deal.stageId = stageId
+  }
+
+  goBack(): void {
     if (this.navController.canGoBack()) {
       this.navController.pop()
     } else {
       this.navController.setRoot('DealsIndexPage')
     }
-  }
-
-  public onStageChange(event: any): void {
-    this.newStageId = event
-  }
-
-  get deal(): Observable<Deal | undefined> {
-    return this.getDeal
   }
 
   private async ionViewCanEnter(): Promise<boolean> {

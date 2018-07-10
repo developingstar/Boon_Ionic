@@ -4,6 +4,7 @@ import { async, ComponentFixture } from '@angular/core/testing'
 import { NavController } from 'ionic-angular'
 import { Observable } from 'rxjs'
 
+import { CurrentUserService } from '../../../src/app/auth/current-user.service'
 import { EmailTemplate } from '../../../src/app/messages/email-template.model'
 import { EmailTemplatesPage } from '../../../src/app/messages/email-templates.page'
 import { EmailTemplatesPageModule } from '../../../src/app/messages/email-templates.page.module'
@@ -12,7 +13,7 @@ import { NavService } from '../../../src/app/nav/nav.service'
 import { sampleEmailTemplate } from '../../support/factories'
 import { initComponent } from '../../support/helpers'
 import { assertTableRow } from '../../support/matchers'
-import { NavControllerStub } from '../../support/stubs'
+import { CurrentUserServiceStub, NavControllerStub } from '../../support/stubs'
 import { EmailTemplatesPageObject } from './email-templates.page.po'
 
 describe('EmailTemplatesPage', () => {
@@ -61,11 +62,13 @@ describe('EmailTemplatesPage', () => {
       navControllerStub = new NavControllerStub({ name: 'EmailTemplatesPage' })
       spyOn(navControllerStub, 'setRoot').and.callThrough()
 
+      const currentUserServiceStub = new CurrentUserServiceStub()
       fixture = initComponent(EmailTemplatesPage, {
         imports: [EmailTemplatesPageModule, HttpClientTestingModule],
         providers: [
           NavService,
           { provide: NavController, useValue: navControllerStub },
+          { provide: CurrentUserService, useValue: currentUserServiceStub },
           {
             provide: MessagesService,
             useValue: messagesServiceStub

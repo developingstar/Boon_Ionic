@@ -7,25 +7,25 @@ import { Observable } from 'rxjs'
 import { PaginatedCollection } from '../../../src/app/api/paginated-collection'
 import { CurrentUserService } from '../../../src/app/auth/current-user.service'
 import { User } from '../../../src/app/auth/user.model'
+import { Contact } from '../../../src/app/crm/contact.model'
 import { CrmPage } from '../../../src/app/crm/crm.page'
 import { CrmPageModule } from '../../../src/app/crm/crm.page.module'
-import { Lead } from '../../../src/app/crm/lead.model'
 import { Pipeline } from '../../../src/app/crm/pipeline.model'
 import { SalesService } from '../../../src/app/crm/sales.service'
 import { NavService } from '../../../src/app/nav/nav.service'
 import {
-  sampleLead,
+  sampleContact,
   samplePipeline,
   sampleStage,
   sampleUser
 } from '../../support/factories'
-import { initComponent } from '../../support/helpers'
+import { initComponent, setTimeZone } from '../../support/helpers'
 import { assertTableRow } from '../../support/matchers'
 import { CurrentUserServiceStub, NavControllerStub } from '../../support/stubs'
 import { CrmPageObject } from './crm.page.po'
 
 describe('CrmPage', () => {
-  let collection: PaginatedCollection<Lead>
+  let collection: PaginatedCollection<Contact>
   let fixture: ComponentFixture<CrmPage>
   let page: CrmPageObject
   let salesServiceStub: any
@@ -43,8 +43,8 @@ describe('CrmPage', () => {
       collection = {
         count: 3,
         items: [
-          new Lead(
-            sampleLead({
+          new Contact(
+            sampleContact({
               email: 'john@example.com',
               first_name: 'John',
               last_name: 'Boon',
@@ -53,8 +53,8 @@ describe('CrmPage', () => {
               stage_id: 2
             })
           ),
-          new Lead(
-            sampleLead({
+          new Contact(
+            sampleContact({
               email: 'susan@example.com',
               first_name: 'Susan',
               last_name: 'Boon',
@@ -63,8 +63,8 @@ describe('CrmPage', () => {
               stage_id: 2
             })
           ),
-          new Lead(
-            sampleLead({
+          new Contact(
+            sampleContact({
               email: null,
               first_name: null,
               last_name: null,
@@ -79,7 +79,7 @@ describe('CrmPage', () => {
         prevPageLink: 'http://example.com/prev'
       }
       salesServiceStub = {
-        leads: () => Observable.of(collection),
+        contacts: () => Observable.of(collection),
         limit: 50,
         pipelines: () =>
           Observable.of([
@@ -97,7 +97,7 @@ describe('CrmPage', () => {
             sampleStage({ id: 3, name: 'Needs follow-up', pipeline_id: 2 })
           ])
       }
-      spyOn(salesServiceStub, 'leads').and.callThrough()
+      spyOn(salesServiceStub, 'contacts').and.callThrough()
       const currentUserServiceStub = new CurrentUserServiceStub(user)
       navControllerStub = new NavControllerStub()
       spyOn(navControllerStub, 'push').and.callThrough()
@@ -127,8 +127,9 @@ describe('CrmPage', () => {
     })
   )
   describe('table', () => {
-    it('includes leads', () => {
-      const table = page.leadsTable()
+    it('includes contacts', () => {
+      setTimeZone()
+      const table = page.contactsTable()
       expect(table.children.length).toBe(4)
       assertTableRow(table.children.item(0), [
         'Name',
@@ -142,7 +143,7 @@ describe('CrmPage', () => {
         'John Boon',
         'john@example.com',
         '+999111111',
-        '01 Dec 2017 12:00 AM',
+        '01 Dec 2017',
         '-',
         ''
       ])
@@ -150,7 +151,7 @@ describe('CrmPage', () => {
         'Susan Boon',
         'susan@example.com',
         '+999222222',
-        '01 Dec 2017 12:00 AM',
+        '01 Dec 2017',
         '-',
         ''
       ])
@@ -158,23 +159,23 @@ describe('CrmPage', () => {
         '-',
         '-',
         '+999333333',
-        '01 Dec 2017 12:00 AM',
+        '01 Dec 2017',
         'Tom',
         ''
       ])
     })
-    it('allows to load leads from different pages', () => {
-      expect(salesServiceStub.leads).toHaveBeenCalledWith({
+    it('allows to load contacts from different pages', () => {
+      expect(salesServiceStub.contacts).toHaveBeenCalledWith({
         params: jasmine.any(HttpParams),
         url: null
       })
       page.clickNextPageButton()
-      expect(salesServiceStub.leads).toHaveBeenCalledWith({
+      expect(salesServiceStub.contacts).toHaveBeenCalledWith({
         params: jasmine.any(HttpParams),
         url: 'http://example.com/next'
       })
       page.clickPrevPageButton()
-      expect(salesServiceStub.leads).toHaveBeenCalledWith({
+      expect(salesServiceStub.contacts).toHaveBeenCalledWith({
         params: jasmine.any(HttpParams),
         url: 'http://example.com/prev'
       })
@@ -186,16 +187,16 @@ describe('CrmPage', () => {
       page.clickNextPageButton()
     })
   })
-  it('opens the lead page after clicking an entry in the table', () => {
-    page.click(page.findDebugByCss('ion-row.lead'))
+  it('opens the contact page after clicking an entry in the table', () => {
+    page.click(page.findDebugByCss('ion-row.contact'))
     expect(navControllerStub.push).toHaveBeenCalled()
   })
-  it('presents the new lead modal after clicking the new contact button', () => {
+  it('presents the new contact modal after clicking the new contact button', () => {
     page.clickNewContactButton()
     expect(modalControllerStub.create).toHaveBeenCalledWith(
-      'NewLeadPage',
+      'NewContactPage',
       { stageId: undefined },
-      { cssClass: 'new-lead-page-modal' }
+      { cssClass: 'new-contact-page-modal' }
     )
     expect(modalStub.present).toHaveBeenCalled()
   })

@@ -1,17 +1,17 @@
 import { User } from '../auth/user.model'
-import { Lead } from '../crm/lead.model'
+import { Contact } from '../crm/contact.model'
 import { ensureNumber } from '../utils/validators'
 
 export class Deal {
-  readonly name: string | null
-  readonly value: number | null
-  readonly contact: Lead | null = null
-  readonly createdByServiceId: number | null
-  readonly createdByUserId: number | null
-  readonly id: number | null
-  readonly owner: User | null = null
-  readonly pipeline: string | null
-  readonly stageId: number
+  name: string | null
+  value: number | null
+  contact: Contact | null = null
+  createdByServiceId: number | null
+  createdByUserId: number | null
+  id: number | null
+  owner: User | null = null
+  pipeline: string | null
+  stageId: number
 
   constructor(data: Deal.API.IDeal) {
     this.name = data.name
@@ -21,13 +21,12 @@ export class Deal {
     this.id = data.id
     this.pipeline = data.pipeline
     this.stageId = ensureNumber(data.stage_id)
-
     if (data.contact) {
-      this.contact = new Lead(data.contact)
+      this.contact = new Contact(data.contact)
     }
 
-    if (data.owner) {
-      this.owner = new User(data.owner)
-    }
+    // if (data.owner) {
+    //   this.owner = new User(data.owner)
+    // }
   }
 }

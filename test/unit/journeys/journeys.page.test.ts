@@ -16,7 +16,7 @@ import { JourneysPageModule } from '../../../src/app/journeys/journeys.page.modu
 import { JourneysService } from '../../../src/app/journeys/journeys.service'
 import { NavService } from '../../../src/app/nav/nav.service'
 import { sampleJourney } from '../../support/factories'
-import { initComponent } from '../../support/helpers'
+import { initComponent, setTimeZone } from '../../support/helpers'
 import { assertTableRow } from '../../support/matchers'
 import { CurrentUserServiceStub, NavControllerStub } from '../../support/stubs'
 import { JourneysPageObject } from './journeys.page.po'
@@ -110,6 +110,7 @@ describe('JourneysPage', () => {
     })
 
     it('table', () => {
+      setTimeZone()
       const table = page.journeysTable()
 
       expect(table.children.length).toBe(4)
@@ -223,7 +224,7 @@ describe('JourneysPage', () => {
   it('clicking an entry in the table opens the journey page', () => {
     page.click(page.findDebugByCss('ion-row.journey ion-col'))
 
-    expect(navControllerStub.setRoot).toHaveBeenCalledWith('JourneyPage', {
+    expect(navControllerStub.setRoot).toHaveBeenCalledWith('JourneyBoardPage', {
       id: collection.items[0].id
     })
   })

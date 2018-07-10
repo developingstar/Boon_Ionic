@@ -26,17 +26,17 @@ export class NavIconsComponent {
     {
       icon: 'Dashboard.svg',
       name: 'Crm',
-      pages: ['CrmPage', 'LeadPage']
+      pages: ['CrmPage', 'ContactPage']
     },
     {
-      icon: 'crm.svg',
+      icon: 'Deals.svg',
       name: 'Deals',
       pages: ['DealsIndexPage', 'DealsShowPage']
     },
     {
       icon: 'automation.svg',
       name: 'Automation',
-      pages: ['JourneysPage', 'JourneyPage']
+      pages: ['JourneysPage', 'JourneyPage', 'JourneyBoardPage']
     },
     {
       icon: 'text.svg',

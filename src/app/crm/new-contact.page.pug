@@ -1,0 +1,22 @@
+h2 New Contact
+
+
+.form([formGroup]="newContactForm")
+  .base-fields
+    field(type="input", [form]="newContactForm", formField="firstName", label="First Name")
+    field(type="input", [form]="newContactForm", formField="lastName", label="Last Name")
+    field(type="input", [form]="newContactForm", formField="email", label="Email")
+    field(type="input", [form]="newContactForm", formField="phoneNumber", label="Phone Number")
+    field(type="select", [form]="newContactForm", formField="owner_id", label="Owner", [options]="owners | async")
+    field(type="select", [form]="newContactForm", formField="pipelineId", label="Pipeline", [options]="pipelines | async", (change)="setStages(newContactForm.value.pipelineId)")
+    field(type="select", [form]="newContactForm", formField="stageId", label="Stage", [options]="stages | async")
+  hr
+  .custom-fields
+    field(*ngFor="let field of (fields | async)",
+      type="input",
+      [form]="newContactForm",
+      [formField]="field.id",
+      [label]="field.name")
+  .buttons
+    button(ion-button, (click)="create(newContactForm.value)", [disabled]="!newContactForm.valid") Create
+    button.cancel(ion-button, outline, (click)="cancel()") Cancel

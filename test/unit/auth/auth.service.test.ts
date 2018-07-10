@@ -36,7 +36,7 @@ describe('AuthService', () => {
         async(() => {
           currentUserService.details.next(undefined)
 
-          service.login('user@example.com', 'secret').add(() => {
+          service.login('john@example.com', 'secret').add(() => {
             currentUserService.details.subscribe((details) => {
               expect(details).toEqual(userDetails)
             })
@@ -47,7 +47,7 @@ describe('AuthService', () => {
 
           req.flush({
             data: {
-              user: userDetails
+              user: userDetails.toApiRepresentation()
             }
           })
 
@@ -67,6 +67,50 @@ describe('AuthService', () => {
         currentUserService.details.subscribe((details) => {
           expect(details).toBeUndefined()
         })
+      })
+    )
+  })
+
+  describe('reset password', () => {
+    it(
+      'send reset request',
+      async(() => {
+        service.sendResetRequest('admin@example.com').subscribe((result) => {
+          expect(result.data.message).toEqual('OK')
+        })
+
+        const req = httpMock.expectOne('/api/users/request-password-reset')
+        expect(req.request.method).toBe('POST')
+
+        req.flush({
+          data: {
+            message: 'OK'
+          }
+        })
+
+        httpMock.verify()
+      })
+    )
+
+    it(
+      'create new password',
+      async(() => {
+        service
+          .createNewPassword('token_code', 'new_password')
+          .subscribe((result) => {
+            expect(result.data.message).toEqual('OK')
+          })
+
+        const req = httpMock.expectOne('/api/users/reset-password')
+        expect(req.request.method).toBe('POST')
+
+        req.flush({
+          data: {
+            message: 'OK'
+          }
+        })
+
+        httpMock.verify()
       })
     )
   })

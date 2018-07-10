@@ -15,7 +15,10 @@ send-code-page {
     }
 
     form {
-      width: 35vw;
+      width: 85vw;
+      @include md {
+        width: 40vw;
+      }
       margin-bottom: 100px;
 
       .title {
@@ -50,6 +53,9 @@ send-code-page {
 
       .login {
         cursor: pointer;
+        white-space: nowrap;
+        font-size: 12px;
+        margin-left: -8px;
       }
     }
   }

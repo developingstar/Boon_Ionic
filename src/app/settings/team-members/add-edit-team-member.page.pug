@@ -41,4 +41,4 @@ settings-page-with-menu.settings-page([currentPage]="'TeamMembersPage'")
           ion-label(stacked) Twilio Number
           ion-select.phone_number_select.select-lg(formControlName="phoneNumber" #phone_number)
             ion-option(*ngFor="let phoneNumber of (phoneNumbers | async)", [value]="phoneNumber.phoneNumber", [selected]="phoneNumber.phoneNumber === 'myForm.value.phoneNumber'")
-              | {{phoneNumber.phone_number}}
+              | {{phoneNumber.phoneNumber}}

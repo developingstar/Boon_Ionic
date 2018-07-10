@@ -25,9 +25,10 @@ import { JourneysService } from './journeys.service'
 })
 export class JourneysPage implements OnInit, OnDestroy {
   readonly state: Observable<IState>
+  public selectedNavItem: string
+  public categoryType: string
   private readonly uiActions: Subject<UserAction> = new Subject()
   private readonly stateSubscription: Subscription
-  private selectedNavItem: string
 
   constructor(
     private journeysService: JourneysService,
@@ -39,7 +40,9 @@ export class JourneysPage implements OnInit, OnDestroy {
     this.state = this.uiActions
       .mergeScan((state, action) => this.reduce(state, action), initialState)
       .shareReplay()
-    this.stateSubscription = this.state.subscribe()
+    this.stateSubscription = this.state.subscribe((state) => {
+      this.categoryType = state.category
+    })
   }
   ngOnInit(): void {
     this.selectedNavItem = 'contact'
@@ -61,13 +64,14 @@ export class JourneysPage implements OnInit, OnDestroy {
   }
 
   public showJourney(journey: Journey): void {
-    this.navController.setRoot('JourneyPage', { id: journey.id })
+    this.navController.setRoot('JourneyBoardPage', { id: journey.id })
   }
 
   public openNewJourneyModal(event: Event): void {
+    const type = { type: this.categoryType }
     const modal = this.modalController.create(
       CreateJourneyModalComponent.name,
-      {},
+      type,
       { cssClass: 'create-journey-modal' }
     )
     modal.present({ ev: event })
@@ -76,6 +80,10 @@ export class JourneysPage implements OnInit, OnDestroy {
         this.showJourney(data.journey)
       }
     })
+  }
+
+  public type(): any {
+    return this.state.flatMap((state) => state.category)
   }
 
   public showActions(event: any, journey: Journey): void {

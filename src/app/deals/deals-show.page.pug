@@ -1,62 +1,62 @@
 nav-content
   nav-icons(right, currentPage="DealsShowPage")
 
-//- header content goes here
 div.deals-header-section
-  .deal-content-wrapper(*ngIf="currentDeal")
+  .deal-content-wrapper(*ngIf="deal")
     div.deal-page-back-section
-      #back-button((click)="goToDeals()")
+      #back-button((click)="goBack()")
         i.fa.fa-arrow-left
     .deal-header-section
       h2
         | deal
-    .contact-header
-      h1
-        | {{currentDeal?.contact?.name}}: {{currentDeal?.name}}
     .deal-details-section
-      form.contact-form([formGroup]='dealDataForm', (ngSubmit)='updateDeal()')
-        .contact-details
-          .contact-detail-item
-            label(for='contactName')
-              | Related Contact
-            input.boon-input(*ngIf='editMode()', formControlName="name", type="text", name="contactName")
-            .display-value(*ngIf='viewMode()')
-              | {{ currentDeal?.contact?.name }}
-          .contact-detail-item
-            label(for='email')
-              | Email
-            input.boon-input(*ngIf='editMode()', formControlName="email", type='text', name='email')
-            .display-value(*ngIf='viewMode()')
-              | {{currentDeal?.contact?.email}}
-          .contact-detail-item
-            label(for='phoneNumber')
-              | Phone Number
-            input.boon-input(*ngIf='editMode()', formControlName="phoneNumber", type="text", name='phoneNumber')
-            .display-value(*ngIf='viewMode()')
-              | {{currentDeal?.contact?.phoneNumber}}
-          .contact-detail-item
+      form.deal-form([formGroup]='dealForm', (ngSubmit)='updateDeal()')
+        .deal-header
+          h1(*ngIf='viewMode()')
+            | {{deal?.contact?.name}}: {{deal?.name}}
+          button.more-button(*ngIf='viewMode()', type='button', (click)='changePipelineModal()')
+            .bullets
+          .deal-detail-item
+            label(*ngIf='editMode()', for='name')
+              | Deal Name
+            input.boon-input(*ngIf='editMode()', formControlName="name", type='text', name='name', required)
+        .deal-details
+          .deal-detail-item
             label(for='value')
               | Deal Value
             input.boon-input(*ngIf='editMode()', formControlName="value", type="number", name='value', required)
             .display-value(*ngIf='viewMode()')
-              | {{ currentDeal?.value }}
-          .contact-detail-item
+              | {{ deal?.value }}
+          .deal-detail-item
+            label(for='contactName')
+              | Contact
+            .display-value
+              | {{ deal?.contact?.name }}
+          .deal-detail-item
+            label(for='email')
+              | Email
+            .display-value
+              | {{deal?.contact?.email}}
+          .deal-detail-item
+            label(for='phoneNumber')
+              | Phone Number
+            .display-value
+              | {{deal?.contact?.phoneNumber}}
+          .deal-detail-item
             label(for='owner')
               | Referral Owner
-            input.boon-input(*ngIf='editMode()', formControlName="referralOwner", type="text", name='owner')
-            .display-value(*ngIf='viewMode()')
-              | {{ currentDeal?.owner?.name }}
-        .deal-buttons-section
-          button.edit-button(*ngIf='viewMode()', (click)='enterEditMode()')
-            | Edit
-          button(*ngIf='viewMode()')
-            | Update Stage
-          button(*ngIf='editMode()', type="submit")
-            | Save
-          button(*ngIf='editMode()', (click)='cancel()')
-            | Cancel
-    pipeline([stages]="stages | async", type="progress", [currentStageId]="currentDeal.stageId", (select)="onStageChange($event)")
-//- two tabing sections
-div.tabs-wrapper
+            .display-value
+              | {{ deal?.owner?.name }}    
+          .deal-buttons-section
+            button.edit-button(*ngIf='viewMode()', (click)='enterEditMode()')
+              | Edit
+            button(*ngIf='viewMode()')
+              | Update Stage
+            button(*ngIf='editMode()', type="submit")
+              | Save
+            button(*ngIf='editMode()', (click)='cancel()')
+              | Cancel
+    pipeline([stages]="stages | async", type="progress", [currentStageId]="deal.stageId", (select)="onStageSelect($event)")
+div.tab-selector-wrapper
   tab-selector([tabs]="leftTabs", [selectedTab]='leftSelected')
   .space-holder

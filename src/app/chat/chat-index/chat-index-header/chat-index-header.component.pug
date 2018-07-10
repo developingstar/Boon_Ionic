@@ -6,7 +6,7 @@
   .filter(*ngIf="!searching")
     .dropdown-title((click)="filtering = !filtering")
       | {{filter}}
-  .add-lead(*ngIf="!searching", (click)="addNew()", [inlineSVG]="'assets/icon/messages/add-lead.svg'")
+  .add-contact(*ngIf="!searching", (click)="addNew()", [inlineSVG]="'assets/icon/messages/add-lead.svg'")
 .dropdown-container(*ngIf="filtering")
   .dropdown
     .top-two

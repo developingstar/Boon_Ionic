@@ -46,8 +46,9 @@ $nav-right-width: auto;
 
 @mixin nav-right($height) {
   display: flex;
-  height: $height;
+  height: calc(#{$height} - 1px);
   width: $nav-right-width;
+  background-color: white;
   *[right],
   .avatar,
   .arrow,
@@ -85,6 +86,7 @@ nav {
       .nav-right {
         @include nav-right($nav-height-mobile);
         justify-content: flex-end;
+        padding-right: 45px;
       }
       .nav-icons-left {
         @include nav-icons-left($nav-height-mobile);
@@ -170,6 +172,7 @@ nav {
     white-space: nowrap;
     font-size: 14px;
     font-weight: 600;
+    margin-top: 6px;
   }
   .avatar svg {
     fill: #c1adee;
@@ -178,8 +181,8 @@ nav {
   }
   .arrow svg {
     height: 20px;
-    width: 20px;
-    fill: #c1adee;
+    width: 8px;
+    margin-top: 3px;
   }
   .nav-container.hidden {
     display: none;
@@ -190,5 +193,72 @@ nav {
       height: $nav-height-large;
     }
     width: 100%;
+  }
+  .nav-right {
+    cursor: pointer;
+    z-index: 99999;
+    .dropdown {
+      position: relative;
+      display: inline-block;
+      background-color: transparent;
+      margin: 2px 6px 0px -6px;
+      height: 20px;
+    }
+
+    /* Dropdown Content (Hidden by Default) */
+    .dropdown-content {
+      height: 59px;
+      padding: 15px;
+      position: absolute;
+      background-color: white;
+      margin: 17px 0px 0px -109px;
+      z-index: 9999;
+      width: 143px;
+      background: transparent;
+      .triangle {
+        border-style: solid;
+        border-width: 10px 10px 10px 10px;
+        transform: rotate(45deg);
+        position: absolute;
+        border-radius: 0.5px;
+        box-shadow: 0px 0px 0px 3px rgba(0, 0, 0, 0.06);
+        margin: -1px 0 0 71px;
+        background-color: white !important;
+        color: white !important;
+      }
+      .bar {
+        border-style: solid;
+        border-width: 5px 5px 5px 5px;
+        transform: rotate(45deg);
+        position: absolute;
+        margin: -5px 0 0 76px;
+        background-color: white;
+        color: white;
+        z-index: 1000;
+      }
+      .popover {
+        display: flex;
+        z-index: 999;
+        width: 120px;
+        height: 43px;
+        border-radius: 4px;
+        padding: 9px;
+        justify-content: center;
+        position: absolute;
+        background: white;
+        box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.2);
+      }
+    }
+  }
+
+  /* Links inside the dropdown */
+  .dropdown-content a {
+    color: #8a96a0;
+    margin: 2px 9px;
+    text-decoration: none;
+    display: block;
+    position: absolute;
+    width: 100%;
+    font-size: 1.3em;
   }
 }

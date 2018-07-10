@@ -10,7 +10,7 @@ import { Stage } from '../../../crm/stage.model'
   templateUrl: 'chat-index-header.component.html'
 })
 export class ChatIndexHeaderComponent implements OnInit {
-  @Output() filterLeads = new EventEmitter()
+  @Output() filterContacts = new EventEmitter()
   public pipelines: Observable<ReadonlyArray<Pipeline>>
   public stages: Observable<ReadonlyArray<Stage>>
   public filtering: boolean = false
@@ -38,7 +38,7 @@ export class ChatIndexHeaderComponent implements OnInit {
       const testInput = /^[^1][0-9]{1}/.test(input)
       const searchString = testInput ? '1' + input : input
       // const scope = 'active&search=' + searchString
-      this.filterLeads.emit({
+      this.filterContacts.emit({
         filter: searchString
       })
     } else {
@@ -57,7 +57,7 @@ export class ChatIndexHeaderComponent implements OnInit {
   }
 
   setFilter(filter: any | null): void {
-    this.filterLeads.emit({
+    this.filterContacts.emit({
       filter: filter
     })
   }

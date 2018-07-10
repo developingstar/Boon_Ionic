@@ -1,14 +1,8 @@
-import {
-  AfterViewChecked,
-  Component,
-  ElementRef,
-  OnInit,
-  ViewChild
-} from '@angular/core'
+import { Component, OnInit } from '@angular/core'
 import { ToastController } from 'ionic-angular'
 import { Observable } from 'rxjs'
 
-import { Lead } from '../crm/lead.model'
+import { Contact } from '../crm/contact.model'
 import { Note } from '../crm/note.model'
 import { SalesService } from '../crm/sales.service'
 import { showToast } from '../utils/toast'
@@ -18,12 +12,11 @@ import { TabService } from './tab.service'
   selector: 'tab-notes',
   templateUrl: 'tab-notes.component.html'
 })
-export class TabNotesComponent implements OnInit, AfterViewChecked {
-  @ViewChild('notes_list') notesList: ElementRef
+export class TabNotesComponent implements OnInit {
   public notes: Note[]
   public newNote: string
-  public contactObs: Observable<Lead>
-  public contact: Lead
+  public contactObs: Observable<Contact>
+  public contact: Contact
 
   constructor(
     public salesService: SalesService,
@@ -37,30 +30,17 @@ export class TabNotesComponent implements OnInit, AfterViewChecked {
     this.contactObs.subscribe((contact) => {
       this.contact = contact
       this.salesService.notes(contact.id).subscribe((notes) => {
-        this.notes = notes
+        this.notes = notes.reverse()
       })
     })
-  }
-
-  async ngAfterViewChecked(): Promise<void> {
-    this.scrollToBottom()
   }
 
   addNote(): void {
     this.salesService
       .createNote(this.contact.id, { content: this.newNote })
       .subscribe((note) => {
-        this.newNote = ''
         this.notes.push(note)
         showToast(this.toastController, 'Note Added', 2000)
       })
-  }
-
-  scrollToBottom(): void {
-    try {
-      this.notesList.nativeElement.scrollTop = this.notesList.nativeElement.scrollHeight
-    } catch (error) {
-      return
-    }
   }
 }

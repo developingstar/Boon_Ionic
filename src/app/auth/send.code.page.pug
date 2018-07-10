@@ -7,7 +7,7 @@ ion-content(padding)
     ion-row
       ion-col
         ion-label(stacked) Email
-        ion-input(name="email", type="email", placeholder="Please input user email", [(ngModel)]="emailModel", required, #email)
+        ion-input(name="email", type="email", pattern = "[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)", placeholder="Please input user email", [(ngModel)]="emailModel", required, #email)
 
     ion-row
       ion-col

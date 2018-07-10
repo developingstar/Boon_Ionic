@@ -1,6 +1,6 @@
 //- Use ngClass instead of ngIf so that the content can be always rendered.
 .nav-container([ngClass]="navClass | async")
-  .nav-logo([inlineSVG]="'assets/icon/boon.svg'", (click)="goToCrm()")
+  .nav-logo([inlineSVG]="'assets/icon/boon.svg'", (click)="goToPage('CrmPage')")
   .nav-center
     div([cdkPortalOutlet]="centerContent | async")
     div.search-bar
@@ -10,15 +10,21 @@
         ng-template(pTemplate="item", let-item)
           div.search-item(*ngIf="item.id !== 0")
             div.group-name {{item.group_name}}
-            div.item-name {{item.name}} - {{item.type}}
+            div.item-name {{item.name}}
             div.item-comment {{item.comment}}
           div.see_results(*ngIf="item.id === 0", (click)="gotoResultPage()")
             span See all Results
             ion-icon(name="md-arrow-round-forward")
-  .nav-right((click)='logoutOn3()')
+  button.nav-right((detectClick)="detectClick($event)")
     span.avatar([inlineSVG]="'assets/icon/settings/avatar.svg'")
     span.username(*ngIf="username | async") {{username | async}}
-    span.arrow([inlineSVG]="'assets/icon/settings/arrow.svg'")
+    span.arrow.dropdown([inlineSVG]="'assets/icon/settings/down-arrow.svg'")
+    div.dropdown
+      div.dropdown-content(*ngIf="active")
+        .triangle
+        .bar
+        .popover
+          a.logout((click)="logout()") Sign Out
   .nav-icons-left
     div([cdkPortalOutlet]="iconsLeftContent | async")
 

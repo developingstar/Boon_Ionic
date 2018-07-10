@@ -1,6 +1,5 @@
 // tslint:disable-next-line:no-submodule-imports
 import { of } from 'rxjs/observable/of'
-
 import { User } from '../../../src/app/auth/user.model'
 import { TeamMembersService } from '../../../src/app/settings/team-members/team-members.service'
 

@@ -1,40 +1,38 @@
 @import 'theme/style-guide';
 @import 'theme/variables';
 @import 'theme/mixins';
-@import '../../../node_modules/ionic2-auto-complete/auto-complete';
-// apply global styles
 @import 'theme/globals';
-
 app {
   &.app-root {
     .ion-page {
+      left: 59px;
+      width: calc(100vw - 59px);
       contain: initial;
       top: $nav-height-mobile;
       height: calc(100vh - #{$nav-height-mobile});
-
       @include md {
         top: $nav-height-large;
         height: calc(100vh - #{$nav-height-large});
       }
     }
-
     .content .fixed-content,
     .content .scroll-content {
       padding: 8px;
-
       @include md {
-        padding: $content-padding 64px;
+        padding: $content-padding 35px;
       }
     }
-
     .loader {
       position: absolute;
       right: 32px;
       bottom: 32px;
-
       * {
         stroke: $color-primary;
       }
     }
+  } //this will change the ugly yellow autofill highlight that browsers add
+  input:-webkit-autofill {
+    box-shadow: 0 0 0 50px white inset;
+    -webkit-box-shadow: 0 0 0 50px white inset;
   }
 }

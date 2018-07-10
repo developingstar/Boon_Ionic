@@ -1,22 +1,21 @@
 nav-content
-  nav-icons(right, currentPage="LeadPage")
+  nav-icons(right, currentPage="ContactPage")
 
 ion-content(padding)
   div.header-row
     div.center-y
-      h2 All Contacts
-      div.showing-total {{leadCount | async}} Total
+      .title All Contacts
+      div.showing-total {{contactCount | async}} Total
       div.sort
         ion-label.sort-label Sort by:
         ion-select(interface="popover", (ionChange)="sortSelected($event)", placeholder="Sort Condition")
           ion-option(*ngFor="let sort of sortList", [value]="sort.value") {{sort.label}}
-            //- ion-option(*ngFor="let name of shortcodeNames | async", [value]="name") {{name}}
-    button.new-contact(ion-button, (click)="newLead()") New Contact
+    button.new-contact(ion-button, (click)="newContact()") New Contact
 
   ion-grid.table
     ion-row.header
       ion-col Name
-      ion-col Email
+      ion-col.email Email
       ion-col Phone number
       ion-col Created at
       ion-col Contact owner
@@ -25,13 +24,12 @@ ion-content(padding)
           ion-icon(name="md-arrow-dropleft")
         button(ion-button, small, (click)="loadNextPage()", [disabled]="isNextPageButtonDisabled | async")
           ion-icon(name="md-arrow-dropright")
-    ion-row.lead(*ngFor="let lead of (leads | async)", (click)="showLead(lead)")
-      ion-col {{lead.name || "-"}}
-      ion-col
-        div.email {{lead.email || "-"}}
-      ion-col {{lead.phoneNumber || "-"}}
-      ion-col {{lead.insertedAt | date:'dd MMM yyyy hh:mm a' || "-"}}
-      ion-col {{lead.owner?.name || "-"}}
+    ion-row.contact(*ngFor="let contact of (contacts | async)", (click)="showContact(contact)")
+      ion-col {{contact.name || "-"}}
+      ion-col {{contact.email || "-"}}
+      ion-col {{contact.phoneNumber || "-"}}
+      ion-col {{contact.insertedAt | date: 'dd MMM yyyy' || "-"}}
+      ion-col {{contact.owner?.name || "-"}}
       ion-col.action
         div.dot
         div.dot

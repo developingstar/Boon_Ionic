@@ -7,8 +7,8 @@ import { IHttpRequestOptions } from '../api/http-request-options'
 import { CurrentUserService } from '../auth/current-user.service'
 import { pageAccess } from '../utils/app-access'
 import { ReactivePage } from '../utils/reactive-page'
+import { Contact } from './contact.model'
 import { initialState, IState, SortType, UserAction } from './crm.page.state'
-import { Lead } from './lead.model'
 import { SalesService } from './sales.service'
 
 @IonicPage({
@@ -26,7 +26,7 @@ export class CrmPage extends ReactivePage<IState, UserAction> {
     { label: 'Email', value: 'email' },
     { label: 'Phone Number', value: 'phone_number' },
     { label: 'Created At', value: 'inserted_at' },
-    { label: 'Contact Owner', value: 'owner_id' }
+    { label: 'Contact Owner', value: 'owner' }
   ]
 
   constructor(
@@ -49,7 +49,7 @@ export class CrmPage extends ReactivePage<IState, UserAction> {
   public loadPrevPage(): void {
     if (this.isPrevPageButtonDisabled) {
       this.showingLow = 1
-      this.leadCount.subscribe((count: number) => {
+      this.contactCount.subscribe((count: number) => {
         count < this.salesService.limit
           ? (this.showingHigh = count)
           : (this.showingHigh = this.salesService.limit)
@@ -64,29 +64,31 @@ export class CrmPage extends ReactivePage<IState, UserAction> {
   public loadNextPage(): void {
     this.showingLow += this.salesService.limit
     this.isNextPageButtonDisabled
-      ? this.leadCount.subscribe((count: number) => (this.showingHigh = count))
+      ? this.contactCount.subscribe(
+          (count: number) => (this.showingHigh = count)
+        )
       : (this.showingHigh += this.salesService.limit)
     this.uiActions.next('next')
   }
 
-  public showLead(lead: Lead): void {
-    this.navController.push('ContactShowPage', { id: lead.id })
+  public showContact(contact: Contact): void {
+    this.navController.push('ContactShowPage', { id: contact.id })
   }
 
-  public newLead(): void {
-    this.uiActions.next('newLead')
+  public newContact(): void {
+    this.uiActions.next('newContact')
   }
 
-  get leads(): Observable<ReadonlyArray<Lead>> {
+  get contacts(): Observable<ReadonlyArray<Contact>> {
     return this.state.map((state) => {
-      return state.leads.items
+      return state.contacts.items
     })
   }
 
-  get leadCount(): any {
+  get contactCount(): any {
     return this.state.map((state) => {
-      if (state.leads.count) {
-        return +state.leads.count
+      if (state.contacts.count) {
+        return +state.contacts.count
           .toString()
           .replace(/\B(?=(\d{3})+(?!\d))/g, ',')
       } else {
@@ -96,11 +98,11 @@ export class CrmPage extends ReactivePage<IState, UserAction> {
   }
 
   get isPrevPageButtonDisabled(): Observable<boolean> {
-    return this.state.map((state) => state.leads.prevPageLink === null)
+    return this.state.map((state) => state.contacts.prevPageLink === null)
   }
 
   get isNextPageButtonDisabled(): Observable<boolean> {
-    return this.state.map((state) => state.leads.nextPageLink === null)
+    return this.state.map((state) => state.contacts.nextPageLink === null)
   }
 
   protected initialAction(): UserAction {
@@ -108,15 +110,17 @@ export class CrmPage extends ReactivePage<IState, UserAction> {
   }
 
   protected reduce(state: IState, action: UserAction): Observable<IState> {
-    if (action === 'newLead') {
-      this.showNewLeadModal()
+    if (action === 'newContact') {
+      this.showNewContactModal()
       return Observable.of(state)
     } else {
       const newRequestOptions = this.actionToRequestOptions(state, action)
-      return this.salesService.leads(newRequestOptions).map((newLeads) => ({
-        leads: newLeads,
-        requestOptions: newRequestOptions
-      }))
+      return this.salesService
+        .contacts(newRequestOptions)
+        .map((newContacts) => ({
+          contacts: newContacts,
+          requestOptions: newRequestOptions
+        }))
     }
   }
 
@@ -129,10 +133,10 @@ export class CrmPage extends ReactivePage<IState, UserAction> {
       case 'init':
         return state.requestOptions
       case 'prev':
-        return { params: new HttpParams(), url: state.leads.prevPageLink }
+        return { params: new HttpParams(), url: state.contacts.prevPageLink }
       case 'next':
-        return { params: new HttpParams(), url: state.leads.nextPageLink }
-      case 'newLead':
+        return { params: new HttpParams(), url: state.contacts.nextPageLink }
+      case 'newContact':
         return state.requestOptions
       default:
         // assume setFilter
@@ -168,12 +172,12 @@ export class CrmPage extends ReactivePage<IState, UserAction> {
     }
   }
 
-  private showNewLeadModal(): void {
+  private showNewContactModal(): void {
     const modal = this.modalController.create(
-      'NewLeadPage',
+      'NewContactPage',
       { stageId: undefined },
       {
-        cssClass: 'new-lead-page-modal'
+        cssClass: 'new-contact-page-modal'
       }
     )
     modal.present()
@@ -189,7 +193,7 @@ export class CrmPage extends ReactivePage<IState, UserAction> {
 
   private ionViewWillEnter(): void {
     this.showingLow = 1
-    this.leadCount.subscribe((count: number) => {
+    this.contactCount.subscribe((count: number) => {
       count < this.salesService.limit
         ? (this.showingHigh = count)
         : (this.showingHigh = this.salesService.limit)

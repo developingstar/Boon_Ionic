@@ -3,7 +3,7 @@ import { App } from 'ionic-angular'
 import { Observable } from 'rxjs'
 import { AuthService } from './../auth/auth.service'
 import { CurrentUserService } from './../auth/current-user.service'
-import { LeadFilterService } from './lead.filter.service'
+import { ContactFilterService } from './contact.filter.service'
 import { NavContent, NavService } from './nav.service'
 // Main navigation bar.
 //
@@ -32,7 +32,7 @@ export class NavComponent {
     protected app: App,
     private readonly authService: AuthService,
     private readonly currentUserService: CurrentUserService,
-    public readonly filterService: LeadFilterService,
+    public readonly filterService: ContactFilterService,
     navService: NavService
   ) {
     this.centerContent = navService.contentUpdated.map((portals) => portals[0])

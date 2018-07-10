@@ -13,7 +13,7 @@ page-account-settings {
       flex-direction: column;
       .photo-wrapper {
         background: #fcfcfd;
-        border: 1px solid #d2d6e4;
+        border: 1px solid $color-card-border;
         width: 109px;
         height: 109px;
         border-radius: 50%;
@@ -29,14 +29,20 @@ page-account-settings {
         font-size: 1.4rem;
       }
     }
-
     .form-row {
       height: 88px;
       button {
         margin: 20px 0 0 0;
       }
     }
-
+    .password-row {
+      display: flex;
+      justify-content: space-between;
+    }
+    .password,
+    .retype-password {
+      width: 49%;
+    }
     ion-input {
       .text-input {
         @extend .boon-input;
@@ -48,7 +54,6 @@ page-account-settings {
         @extend .boon-invalid-input;
       }
     }
-
     .label {
       @extend .boon-label;
       padding-bottom: 8px !important;
@@ -56,7 +61,6 @@ page-account-settings {
       font-size: 1rem !important;
       letter-spacing: 0.2em;
     }
-
     ion-select {
       @extend .boon-input;
       min-width: 100%;
@@ -64,11 +68,9 @@ page-account-settings {
         display: none;
       }
     }
-
     .hide-field {
       display: none;
     }
-
     .avatar-input {
       width: 0.1px;
       height: 0.1px;
@@ -83,7 +85,6 @@ page-account-settings {
       margin: 10px 0 0 13px;
       cursor: pointer;
     }
-
     .settings-button {
       @extend .no-box-shadow;
       @extend .boon-button;

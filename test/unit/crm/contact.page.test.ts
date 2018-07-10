@@ -12,7 +12,7 @@ import { CurrentUserService } from '../../../src/app/auth/current-user.service'
 import { User } from '../../../src/app/auth/user.model'
 import { ContactShowPage } from '../../../src/app/crm/contact-show.page'
 import { ContactShowPageModule } from '../../../src/app/crm/contact-show.page.module'
-import { Lead } from '../../../src/app/crm/lead.model'
+import { Contact } from '../../../src/app/crm/contact.model'
 import { SalesService } from '../../../src/app/crm/sales.service'
 import { UsersService } from '../../../src/app/crm/users.service'
 import { NavService } from '../../../src/app/nav/nav.service'
@@ -22,13 +22,13 @@ import { toastSuccessDefaults } from '../../../src/app/utils/toast'
 describe('ContactPage', () => {
   let fixture: ComponentFixture<ContactShowPage>
   let page: ContactPageObject
-  let contact: Lead
-  let contactUpdate: Crm.API.ILeadUpdate
+  let contact: Contact
+  let contactUpdate: Crm.API.IContactUpdate
   let navControllerStub: any
   let users: ReadonlyArray<User>
   let toastControllerStub: any
   let toastStub: any
-  let contactSubject: Subject<Lead>
+  let contactSubject: Subject<Contact>
   let salesServiceStub: any
   const userRole: BehaviorSubject<string> = new BehaviorSubject<string>('admin')
 
@@ -55,7 +55,7 @@ describe('ContactPage', () => {
         })
       ]
 
-      contact = new Lead({
+      contact = new Contact({
         created_by_service_id: null,
         created_by_user_id: 101,
         email: 'contact@example.com',
@@ -81,11 +81,11 @@ describe('ContactPage', () => {
         stage_id: 0,
         updated_at: '2017-12-01T07:00:00.000Z'
       })
-      contactSubject = new Subject<Lead>()
+      contactSubject = new Subject<Contact>()
 
       salesServiceStub = {
-        lead: (id: number) => Observable.of(contact),
-        updateLead: (id: number, data: Crm.API.ILeadUpdate) => {
+        contact: (id: number) => Observable.of(contact),
+        updateContact: (id: number, data: Crm.API.IContactUpdate) => {
           contactUpdate = data
           return Observable.of({
             ...contact,
@@ -97,8 +97,8 @@ describe('ContactPage', () => {
         }
       }
 
-      spyOn(salesServiceStub, 'lead').and.callThrough()
-      spyOn(salesServiceStub, 'updateLead').and.callThrough()
+      spyOn(salesServiceStub, 'contact').and.callThrough()
+      spyOn(salesServiceStub, 'updateContact').and.callThrough()
 
       const currentUserServiceStub = {
         details: Observable.of(users[0]),
@@ -137,7 +137,7 @@ describe('ContactPage', () => {
         getContact: () => {
           return contactSubject
         },
-        setContact: (con: Lead) => {
+        setContact: (con: Contact) => {
           contactSubject.next(con)
         }
       }
@@ -223,7 +223,7 @@ describe('ContactPage', () => {
       page.clickSaveButton()
       fixture.detectChanges()
 
-      expect(salesServiceStub.updateLead).toHaveBeenCalledWith(contact.id, {
+      expect(salesServiceStub.updateContact).toHaveBeenCalledWith(contact.id, {
         email: 'martin@gmail.com',
         first_name: 'Martin',
         last_name: 'Stoyanov',

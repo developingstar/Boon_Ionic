@@ -27,6 +27,6 @@ export class TextTemplateDetailsComponent extends DetailsComponent<
   }
 
   private suffix(): string {
-    return this.event.data.send_from_owner ? ' (lead owner)' : ''
+    return this.event.data.send_from_owner ? ' (contact owner)' : ''
   }
 }

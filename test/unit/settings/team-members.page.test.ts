@@ -3,12 +3,14 @@ import { async, ComponentFixture } from '@angular/core/testing'
 import { NavController, NavParams } from 'ionic-angular'
 import { Observable } from 'rxjs'
 
+import { CurrentUserService } from '../../../src/app/auth/current-user.service'
 import { User } from '../../../src/app/auth/user.model'
 import { NavService } from '../../../src/app/nav/nav.service'
 import { TeamMembersPage } from '../../../src/app/settings/team-members/team-members.page'
 import { TeamMembersPageModule } from '../../../src/app/settings/team-members/team-members.page.module'
 import { TeamMembersService } from '../../../src/app/settings/team-members/team-members.service'
 import { initComponent } from '../../support/helpers'
+import { CurrentUserServiceStub } from '../../support/stubs'
 import { TeamMembersPageObject } from './team-members.page.po'
 
 describe('TeamMembersPage', () => {
@@ -55,13 +57,16 @@ describe('TeamMembersPage', () => {
         getTeamMembers: () => Observable.of(teamMembers)
       }
 
+      const currentUserServiceStub = new CurrentUserServiceStub()
+
       fixture = initComponent(TeamMembersPage, {
         imports: [TeamMembersPageModule, HttpClientTestingModule],
         providers: [
           NavService,
           { provide: NavParams, useValue: navParamsStub },
           { provide: TeamMembersService, useValue: teamMemberServiceStub },
-          { provide: NavController, useValue: navControllerStub }
+          { provide: NavController, useValue: navControllerStub },
+          { provide: CurrentUserService, useValue: currentUserServiceStub }
         ]
       })
 

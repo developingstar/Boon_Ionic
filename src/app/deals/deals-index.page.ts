@@ -26,6 +26,7 @@ export class DealsIndexPage {
   public deals: any
   public count: number | undefined
   public owner: any
+  public selectedSort: any = 'Sort Condition'
   public selected: any = 'All Deals'
   public httpParams: HttpParams = new HttpParams()
 
@@ -33,10 +34,10 @@ export class DealsIndexPage {
   public sortList = [
     { label: 'Name', value: 'name' },
     { label: 'Email', value: 'email' },
-    { label: 'Pipeline', value: 'pipeline_id' },
-    { label: 'Stage', value: 'stage_id' },
+    { label: 'Pipeline', value: 'pipeline' },
+    { label: 'Stage', value: 'stage' },
     { label: 'Deal Value', value: 'value' },
-    { label: 'Deal Owner', value: 'owner_id' }
+    { label: 'Deal Owner', value: 'owner' }
   ]
 
   constructor(
@@ -62,6 +63,7 @@ export class DealsIndexPage {
       this.pageData = res
       this.deals = this.pageData.items
       this.count = this.pageData.totalCount
+      this.goToPrevDisabled()
     })
   }
 
@@ -156,6 +158,21 @@ export class DealsIndexPage {
 
   public goToNext(): void {
     this.getDeals(this.pageData.nextPageLink)
+  }
+
+  goToNextDisabled(): any {
+    if (this.pageData) {
+      return this.pageData.nextPageLink === null
+    } else {
+      return false
+    }
+  }
+  public goToPrevDisabled(): boolean {
+    if (this.pageData) {
+      return this.pageData.prevPageLink === null
+    } else {
+      return false
+    }
   }
 
   public goToPrev(): void {

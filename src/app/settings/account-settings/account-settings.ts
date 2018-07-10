@@ -1,10 +1,17 @@
 import { Component, OnInit } from '@angular/core'
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
-import { IonicPage, NavController, NavParams } from 'ionic-angular'
+import {
+  IonicPage,
+  NavController,
+  NavParams,
+  ToastController
+} from 'ionic-angular'
 
 import { CurrentUserService } from '../../auth/current-user.service'
 import { User } from '../../auth/user.model'
 import { pageAccess } from '../../utils/app-access'
+import { showToast } from '../../utils/toast'
+import { AlertService } from '../alert.service'
 import { TeamMembersService } from '../team-members/team-members.service'
 
 @IonicPage()
@@ -19,9 +26,11 @@ export class AccountSettingsPage implements OnInit {
   public formData: FormData
 
   constructor(
+    public alertService: AlertService,
     public navCtrl: NavController,
     public navParams: NavParams,
     public teamMembersService: TeamMembersService,
+    private readonly toastController: ToastController,
     private formBuilder: FormBuilder,
     private currentUserService: CurrentUserService
   ) {
@@ -44,7 +53,9 @@ export class AccountSettingsPage implements OnInit {
     if (currentUser) {
       const user = JSON.parse(currentUser)
       this.setUserForm(user)
-      this.localUrl = user.avatarUrl || ''
+      this.localUrl = user.avatarUrl
+        ? user.avatarUrl
+        : '../../assets/icon/settings/avatar.svg'
     }
   }
 
@@ -68,6 +79,38 @@ export class AccountSettingsPage implements OnInit {
       .updateTeamMember(this.userForm.value)
       .subscribe((res: User) => {
         this.uploadAvatar(res.id)
+      })
+    this.currentUserService.details.subscribe((details: any) => {
+      if (details) {
+        details.name = this.userForm.value.name
+        details.email = this.userForm.value.email
+        localStorage.setItem('user', JSON.stringify(details))
+      }
+    })
+    showToast(this.toastController, 'User updated successfully', 2000)
+  }
+
+  resetPassword(): void {
+    this.alertService
+      .showRemoveConfirmDialog(
+        'Password instructions will be sent to your email',
+        this.handleYes,
+        this.handleNo
+      )
+      .then((val: boolean) => {
+        if (val === true) {
+          this.teamMembersService
+            .resetPasswordRequest(this.userForm.value.email)
+            .subscribe((res: any) => {
+              if (res.data.message === 'OK') {
+                showToast(
+                  this.toastController,
+                  'Reset password instructions sent',
+                  2000
+                )
+              }
+            })
+        }
       })
   }
 
@@ -94,5 +137,13 @@ export class AccountSettingsPage implements OnInit {
       .first()
       .toPromise()
     return pageAccess(role).AccountSettingsPage !== undefined
+  }
+
+  private handleYes(): boolean {
+    return true
+  }
+
+  private handleNo(): boolean {
+    return false
   }
 }

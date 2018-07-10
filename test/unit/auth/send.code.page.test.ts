@@ -15,31 +15,33 @@ describe('SendCodePage', () => {
   let page: SendCodePageObject
   let nextPage: string | undefined
   let navControllerStub: any
-  beforeEach(async(() => {
-    nextPage = undefined
+  beforeEach(
+    async(() => {
+      nextPage = undefined
 
-    navControllerStub = {
-      setRoot: (newRoot: string) => (nextPage = newRoot)
-    }
-
-    const authServiceStub = {
-      sendResetRequest: (email: string) => {
-        navControllerStub.setRoot('ConfirmCodePage')
-        return Observable.of(null)
+      navControllerStub = {
+        setRoot: (newRoot: string) => (nextPage = newRoot)
       }
-    }
 
-    fixture = initComponent(SendCodePage, {
-      imports: [SendCodePageModule],
-      providers: [
-        NavService,
-        { provide: AuthService, useValue: authServiceStub },
-        { provide: NavController, useValue: navControllerStub }
-      ]
+      const authServiceStub = {
+        sendResetRequest: (email: string) => {
+          navControllerStub.setRoot('NewPasswordPage')
+          return Observable.of(null)
+        }
+      }
+
+      fixture = initComponent(SendCodePage, {
+        imports: [SendCodePageModule],
+        providers: [
+          NavService,
+          { provide: AuthService, useValue: authServiceStub },
+          { provide: NavController, useValue: navControllerStub }
+        ]
+      })
+
+      page = new SendCodePageObject(fixture)
     })
-
-    page = new SendCodePageObject(fixture)
-  }))
+  )
 
   describe('Send Code Form', () => {
     it('Form UIs are visible', () => {
@@ -52,13 +54,12 @@ describe('SendCodePage', () => {
 
     it('Submit a form', () => {
       fixture.detectChanges()
-
       page.setEmail('admin@example.com')
       page.submitForm()
 
       fixture.detectChanges()
 
-      expect(nextPage).toEqual('ConfirmCodePage')
+      expect(nextPage).toEqual('NewPasswordPage')
     })
 
     it('Go to login page', () => {

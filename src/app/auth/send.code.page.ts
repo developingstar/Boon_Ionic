@@ -38,4 +38,15 @@ export class SendCodePage implements OnInit {
   set emailModel(value: string) {
     this.email.next(value)
   }
+
+  get emailModel(): string {
+    const email = this.email.getValue() as string
+    return email
+  }
+
+  get validEmail(): boolean {
+    const reg = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    const email = this.email.getValue() as string
+    return reg.test(email)
+  }
 }

@@ -117,16 +117,14 @@ describe('EmailTemplatePage', () => {
       page.setSubject('Welcome in Boon')
       page.setFromName('Sales Team')
       page.setFromEmail('sales@example.com')
-      page.setContent('Hello from Boon team!')
       page.save()
 
       expect(messagesServiceStub.createEmailTemplate).toHaveBeenCalledWith({
         template: {
-          content: 'Hello from Boon team!',
+          content: '',
           default_sender: 'sales@example.com',
           default_sender_name: 'Sales Team',
           name: 'Introduction to Boon',
-          shortcode: null,
           subject: 'Welcome in Boon'
         }
       })
@@ -198,7 +196,6 @@ describe('EmailTemplatePage', () => {
       expect(page.getSubject()).toEqual(template.subject)
       expect(page.getFromName()).toEqual(template.defaultSenderName!)
       expect(page.getFromEmail()).toEqual(template.defaultSender)
-      expect(page.getContent()).toEqual(template.content)
     })
 
     it('allows to update template', () => {
@@ -208,16 +205,14 @@ describe('EmailTemplatePage', () => {
       page.setSubject('Welcome in Boon')
       page.setFromName('Sales Team')
       page.setFromEmail('sales@example.com')
-      page.setContent('Hello from Boon team!')
       page.save()
 
       expect(messagesServiceStub.updateEmailTemplate).toHaveBeenCalledWith(1, {
         template: {
-          content: 'Hello from Boon team!',
+          content: 'Hello',
           default_sender: 'sales@example.com',
           default_sender_name: 'Sales Team',
           name: 'Introduction to Boon',
-          shortcode: null,
           subject: 'Welcome in Boon'
         }
       })

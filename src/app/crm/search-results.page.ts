@@ -10,7 +10,7 @@ import { Deal } from '../deals/deal.model'
 import { DealsService } from '../deals/deals.service'
 import { pageAccess } from '../utils/app-access'
 import { ReactivePage } from '../utils/reactive-page'
-import { Lead } from './lead.model'
+import { Contact } from './contact.model'
 import { SalesService } from './sales.service'
 
 @IonicPage({
@@ -53,7 +53,7 @@ export class SearchResultsPage extends ReactivePage<IState, UserAction> {
     this.uiActions.next({ name: 'next' })
   }
 
-  public showDetail(item: Lead | Deal): void {
+  public showDetail(item: Contact | Deal): void {
     let type = 'contact'
     this.state.subscribe((state) => (type = state.type))
     if (type === 'contact') {
@@ -71,7 +71,7 @@ export class SearchResultsPage extends ReactivePage<IState, UserAction> {
     return this.state.map((state) => state.results.nextPageLink === null)
   }
 
-  get results(): Observable<ReadonlyArray<Lead> | ReadonlyArray<Deal>> {
+  get results(): Observable<ReadonlyArray<Contact> | ReadonlyArray<Deal>> {
     return this.state.map((state) => {
       return state.results.items
     })
@@ -97,11 +97,13 @@ export class SearchResultsPage extends ReactivePage<IState, UserAction> {
     switch (action.name) {
       case 'init': {
         if (action.category === 'contact') {
-          return this.salesService.leads(newRequestOptions).map((leads) => ({
-            requestOptions: newRequestOptions,
-            results: leads,
-            type: 'contact'
-          }))
+          return this.salesService
+            .contacts(newRequestOptions)
+            .map((contacts) => ({
+              requestOptions: newRequestOptions,
+              results: contacts,
+              type: 'contact'
+            }))
         } else if (action.category === 'deal') {
           return this.dealsService.deals(switchOptions).map((deals) => ({
             requestOptions: newRequestOptions,
@@ -112,11 +114,13 @@ export class SearchResultsPage extends ReactivePage<IState, UserAction> {
       }
       default: {
         if (state.type === 'contact') {
-          return this.salesService.leads(newRequestOptions).map((leads) => ({
-            requestOptions: newRequestOptions,
-            results: leads,
-            type: 'contact'
-          }))
+          return this.salesService
+            .contacts(newRequestOptions)
+            .map((contacts) => ({
+              requestOptions: newRequestOptions,
+              results: contacts,
+              type: 'contact'
+            }))
         } else {
           return this.dealsService.deals(defaultOptions).map((deals) => ({
             requestOptions: newRequestOptions,

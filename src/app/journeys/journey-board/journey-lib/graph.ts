@@ -1,130 +1,108 @@
 import Konva from 'konva'
+import { Subscription } from 'rxjs'
 import { v4 as UUID } from 'uuid'
-import { DrawService, IOnDraw } from './draw.service'
+import { DrawService, IEdge, INode } from './draw.service'
 import { Edge } from './edge'
-import { EdgeValidation } from './edge.validations'
-import { Node } from './node'
-import { NodeValidation } from './node.validations'
-import { Rectangle } from './rectangle'
+import { GraphService, INodeData } from './graph.service'
+import { Grid } from './grid'
+
 export class Graph {
+  static getGraphService(): GraphService {
+    if (!this.graphService) this.graphService = new GraphService()
+    return this.graphService
+  }
   static getDrawService(): DrawService {
     if (!this.drawService) this.drawService = new DrawService()
     return this.drawService
   }
   static calcSnapX(position: number): number {
-    const snapSize = Rectangle.BASE_WIDTH / 3 + 10
+    const snapSize = 30
     return Math.round(position / snapSize) * snapSize
   }
   static calcSnapY(position: number): number {
-    const snapSize = Rectangle.BASE_HEIGHT / 3 + 10
+    const snapSize = 30
     return Math.round(position / snapSize) * snapSize
   }
   static generateId(): string {
     return UUID()
   }
+  static getLayer(): Konva.Layer {
+    if (!this.layer) this.layer = new Konva.Layer()
+    return this.layer
+  }
 
+  private static graphService: GraphService
   private static drawService: DrawService
+  private static layer: Konva.Layer
 
-  public stage: any
-  public layer: Konva.Layer
-  public nodes: Node[] = [] // TODO: make this an attribute on a new class for layer
+  public layer: Konva.Layer = Graph.getLayer()
+  public graphService: GraphService = Graph.getGraphService()
+  public stage: Konva.Stage
   public currentEdge: Edge
-  // then create layer
+  public grid: Grid
+  public layerDrawSubscription: Subscription
   constructor() {
     this.stage = new Konva.Stage({
       container: 'container', // id of container <div>
-      height: window.innerHeight,
-      width: window.innerWidth
+      height: 1500,
+      width: 2500
     })
-
-    // then create layer
-    this.layer = new Konva.Layer()
-
+    this.grid = new Grid(this.stage)
+    this.stage.add(this.grid)
     this.stage.add(this.layer)
-
-    Graph.getDrawService().onLayerDraw.subscribe(() => {
-      this.layer.draw()
-    })
+    this.layerDrawSubscription = Graph.getDrawService().onLayerDraw.subscribe(
+      () => {
+        this.layer.draw()
+      }
+    )
     Graph.getDrawService().onDraw.subscribe((onDraw) => {
-      this.currentEdge = onDraw.shape as Edge
-      this.layer.add(this.currentEdge)
-      this.currentEdge.origin.setZIndex(this.currentEdge.getZIndex() + 1)
-      Graph.getDrawService().redrawCanvas()
+      this.graphService.updateCurrentEdge(onDraw.shape as Edge)
     })
 
     this.stage.on('contentMouseup', (event: any) => {
       if (Graph.getDrawService().isDrawing) {
-        if (this.currentEdge.isNearTarget(this.nodes)) {
+        if (
+          this.graphService.currentEdge.isNearTarget(this.graphService.nodes)
+        ) {
           // snap to target and set target on edge
-          this.currentEdge.setTarget()
+          this.graphService.currentEdge.setTarget()
         } else {
-          this.currentEdge.destroy()
+          this.graphService.currentEdge.delete()
         }
         Graph.getDrawService().redrawCanvas()
         Graph.getDrawService().stopDrawing()
       }
     })
 
-    this.stage.on(
-      'contentMousedown contentMousemove',
-      this.onMouseMove.bind(this)
+    this.stage.on('contentMousedown contentMousemove', (ev: any) => {
+      this.graphService.onMouseMove(ev)
+    })
+  }
+
+  public addNode(data: INodeData, id?: string, x?: number, y?: number): any {
+    return this.graphService.addNode(data, id, x, y)
+  }
+  public addEdge(originId: string, targetId: string): void {
+    this.graphService.addEdge(originId, targetId)
+  }
+  public drawFromData(nodes: INode[], edges?: IEdge[]): void {
+    this.graphService.drawFromData(nodes, edges)
+  }
+  public clearLayer(): void {
+    this.layer.destroy()
+    Graph.getDrawService().edges = []
+    Graph.getDrawService().nodes = []
+    Graph.getGraphService().nodes = []
+    this.layer = Graph.getLayer()
+    this.stage.add(this.layer)
+    this.layerDrawSubscription.unsubscribe()
+    this.layerDrawSubscription = Graph.getDrawService().onLayerDraw.subscribe(
+      () => {
+        this.layer.draw()
+      }
     )
   }
-  //TODO: Change id generation to something better
-  public addNode(
-    id: string = Graph.generateId(),
-    x: number = 200,
-    y: number = 200
-  ): void {
-    const node = new Node(this, {
-      draggable: true,
-      id: id,
-      x: Graph.calcSnapX(x),
-      y: Graph.calcSnapY(y)
-    })
-    this.nodes.push(node)
-    this.layer.add(node)
-    Graph.getDrawService().redrawCanvas()
-  }
-
-  public addEdge(originId: string, targetId: string): void {
-    const origin: Node = this.layer.find('#' + originId)[0]
-    const target: Node = this.layer.find('#' + targetId)[0]
-    if (origin && target) {
-      const edge = new Edge(origin, {
-        points: [origin.x(), origin.y(), target.x(), target.y()]
-      })
-      this.layer.add(edge)
-      edge.setTarget(target)
-      Graph.getDrawService().redrawCanvas()
-    }
-  }
-
-  public drawFromData(nodes: any, edges?: any): void {
-    if (nodes) {
-      nodes.forEach((node: any) => {
-        this.addNode(node.id, node.x, node.y)
-      })
-      if (edges) {
-        edges.forEach((edge: any) => {
-          this.addEdge(edge.origin, edge.target)
-        })
-      }
-    }
-  }
-
-  public onMouseMove(e: any): void {
-    if (!Graph.getDrawService().mouseDown) return
-    const mouseX = e.evt.layerX
-    const mouseY = e.evt.layerY
-    const p = [
-      this.currentEdge.points()[0],
-      this.currentEdge.points()[1],
-      mouseX,
-      mouseY
-    ]
-    this.currentEdge.points(p)
-    this.currentEdge.isNearTarget(this.nodes)
-    Graph.getDrawService().redrawCanvas()
+  public destroy(): void {
+    this.stage.destroy()
   }
 }

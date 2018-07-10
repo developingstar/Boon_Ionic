@@ -18,6 +18,7 @@ import { CurrentUserService } from '../../../src/app/auth/current-user.service'
 import { User } from '../../../src/app/auth/user.model'
 import { Pipeline } from '../../../src/app/crm/pipeline.model'
 import { SalesService } from '../../../src/app/crm/sales.service'
+import { Stage } from '../../../src/app/crm/stage.model'
 import { UsersService } from '../../../src/app/crm/users.service'
 import { JourneyPage } from '../../../src/app/journeys/journey.page'
 import { JourneysService } from '../../../src/app/journeys/journeys.service'
@@ -64,7 +65,7 @@ describe('JourneyPage', () => {
               id: 1,
               journey_id: 1,
               position: 1,
-              type: 'assign_lead_owner'
+              type: 'assign_owner'
             },
             {
               data: {
@@ -174,10 +175,13 @@ describe('JourneyPage', () => {
         )
       salesServiceStub.stage = () =>
         Observable.of(
-          sampleStage({
-            id: 1,
-            name: 'Converted'
-          })
+          new Stage(
+            sampleStage({
+              id: 1,
+              name: 'Converted',
+              pipeline_id: 1
+            })
+          )
         )
       salesServiceStub.field = () =>
         Observable.of(
@@ -322,7 +326,7 @@ describe('JourneyPage', () => {
         const actions = page.sidebarActions()
 
         expect(actions.length).toEqual(6)
-        expect(actions[0].textContent).toEqual('assign lead owner')
+        expect(actions[0].textContent).toEqual('assign owner')
         expect(actions[1].textContent).toEqual('assign stage')
         expect(actions[2].textContent).toEqual('send email')
         expect(actions[3].textContent).toEqual('send text')
@@ -330,13 +334,13 @@ describe('JourneyPage', () => {
         expect(actions[5].textContent).toEqual('wait')
       })
 
-      it('allows opening a modal for adding an assign lead owner action', () => {
-        page.openNewActionModal('assign_lead_owner')
+      it('allows opening a modal for adding an assign contact owner action', () => {
+        page.openNewActionModal('assign_owner')
 
         expect(modalControllerStub.create).toHaveBeenCalledWith(
-          'AssignLeadOwnerModalComponent',
+          'AssignContactOwnerModalComponent',
           {},
-          { cssClass: 'assign-lead-owner-modal-component' }
+          { cssClass: 'assign-contact-owner-modal-component' }
         )
         expect(modalStub.present).toHaveBeenCalled()
       })
@@ -451,16 +455,12 @@ describe('JourneyPage', () => {
         const actions = page.contentActions()
 
         expect(actions.length).toEqual(6)
-        page.expectEventBoxInformation(
-          actions[0],
-          'assign lead owner',
-          'Susan Boon'
-        )
+        page.expectEventBoxInformation(actions[0], 'assign owner', 'Susan Boon')
         page.expectEventBoxInformation(actions[1], 'assign stage', 'Converted')
         page.expectEventBoxInformation(
           actions[2],
           'send email',
-          'Email Introduction (lead owner)'
+          'Email Introduction (contact owner)'
         )
         page.expectEventBoxInformation(
           actions[3],
@@ -475,9 +475,9 @@ describe('JourneyPage', () => {
         page.openEditActionModal(1)
 
         expect(modalControllerStub.create).toHaveBeenCalledWith(
-          'AssignLeadOwnerModalComponent',
+          'AssignContactOwnerModalComponent',
           { action: journey.actions[0] },
-          { cssClass: 'assign-lead-owner-modal-component' }
+          { cssClass: 'assign-contact-owner-modal-component' }
         )
         expect(modalStub.present).toHaveBeenCalled()
       })

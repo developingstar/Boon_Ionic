@@ -1,27 +1,24 @@
 @import 'theme/mixins';
 @import 'theme/shared-classes/generic';
 @import 'theme/style-guide';
-
 .boon-button {
   @include border-radius($radius-size);
   @extend .no-box-shadow;
-
   background-color: $color-primary;
   font-size: 12px;
+  font-weight: 600;
+  letter-spacing: -0.13px;
+  line-height: 14px;
   text-transform: capitalize;
-
   span + ion-icon {
     padding-left: $button-md-large-padding-start;
   }
-
   span + ion-icon.button-small {
     padding-left: $button-md-small-padding-start;
   }
-
   ion-icon + span {
     padding-left: $button-md-large-padding-start;
   }
-
   ion-icon.button-small + span {
     padding-left: $button-md-small-padding-start;
   }
@@ -29,13 +26,12 @@
 
 .boon-button-grey {
   @extend .boon-button;
-
   background-color: #a5acc6;
 }
 
 .boon-button.button-outline {
   background-color: transparent;
-  border: 1px solid #d2d6e4;
+  border: 1px solid $color-card-border;
   color: $color-primary;
 }
 
@@ -46,14 +42,12 @@
 
 .boon-uppercase-label {
   @extend .boon-label;
-
   text-transform: uppercase;
   letter-spacing: 1px;
 }
 
 .boon-input {
   @include border-radius($radius-size);
-
   background-color: $color-input-background;
   border: 1px $color-input-border solid;
   margin-left: 0;
@@ -69,8 +63,7 @@
 
 .boon-select {
   @extend .boon-input;
-
-  height: 40px;
+  height: 45px;
 }
 
 .boon-invalid-select {

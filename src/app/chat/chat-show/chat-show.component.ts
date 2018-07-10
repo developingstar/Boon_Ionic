@@ -7,7 +7,6 @@ import {
   ViewChild
 } from '@angular/core'
 import { Content, NavController, NavParams, Platform } from 'ionic-angular'
-import { SalesService } from '../../crm/sales.service'
 import { ChatService } from '../chat.service'
 import { CurrentConversation } from '../current-conversation.model'
 import { CurrentConversationService } from '../current-conversation.service'
@@ -29,7 +28,7 @@ export class ChatShowComponent {
   public threadData: MessageThread
   public conversationId: number
   public message: any = {}
-  public lead: any = {}
+  public contact: any = {}
   public conversationsChannel: any
   public nameNumberToggle = true
   public pipeline: string
@@ -38,7 +37,6 @@ export class ChatShowComponent {
   constructor(
     private chatService: ChatService,
     private currentConversationService: CurrentConversationService,
-    private salesService: SalesService,
     private webSockets: WebSocketsService,
     private zone: NgZone,
     public navCtrl: NavController,
@@ -126,9 +124,9 @@ export class ChatShowComponent {
     }
   }
 
-  newLeadBlur(event: Event): void {
+  newContactBlur(event: Event): void {
     const isNumber = /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/.test(
-      this.threadData.leadNumber
+      this.threadData.contactNumber
     )
     if (isNumber) {
       this.openOrCreate.emit({
@@ -141,30 +139,31 @@ export class ChatShowComponent {
     this.openThreads.emit()
   }
 
-  openEditLead(): void {
-    const lead = {
-      lead: {
-        first_name: this.threadData.leadFirst,
-        id: this.threadData.leadId,
-        last_name: this.threadData.leadLast,
-        phone: this.threadData.leadNumber
+  openEditContact(): void {
+    const contact = {
+      contact: {
+        first_name: this.threadData.contactFirst,
+        id: this.threadData.contactId,
+        last_name: this.threadData.contactLast,
+        phone: this.threadData.contactNumber
       }
     }
 
-    this.navCtrl.push('LeadsPage', lead)
+    this.navCtrl.push('ContactsPage', contact)
   }
 
   getPipelineAndStage(): void {
-    this.salesService.lead(this.threadData.leadId).subscribe((lead) =>
-      this.salesService.stage(lead.stageId).subscribe((stage) => {
-        this.salesService
-          .pipeline(stage.pipelineId)
-          .subscribe(
-            (res2 = { id: 0, name: 'Oops', stageOrder: [] }) =>
-              (this.pipeline = res2.name)
-          )
-        this.stage = stage.name
-      })
-    )
+    // TODO: will need to be replaced with deals stage information
+    //   this.salesService.contact(this.threadData.contactId).subscribe((contact) =>
+    //     this.salesService.stage(contact.stageId).subscribe((stage) => {
+    //       this.salesService
+    //         .pipeline(stage.pipelineId)
+    //         .subscribe(
+    //           (res2 = { id: 0, name: 'Oops', stageOrder: [] }) =>
+    //             (this.pipeline = res2.name)
+    //         )
+    //       this.stage = stage.name
+    //     })
+    //   )
   }
 }

@@ -14,12 +14,6 @@ export class TabNotesComponentObject extends PageObject<TabNotesComponent> {
     this.setInput(element!, note)
   }
 
-  getNote(): string {
-    const element = this.findByCss<HTMLInputElement>('input.note')
-    expect(element).toBeTruthy()
-    return element!.value
-  }
-
   clickAddNote(): void {
     const img = this.findDebugByCss('div.send-button img')
     expect(img).toBeTruthy()

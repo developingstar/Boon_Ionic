@@ -4,22 +4,22 @@ import {
 } from '@angular/common/http/testing'
 import { async, TestBed } from '@angular/core/testing'
 
-import { LeadFilterService } from '../../../src/app/nav/lead.filter.service'
-import { sampleLead } from '../../support/factories'
+import { ContactFilterService } from '../../../src/app/nav/contact.filter.service'
+import { sampleContact } from '../../support/factories'
 
-describe('LeadFilterService', () => {
+describe('ContactFilterService', () => {
   let httpMock: HttpTestingController
-  let leadFilterService: LeadFilterService
+  let contactFilterService: ContactFilterService
 
   beforeEach(
     async(() => {
       TestBed.configureTestingModule({
         imports: [HttpClientTestingModule],
-        providers: [leadFilterService]
+        providers: [contactFilterService]
       })
 
       httpMock = TestBed.get(HttpTestingController)
-      leadFilterService = TestBed.get(LeadFilterService)
+      contactFilterService = TestBed.get(ContactFilterService)
     })
   )
 
@@ -27,44 +27,44 @@ describe('LeadFilterService', () => {
     it(
       'returns an array',
       async(() => {
-        const lead1 = sampleLead({
+        const contact1 = sampleContact({
           id: 1,
           owner: {
-            name: 'Lead Test'
+            name: 'Contact Test'
           }
         })
 
-        const lead2 = sampleLead({
+        const contact2 = sampleContact({
           id: 2,
           owner: {
-            name: 'Lead Sample'
+            name: 'Contact Sample'
           }
         })
 
-        const lead3 = sampleLead({
+        const contact3 = sampleContact({
           id: 3,
           owner: {
-            name: 'Test Lead'
+            name: 'Test Contact'
           }
         })
 
-        leadFilterService.getResults('test').subscribe((result: any[]) => {
+        contactFilterService.getResults('test').subscribe((result: any[]) => {
           expect(result.length).toEqual(2)
           expect(result).toEqual([
-            { id: 1, name: 'Lead Test' },
-            { id: 1, name: 'Test Lead' }
+            { id: 1, name: 'Contact Test' },
+            { id: 1, name: 'Test Contact' }
           ])
         })
 
-        const req = httpMock.expectOne('/api/leads?query=test')
+        const req = httpMock.expectOne('/api/contacts?query=test')
         expect(req.request.method).toBe('GET')
 
         req.flush({
           data: {
-            leads: [
-              JSON.parse(JSON.stringify(lead1)),
-              JSON.parse(JSON.stringify(lead2)),
-              JSON.parse(JSON.stringify(lead3))
+            contacts: [
+              JSON.parse(JSON.stringify(contact1)),
+              JSON.parse(JSON.stringify(contact2)),
+              JSON.parse(JSON.stringify(contact3))
             ]
           }
         })

@@ -14,6 +14,7 @@ export interface IJourneyCreateRequest {
   readonly journey: {
     readonly actions: ReadonlyArray<IAction>
     readonly name?: string
+    readonly type: string
     readonly state?: State
     readonly triggers: ReadonlyArray<ITrigger>
   }
@@ -55,7 +56,7 @@ export interface IAction {
 }
 
 export type ActionType =
-  | 'assign_lead_owner'
+  | 'assign_owner'
   | 'assign_stage'
   | 'remove_from_journey'
   | 'send_email'
@@ -63,7 +64,7 @@ export type ActionType =
   | 'update_field'
   | 'wait'
 
-export interface IAssignLeadOwnerData {
+export interface IAssignContactOwnerData {
   readonly owner_id: number
 }
 
@@ -95,7 +96,7 @@ export interface IWaitData {
 }
 
 export type ActionData =
-  | IAssignLeadOwnerData
+  | IAssignContactOwnerData
   | IAssignStageData
   | IRemoveFromJourneyData
   | ISendEmailData
@@ -140,8 +141,8 @@ interface ILinks {
   readonly next: string | null
 }
 
-export interface ILeadOwnerEvent extends Action {
-  readonly data: IAssignLeadOwnerData
+export interface IContactOwnerEvent extends Action {
+  readonly data: IAssignContactOwnerData
 }
 
 interface IStageAssignedTrigger extends Trigger {

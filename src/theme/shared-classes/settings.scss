@@ -1,6 +1,5 @@
 @import '../style-guide/sizes.scss';
 @import '../style-guide/global-colors.scss';
-
 .settings-back-button {
   color: $color-primary;
   position: absolute;
@@ -27,7 +26,6 @@
       height: 100%;
     }
   }
-
   .scrollable-content-wrapper {
     .settings-header {
       display: flex;
@@ -42,6 +40,7 @@
       max-width: 600px;
       background: white;
       margin-top: -30px;
+      z-index: 100;
     }
     .scroll-spacer {
       height: 100px;
@@ -53,7 +52,7 @@
     h1 {
       font-size: 25px;
       font-weight: $font-weight-headers;
-      color: $color-text-primary-dk;
+      color: $color-text-primary;
       margin-bottom: 0;
     }
     .settings-button {

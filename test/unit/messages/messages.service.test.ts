@@ -86,7 +86,7 @@ describe('MessagesService', () => {
               default_sender: 'user@example.com',
               default_sender_name: null,
               id: 2,
-              name: 'Lead owner assigned',
+              name: 'Contact owner assigned',
               subject: 'Your sales contact'
             })
           )
@@ -112,7 +112,7 @@ describe('MessagesService', () => {
                 default_sender: 'user@example.com',
                 default_sender_name: null,
                 id: 2,
-                name: 'Lead owner assigned',
+                name: 'Contact owner assigned',
                 subject: 'Your sales contact',
                 type: 'email'
               }
@@ -271,7 +271,7 @@ describe('MessagesService', () => {
               content: 'Susan will be your sales contact',
               default_sender: '+999700100100',
               id: 2,
-              name: 'Lead owner assigned'
+              name: 'Contact owner assigned'
             })
           )
         })
@@ -296,7 +296,7 @@ describe('MessagesService', () => {
                 default_sender: '+999700100100',
                 default_sender_name: null,
                 id: 2,
-                name: 'Lead owner assigned',
+                name: 'Contact owner assigned',
                 subject: null,
                 type: 'text'
               }

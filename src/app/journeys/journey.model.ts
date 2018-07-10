@@ -3,13 +3,13 @@ import * as API from './journeys.api.model'
 import { Trigger } from './trigger.model'
 
 export class Journey {
-  readonly id: number
-  readonly name: string
-  readonly state: API.State
-  readonly publishedAt: string | null
-  readonly actions: ReadonlyArray<Action>
-  readonly triggers: ReadonlyArray<Trigger>
-  readonly type: string
+  id: number
+  name: string
+  state: API.State
+  publishedAt: string | null
+  actions: Action[]
+  triggers: Trigger[]
+  type: string
 
   constructor(data: API.IJourney) {
     this.id = data.id

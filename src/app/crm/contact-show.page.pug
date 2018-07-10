@@ -49,7 +49,7 @@ div.deals-header-section
           .deal-buttons-section
             button.edit-button(*ngIf='viewMode()', (click)='enterEditMode()')
               | Edit
-            button(*ngIf='editMode()', (click)="updateLead()")
+            button(*ngIf='editMode()', (click)="updateContact()")
               | Save
             button(*ngIf='editMode()', (click)='cancel()')
               | Cancel

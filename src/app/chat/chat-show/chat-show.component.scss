@@ -5,14 +5,14 @@
 
 chat-show {
   $send-bar-height: 55px;
-  $lead-header-height: 55px;
-  .lead-header-wrapper {
+  $contact-header-height: 55px;
+  .contact-header-wrapper {
     @extend .space-between;
     padding: 10px;
     z-index: 10;
     width: 100%;
     max-width: 100%;
-    height: $lead-header-height;
+    height: $contact-header-height;
     background: #f4f5f9;
     overflow: hidden;
     font-size: 14px;
@@ -44,7 +44,7 @@ chat-show {
         font-weight: bold;
         text-transform: uppercase;
       }
-      .lead-header-content {
+      .contact-header-content {
         color: $color-primary;
         font-weight: 500;
         font-size: 15px;
@@ -55,7 +55,7 @@ chat-show {
   .message-show-wrapper {
     font-weight: 500;
     height: calc(
-      100vh - (#{$nav-height-mobile} + #{$lead-header-height} + #{$send-bar-height})
+      100vh - (#{$nav-height-mobile} + #{$contact-header-height} + #{$send-bar-height})
     );
     overflow: scroll;
     overflow-x: hidden;
@@ -64,7 +64,7 @@ chat-show {
     -webkit-overflow-scrolling: touch;
     @include md {
       height: calc(
-        100vh - (#{$nav-height-large} + #{$lead-header-height} + #{$send-bar-height})
+        100vh - (#{$nav-height-large} + #{$contact-header-height} + #{$send-bar-height})
       );
     }
   }

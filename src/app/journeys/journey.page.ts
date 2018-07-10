@@ -32,7 +32,7 @@ import { StageAssignedModalComponent } from './modals/stage-assigned-modal.compo
 import { CurrentUserService } from '../auth/current-user.service'
 import { pageAccess } from '../utils/app-access'
 import { showToast } from '../utils/toast'
-import { AssignLeadOwnerModalComponent } from './modals/assign-lead-owner-modal.component'
+import { AssignContactOwnerModalComponent } from './modals/assign-contact-owner-modal.component'
 import { AssignStageModalComponent } from './modals/assign-stage-modal.component'
 import { SendEmailModalComponent } from './modals/send-email-modal.component'
 import { SendTextModalComponent } from './modals/send-text-modal.component'
@@ -413,7 +413,7 @@ export class JourneyPage implements OnInit, OnDestroy {
 
   private actionToModalName(kind: ActionType): string {
     return Object({
-      assign_lead_owner: AssignLeadOwnerModalComponent.name,
+      assign_owner: AssignContactOwnerModalComponent.name,
       assign_stage: AssignStageModalComponent.name,
       send_email: SendEmailModalComponent.name,
       send_text: SendTextModalComponent.name,

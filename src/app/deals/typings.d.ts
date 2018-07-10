@@ -3,7 +3,7 @@ declare namespace Deal {
     interface IDeal {
       readonly name: string | null
       readonly value: number | null
-      readonly contact: Crm.API.ILead | null
+      readonly contact: Crm.API.IContact | null
       readonly created_by_service_id: number | null
       readonly created_by_user_id: number | null
       readonly id: number | null

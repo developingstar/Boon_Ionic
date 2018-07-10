@@ -5,10 +5,10 @@ import {
 } from '@angular/common/http/testing'
 import { async, TestBed } from '@angular/core/testing'
 
-import { Lead } from '../../../src/app/crm/lead.model'
+import { Contact } from '../../../src/app/crm/contact.model'
 import { Pipeline } from '../../../src/app/crm/pipeline.model'
 import { SalesService } from '../../../src/app/crm/sales.service'
-import { sampleLead, samplePipeline } from '../../support/factories'
+import { sampleContact, samplePipeline } from '../../support/factories'
 import { PaginatedCollection } from './../../../src/app/api/paginated-collection'
 import { FieldDefinition } from './../../../src/app/crm/field-definition.model'
 
@@ -25,24 +25,24 @@ describe('SalesService', () => {
       service = TestBed.get(SalesService)
     })
   )
-  describe('leads', () => {
+  describe('contacts', () => {
     it(
       'returns an API collection',
       async(() => {
-        const lead = sampleLead()
-        service.leads().subscribe((result: PaginatedCollection<Lead>) => {
+        const contact = sampleContact()
+        service.contacts().subscribe((result: PaginatedCollection<Contact>) => {
           expect(result.count).toEqual(1)
           expect(result.nextPageLink).toEqual('http://example.com/next')
           expect(result.prevPageLink).toEqual('http://example.com/prev')
-          expect(result.items[0]).toEqual(new Lead(lead))
-          expect(result.items[0] instanceof Lead).toBeTruthy()
+          expect(result.items[0]).toEqual(new Contact(contact))
+          expect(result.items[0] instanceof Contact).toBeTruthy()
           expect(result.items.length).toEqual(1)
         })
-        const req = httpMock.expectOne('/api/leads?per_page=50')
+        const req = httpMock.expectOne('/api/contacts?per_page=50')
         expect(req.request.method).toBe('GET')
         req.flush({
           data: {
-            leads: [JSON.parse(JSON.stringify(lead))]
+            contacts: [JSON.parse(JSON.stringify(contact))]
           },
           links: {
             next: 'http://example.com/next',
@@ -58,14 +58,14 @@ describe('SalesService', () => {
     it(
       'allows to use a custom URL',
       async(() => {
-        const url = 'http://example.com/api/leads?cursor=10'
+        const url = 'http://example.com/api/contacts?cursor=10'
         const emptyParams = new HttpParams()
-        service.leads({ url: url, params: emptyParams }).subscribe()
+        service.contacts({ url: url, params: emptyParams }).subscribe()
         const req = httpMock.expectOne(url)
         expect(req.request.method).toBe('GET')
         req.flush({
           data: {
-            leads: []
+            contacts: []
           },
           links: {
             next: null,
@@ -83,12 +83,14 @@ describe('SalesService', () => {
       async(() => {
         const emptyParams = new HttpParams()
         const params = emptyParams.set('pipeline_id', '1')
-        service.leads({ url: null, params: params }).subscribe()
-        const req = httpMock.expectOne('/api/leads?per_page=50&pipeline_id=1')
+        service.contacts({ url: null, params: params }).subscribe()
+        const req = httpMock.expectOne(
+          '/api/contacts?per_page=50&pipeline_id=1'
+        )
         expect(req.request.method).toBe('GET')
         req.flush({
           data: {
-            leads: []
+            contacts: []
           },
           links: {
             next: null,
@@ -259,34 +261,34 @@ describe('SalesService', () => {
       })
     )
   })
-  describe('lead', () => {
+  describe('contact', () => {
     it(
-      'returns a Lead',
+      'returns a Contact',
       async(() => {
-        service.lead(1).subscribe((lead) => {
-          expect(lead.id).toEqual(1)
-          expect(lead.email).toEqual('lead@example.com')
-          expect(lead.phoneNumber).toEqual('+999100200300')
-          expect(lead.owner).not.toBeNull()
-          expect(lead.owner!.id).toEqual(100)
-          expect(lead.owner!.role).toEqual('sales_rep')
-          expect(lead.owner!.name).toEqual('John Boon')
-          expect(lead.owner!.email).toEqual('john@example.com')
-          expect(lead.createdByUserId).toEqual(101)
-          expect(lead.createdByServiceId).toBeNull()
-          expect(Array.isArray(lead.fields)).toBeTruthy()
-          expect(lead.fields[0].id).toBe(300)
-          expect(lead.fields[0].name).toBe('website')
-          expect(lead.fields[0].value).toBe('example.com')
+        service.contact(1).subscribe((contact) => {
+          expect(contact.id).toEqual(1)
+          expect(contact.email).toEqual('contact@example.com')
+          expect(contact.phoneNumber).toEqual('+999100200300')
+          expect(contact.owner).not.toBeNull()
+          expect(contact.owner!.id).toEqual(100)
+          expect(contact.owner!.role).toEqual('sales_rep')
+          expect(contact.owner!.name).toEqual('John Boon')
+          expect(contact.owner!.email).toEqual('john@example.com')
+          expect(contact.createdByUserId).toEqual(101)
+          expect(contact.createdByServiceId).toBeNull()
+          expect(Array.isArray(contact.fields)).toBeTruthy()
+          expect(contact.fields[0].id).toBe(300)
+          expect(contact.fields[0].name).toBe('website')
+          expect(contact.fields[0].value).toBe('example.com')
         })
-        const req = httpMock.expectOne('/api/leads/1')
+        const req = httpMock.expectOne('/api/contacts/1')
         expect(req.request.method).toBe('GET')
         req.flush({
           data: {
-            lead: {
+            contact: {
               created_by_service_id: null,
               created_by_user_id: 101,
-              email: 'lead@example.com',
+              email: 'contact@example.com',
               fields: [{ id: 300, name: 'website', value: 'example.com' }],
               id: 1,
               owner: {
@@ -304,34 +306,34 @@ describe('SalesService', () => {
       })
     )
   })
-  describe('createLead', () => {
+  describe('createContact', () => {
     it(
-      'returns a new lead',
+      'returns a new contact',
       async(() => {
-        service.createLead({}).subscribe((lead) => {
-          expect(lead.id).toEqual(1)
-          expect(lead.email).toEqual('lead@example.com')
-          expect(lead.phoneNumber).toEqual('+999100200300')
-          expect(lead.owner).not.toBeNull()
-          expect(lead.owner!.id).toEqual(100)
-          expect(lead.owner!.role).toEqual('sales_rep')
-          expect(lead.owner!.name).toEqual('John Boon')
-          expect(lead.owner!.email).toEqual('john@example.com')
-          expect(lead.createdByUserId).toEqual(101)
-          expect(lead.createdByServiceId).toBeNull()
-          expect(Array.isArray(lead.fields)).toBeTruthy()
-          expect(lead.fields[0].id).toBe(300)
-          expect(lead.fields[0].name).toBe('website')
-          expect(lead.fields[0].value).toBe('example.com')
+        service.createContact({}).subscribe((contact) => {
+          expect(contact.id).toEqual(1)
+          expect(contact.email).toEqual('contact@example.com')
+          expect(contact.phoneNumber).toEqual('+999100200300')
+          expect(contact.owner).not.toBeNull()
+          expect(contact.owner!.id).toEqual(100)
+          expect(contact.owner!.role).toEqual('sales_rep')
+          expect(contact.owner!.name).toEqual('John Boon')
+          expect(contact.owner!.email).toEqual('john@example.com')
+          expect(contact.createdByUserId).toEqual(101)
+          expect(contact.createdByServiceId).toBeNull()
+          expect(Array.isArray(contact.fields)).toBeTruthy()
+          expect(contact.fields[0].id).toBe(300)
+          expect(contact.fields[0].name).toBe('website')
+          expect(contact.fields[0].value).toBe('example.com')
         })
-        const req = httpMock.expectOne('/api/leads')
+        const req = httpMock.expectOne('/api/contacts')
         expect(req.request.method).toBe('POST')
         req.flush({
           data: {
-            lead: {
+            contact: {
               created_by_service_id: null,
               created_by_user_id: 101,
-              email: 'lead@example.com',
+              email: 'contact@example.com',
               fields: [{ id: 300, name: 'website', value: 'example.com' }],
               id: 1,
               owner: {
@@ -349,34 +351,34 @@ describe('SalesService', () => {
       })
     )
   })
-  describe('updateLead', () => {
+  describe('updateContact', () => {
     it(
-      'returns an updated lead',
+      'returns an updated contact',
       async(() => {
-        service.updateLead(2, {}).subscribe((lead) => {
-          expect(lead.id).toEqual(2)
-          expect(lead.email).toEqual('lead@example.com')
-          expect(lead.phoneNumber).toEqual('+999100200300')
-          expect(lead.owner).not.toBeNull()
-          expect(lead.owner!.id).toEqual(100)
-          expect(lead.owner!.role).toEqual('sales_rep')
-          expect(lead.owner!.name).toEqual('John Boon')
-          expect(lead.owner!.email).toEqual('john@example.com')
-          expect(lead.createdByUserId).toEqual(101)
-          expect(lead.createdByServiceId).toBeNull()
-          expect(Array.isArray(lead.fields)).toBeTruthy()
-          expect(lead.fields[0].id).toBe(300)
-          expect(lead.fields[0].name).toBe('website')
-          expect(lead.fields[0].value).toBe('example.com')
+        service.updateContact(2, {}).subscribe((contact) => {
+          expect(contact.id).toEqual(2)
+          expect(contact.email).toEqual('contact@example.com')
+          expect(contact.phoneNumber).toEqual('+999100200300')
+          expect(contact.owner).not.toBeNull()
+          expect(contact.owner!.id).toEqual(100)
+          expect(contact.owner!.role).toEqual('sales_rep')
+          expect(contact.owner!.name).toEqual('John Boon')
+          expect(contact.owner!.email).toEqual('john@example.com')
+          expect(contact.createdByUserId).toEqual(101)
+          expect(contact.createdByServiceId).toBeNull()
+          expect(Array.isArray(contact.fields)).toBeTruthy()
+          expect(contact.fields[0].id).toBe(300)
+          expect(contact.fields[0].name).toBe('website')
+          expect(contact.fields[0].value).toBe('example.com')
         })
-        const req = httpMock.expectOne('/api/leads/2')
+        const req = httpMock.expectOne('/api/contacts/2')
         expect(req.request.method).toBe('PATCH')
         req.flush({
           data: {
-            lead: {
+            contact: {
               created_by_service_id: null,
               created_by_user_id: 101,
-              email: 'lead@example.com',
+              email: 'contact@example.com',
               fields: [{ id: 300, name: 'website', value: 'example.com' }],
               id: 2,
               owner: {

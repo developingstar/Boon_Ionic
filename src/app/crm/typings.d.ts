@@ -49,12 +49,12 @@ declare namespace Crm {
       readonly value: string
     }
 
-    interface IFilterLead {
+    interface IFilterContact {
       readonly id: number
       readonly value: string
     }
 
-    export interface ILead {
+    export interface IContact {
       readonly created_by_service_id: number | null
       readonly created_by_user_id: number | null
       readonly email: string | null
@@ -69,7 +69,7 @@ declare namespace Crm {
       readonly updated_at: string
     }
 
-    interface ILeadsResponse {
+    interface IContactsResponse {
       readonly metadata: {
         count: number | null
       }
@@ -79,11 +79,11 @@ declare namespace Crm {
       }
       readonly data: {
         readonly count: number | null
-        readonly leads: ReadonlyArray<ILead>
+        readonly contacts: ReadonlyArray<IContact>
       }
     }
 
-    interface ILeadCreate {
+    interface IContactCreate {
       email?: string
       first_name?: string
       last_name?: string
@@ -91,12 +91,12 @@ declare namespace Crm {
       stage_id?: number
       owner_id?: number | null
       pipeline_id?: number | null
-      fields?: Array<ILeadFieldUpdate>
+      fields?: Array<IContactFieldUpdate>
     }
 
-    type ILeadUpdate = ILeadCreate
+    type IContactUpdate = IContactCreate
 
-    interface ILeadFieldUpdate {
+    interface IContactFieldUpdate {
       readonly id: number
       readonly value: string
     }

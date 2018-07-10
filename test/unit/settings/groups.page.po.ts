@@ -57,6 +57,11 @@ export class GroupsPageObject extends PageObject<GroupsPage> {
       (el) => el.textContent || ''
     )
   }
+  get groupMembers(): ReadonlyArray<string> {
+    return this.findAllByCss<HTMLDivElement>('div.group-members').map(
+      (el) => el.textContent || ''
+    )
+  }
 
   get groupUsers(): ReadonlyArray<string> {
     return this.findAllByCss<HTMLSpanElement>('span.user-name').map(

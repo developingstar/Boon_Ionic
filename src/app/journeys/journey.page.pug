@@ -12,7 +12,7 @@ ion-grid.journey
 
       .events-group
         h6 Actions
-        event(type="action", kind="assign_lead_owner", (click)="addNewAction('assign_lead_owner')")
+        event(type="action", kind="assign_owner", (click)="addNewAction('assign_owner')")
         event(type="action", kind="assign_stage", (click)="addNewAction('assign_stage')")
         event(type="action", kind="send_email", (click)="addNewAction('send_email')")
         event(type="action", kind="send_text", (click)="addNewAction('send_text')")
@@ -39,7 +39,7 @@ ion-grid.journey
                 .trash-icon([inlineSVG]="'assets/icon/journey/trash.svg'", (click)="deleteAction($event, event)")
                 email-template-details(*ngIf="event.type == 'send_email'", [event]="event")
                 field-details(*ngIf="event.type == 'update_field'", [event]="event")
-                lead-owner-details(*ngIf="event.type == 'assign_lead_owner'", [event]="event")
+                contact-owner-details(*ngIf="event.type == 'assign_owner'", [event]="event")
                 stage-details(*ngIf="event.type == 'assign_stage'", [event]="event")
                 text-template-details(*ngIf="event.type == 'send_text'", [event]="event")
                 wait-details(*ngIf="event.type == 'wait'", [event]="event")

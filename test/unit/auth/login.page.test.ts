@@ -61,6 +61,18 @@ describe('LoginPage', () => {
 
       expect(isAuthenticated).toEqual(true)
     })
+
+    it('forgot a password click', () => {
+      isAuthenticated = false
+      fixture.detectChanges()
+
+      expect(page.forgotButtonVisible).toBe(true)
+
+      page.clickForgotPassword()
+      fixture.detectChanges()
+
+      expect(nextPage).toEqual('SendCodePage')
+    })
   })
 
   describe('when user is authenticated', () => {

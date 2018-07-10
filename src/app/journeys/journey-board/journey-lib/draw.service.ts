@@ -1,5 +1,5 @@
-import { Shape } from 'konva'
 import { Subject } from 'rxjs'
+import { Edge } from './edge'
 
 export class DrawService {
   isDrawing: boolean = false
@@ -29,7 +29,7 @@ export class DrawService {
 
 // tslint:disable-next-line:interface-name
 export interface IOnDraw {
-  shape: Shape | null
+  shape: Edge | null
   x: number
   y: number
 }
@@ -38,6 +38,7 @@ export interface INode {
   id: string
   x: number
   y: number
+  data: any
 }
 
 export interface IEdge {

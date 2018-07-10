@@ -11,12 +11,41 @@ deals-show-page {
     background-color: #4c4953;
     display: flex;
     justify-content: center;
-    height: 250px;
+    height: $deal-contact-header-height;
+  }
+  .deal-show-button {
+    height: 38px;
+    width: 45%;
+    border-radius: 4px;
+    background-color: #3a373f;
+    color: #fff;
+    &:hover {
+      background-color: #231f28;
+    }
+  }
+  .more-button {
+    width: 70px;
+    margin-left: 15px;
+    border-radius: 4px;
+    background-color: #3a373f;
+    .bullets::before {
+      @include bullet(#d8d8d8, '\25CF\25CF\25CF');
+      margin: 0px;
+    }
+    &:hover {
+      background-color: #231f28;
+    }
+  }
+  .deal-buttons-section button {
+    @extend .deal-show-button;
   }
   .deal-content-wrapper {
     width: 90%;
     height: 160px;
     margin-top: 15px;
+  }
+  .deal-header {
+    display: flex;
   }
   #back-button {
     height: 17px;
@@ -48,19 +77,19 @@ deals-show-page {
     margin-bottom: 18px;
     margin: 0 0 17px 0;
   }
-  .contact-form {
+  .deal-form {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: space-between;
   }
-  .contact-details {
+  .deal-details {
     height: 65px;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    width: 75%;
+    width: 100%;
   }
-  .contact-detail-item {
+  .deal-detail-item {
     display: flex;
     flex-direction: column;
     width: 18%;
@@ -79,87 +108,22 @@ deals-show-page {
     }
   }
   .deal-buttons-section {
-    width: 20%;
+    width: 180px;
     display: flex;
     justify-content: space-between;
-    button {
-      height: 38px;
-      width: 45%;
-      border-radius: 4px;
-      background-color: #3a373f;
-      color: #fff;
-    }
-    button:hover {
-      background-color: #231f28;
-    }
-  }
-
-  .lead-more-button {
-    background: white !important;
-    @extend .update-stage-button;
-    border: 1px solid rgb(224, 232, 235) !important;
-    .bullets::before {
-      @include bullet(#d8d8d8, '\25CF\25CF\25CF');
-    }
+    align-self: flex-end;
   }
 
   pipeline {
     margin-top: 20px;
   }
-  .lead {
-    @include border-radius($radius-size);
-    background-color: #fff;
-    border: 1px $color-border solid;
-    padding: 8px;
-    button {
-      @extend .boon-button;
-    }
-    .base-fields,
-    .custom-fields {
-      margin: 30px 50px;
-    }
-    .base-fields {
-      display: flex;
-      justify-content: space-between;
-      button {
-        display: inline-block;
-        margin-left: 6px;
-        width: 124px;
-      }
-    }
-    hr {
-      border-top: 1px $color-border solid;
-      height: 0;
-      margin: 0 -8px;
-    }
-    .custom-fields {
-      margin-bottom: 0px;
-      h2 {
-        color: #000000;
-        font-size: 12px;
-        font-weight: bold;
-        margin-bottom: 5px;
-        text-transform: uppercase;
-      }
-      field {
-        margin-top: 15px;
-        margin-bottom: 30px;
-      }
-    }
-    field {
-      display: inline-block;
-      margin-right: 40px;
-      vertical-align: top;
-      width: 195px;
-    }
-  }
-  .tabs-wrapper {
+  .tab-selector-wrapper {
     display: flex;
     flex-flow: row nowrap;
     justify-content: stretch;
     background-color: $color-tab-background;
     width: 100%;
-    height: 100%;
+    height: calc(100% - #{$deal-contact-header-height});
   }
   .space-holder {
     flex: 1 0 50%;

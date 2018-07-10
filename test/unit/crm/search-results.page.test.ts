@@ -8,14 +8,14 @@ import { PaginatedCollection } from '../../../src/app/api/paginated-collection'
 import { PaginatedList } from '../../../src/app/api/paginated-list'
 import { CurrentUserService } from '../../../src/app/auth/current-user.service'
 import { User } from '../../../src/app/auth/user.model'
-import { Lead } from '../../../src/app/crm/lead.model'
+import { Contact } from '../../../src/app/crm/contact.model'
 import { SalesService } from '../../../src/app/crm/sales.service'
 import { SearchResultsPage } from '../../../src/app/crm/search-results.page'
 import { SearchResultsPageModule } from '../../../src/app/crm/search-results.page.module'
 import { Deal } from '../../../src/app/deals/deal.model'
 import { DealsService } from '../../../src/app/deals/deals.service'
 import { NavService } from '../../../src/app/nav/nav.service'
-import { sampleDeal, sampleLead, sampleUser } from '../../support/factories'
+import { sampleContact, sampleDeal, sampleUser } from '../../support/factories'
 import { initComponent } from '../../support/helpers'
 import { assertTableRow } from '../../support/matchers'
 import { CurrentUserServiceStub, NavControllerStub } from '../../support/stubs'
@@ -24,14 +24,14 @@ import { SearchResultsPageObject } from './search-results.page.po'
 describe('SearchResultsPage', () => {
   let dealsServiceStub: any
   let fixture: ComponentFixture<SearchResultsPage>
-  let leadsCollection: PaginatedCollection<Lead>
+  let contactsCollection: PaginatedCollection<Contact>
   let dealsCollection: PaginatedList<Deal>
   let page: SearchResultsPageObject
   let salesServiceStub: any
   let navControllerStub: any
   beforeEach(
     async(() => {
-      const lead: Crm.API.ILead = sampleLead({
+      const contact: Crm.API.IContact = sampleContact({
         email: 'leeess@gmail.com',
         name: 'Lisa Newman',
         phone_number: '234332111'
@@ -42,11 +42,11 @@ describe('SearchResultsPage', () => {
           name: 'Tom'
         })
       )
-      leadsCollection = {
+      contactsCollection = {
         count: 1,
         items: [
-          new Lead(
-            sampleLead({
+          new Contact(
+            sampleContact({
               email: 'john@example.com',
               first_name: 'John',
               last_name: 'Boon',
@@ -55,8 +55,8 @@ describe('SearchResultsPage', () => {
               stage_id: 2
             })
           ),
-          new Lead(
-            sampleLead({
+          new Contact(
+            sampleContact({
               email: 'susan@example.com',
               first_name: 'Susan',
               last_name: 'Boon',
@@ -65,8 +65,8 @@ describe('SearchResultsPage', () => {
               stage_id: 2
             })
           ),
-          new Lead(
-            sampleLead({
+          new Contact(
+            sampleContact({
               email: null,
               first_name: null,
               last_name: null,
@@ -92,7 +92,7 @@ describe('SearchResultsPage', () => {
           ),
           new Deal(
             sampleDeal({
-              contact: lead,
+              contact: contact,
               name: 'Another Deal',
               owner: null,
               pipline: 'New',
@@ -114,13 +114,13 @@ describe('SearchResultsPage', () => {
         prevPageLink: 'http://example.com/prev?query=mar'
       }
       salesServiceStub = {
-        leads: () => Observable.of(leadsCollection),
+        contacts: () => Observable.of(contactsCollection),
         limit: 50
       }
       dealsServiceStub = {
         deals: () => Observable.of(dealsCollection)
       }
-      spyOn(salesServiceStub, 'leads').and.callThrough()
+      spyOn(salesServiceStub, 'contacts').and.callThrough()
       spyOn(dealsServiceStub, 'deals').and.callThrough()
 
       navControllerStub = new NavControllerStub()
@@ -160,7 +160,7 @@ describe('SearchResultsPage', () => {
   })
 
   describe('contact filter', () => {
-    it('table shows leads', () => {
+    it('table shows contacts', () => {
       const table = page.resultsTable()
       expect(table.children.length).toBe(4)
       assertTableRow(table.children.item(0), [
@@ -192,18 +192,18 @@ describe('SearchResultsPage', () => {
         ''
       ])
     })
-    it('allows to load leads from different pages', () => {
-      expect(salesServiceStub.leads).toHaveBeenCalledWith({
+    it('allows to load contacts from different pages', () => {
+      expect(salesServiceStub.contacts).toHaveBeenCalledWith({
         params: jasmine.any(HttpParams),
         url: null
       })
       page.clickNextPageButton()
-      expect(salesServiceStub.leads).toHaveBeenCalledWith({
+      expect(salesServiceStub.contacts).toHaveBeenCalledWith({
         params: jasmine.any(HttpParams),
         url: 'http://example.com/next?query=mar'
       })
       page.clickPrevPageButton()
-      expect(salesServiceStub.leads).toHaveBeenCalledWith({
+      expect(salesServiceStub.contacts).toHaveBeenCalledWith({
         params: jasmine.any(HttpParams),
         url: 'http://example.com/prev?query=mar'
       })
@@ -243,19 +243,21 @@ describe('SearchResultsPage', () => {
       ])
       assertTableRow(table.children.item(3), ['-', '-', '-', '', ''])
     })
-    it('allows to load leads from different pages', () => {
+    it('allows to load contacts from different pages', () => {
       page.clickNextPageButton()
-      expect(dealsServiceStub.deals).toHaveBeenCalledWith(
-        '/api/deals?per_page=50&query=mar'
-      )
+      expect(dealsServiceStub.deals).toHaveBeenCalledWith({
+        params: jasmine.any(HttpParams),
+        url: '/api/deals?per_page=50&query=mar'
+      })
       page.clickPrevPageButton()
-      expect(dealsServiceStub.deals).toHaveBeenCalledWith(
-        '/api/deals?per_page=50&query=mar'
-      )
+      expect(dealsServiceStub.deals).toHaveBeenCalledWith({
+        params: jasmine.any(HttpParams),
+        url: '/api/deals?per_page=50&query=mar'
+      })
     })
   })
-  it('opens the lead page after clicking an entry in the table', () => {
-    page.click(page.findDebugByCss('ion-row.lead'))
+  it('opens the clicked items page after clicking an entry in the table', () => {
+    page.click(page.findDebugByCss('ion-row.result'))
     expect(navControllerStub.push).toHaveBeenCalled()
   })
 })

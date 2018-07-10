@@ -78,10 +78,12 @@ export class ChatService {
       })
   }
 
-  public getLeadName(id: number): Observable<any> {
-    return this.http.get('lead-name' + '?conv=' + id).map((data: Response) => {
-      return data.json()
-    })
+  public getContactName(id: number): Observable<any> {
+    return this.http
+      .get('contact-name' + '?conv=' + id)
+      .map((data: Response) => {
+        return data.json()
+      })
   }
 
   public sendMsg(conversationId: number, message: any): Observable<any> {

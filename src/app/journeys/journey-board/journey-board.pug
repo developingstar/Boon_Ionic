@@ -1,4 +1,27 @@
-button(ion-button, (click)="addNode()") Add Node
-button(ion-button, (click)="save()") Save
-button(ion-button, (click)="clear()") Clear
-#container.konva-background()
+nav-content
+  nav-icons(right, currentPage="JourneyBoardPage")
+
+.journey-board-wrapper
+  .node-selection-container
+    h1.node-selection-title(*ngIf="journey")
+      | {{journey.type}} Journey
+    h3.node-selection-subtitle
+      | Triggers
+    ion-row.node-selection-row(no-padding)
+      ion-col.event-col(*ngFor="let trigger of triggers", col-6)
+        img.event-icon([src]="'assets/icon/journey/triggers/' + trigger.kind + '.svg'", draggable, (mousedown)="createDropOffsets($event)", [dragData]="trigger")
+        .event-title {{getEventTitle(trigger.kind)}}
+    .node-selection-separator
+    h3.node-selection-subtitle
+      | Actions
+    ion-row.node-selection-row(no-padding)
+      ion-col.event-col(*ngFor="let action of actions", col-6)
+        img.event-icon([src]="'assets/icon/journey/actions/' + action.kind + '.svg'", draggable, (mousedown)="createDropOffsets($event)", [dragData]="action")
+        .event-title {{getEventTitle(action.kind)}}
+  .konva-board-wrapper
+    .konva-board-header
+      ion-input.journey-name-input(*ngIf="journey", [(ngModel)]="journey.name", required)
+      button.boon-button(ion-button, (click)="save()") Save
+      button.boon-button(*ngIf="journey && journey.state === 'inactive'", ion-button, (click)="publishJourney()") Publish Journey
+      button.boon-button(*ngIf="journey && journey.state === 'active'", ion-button, (click)="stopJourney()") Stop Journey
+    #container.konva-background(#cleber, droppable, (onDrop)="onItemDrop($event)")

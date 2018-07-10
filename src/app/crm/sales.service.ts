@@ -7,8 +7,8 @@ import {
   IHttpRequestOptions
 } from './../api/http-request-options'
 import { PaginatedCollection } from './../api/paginated-collection'
+import { Contact } from './contact.model'
 import { FieldDefinition } from './field-definition.model'
-import { Lead } from './lead.model'
 import { Note } from './note.model'
 import { Pipeline } from './pipeline.model'
 import { Stage } from './stage.model'
@@ -19,59 +19,60 @@ export class SalesService {
 
   constructor(private readonly http: HttpClient) {}
 
-  public leads(
+  public contacts(
     options: IHttpRequestOptions = blankHttpRequestOptions
-  ): Observable<PaginatedCollection<Lead>> {
+  ): Observable<PaginatedCollection<Contact>> {
     return this.http
-      .get(options.url || `/api/leads?per_page=${this.limit}`, {
+      .get(options.url || `/api/contacts?per_page=${this.limit}`, {
         params: options.params
       })
-      .map((response: Crm.API.ILeadsResponse) => {
-        const page: PaginatedCollection<Lead> = {
+      .map((response: Crm.API.IContactsResponse) => {
+        const page: PaginatedCollection<Contact> = {
           count: response.metadata.count,
-          items: response.data.leads.map((raw) => new Lead(raw)),
+          items: response.data.contacts.map((raw) => new Contact(raw)),
           nextPageLink: response.links.next,
           prevPageLink: response.links.prev
         }
-
         return page
       })
   }
 
-  public lead(id: number): Observable<Lead> {
-    return this.http.get(`/api/leads/${id}`).map(
+  public contact(id: number): Observable<Contact> {
+    return this.http.get(`/api/contacts/${id}`).map(
       (response: {
         readonly data: {
-          readonly lead: Crm.API.ILead
+          readonly contact: Crm.API.IContact
         }
-      }) => new Lead(response.data.lead)
+      }) => new Contact(response.data.contact)
     )
   }
 
-  public createLead(leadCreate: Crm.API.ILeadCreate): Observable<Lead> {
+  public createContact(
+    contactCreate: Crm.API.IContactCreate
+  ): Observable<Contact> {
     return this.http
-      .post(`/api/leads`, JSON.stringify({ lead: leadCreate }))
+      .post(`/api/contacts`, JSON.stringify({ contact: contactCreate }))
       .map(
         (response: {
           readonly data: {
-            readonly lead: Crm.API.ILead
+            readonly contact: Crm.API.IContact
           }
-        }) => new Lead(response.data.lead)
+        }) => new Contact(response.data.contact)
       )
   }
 
-  public updateLead(
+  public updateContact(
     id: number,
-    leadUpdate: Crm.API.ILeadUpdate
-  ): Observable<Lead> {
+    contactUpdate: Crm.API.IContactUpdate
+  ): Observable<Contact> {
     return this.http
-      .patch(`/api/leads/${id}`, JSON.stringify({ lead: leadUpdate }))
+      .patch(`/api/contacts/${id}`, JSON.stringify({ contact: contactUpdate }))
       .map(
         (response: {
           readonly data: {
-            readonly lead: Crm.API.ILead
+            readonly contact: Crm.API.IContact
           }
-        }) => new Lead(response.data.lead)
+        }) => new Contact(response.data.contact)
       )
   }
 
@@ -145,7 +146,7 @@ export class SalesService {
       )
   }
 
-  public pipelines(): Observable<ReadonlyArray<Pipeline>> {
+  public pipelines(): Observable<Pipeline[]> {
     return this.http
       .get('/api/pipelines')
       .map((response: Crm.API.IPipelinesResponse) =>
@@ -215,20 +216,23 @@ export class SalesService {
       )
   }
 
-  public notes(leadId: number | null = null): Observable<ReadonlyArray<Note>> {
+  public notes(contactId: number | null = null): Observable<Note[]> {
     return this.http
-      .get(`/api/leads/${leadId}/notes`)
+      .get(`/api/contacts/${contactId}/notes`)
       .map((response: Crm.API.INotesResponse) =>
         response.data.notes.map((item) => new Note(item))
       )
   }
 
   public createNote(
-    leadId: number,
+    contactId: number,
     noteData: Crm.API.INoteCreate
   ): Observable<Note> {
     return this.http
-      .post(`/api/leads/${leadId}/notes`, JSON.stringify({ note: noteData }))
+      .post(
+        `/api/contacts/${contactId}/notes`,
+        JSON.stringify({ note: noteData })
+      )
       .map((response: { readonly data: { readonly note: Crm.API.INote } }) => {
         return new Note(response.data.note)
       })

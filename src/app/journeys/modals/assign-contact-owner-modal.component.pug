@@ -1,0 +1,10 @@
+.modal-header
+  event(type="action", kind="assign_owner")
+.modal-body
+  form.form
+    label select contact owner
+    select(name="owner_id", [formControl]="ownerSelect")
+      option(*ngFor="let option of (ownerOptions | async)", [value]="option.value") {{option.label}}
+.modal-footer
+    button.boon-button(ion-button (click)="save()", [disabled]="!ownerSelect.valid") Save
+    button.boon-button-grey(ion-button (click)="cancel()") Cancel

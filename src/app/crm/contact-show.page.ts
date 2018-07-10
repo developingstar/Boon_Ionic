@@ -12,7 +12,7 @@ import { TabTypes } from '../show-tabs/tab-selector.component'
 import { TabService } from '../show-tabs/tab.service'
 import { emailValidator, phoneNumberValidator } from '../utils/form-validators'
 import { showToast } from '../utils/toast'
-import { Lead } from './lead.model'
+import { Contact } from './contact.model'
 import { SalesService } from './sales.service'
 import { UsersService } from './users.service'
 
@@ -26,7 +26,7 @@ import { UsersService } from './users.service'
 export class ContactShowPage implements OnInit {
   public leftTabs: TabTypes[] = ['Notes']
   public leftSelected: TabTypes = 'Notes'
-  public contact: Lead
+  public contact: Contact
   public contactOwners: User[]
   public contactId: number
   public contactDataForm: FormGroup
@@ -55,7 +55,7 @@ export class ContactShowPage implements OnInit {
       phoneNumber: new FormControl('', phoneNumberValidator())
     })
 
-    this.salesService.lead(this.contactId).subscribe((res: Lead) => {
+    this.salesService.contact(this.contactId).subscribe((res: Contact) => {
       this.contact = res
       if (this.contact) this.tabService.setContact(this.contact)
     })
@@ -69,13 +69,13 @@ export class ContactShowPage implements OnInit {
     })
   }
 
-  updateLead(): void {
+  updateContact(): void {
     const email = this.contactDataForm.get('email')!.value
     const firstName = this.contactDataForm.get('firstName')!.value
     const lastName = this.contactDataForm.get('lastName')!.value
     const phoneNumber = this.contactDataForm.get('phoneNumber')!.value
     const owner = this.contactDataForm.get('contactOwner')!.value
-    const contactUpdate: Crm.API.ILeadUpdate = {
+    const contactUpdate: Crm.API.IContactUpdate = {
       email: email ? email : '',
       first_name: firstName ? firstName : '',
       last_name: lastName ? lastName : '',
@@ -84,8 +84,8 @@ export class ContactShowPage implements OnInit {
     }
 
     this.salesService
-      .updateLead(this.contactId, contactUpdate)
-      .subscribe((res: Lead) => {
+      .updateContact(this.contactId, contactUpdate)
+      .subscribe((res: Contact) => {
         showToast(this.toastController, 'Successfully updated contact')
         this.contact = res
       })
@@ -113,13 +113,13 @@ export class ContactShowPage implements OnInit {
     }
   }
 
-  setFormData(leadResponse: Lead): void {
+  setFormData(contactResponse: Contact): void {
     this.contactDataForm.patchValue({
-      contactOwner: leadResponse.owner ? leadResponse.owner.name : '',
-      email: leadResponse.email || '',
-      firstName: leadResponse.firstName ? leadResponse.firstName : '',
-      lastName: leadResponse.lastName ? leadResponse.lastName : '',
-      phoneNumber: leadResponse.phoneNumber || ''
+      contactOwner: contactResponse.owner ? contactResponse.owner.name : '',
+      email: contactResponse.email || '',
+      firstName: contactResponse.firstName ? contactResponse.firstName : '',
+      lastName: contactResponse.lastName ? contactResponse.lastName : '',
+      phoneNumber: contactResponse.phoneNumber || ''
     })
   }
 }

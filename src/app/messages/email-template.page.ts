@@ -21,7 +21,7 @@ import {
 import { IEmailTemplate } from './messages.api.model'
 import { MessagesService } from './messages.service'
 import { TemplatePage } from './template.page'
-declare var CKEDITOR: any
+
 @IonicPage({
   segment: 'email-template/:id'
 })
