@@ -71,7 +71,10 @@ export class NewContactPage {
         }
       })
       .subscribe(
-        () => this.viewController.dismiss(),
+        () => {
+          showToast(this.toastController, 'Contact created successfully.')
+          this.viewController.dismiss()
+        },
         (error: any) => {
           if (error.status === 422) {
             const errors = error.error.errors
@@ -156,7 +159,6 @@ export class NewContactPage {
   }
 
   private buildContactCreate(formModel: any): Crm.API.IContactCreate {
-    showToast(this.toastController, 'Contact created successfully.')
     return {
       email: formModel.email === '' ? null : formModel.email,
       fields: Object.keys(formModel)
