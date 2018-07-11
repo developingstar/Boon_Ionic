@@ -26,7 +26,7 @@ ion-content(padding)
           ion-icon(name="md-arrow-dropright")
     ion-row.contact(*ngFor="let contact of (contacts | async)", (click)="showContact(contact)")
       ion-col {{contact.name || "-"}}
-      ion-col {{contact.email || "-"}}
+      ion-col.email {{contact.email || "-"}}
       ion-col {{contact.phoneNumber || "-"}}
       ion-col {{contact.insertedAt | date: 'dd MMM yyyy' || "-"}}
       ion-col {{contact.owner?.name || "-"}}
