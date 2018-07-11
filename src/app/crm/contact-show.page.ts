@@ -83,12 +83,42 @@ export class ContactShowPage implements OnInit {
       phone_number: phoneNumber ? phoneNumber : ''
     }
 
-    this.salesService
+    const subscription = this.salesService
       .updateContact(this.contactId, contactUpdate)
-      .subscribe((res: Contact) => {
-        showToast(this.toastController, 'Successfully updated contact')
-        this.contact = res
+      .finally(() => {
+        if (subscription) {
+          subscription.unsubscribe()
+        }
       })
+      .subscribe(
+        (res: Contact) => {
+          showToast(this.toastController, 'Successfully updated contact')
+          this.contact = res
+        },
+        (error: any) => {
+          if (error.status === 422) {
+            const errors = error.error.errors
+            if (errors) {
+              const detail = errors[0].detail
+              const title = errors[0].title
+              const pointers = errors[0].source.pointer.split('/')
+              showToast(
+                this.toastController,
+                title + ': The ' + pointers[pointers.length - 1] + ' ' + detail,
+                2000,
+                false
+              )
+            } else {
+              showToast(
+                this.toastController,
+                'The form is invalid',
+                2000,
+                false
+              )
+            }
+          }
+        }
+      )
 
     this.state = 'view'
   }
