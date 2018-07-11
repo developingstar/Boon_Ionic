@@ -174,6 +174,14 @@ export class JourneysPage implements OnInit, OnDestroy {
               this.getJourneys(state.requestOptions, state.category)
             )
         )
+      case 'delete_journey':
+        return this.setLoading(state).concat(
+          this.journeysService
+            .deleteJourney(action.journey.id)
+            .flatMap((journey) =>
+              this.getJourneys(state.requestOptions, state.category)
+            )
+        )
     }
   }
 
