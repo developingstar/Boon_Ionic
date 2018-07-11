@@ -69,4 +69,15 @@ export class JourneysService {
       .post<API.IJourneyResponse>('/api/journeys', requestData)
       .map((response) => new Journey(response.data.journey))
   }
+
+  deleteJourney(id: number): Observable<{
+    readonly data: {
+      readonly message: string
+    }
+  }> {
+    return this.http.delete(`/api/journeys/${id}`)
+      .map((response: { readonly data: { readonly message: string } }) => {
+        return response
+      })
+  }
 }
