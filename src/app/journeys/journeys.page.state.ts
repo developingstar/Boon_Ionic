@@ -23,12 +23,17 @@ interface IPublishJourneyAction extends IAction<'publish_journey'> {
   readonly journey: Journey
 }
 
+interface IDeleteJourneyAction extends IAction<'delete_journey'> {
+  readonly journey: Journey
+}
+
 export type UserAction =
   | IInitAction
   | IPrevAction
   | INextAction
   | IStopJourneyAction
   | IPublishJourneyAction
+  | IDeleteJourneyAction
 
 export interface IState {
   readonly category: string
