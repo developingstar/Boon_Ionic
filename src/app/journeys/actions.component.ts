@@ -12,7 +12,12 @@ interface IStopJourneyAction {
   readonly journey: Journey
 }
 
-export type ActionsResult = IPublishJourneyAction | IStopJourneyAction | null
+interface IDeleteJourneyAction {
+  readonly name: 'delete_journey'
+  readonly journey: Journey
+}
+
+export type ActionsResult = IPublishJourneyAction | IStopJourneyAction | IDeleteJourneyAction | null
 
 // Displays journey actions popover menu.
 //
@@ -43,6 +48,10 @@ export class ActionsComponent {
 
   public publishJourney(): void {
     this.dismissWith({ name: 'publish_journey', journey: this.journey })
+  }
+
+  public deleteJourney(): void {
+    this.dismissWith({ name: 'delete_journey', journey: this.journey })
   }
 
   private dismissWith(action: ActionsResult): void {
