@@ -11,7 +11,12 @@ ion-content(padding)
       ion-col Name
       ion-col Subject
       ion-col Default sender
+      ion-col.action
     ion-row.template-row(*ngFor="let template of (templates | async)", (click)="show(template)")
       ion-col {{template.name}}
       ion-col {{template.subject}}
       ion-col {{template.sender}}
+      ion-col.action
+        div.dot
+        div.dot
+        div.dot
