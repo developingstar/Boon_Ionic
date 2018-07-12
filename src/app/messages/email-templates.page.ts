@@ -2,6 +2,7 @@ import { Component } from '@angular/core'
 import { IonicPage, NavController, PopoverController, ToastController } from 'ionic-angular'
 import { Observable } from 'rxjs'
 
+import { ObservableInput } from '../../../node_modules/rxjs/Observable'
 import { CurrentUserService } from '../auth/current-user.service'
 import { pageAccess } from '../utils/app-access'
 import { showToast } from '../utils/toast'
@@ -25,7 +26,7 @@ export class EmailTemplatesPage extends TemplatesPage<EmailTemplate> {
     protected navController: NavController,
     protected service: MessagesService,
     private currentUserService: CurrentUserService,
-    private readonly toastController: ToastController,
+    private toastController: ToastController,
     protected popoverController: PopoverController,
   ) {
     super(initialState, navController, service, popoverController)
@@ -45,21 +46,42 @@ export class EmailTemplatesPage extends TemplatesPage<EmailTemplate> {
           }))
       case 'delete_template':
         return this.service.deleteTemplate(action.template.id).map<
-        {
-          readonly data: {
-            readonly message: string
+          {
+            readonly data: {
+              readonly message: string
+            }
+          },
+          IState
+        >((response) => {
+          showToast(this.toastController, 'Removed template successfully.')
+          return {
+            ...state,
+            templates: state.templates.filter(
+              (template) => template.id !== action.template.id
+            )
           }
-        },
-        IState
-      >((response) => {
-        showToast(this.toastController, 'Removed user successfully.')
-        return {
-          ...state,
-          templates: state.templates.filter(
-            (template) => template.id !== action.template.id
-          )
-        }
-      })
+        }).catch((error: any, caught: Observable<IState>): ObservableInput<IState> => {
+          if (error.status === 422) {
+            const errors = error.error.errors
+            if (errors) {
+              const detail = errors[1].detail
+              showToast(
+                this.toastController,
+                detail,
+                2000,
+                false
+              )
+            }
+          } else {
+            showToast(
+              this.toastController,
+              'Unknown issue',
+              2000,
+              false
+            )
+          }
+          return Observable.of(state)
+        })
     }
   }
 
