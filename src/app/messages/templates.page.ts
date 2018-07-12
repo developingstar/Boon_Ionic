@@ -4,7 +4,10 @@ import { Observable } from 'rxjs'
 import { ReactivePage } from '../utils/reactive-page'
 import { EmailTemplate } from './email-template.model'
 import { MessagesService } from './messages.service'
-import { ActionsResult, TemplateActionsComponent } from './template-actions.component'
+import {
+  ActionsResult,
+  TemplateActionsComponent
+} from './template-actions.component'
 import { IState, UserAction } from './templates.page.state'
 import { TextTemplate } from './text-template.model'
 
@@ -18,7 +21,7 @@ export abstract class TemplatesPage<Model> extends ReactivePage<
     initialState: IState<Model>,
     protected navController: NavController,
     protected service: MessagesService,
-    protected popoverController: PopoverController,
+    protected popoverController: PopoverController
   ) {
     super(initialState)
   }

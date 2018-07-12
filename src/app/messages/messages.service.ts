@@ -97,7 +97,9 @@ export class MessagesService {
       )
   }
 
-  public deleteTemplate(id: number): Observable<{
+  public deleteTemplate(
+    id: number
+  ): Observable<{
     readonly data: {
       readonly message: string
     }
