@@ -12,9 +12,9 @@ export type ActionsResult = IDeleteTemplateAction | null
 
 @IonicPage()
 @Component({
-  templateUrl: 'actions.component.html'
+  templateUrl: 'template-actions.component.html'
 })
-export class ActionsComponent {
+export class TemplateActionsComponent {
   readonly template: EmailTemplate | TextTemplate
 
   constructor(private viewController: ViewController) {
