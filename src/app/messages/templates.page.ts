@@ -5,12 +5,12 @@ import { ReactivePage } from '../utils/reactive-page'
 import { EmailTemplate } from './email-template.model'
 import { MessagesService } from './messages.service'
 import { ActionsResult, TemplateActionsComponent } from './template-actions.component'
-import { IState, IUserAction } from './templates.page.state'
+import { IState, UserAction } from './templates.page.state'
 import { TextTemplate } from './text-template.model'
 
 export abstract class TemplatesPage<Model> extends ReactivePage<
   IState<Model>,
-  IUserAction
+  UserAction
 > {
   protected abstract readonly resourcePageRoot: string
 
@@ -48,12 +48,12 @@ export abstract class TemplatesPage<Model> extends ReactivePage<
     popover.present({ ev: event })
     popover.onDidDismiss((data: ActionsResult) => {
       if (data) {
-        console.log(data)
+        this.uiActions.next(data)
       }
     })
   }
 
-  protected initialAction(): IUserAction {
+  protected initialAction(): UserAction {
     return { name: 'list' }
   }
 

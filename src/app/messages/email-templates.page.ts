@@ -1,14 +1,15 @@
 import { Component } from '@angular/core'
-import { IonicPage, NavController, PopoverController } from 'ionic-angular'
+import { IonicPage, NavController, PopoverController, ToastController } from 'ionic-angular'
 import { Observable } from 'rxjs'
 
 import { CurrentUserService } from '../auth/current-user.service'
 import { pageAccess } from '../utils/app-access'
+import { showToast } from '../utils/toast'
 import { EmailTemplate } from './email-template.model'
 import { initialState, IState } from './email-templates.page.state'
 import { MessagesService } from './messages.service'
 import { TemplatesPage } from './templates.page'
-import { IUserAction } from './templates.page.state'
+import { UserAction } from './templates.page.state'
 
 @IonicPage({
   segment: 'email-templates'
@@ -24,6 +25,7 @@ export class EmailTemplatesPage extends TemplatesPage<EmailTemplate> {
     protected navController: NavController,
     protected service: MessagesService,
     private currentUserService: CurrentUserService,
+    private readonly toastController: ToastController,
     protected popoverController: PopoverController,
   ) {
     super(initialState, navController, service, popoverController)
@@ -33,7 +35,7 @@ export class EmailTemplatesPage extends TemplatesPage<EmailTemplate> {
     return template.id
   }
 
-  protected reduce(state: IState, action: IUserAction): Observable<IState> {
+  protected reduce(state: IState, action: UserAction): Observable<IState> {
     switch (action.name) {
       case 'list':
         return this.service
@@ -41,6 +43,23 @@ export class EmailTemplatesPage extends TemplatesPage<EmailTemplate> {
           .map<ReadonlyArray<EmailTemplate>, IState>((templates) => ({
             templates: templates
           }))
+      case 'delete_template':
+        return this.service.deleteTemplate(action.template.id).map<
+        {
+          readonly data: {
+            readonly message: string
+          }
+        },
+        IState
+      >((response) => {
+        showToast(this.toastController, 'Removed user successfully.')
+        return {
+          ...state,
+          templates: state.templates.filter(
+            (template) => template.id !== action.template.id
+          )
+        }
+      })
     }
   }
 
