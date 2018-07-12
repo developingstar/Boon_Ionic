@@ -1,5 +1,5 @@
 import { Component } from '@angular/core'
-import { IonicPage, NavController } from 'ionic-angular'
+import { IonicPage, NavController, PopoverController } from 'ionic-angular'
 import { Observable } from 'rxjs'
 
 import { CurrentUserService } from '../auth/current-user.service'
@@ -23,9 +23,10 @@ export class TextTemplatesPage extends TemplatesPage<TextTemplate> {
   constructor(
     protected navController: NavController,
     protected service: MessagesService,
-    private currentUserService: CurrentUserService
+    private currentUserService: CurrentUserService,
+    protected popoverController: PopoverController,
   ) {
-    super(initialState, navController, service)
+    super(initialState, navController, service, popoverController)
   }
 
   protected templateId(template: TextTemplate): number {
