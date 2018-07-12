@@ -96,4 +96,16 @@ export class MessagesService {
         response.data.shortcodes.map((shortcode) => new Shortcode(shortcode))
       )
   }
+
+  public deleteTemplate(id: number): Observable<{
+    readonly data: {
+      readonly message: string
+    }
+  }> {
+    return this.http
+      .delete(`/api/templates/${id}`)
+      .map((response: { readonly data: { readonly message: string } }) => {
+        return response
+      })
+  }
 }
