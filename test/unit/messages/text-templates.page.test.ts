@@ -84,9 +84,9 @@ describe('TextTemplatesPage', () => {
       const table = page.getTemplatesTable()
 
       expect(table.children.length).toBe(3)
-      assertTableRow(table.children.item(0), ['Name', 'Default sender'])
-      assertTableRow(table.children.item(1), ['Introduction', '+999111111'])
-      assertTableRow(table.children.item(2), ['Follow up', '+999222222'])
+      assertTableRow(table.children.item(0), ['Name', 'Default sender', ''])
+      assertTableRow(table.children.item(1), ['Introduction', '+999111111', ''])
+      assertTableRow(table.children.item(2), ['Follow up', '+999222222', ''])
     })
 
     it('allows clicking on a row', () => {

@@ -90,17 +90,20 @@ describe('EmailTemplatesPage', () => {
       assertTableRow(table.children.item(0), [
         'Name',
         'Subject',
-        'Default sender'
+        'Default sender',
+        ''
       ])
       assertTableRow(table.children.item(1), [
         'Introduction',
         'Welcome in Boon',
-        'John Boon <john@example.com>'
+        'John Boon <john@example.com>',
+        ''
       ])
       assertTableRow(table.children.item(2), [
         'Follow up',
         'Hello from Boon',
-        'susan@example.com'
+        'susan@example.com',
+        ''
       ])
     })
 

@@ -435,4 +435,26 @@ describe('MessagesService', () => {
       })
     )
   })
+
+  describe('deleteTemplate', () => {
+    it(
+      'returns the success message',
+      async(() => {
+        service.deleteTemplate(1).subscribe((result) => {
+          expect(result.data.message).toEqual('OK')
+        })
+
+        const req = httpMock.expectOne('/api/templates/1')
+        expect(req.request.method).toBe('DELETE')
+
+        req.flush({
+          data: {
+            message: 'OK'
+          }
+        })
+
+        httpMock.verify()
+      })
+    )
+  })
 })
