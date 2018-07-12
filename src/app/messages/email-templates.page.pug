@@ -12,11 +12,11 @@ ion-content(padding)
       ion-col Subject
       ion-col Default sender
       ion-col.action
-    ion-row.template-row(*ngFor="let template of (templates | async)", (click)="show(template)")
-      ion-col {{template.name}}
-      ion-col {{template.subject}}
-      ion-col {{template.sender}}
-      ion-col.action
+    ion-row.template-row(*ngFor="let template of (templates | async)")
+      ion-col((click)="show(template)") {{template.name}}
+      ion-col((click)="show(template)") {{template.subject}}
+      ion-col((click)="show(template)") {{template.sender}}
+      ion-col.action((click)="showActions($event, template)")
         div.dot
         div.dot
         div.dot
