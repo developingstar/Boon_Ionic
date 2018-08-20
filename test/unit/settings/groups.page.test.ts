@@ -38,18 +38,7 @@ describe('GroupsPage', () => {
 
   beforeEach(
     async(() => {
-      groups = [
-        new Group({
-          id: 1,
-          name: 'Group1',
-          user_count: 5
-        }),
-        new Group({
-          id: 2,
-          name: 'Group2',
-          user_count: 3
-        })
-      ]
+      groups = [{ id: 1, name: 'Group1' }, { id: 2, name: 'Group2' }]
 
       groupUsers = [
         new User({
@@ -122,8 +111,7 @@ describe('GroupsPage', () => {
         createGroup: (groupData: API.IGroupCreate) => {
           const newGroup = new Group({
             id: 3,
-            name: groupData.name,
-            user_count: 5
+            name: groupData.name
           })
           groups.push(newGroup)
           return Observable.of(groups)
@@ -136,7 +124,6 @@ describe('GroupsPage', () => {
           const group = groups.find((g) => g.id === id)
           return Observable.of(group)
         },
-        groupMembers: () => Observable.of(groups),
         groupUsers: () => Observable.of(groupUsers),
         groups: () => Observable.of(groups),
         updateGroup: (id: number, groupData: API.IGroupUpdate) => {
@@ -216,8 +203,8 @@ describe('GroupsPage', () => {
     it('shows a list of groups', () => {
       expect(page.header).toEqual('Sales Groups')
       expect(page.groups).toEqual(['Group1', 'Group2'])
-      expect(page.groupMembers).toEqual(['5 Team Members', '3 Team Members'])
     })
+
     it('shows the create group button', () => {
       expect(page.createGroupButtonVisible).toBe(true)
     })

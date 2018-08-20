@@ -1,13 +1,9 @@
-import { HttpParams } from '@angular/common/http'
+import { HttpClient, HttpHandler, HttpParams } from '@angular/common/http'
 import { HttpClientTestingModule } from '@angular/common/http/testing'
 import { async, ComponentFixture } from '@angular/core/testing'
 import { NavController } from 'ionic-angular'
 import { Observable } from 'rxjs'
 
-import {
-  blankHttpRequestOptions,
-  IHttpRequestOptions
-} from '../../../src/app/api/http-request-options'
 import { PaginatedCollection } from '../../../src/app/api/paginated-collection'
 import { CurrentUserService } from '../../../src/app/auth/current-user.service'
 import { Journey } from '../../../src/app/journeys/journey.model'
@@ -16,7 +12,7 @@ import { JourneysPageModule } from '../../../src/app/journeys/journeys.page.modu
 import { JourneysService } from '../../../src/app/journeys/journeys.service'
 import { NavService } from '../../../src/app/nav/nav.service'
 import { sampleJourney } from '../../support/factories'
-import { initComponent, setTimeZone } from '../../support/helpers'
+import { initComponent } from '../../support/helpers'
 import { assertTableRow } from '../../support/matchers'
 import { CurrentUserServiceStub, NavControllerStub } from '../../support/stubs'
 import { JourneysPageObject } from './journeys.page.po'
@@ -25,56 +21,51 @@ describe('JourneysPage', () => {
   let collection: PaginatedCollection<Journey>
   let fixture: ComponentFixture<JourneysPage>
   let page: JourneysPageObject
-  let journeysServiceStub: any
+  let journeysServiceStub: JourneysService
   let navControllerStub: any
-  let items: any
+
   beforeEach(
     async(() => {
-      items = [
-        new Journey(
-          sampleJourney({
-            id: 1,
-            name: 'motivating introduction 1',
-            published_at: '2018-03-11T11:07:48Z',
-            state: 'active',
-            type: 'contact'
-          })
-        ),
-        new Journey(
-          sampleJourney({
-            id: 2,
-            name: 'motivating introduction 2',
-            type: 'deal'
-          })
-        ),
-        new Journey(
-          sampleJourney({
-            id: 3,
-            name: 'motivating introduction 3',
-            published_at: '2018-03-12T09:16:32Z',
-            state: 'active',
-            type: 'contact'
-          })
-        )
-      ]
-
-      journeysServiceStub = {
-        journeys: (
-          options: IHttpRequestOptions = blankHttpRequestOptions,
-          category: string = 'contact'
-        ) => {
-          const journeys = items.filter(
-            (journey: Journey) => journey.type === category
+      collection = {
+        count: 0,
+        items: [
+          new Journey(
+            sampleJourney({
+              id: 1,
+              name: 'motivating introduction 1',
+              published_at: '2018-03-11T11:07:48Z',
+              state: 'active'
+            })
+          ),
+          new Journey(
+            sampleJourney({
+              id: 2,
+              name: 'motivating introduction 2'
+            })
+          ),
+          new Journey(
+            sampleJourney({
+              id: 3,
+              name: 'motivating introduction 3',
+              published_at: '2018-03-12T09:16:32Z',
+              state: 'active'
+            })
           )
-          collection = {
-            count: 0,
-            items: journeys,
-            nextPageLink: 'http://example.com/next',
-            prevPageLink: 'http://example.com/prev'
-          }
-          return Observable.of(collection)
-        }
+        ],
+        nextPageLink: 'http://example.com/next',
+        prevPageLink: 'http://example.com/prev'
       }
+
+      const httpClient = new HttpClient(
+        new class extends HttpHandler {
+          handle(req: any): Observable<any> {
+            return Observable.never()
+          }
+        }()
+      )
+
+      journeysServiceStub = new JourneysService(httpClient)
+      journeysServiceStub.journeys = () => Observable.of(collection)
 
       spyOn(journeysServiceStub, 'journeys').and.callThrough()
 
@@ -99,21 +90,11 @@ describe('JourneysPage', () => {
     })
   )
 
-  describe('show journeys with contact type', () => {
-    it('show buttons', () => {
-      expect(page.isButtonVisible('New Contact Journey')).toBe(true)
-      expect(page.isButtonVisible('New Deal Journey')).toBe(false)
-      expect(page.isButtonVisible('Contact Journeys')).toBe(true)
-      expect(page.isButtonVisible('Deal Journeys')).toBe(true)
-      expect(page.hasClass('Contact Journeys', '.nav-item-active')).toBe(true)
-      expect(page.hasClass('Deal Journeys', '.nav-item-active')).toBe(false)
-    })
-
-    it('table', () => {
-      setTimeZone()
+  describe('table', () => {
+    it('includes journeys', () => {
       const table = page.journeysTable()
 
-      expect(table.children.length).toBe(4)
+      expect(table.children.length).toBe(5)
       assertTableRow(table.children.item(0), [
         'Name',
         'Published',
@@ -127,6 +108,12 @@ describe('JourneysPage', () => {
         ''
       ])
       assertTableRow(table.children.item(2), [
+        'motivating introduction 2',
+        '-',
+        'Draft',
+        ''
+      ])
+      assertTableRow(table.children.item(3), [
         'motivating introduction 3',
         '03-12-2018',
         'Published',
@@ -135,96 +122,31 @@ describe('JourneysPage', () => {
     })
 
     it('allows to load journeys from different pages', () => {
-      expect(journeysServiceStub.journeys).toHaveBeenCalledWith(
-        {
-          params: jasmine.any(HttpParams),
-          url: null
-        },
-        'contact'
-      )
-
-      page.clickNextPageButton()
-
-      expect(journeysServiceStub.journeys).toHaveBeenCalledWith(
-        {
-          params: jasmine.any(HttpParams),
-          url: 'http://example.com/next'
-        },
-        'contact'
-      )
-
-      page.clickPrevPageButton()
-
-      expect(journeysServiceStub.journeys).toHaveBeenCalledWith(
-        {
-          params: jasmine.any(HttpParams),
-          url: 'http://example.com/prev'
-        },
-        'contact'
-      )
-    })
-  })
-
-  describe('show journeys with deal type', () => {
-    beforeEach(
-      async(() => {
-        page.clickActionButton('Deal Journeys')
-        fixture.detectChanges()
+      expect(journeysServiceStub.journeys).toHaveBeenCalledWith({
+        params: jasmine.any(HttpParams),
+        url: null
       })
-    )
 
-    it('show buttons', () => {
-      expect(page.isButtonVisible('New Contact Journey')).toBe(false)
-      expect(page.isButtonVisible('New Deal Journey')).toBe(true)
-      expect(page.hasClass('Contact Journeys', '.nav-item-active')).toBe(false)
-      expect(page.hasClass('Deal Journeys', '.nav-item-active')).toBe(true)
-    })
-
-    it('table', () => {
-      const table = page.journeysTable()
-
-      expect(table.children.length).toBe(3)
-      assertTableRow(table.children.item(0), [
-        'Name',
-        'Published',
-        'Status',
-        ''
-      ])
-      assertTableRow(table.children.item(1), [
-        'motivating introduction 2',
-        '-',
-        'Draft',
-        ''
-      ])
-    })
-
-    it('allows to load journeys from different pages', () => {
       page.clickNextPageButton()
 
-      expect(journeysServiceStub.journeys).toHaveBeenCalledWith(
-        {
-          params: jasmine.any(HttpParams),
-          url: 'http://example.com/next'
-        },
-        'deal'
-      )
+      expect(journeysServiceStub.journeys).toHaveBeenCalledWith({
+        params: jasmine.any(HttpParams),
+        url: 'http://example.com/next'
+      })
 
       page.clickPrevPageButton()
 
-      expect(journeysServiceStub.journeys).toHaveBeenCalledWith(
-        {
-          params: jasmine.any(HttpParams),
-          url: 'http://example.com/prev'
-        },
-        'deal'
-      )
+      expect(journeysServiceStub.journeys).toHaveBeenCalledWith({
+        params: jasmine.any(HttpParams),
+        url: 'http://example.com/prev'
+      })
     })
   })
 
   it('clicking an entry in the table opens the journey page', () => {
     page.click(page.findDebugByCss('ion-row.journey ion-col'))
 
-    expect(navControllerStub.setRoot).toHaveBeenCalledWith('JourneyBoardPage', {
+    expect(navControllerStub.setRoot).toHaveBeenCalledWith('JourneyPage', {
       id: collection.items[0].id
     })
   })

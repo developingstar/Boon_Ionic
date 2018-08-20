@@ -19,7 +19,7 @@ import {
   sampleStage,
   sampleUser
 } from '../../support/factories'
-import { initComponent, setTimeZone } from '../../support/helpers'
+import { initComponent } from '../../support/helpers'
 import { assertTableRow } from '../../support/matchers'
 import { CurrentUserServiceStub, NavControllerStub } from '../../support/stubs'
 import { CrmPageObject } from './crm.page.po'
@@ -41,7 +41,7 @@ describe('CrmPage', () => {
       )
 
       collection = {
-        count: 3,
+        count: 1,
         items: [
           new Contact(
             sampleContact({
@@ -128,40 +128,39 @@ describe('CrmPage', () => {
   )
   describe('table', () => {
     it('includes contacts', () => {
-      setTimeZone()
       const table = page.contactsTable()
       expect(table.children.length).toBe(4)
       assertTableRow(table.children.item(0), [
         'Name',
         'Email',
+        'Stage',
         'Phone number',
-        'Created at',
         'Contact owner',
-        ''
+        'Created at'
       ])
       assertTableRow(table.children.item(1), [
         'John Boon',
         'john@example.com',
+        'Introduction',
         '+999111111',
-        '01 Dec 2017',
         '-',
-        ''
+        '12/01 07:00 AM'
       ])
       assertTableRow(table.children.item(2), [
         'Susan Boon',
         'susan@example.com',
+        'Introduction',
         '+999222222',
-        '01 Dec 2017',
         '-',
-        ''
+        '12/01 07:00 AM'
       ])
       assertTableRow(table.children.item(3), [
         '-',
         '-',
+        'Closed - Won',
         '+999333333',
-        '01 Dec 2017',
         'Tom',
-        ''
+        '12/01 07:00 AM'
       ])
     })
     it('allows to load contacts from different pages', () => {
@@ -183,8 +182,145 @@ describe('CrmPage', () => {
   })
   describe('showing from(x) to(y) of toatl(z) contacts', () => {
     it('shows correct x(from), y(to) and z(number of total contacts)', () => {
-      expect(page.showingTotal().textContent).toEqual('3 Total')
+      expect(page.showingFrom().textContent).toEqual('1')
+      expect(page.showingTo().textContent).toEqual('50')
+      expect(page.showingTotal().textContent).toEqual('1 contacts')
       page.clickNextPageButton()
+    })
+  })
+  describe('pipelines nav', () => {
+    it('check header', () => {
+      expect(page.getHeader()).toEqual('All Contacts')
+      page.selectPipeline(2)
+      expect(page.getHeader()).toEqual('Converted')
+      page.selectPipeline(3)
+      expect(page.getHeader()).toEqual('Without response')
+    })
+    it('includes items and a default option', () => {
+      const nav = page.pipelinesNavElements()
+      expect(nav.length).toBe(3)
+      expect(nav.item(0).textContent).toBe('All Contacts')
+      expect(nav.item(1).textContent).toBe('Converted')
+      expect(nav.item(2).textContent).toBe('Without response')
+    })
+    it('allows to set a filter and to clear it', () => {
+      expect(salesServiceStub.contacts).toHaveBeenCalled()
+      page.selectPipeline(2)
+      expect(salesServiceStub.contacts).toHaveBeenCalled()
+      let latestArgs = salesServiceStub.contacts.calls.mostRecent().args
+      expect(latestArgs[0].url).toBeNull()
+      expect(latestArgs[0].params.get('pipeline_id')).toBe('1')
+      page.selectPipeline(1)
+      expect(salesServiceStub.contacts).toHaveBeenCalled()
+      latestArgs = salesServiceStub.contacts.calls.mostRecent().args
+      expect(latestArgs[0].url).toBeNull()
+      expect(latestArgs[0].params.get('pipeline_id')).toBe(null)
+    })
+    it('resets current page on option select', () => {
+      page.clickNextPageButton()
+      expect(salesServiceStub.contacts).toHaveBeenCalled()
+      page.selectPipeline(2)
+      expect(salesServiceStub.contacts).toHaveBeenCalledWith({
+        params: jasmine.any(HttpParams),
+        url: null
+      })
+    })
+    describe('stages nav', () => {
+      it('includes items and a default option when pipeline is selected', () => {
+        page.selectPipeline(1)
+        expect(page.stagesNav()!.hidden).toBeTruthy()
+        page.selectPipeline(2)
+        expect(page.stagesNav()!.hidden).toBeFalsy()
+        const nav = page.stagesNavElements()
+        expect(nav.length).toBe(3)
+        expect(nav.item(0).textContent).toBe('View All')
+        expect(nav.item(0).classList).toContain('view-all-container-selected')
+        expect(nav.item(1).textContent).toBe('Introduction')
+        expect(nav.item(2).textContent).toBe('Closed - Won')
+        page.selectPipeline(1)
+        expect(page.stagesNav()!.hidden).toBeTruthy()
+      })
+      it('allows to set a filter and to clear it', () => {
+        expect(salesServiceStub.contacts).toHaveBeenCalled()
+        page.selectPipeline(2)
+        expect(salesServiceStub.contacts).toHaveBeenCalled()
+        page.selectStage(2)
+        expect(salesServiceStub.contacts).toHaveBeenCalled()
+        let latestArgs = salesServiceStub.contacts.calls.mostRecent().args
+        expect(latestArgs[0].url).toBeNull()
+        expect(latestArgs[0].params.get('stage_id')).toBe('2')
+        page.selectStage(1)
+        expect(salesServiceStub.contacts).toHaveBeenCalled()
+        latestArgs = salesServiceStub.contacts.calls.mostRecent().args
+        expect(latestArgs[0].url).toBeNull()
+        expect(latestArgs[0].params.get('stage_id')).toBe(null)
+      })
+      it('clears the stage filter on pipeline change', () => {
+        expect(salesServiceStub.contacts).toHaveBeenCalled()
+        page.selectPipeline(2)
+        expect(salesServiceStub.contacts).toHaveBeenCalled()
+        page.selectStage(2)
+        expect(salesServiceStub.contacts).toHaveBeenCalled()
+        let latestArgs = salesServiceStub.contacts.calls.mostRecent().args
+        expect(latestArgs[0].url).toBeNull()
+        expect(latestArgs[0].params.get('stage_id')).toBe('2')
+        page.selectPipeline(2)
+        expect(salesServiceStub.contacts).toHaveBeenCalled()
+        latestArgs = salesServiceStub.contacts.calls.mostRecent().args
+        expect(latestArgs[0].url).toBeNull()
+        expect(latestArgs[0].params.get('stage_id')).toBe(null)
+      })
+      it('resets the stage selection on pipeline change', () => {
+        page.selectPipeline(2)
+        page.selectStage(2)
+        let nav = page.stagesNavElements()
+        expect(nav.length).toBe(3)
+        expect(nav.item(0).textContent).toBe('View All')
+        expect(nav.item(1).textContent).toBe('Introduction')
+        expect(nav.item(1).classList).toContain('stage-container-selected')
+        expect(nav.item(2).textContent).toBe('Closed - Won')
+        page.selectPipeline(3)
+        nav = page.stagesNavElements()
+        expect(nav.length).toBe(2)
+        expect(nav.item(0).textContent).toBe('View All')
+        expect(nav.item(0).classList).toContain('view-all-container-selected')
+        expect(nav.item(1).textContent).toBe('Needs follow-up')
+      })
+      it('hides stage column when a filter is set', () => {
+        page.selectPipeline(2)
+        const table = page.contactsTable()
+        assertTableRow(table.children.item(0), [
+          'Name',
+          'Email',
+          'Stage',
+          'Phone number',
+          'Contact owner',
+          'Created at'
+        ])
+        assertTableRow(table.children.item(1), [
+          'John Boon',
+          'john@example.com',
+          'Introduction',
+          '+999111111',
+          '-',
+          '12/01 07:00 AM'
+        ])
+        page.selectStage(2)
+        assertTableRow(table.children.item(0), [
+          'Name',
+          'Email',
+          'Phone number',
+          'Contact owner',
+          'Created at'
+        ])
+        assertTableRow(table.children.item(1), [
+          'John Boon',
+          'john@example.com',
+          '+999111111',
+          '-',
+          '12/01 07:00 AM'
+        ])
+      })
     })
   })
   it('opens the contact page after clicking an entry in the table', () => {
@@ -192,10 +328,12 @@ describe('CrmPage', () => {
     expect(navControllerStub.push).toHaveBeenCalled()
   })
   it('presents the new contact modal after clicking the new contact button', () => {
+    page.selectPipeline(2)
+    page.selectStage(3)
     page.clickNewContactButton()
     expect(modalControllerStub.create).toHaveBeenCalledWith(
       'NewContactPage',
-      { stageId: undefined },
+      { stageId: 1 },
       { cssClass: 'new-contact-page-modal' }
     )
     expect(modalStub.present).toHaveBeenCalled()

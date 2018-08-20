@@ -7,7 +7,7 @@ export class TestHostPageObject extends PageObject<TestHostComponent> {
     return el.classList.contains('hidden')
   }
 
-  getNavContent(placement: 'center' | 'right' | 'icons-left'): string | null {
+  getNavContent(placement: 'center' | 'right'): string | null {
     return this.findByCss<HTMLElement>(`nav .nav-${placement}`)!.textContent
   }
 
@@ -33,21 +33,8 @@ export class TestHostPageObject extends PageObject<TestHostComponent> {
     )
   }
 
-  clickNavRight(name: string): void {
-    const item = this.findAllDebugByCss('.nav-right').find(
-      (b) => b.nativeElement.textContent === name
-    )!
-    expect(item).toBeTruthy()
-    this.detectClick(item!)
-  }
-
-  logOutButtonVisisble(): boolean {
-    const link = this.findDebugByCss('.dropdown-content')
-    return link ? true : false
-  }
-
   getUsername(): string | null {
-    const el = this.findByCss<HTMLElement>('nav .nav-right .username')
+    const el = this.findByCss<HTMLElement>('nav .nav-right span')
 
     if (el === null) {
       return null

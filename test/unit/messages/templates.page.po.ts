@@ -7,7 +7,7 @@ export class TemplatesPageObject<T> extends PageObject<T> {
 
   showTemplate(position: number): void {
     const element = this.findDebugByCss(
-      `.table .template-row:nth-of-type(${position}) .col:first-child`
+      `.table .template-row:nth-of-type(${position})`
     )!
 
     this.click(element)

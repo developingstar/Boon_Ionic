@@ -13,16 +13,4 @@ export class AccountSettingsPageObject extends PageObject<AccountSettingsPage> {
   get buttonState(): any[] {
     return this.findAllByCss('.settings-button')
   }
-
-  clickResetPasswordButton(): void {
-    this.clickButton('Reset Password')
-  }
-
-  clickButton(name: string): void {
-    const button = this.findAllDebugByCss('button').find(
-      (b) => b.nativeElement.textContent === name
-    )
-    expect(button).toBeTruthy()
-    this.click(button!)
-  }
 }

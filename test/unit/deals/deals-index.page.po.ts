@@ -14,20 +14,6 @@ export class DealsIndexPageObject extends PageObject<DealsIndexPage> {
     this.clickButton('.deal-end button:last-of-type')
   }
 
-  clickPipelineDropdown(): void {
-    this.clickButton('.pipeline-dropdown')
-  }
-
-  showingTotal(): HTMLElement {
-    return this.findByCss<HTMLElement>('.deals-index-total')!
-  }
-
-  selectPipeline(position: number): void {
-    const pipelineSelectors = this.findAllByCss<HTMLDivElement>(`.ng-option`)
-    this.click(pipelineSelectors[position]!)
-    this.fixture.detectChanges()
-  }
-
   private clickButton(selector: string): void {
     const button = this.findDebugByCss(selector)
     this.click(button!)

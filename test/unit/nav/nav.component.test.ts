@@ -2,7 +2,6 @@ import { HttpClientTestingModule } from '@angular/common/http/testing'
 import { async, ComponentFixture, fakeAsync, tick } from '@angular/core/testing'
 import { BehaviorSubject } from 'rxjs'
 
-import { NavController } from 'ionic-angular'
 import { CurrentUserService } from '../../../src/app/auth/current-user.service'
 import { User } from '../../../src/app/auth/user.model'
 import { NavModule } from '../../../src/app/nav.module'
@@ -19,17 +18,9 @@ describe('NavComponent and NavContentComponent', () => {
   let page: TestHostPageObject
   const user: BehaviorSubject<User | undefined> = new BehaviorSubject(undefined)
   let filteredContacts: any[]
-  let nextPage: string | undefined
-  let navControllerStub: any
 
   beforeEach(
     async(() => {
-      nextPage = undefined
-
-      navControllerStub = {
-        setRoot: (newRoot: string) => (nextPage = newRoot)
-      }
-
       user.next(undefined)
       filteredContacts = [
         { id: 1, name: 'Test Contact' },
@@ -53,7 +44,6 @@ describe('NavComponent and NavContentComponent', () => {
         providers: [
           { provide: CurrentUserService, useValue: currentUserServiceStub },
           { provide: ContactFilterService, useValue: filterContactServiceStub },
-          { provide: NavController, useValue: navControllerStub },
           NavService
         ]
       })
@@ -72,7 +62,7 @@ describe('NavComponent and NavContentComponent', () => {
 
   it('renders the right content in the nav', () => {
     fixture.detectChanges()
-    expect(page.getNavContent('icons-left')).toBe('right content')
+    expect(page.getNavContent('right')).toBe('right content')
   })
 
   it('can toggle nav bar visibility', () => {
@@ -101,7 +91,7 @@ describe('NavComponent and NavContentComponent', () => {
 
       fixture.detectChanges()
 
-      expect(page.getUsername()).toBe('John Boon')
+      expect(page.getUsername()).toBe('Hello, John Boon')
     })
   })
 
@@ -122,12 +112,5 @@ describe('NavComponent and NavContentComponent', () => {
         tick(2000)
       })
     )
-  })
-  describe('logout', () => {
-    it('click on user name to activate logout popover', () => {
-      page.clickNavRight(name)
-      fixture.detectChanges()
-      expect(page.logOutButtonVisisble()).toBe(true)
-    })
   })
 })

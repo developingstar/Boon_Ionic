@@ -18,7 +18,6 @@ import { CurrentUserService } from '../../../src/app/auth/current-user.service'
 import { User } from '../../../src/app/auth/user.model'
 import { Pipeline } from '../../../src/app/crm/pipeline.model'
 import { SalesService } from '../../../src/app/crm/sales.service'
-import { Stage } from '../../../src/app/crm/stage.model'
 import { UsersService } from '../../../src/app/crm/users.service'
 import { JourneyPage } from '../../../src/app/journeys/journey.page'
 import { JourneysService } from '../../../src/app/journeys/journeys.service'
@@ -175,13 +174,10 @@ describe('JourneyPage', () => {
         )
       salesServiceStub.stage = () =>
         Observable.of(
-          new Stage(
-            sampleStage({
-              id: 1,
-              name: 'Converted',
-              pipeline_id: 1
-            })
-          )
+          sampleStage({
+            id: 1,
+            name: 'Converted'
+          })
         )
       salesServiceStub.field = () =>
         Observable.of(
@@ -334,13 +330,13 @@ describe('JourneyPage', () => {
         expect(actions[5].textContent).toEqual('wait')
       })
 
-      it('allows opening a modal for adding an assign contact owner action', () => {
+      it('allows opening a modal for adding an assign owner action', () => {
         page.openNewActionModal('assign_owner')
 
         expect(modalControllerStub.create).toHaveBeenCalledWith(
-          'AssignContactOwnerModalComponent',
+          'AssignOwnerModalComponent',
           {},
-          { cssClass: 'assign-contact-owner-modal-component' }
+          { cssClass: 'assign-owner-modal-component' }
         )
         expect(modalStub.present).toHaveBeenCalled()
       })
@@ -475,9 +471,9 @@ describe('JourneyPage', () => {
         page.openEditActionModal(1)
 
         expect(modalControllerStub.create).toHaveBeenCalledWith(
-          'AssignContactOwnerModalComponent',
+          'AssignOwnerModalComponent',
           { action: journey.actions[0] },
-          { cssClass: 'assign-contact-owner-modal-component' }
+          { cssClass: 'assign-owner-modal-component' }
         )
         expect(modalStub.present).toHaveBeenCalled()
       })

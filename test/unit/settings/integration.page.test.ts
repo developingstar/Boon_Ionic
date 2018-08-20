@@ -13,10 +13,7 @@ import { IntegrationPage } from '../../../src/app/settings/integration.page'
 import { IntegrationPageModule } from '../../../src/app/settings/integration.page.module'
 import { IntegrationsService } from '../../../src/app/settings/integrations.service'
 import { Service } from '../../../src/app/settings/service.model'
-import {
-  toastSuccessDefaults,
-  toastWarningDefaults
-} from '../../../src/app/utils/toast'
+import { toastSuccessDefaults } from '../../../src/app/utils/toast'
 
 describe('IntegrationPage', () => {
   let fixture: ComponentFixture<IntegrationPage>
@@ -175,28 +172,6 @@ describe('IntegrationPage', () => {
     })
 
     it('updates a service token after clicking the update button', () => {
-      page.setToken('invalidtoken')
-      page.clickActionButton('Update Token')
-      fixture.detectChanges()
-
-      expect(toastControllerStub.create).toHaveBeenCalledWith({
-        ...toastWarningDefaults,
-        duration: 4000,
-        message:
-          'The token/secret provided does not match the required format of "token:secret"'
-      })
-
-      page.setToken('token:')
-      page.clickActionButton('Update Token')
-      fixture.detectChanges()
-
-      expect(toastControllerStub.create).toHaveBeenCalledWith({
-        ...toastWarningDefaults,
-        duration: 4000,
-        message:
-          'The token/secret provided does not match the required format of "token:secret"'
-      })
-
       page.setToken('updated-token:secret')
       fixture.detectChanges()
       page.clickActionButton('Update Token')

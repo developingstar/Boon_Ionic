@@ -269,6 +269,7 @@ describe('SalesService', () => {
           expect(contact.id).toEqual(1)
           expect(contact.email).toEqual('contact@example.com')
           expect(contact.phoneNumber).toEqual('+999100200300')
+          expect(contact.stageId).toEqual(14)
           expect(contact.owner).not.toBeNull()
           expect(contact.owner!.id).toEqual(100)
           expect(contact.owner!.role).toEqual('sales_rep')
@@ -314,6 +315,7 @@ describe('SalesService', () => {
           expect(contact.id).toEqual(1)
           expect(contact.email).toEqual('contact@example.com')
           expect(contact.phoneNumber).toEqual('+999100200300')
+          expect(contact.stageId).toEqual(14)
           expect(contact.owner).not.toBeNull()
           expect(contact.owner!.id).toEqual(100)
           expect(contact.owner!.role).toEqual('sales_rep')
@@ -359,6 +361,7 @@ describe('SalesService', () => {
           expect(contact.id).toEqual(2)
           expect(contact.email).toEqual('contact@example.com')
           expect(contact.phoneNumber).toEqual('+999100200300')
+          expect(contact.stageId).toEqual(14)
           expect(contact.owner).not.toBeNull()
           expect(contact.owner!.id).toEqual(100)
           expect(contact.owner!.role).toEqual('sales_rep')
@@ -539,56 +542,6 @@ describe('SalesService', () => {
                 name: 'Last Name'
               }
             ]
-          }
-        })
-        httpMock.verify()
-      })
-    )
-  })
-  describe('createField', () => {
-    it(
-      'creates a new field',
-      async(() => {
-        const fieldCreate = {
-          name: 'New Field'
-        }
-        service.createField(fieldCreate).subscribe((field) => {
-          expect(field.id).toEqual(11)
-          expect(field.name).toEqual('New Field')
-        })
-        const req = httpMock.expectOne('/api/fields')
-        expect(req.request.method).toBe('POST')
-        req.flush({
-          data: {
-            field: {
-              id: 11,
-              name: fieldCreate.name
-            }
-          }
-        })
-        httpMock.verify()
-      })
-    )
-  })
-  describe('updateField', () => {
-    it(
-      'updates an existing field',
-      async(() => {
-        const fieldUpdate = {
-          name: 'Updated Field'
-        }
-        service.updateField(11, fieldUpdate).subscribe((field) => {
-          expect(field.id).toEqual(11)
-          expect(field.name).toEqual('Updated Field')
-        })
-        const req = httpMock.expectOne('/api/fields/11')
-        expect(req.request.method).toBe('PATCH')
-        req.flush({
-          data: {
-            field: {
-              id: 11,
-              name: fieldUpdate.name
-            }
           }
         })
         httpMock.verify()

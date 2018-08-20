@@ -20,6 +20,15 @@ describe('Contact', () => {
       expect(nullPhonecontact.phoneNumber).toBeNull()
       expect(emptyPhoneContact.phoneNumber).toEqual('')
     })
+
+    it('ensures stage_id is a number', () => {
+      expect(() => new Contact(sampleContact({ stage_id: null }))).toThrow(
+        new Error('Expected null to be a number')
+      )
+      expect(() => new Contact(sampleContact({ stage_id: '1' }))).toThrow(
+        new Error('Expected 1 to be a number')
+      )
+    })
   })
 
   describe('name', () => {

@@ -4,8 +4,6 @@ import {
 } from '@angular/common/http/testing'
 import { async, TestBed } from '@angular/core/testing'
 
-import { HttpParams } from '@angular/common/http'
-import { IHttpRequestOptions } from '../../../src/app/api/http-request-options'
 import { Deal } from '../../../src/app/deals/deal.model'
 import { DealsService } from '../../../src/app/deals/deals.service'
 import { sampleDeal } from '../../support/factories'
@@ -45,9 +43,6 @@ describe('DealsService', () => {
           links: {
             next: 'http://example.com/next',
             prev: 'http://example.com/prev'
-          },
-          metadata: {
-            count: 1
           }
         })
         httpMock.verify()
@@ -57,11 +52,7 @@ describe('DealsService', () => {
       'allows to use a custom URL',
       async(() => {
         const url = 'http://example.com/api/deals?cursor=10'
-        const params: IHttpRequestOptions = {
-          params: new HttpParams(),
-          url: url
-        }
-        service.deals(params).subscribe()
+        service.deals(url).subscribe()
         const req = httpMock.expectOne(url)
         expect(req.request.method).toBe('GET')
         req.flush({
@@ -71,9 +62,6 @@ describe('DealsService', () => {
           links: {
             next: null,
             prev: null
-          },
-          metadata: {
-            count: 1
           }
         })
         httpMock.verify()

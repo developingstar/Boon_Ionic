@@ -68,14 +68,14 @@ describe('NewContactPage', () => {
         )
       ]
       stages = [
-        new Stage(sampleStage({ id: 1, name: 'Stage One', pipeline_id: 1 })),
-        new Stage(sampleStage({ id: 2, name: 'Stage Two', pipeline_id: 1 })),
-        new Stage(sampleStage({ id: 3, name: 'Stage Three', pipeline_id: 1 }))
+        sampleStage({ id: 1, name: 'Stage One', pipeline_id: 1 }),
+        sampleStage({ id: 2, name: 'Stage Two', pipeline_id: 1 }),
+        sampleStage({ id: 3, name: 'Stage Three', pipeline_id: 1 })
       ]
       stages2 = [
-        new Stage(sampleStage({ id: 4, name: 'Stage Four', pipeline_id: 2 })),
-        new Stage(sampleStage({ id: 5, name: 'Stage Five', pipeline_id: 2 })),
-        new Stage(sampleStage({ id: 6, name: 'Stage Six', pipeline_id: 2 }))
+        sampleStage({ id: 4, name: 'Stage Four', pipeline_id: 2 }),
+        sampleStage({ id: 5, name: 'Stage Five', pipeline_id: 2 }),
+        sampleStage({ id: 6, name: 'Stage Six', pipeline_id: 2 })
       ]
       currentUser = new BehaviorSubject<User | undefined>(users[0])
       fields = [{ id: 302, name: 'Website' }]

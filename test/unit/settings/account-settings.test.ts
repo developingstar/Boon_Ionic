@@ -72,15 +72,8 @@ describe('AccountSettingsPage', () => {
     expect(page.userName).toEqual('John Boon')
   })
 
-  it('update info button is enabled', () => {
+  it('the button is enabled', () => {
     const buttonState = page.buttonState[0].disabled
     expect(buttonState).toBe(false)
-  })
-
-  it('reset password button is enabled and has confirmation', () => {
-    const buttonState = page.buttonState[1].disabled
-    expect(buttonState).toBe(false)
-    page.clickResetPasswordButton()
-    fixture.detectChanges()
   })
 })

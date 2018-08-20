@@ -28,20 +28,16 @@ describe('GroupsService', () => {
     it(
       'returns an array',
       async(() => {
-        const group1 = new Group(
-          sampleGroup({
-            id: 1,
-            name: 'Group1',
-            user_count: 5
-          })
-        )
-        const group2 = new Group(
-          sampleGroup({
-            id: 2,
-            name: 'Group2',
-            user_count: 3
-          })
-        )
+        const group1 = sampleGroup({
+          id: 1,
+          name: 'Group1'
+        })
+
+        const group2 = sampleGroup({
+          id: 2,
+          name: 'Group2'
+        })
+
         groupsService.groups().subscribe((result: ReadonlyArray<Group>) => {
           expect(result.length).toEqual(2)
           expect(result).toEqual([group1, group2])
@@ -53,16 +49,8 @@ describe('GroupsService', () => {
         req.flush({
           data: {
             groups: [
-              {
-                id: 1,
-                name: 'Group1',
-                user_count: 5
-              },
-              {
-                id: 2,
-                name: 'Group2',
-                user_count: 3
-              }
+              JSON.parse(JSON.stringify(group1)),
+              JSON.parse(JSON.stringify(group2))
             ]
           }
         })
@@ -76,16 +64,10 @@ describe('GroupsService', () => {
     it(
       'returns a group',
       async(() => {
-        const group3 = new Group(
-          sampleGroup({
-            id: 1,
-            name: 'Group3',
-            user_count: 5
-          })
-        )
+        const group = sampleGroup()
 
         groupsService.group(1).subscribe((result: Group | undefined) => {
-          expect(result).toEqual(group3)
+          expect(result).toEqual(group)
         })
 
         const req = httpMock.expectOne('/api/groups/1')
@@ -93,13 +75,10 @@ describe('GroupsService', () => {
 
         req.flush({
           data: {
-            group: {
-              id: 1,
-              name: 'Group3',
-              user_count: 5
-            }
+            group: group
           }
         })
+
         httpMock.verify()
       })
     )
@@ -122,8 +101,7 @@ describe('GroupsService', () => {
           data: {
             group: {
               id: 1,
-              name: 'CreateGroup',
-              user_count: 5
+              name: 'CreateGroup'
             }
           }
         })

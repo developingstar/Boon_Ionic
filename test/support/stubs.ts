@@ -21,10 +21,6 @@ export class NavControllerStub {
   pop(): void {
     return
   }
-
-  canGoBack(): boolean {
-    return true
-  }
 }
 
 // tslint:disable-next-line:max-classes-per-file
