@@ -89,7 +89,7 @@ export class SettingsPageWithMenuComponent {
           { label: 'Sales groups', link: 'GroupsPage' }
         ],
         label: 'Team Settings',
-        link: 'GroupsPage'
+        link: 'TeamMembersPage'
       },
       {
         children: [
