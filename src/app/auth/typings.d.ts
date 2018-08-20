@@ -11,10 +11,6 @@ declare namespace Auth {
       readonly password: string
       readonly role: Role
     }
-    interface ISignupOrganization {
-      readonly user: IUser
-      readonly name: string
-    }
   }
 
   interface IRolesAccess {
@@ -55,7 +51,6 @@ declare namespace Auth {
   // TODO: Text/Email will be renamed to templates in the near future
   interface INavAccess {
     Automation?: boolean
-    Chat?: boolean
     Crm?: boolean
     Deals?: boolean
     Email?: boolean
