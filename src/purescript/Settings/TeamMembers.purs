@@ -4,14 +4,13 @@ import Boon.Common
 
 import Boon.Bridge (appendFile, showToast, warning)
 import Boon.Elements (button, classIf, classList, onClick)
+import Boon.Forms (fileInputGroup, inputGroup, selectGroup)
 import Data.Array as Array
 import Data.Maybe (fromMaybe, maybe)
-import Data.MediaType (MediaType(..))
 import Data.String as String
 import Effect.Class (liftEffect)
 import Halogen as H
 import Halogen.HTML as HH
-import Halogen.HTML.Events as HE
 import Halogen.HTML.Properties as HP
 import Model.Common (class RequestContent, Request, send, showErrors)
 import Model.PhoneNumber as PhoneNumber
@@ -67,9 +66,15 @@ itemList items =
   |> HH.div [classList "item-list"]
 
 formView :: String -> String -> Boolean -> Form -> (Unit -> Query Unit) -> HH.HTML Void (Query Unit)
-formView headerAction buttonAction hideAvatar form confirmQuery =
+formView headerAction buttonAction isCreate form confirmQuery =
   let
+    password = fromMaybe "" form.password
+    defaultAvatar = "assets/icon/settings/avatar.svg"
     isInvalid = String.null form.email || String.null form.name
+    isPasswordInvalid = (String.length password < 6 && String.length password > 0)
+    updateEmail = UpdateField \form' val -> form' {email = val}
+    updateName = UpdateField \form' val -> form' {name = val}
+    updatePassword = UpdateField \form' val -> form' {password = Just val}
     maybeQuery = if isInvalid then Nothing else Just confirmQuery in
   HH.div_
   [ HH.div [HP.class_ $ HH.ClassName "header"]
@@ -80,45 +85,13 @@ formView headerAction buttonAction hideAvatar form confirmQuery =
     , button maybeQuery $ buttonAction <> " User"
     ]
   , HH.form [HP.autocomplete false]
-    [ HH.div [classIf hideAvatar "hidden"]
-      [ HH.label [classList "label label-md"] [HH.text "Avatar"]
-      , HH.img [classList "avatar", HP.src $ fromMaybe "assets/icon/settings/avatar.svg" form.avatar_url]
-      , HH.input
-        [ HP.type_ HP.InputFile
-        , HP.accept $ MediaType ".png, .jpg, .jpeg"
-        , HE.onChange (HE.input UpdateAvatar)
-        ]
-      ]
-    , HH.label [classList "label label-md"] [HH.text "E-mail"]
-    , HH.input
-      [ classIf (String.null form.email) "invalid"
-      , HP.type_ HP.InputEmail
-      , HP.autofocus true
-      , HE.onValueInput (HE.input $ UpdateField (\form' val -> form' {email = val}))
-      , HP.value form.email
-      ]
-    , HH.label [classList "label label-md"] [HH.text "Name"]
-    , HH.input
-      [ classIf (String.null form.name) "invalid"
-      , HP.type_ HP.InputText
-      , HE.onValueInput (HE.input $ UpdateField (\form' val -> form' {name = val}))
-      , HP.value form.name
-      ]
-    , HH.label [classList "label label-md"] [HH.text "Password"]
-    , HH.input
-      [ classIf (String.length (fromMaybe "" form.password) < 6 && String.length (fromMaybe "" form.password) > 0) "invalid"
-      , HP.type_ HP.InputPassword
-      , HE.onValueInput (HE.input $ UpdateField (\form' val -> form' {password = Just val}))
-      , HP.value $ fromMaybe "" form.password
-      ]
-    , HH.label [classList "label label-md"] [HH.text "Phone number"]
-    , HH.select [ HE.onSelectedIndexChange (HE.input $ UpdatePhoneNumber form.phone_numbers)]
-      (map
-        (\v -> HH.option
-                [HP.selected $ v == form.phone_number]
-                [HH.text $ fromMaybe "" v]
-        )
-        form.phone_numbers)
+    [ HH.div [classIf isCreate "hidden"]
+      [ fileInputGroup "Avatar" (fromMaybe defaultAvatar form.avatar_url) UpdateAvatar ]
+    , inputGroup "E-mail" (String.null form.email) HP.InputEmail updateEmail form.email
+    , inputGroup "Name" (String.null form.name) HP.InputText updateName form.name
+    , HH.div [classIf isCreate "hidden"]
+      [ inputGroup "Password" isPasswordInvalid HP.InputPassword updatePassword password]
+    , selectGroup "Phone number" UpdatePhoneNumber form.phone_number form.phone_numbers
     ]
   ]
 

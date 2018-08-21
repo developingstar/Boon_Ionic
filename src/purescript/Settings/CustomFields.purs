@@ -4,6 +4,7 @@ import Boon.Common
 
 import Boon.Bridge (showToast, warning)
 import Boon.Elements (button, classIf, classList, itemList, onClick)
+import Boon.Forms (inputGroup)
 import Data.Array as Array
 import Data.String as String
 import Halogen as H
@@ -40,15 +41,7 @@ formView headerAction buttonAction value confirmQuery =
       ]
     , button maybeQuery $ buttonAction <> " Field"
     ]
-  , HH.form [HP.autocomplete false]
-    [ HH.label [classList "label label-md"] [HH.text "Name"]
-    , HH.input
-      [ classIf isInvalid "invalid"
-      , HP.type_ HP.InputText
-      , HP.autofocus true
-      , HE.onValueInput (HE.input UpdateName)
-      , HP.value value]
-    ]
+  , HH.form [HP.autocomplete false] [inputGroup "Name" isInvalid HP.InputText UpdateName value]
   ]
 
 updateName :: String -> State -> State
