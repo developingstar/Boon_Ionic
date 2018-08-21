@@ -19,7 +19,7 @@ decodeMany s =
     json = readJSON s in
   map (\x -> x.data.phone_numbers) json
 
-getAll :: Request (Array PhoneNumber)
+getAll :: Request String (Array PhoneNumber)
 getAll =
   { path: "/api/phone_numbers"
   , method: GET

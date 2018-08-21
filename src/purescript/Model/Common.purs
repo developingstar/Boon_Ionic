@@ -1,10 +1,11 @@
 module Model.Common
-  ( Decoder
-  , FormDataRequest
+  ( class RequestContent
+  , Decoder
   , Request
+  , headers
   , send
-  , sendFormData
   , showErrors
+  , toAXRequest
   , validateAndDecode
   ) where
 
@@ -16,7 +17,7 @@ import Data.Array as Array
 import Data.HTTP.Method (Method)
 import Data.List.NonEmpty as List.NonEmpty
 import Data.Maybe (isNothing, maybe)
-import Data.MediaType.Common (applicationJSON, multipartFormData)
+import Data.MediaType.Common (applicationJSON)
 import Data.String as String
 import Effect.Class (liftEffect)
 import Foreign (ForeignError(..), MultipleErrors, renderForeignError)
@@ -32,19 +33,27 @@ import Web.XHR.FormData (FormData)
 
 type Decoder a = String -> Either MultipleErrors a
 
-type Request a =
+type Request a b =
   { path :: AX.URL
   , method :: Method
-  , content :: Maybe String
-  , decoder :: Decoder a
+  , content :: Maybe a
+  , decoder :: Decoder b
   }
 
-type FormDataRequest a =
-  { path :: AX.URL
-  , method :: Method
-  , content :: Maybe FormData
-  , decoder :: Decoder a
-  }
+class RequestContent a where
+  toAXRequest :: a -> AXRequest.Request
+  headers :: Maybe a -> Array RequestHeader
+
+instance stringRequest :: RequestContent String where
+  toAXRequest = AXRequest.String
+  headers content =
+    if isNothing content
+    then []
+    else [ContentType applicationJSON]
+
+instance formRequest :: RequestContent FormData where
+  toAXRequest = AXRequest.FormData
+  headers _ = []
 
 type ServerError =
   { detail :: String
@@ -52,34 +61,14 @@ type ServerError =
   , source :: Maybe { pointer :: String }
   }
 
-send :: forall a. Request a -> Aff (Either MultipleErrors a)
+send :: forall a b. RequestContent a => Request a b -> Aff (Either MultipleErrors b)
 send request = do
   base <- liftEffect apiBaseUrl
-  let headers =
-        if isNothing request.content
-        then []
-        else [ContentType applicationJSON]
-  let content = map AXRequest.String request.content
+  let content = map toAXRequest request.content
   let r =
         { method: Left request.method
         , url: base <> request.path
-        , headers
-        , content
-        , username : Nothing
-        , password : Nothing
-        , withCredentials : true
-        }
-  map (validateAndDecode request.decoder) (AX.affjax AXResponse.string r)
-    <|> (pure $ Left $ singleError "Server is unreachable")
-
-sendFormData :: forall a. FormDataRequest a -> Aff (Either MultipleErrors a)
-sendFormData request = do
-  base <- liftEffect apiBaseUrl
-  let content = map AXRequest.FormData request.content
-  let r =
-        { method: Left request.method
-        , url: base <> request.path
-        , headers: []
+        , headers: headers request.content
         , content
         , username : Nothing
         , password : Nothing

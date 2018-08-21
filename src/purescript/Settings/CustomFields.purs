@@ -10,7 +10,7 @@ import Halogen as H
 import Halogen.HTML as HH
 import Halogen.HTML.Events as HE
 import Halogen.HTML.Properties as HP
-import Model.Common (Request, send, showErrors)
+import Model.Common (class RequestContent, Request, send, showErrors)
 import Model.Field (Field)
 import Model.Field as Field
 
@@ -112,7 +112,7 @@ component =
     pure next
 
   -- Goes to list view when the request is successful, otherwise shows a warning toast.
-  whenRequestSuccessful :: forall a b. Request a -> State -> b -> H.ComponentDSL State Query Unit Aff b
+  whenRequestSuccessful :: forall a b c. RequestContent a => Request a b -> State -> c -> H.ComponentDSL State Query Unit Aff c
   whenRequestSuccessful request state next = do
     response <- H.liftAff $ send request
     case response of

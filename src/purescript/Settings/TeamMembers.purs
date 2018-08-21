@@ -9,21 +9,19 @@ import Data.Maybe (fromMaybe, maybe)
 import Data.MediaType (MediaType(..))
 import Data.String as String
 import Effect.Class (liftEffect)
-import Foreign (MultipleErrors)
 import Halogen as H
 import Halogen.HTML as HH
 import Halogen.HTML.Events as HE
 import Halogen.HTML.Properties as HP
-import Model.Common (Request, FormDataRequest, send, sendFormData, showErrors)
+import Model.Common (class RequestContent, Request, send, showErrors)
 import Model.PhoneNumber as PhoneNumber
 import Model.User (User)
 import Model.User as User
 import Web.Event.Event (Event, target)
-import Web.File.File (File, toBlob)
-import Web.File.File as File
+import Web.File.File (File)
 import Web.File.FileList as FileList
 import Web.HTML.HTMLInputElement as HTMLInputElement
-import Web.XHR.FormData (EntryName(..), FileName(..))
+import Web.XHR.FormData (EntryName(..))
 import Web.XHR.FormData as FormData
 
 data State
@@ -256,7 +254,7 @@ component =
     case maybeFile of
       Just file -> do
         _ <- liftEffect $ appendFile formData (EntryName "avatar") file
-        whenFileRequestSuccessful (User.updateAvatar user formData) state next
+        whenRequestSuccessful (User.updateAvatar user formData) state next
       Nothing ->
         pure next
   eval (UpdateAvatar event next) _ =
@@ -267,19 +265,10 @@ component =
     files <- maybe (pure Nothing) HTMLInputElement.files (target event >>= HTMLInputElement.fromEventTarget)
     pure $ files >>= (FileList.item 0)
 
-  whenRequestSuccessful :: forall a b. Request a -> State -> b -> H.ComponentDSL State Query Unit Aff b
+  -- Goes to list view when the request is successful, otherwise shows a warning toast.
+  whenRequestSuccessful :: forall a b c. RequestContent a => Request a b -> State -> c -> H.ComponentDSL State Query Unit Aff c
   whenRequestSuccessful request state next = do
     response <- H.liftAff $ send request
-    _whenRequestSuccessful response state next
-
-  whenFileRequestSuccessful :: forall a b. FormDataRequest a -> State -> b -> H.ComponentDSL State Query Unit Aff b
-  whenFileRequestSuccessful request state next = do
-    response <- H.liftAff $ sendFormData request
-    _whenRequestSuccessful response state next
-
-  -- Goes to list view when the request is successful, otherwise shows a warning toast.
-  _whenRequestSuccessful :: forall a b. Either MultipleErrors a -> State -> b -> H.ComponentDSL State Query Unit Aff b
-  _whenRequestSuccessful response state next = do
     case response of
       Left e -> do
         H.liftEffect $ showToast warning 2000 (showErrors e)

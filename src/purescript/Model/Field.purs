@@ -21,7 +21,7 @@ decodeMany s =
     json = readJSON s in
   map (\x -> x.data.fields) json
 
-getAll :: Request (Array Field)
+getAll :: Request String (Array Field)
 getAll =
   { path: "/api/fields"
   , method: GET
@@ -29,7 +29,7 @@ getAll =
   , decoder: decodeMany
   }
 
-create :: String -> Request Unit
+create :: String -> Request String Unit
 create name =
   { path: "/api/fields"
   , method: POST
@@ -37,7 +37,7 @@ create name =
   , decoder: const (Right unit)
   }
 
-update :: Field -> Request Unit
+update :: Field -> Request String Unit
 update field =
   { path: "/api/fields/" <> (show field.id)
   , method: PATCH

@@ -6,7 +6,7 @@ import Data.HTTP.Method (Method(..))
 import Data.List.NonEmpty (NonEmptyList)
 import Data.Nullable (toNullable)
 import Foreign (ForeignError)
-import Model.Common (Decoder, Request, FormDataRequest)
+import Model.Common (Decoder, Request)
 import Simple.JSON (readJSON, writeJSON)
 import Web.XHR.FormData (FormData)
 
@@ -29,7 +29,7 @@ decodeMany s =
     json = readJSON s in
   map (\x -> x.data.users) json
 
-getAll :: Request (Array User)
+getAll :: Request String (Array User)
 getAll =
   { path: "/api/users"
   , method: GET
@@ -37,7 +37,7 @@ getAll =
   , decoder: decodeMany
   }
 
-create :: Maybe String -> String -> String -> Maybe String -> Maybe String -> Request Unit
+create :: Maybe String -> String -> String -> Maybe String -> Maybe String -> Request String Unit
 create avatar_url email name phone_number password =
   { path: "/api/users"
   , method: POST
@@ -54,7 +54,7 @@ create avatar_url email name phone_number password =
   , decoder: const (Right unit)
   }
 
-update :: User -> Request Unit
+update :: User -> Request String Unit
 update user =
   { path: "/api/users/" <> (show user.id)
   , method: PATCH
@@ -73,7 +73,7 @@ update user =
   , decoder: const (Right unit)
   }
 
-updateAvatar :: User -> FormData -> FormDataRequest Unit
+updateAvatar :: User -> FormData -> Request FormData Unit
 updateAvatar user formData =
   { path: "/api/users/" <> (show user.id) <> "/avatar"
   , method: POST
