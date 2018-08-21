@@ -57,46 +57,4 @@ export class AlertService {
       alert.present()
     })
   }
-
-  confirm(
-    title: string,
-    message: string,
-    data: any = null,
-    callback: any,
-    confirmButton: string = 'OK',
-    cancelButton: string = 'Cancel'
-  ): void {
-    const confirm = this.alertCtrl.create({
-      buttons: [
-        {
-          cssClass: 'cancel-alert-button',
-          text: cancelButton
-        },
-        {
-          cssClass: 'confirm-alert-button',
-          handler: () => {
-            callback(data)
-          },
-          text: confirmButton
-        }
-      ],
-      message: message,
-      title: title
-    })
-    confirm.present()
-  }
-
-  alert(title: string, message: string, confirmButton: string = 'OK'): void {
-    const alert = this.alertCtrl.create({
-      buttons: [
-        {
-          cssClass: 'confirm-alert-button',
-          text: confirmButton
-        }
-      ],
-      message: message,
-      title: title
-    })
-    alert.present()
-  }
 }

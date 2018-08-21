@@ -8,9 +8,16 @@ package-lock.json
 .versions/
 coverage/
 dist/
+ngc_build/
 node_modules/
 tmp/
 platforms/
 plugins/
 www/
 src/app/**/*.html
+resources
+ngc_build
+.pulp-cache/
+output/
+build/
+.psc-package/

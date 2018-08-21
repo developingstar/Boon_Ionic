@@ -5,50 +5,37 @@ ion-content
   ion-grid.deals-index-header
     ion-row
       ion-col.header-info-group
-        ng-select.pipeline-dropdown([items]="pipelines",
-                  bindLabel="name",
-                  [(ngModel)]="selected",
-                  (change)="onSelection()",
-                  [searchable]="false"
-                  )
-        ion-icon.arrow(name='md-arrow-dropdown')
-        div.deals-index-total {{count}} Total
-        div.sort
-          ion-label.sort-label Sort by:
-          ng-select.sort-dropdown([items]="sortList",
-                  bindLabel="name",
-                  [(ngModel)]="selectedSort",
-                  (change)="sortSelected($event.value)",
-                  [searchable]="false")
-          ion-icon.sort-arrow(name='md-arrow-dropdown')
+        ion-col.deals-index-title 
+          span.title All Deals
+          ion-icon.arrow(name='md-arrow-dropdown')
+        ion-col.deals-index-total {{count}} Total
+        ion-col.deals-index-sort
+          span.title Sort by:
+          span.sort Date Added
+          ion-icon.arrow(name='md-arrow-dropdown')
       ion-col.header-row
         button.new-deal(ion-button, (click)="newDeal()") New Deal
 
-  div.nav-stages([hidden]="isAllDeals()")
-    pipeline([stages]="stages", type="select", (select)="onSelect($event)")
 
   ion-grid.table
       ion-row.header-row
         ion-col.deal-header Name
-        ion-col.deal-header.email Email
-        ion-col.deal-header(*ngIf="isAllDeals()") Pipeline
+        ion-col.deal-header Email
+        ion-col.deal-header Pipeline
         ion-col.deal-header Stage
         ion-col.deal-header Deal Value
         ion-col.deal-header Deal Owner
         .deal-end
-          button(ion-button, small, (click)="goToPrev()", [disabled]="goToPrevDisabled()")
+          button(ion-button, small, (click)="goToPrev()")
             ion-icon.arrow(name="md-arrow-dropleft")
-          button(ion-button, small, (click)="goToNext()", [disabled]="goToNextDisabled()")
+          button(ion-button, small, (click)="goToNext()")
             ion-icon.arrow(name="md-arrow-dropright")
       ion-row.deal(*ngFor="let deal of deals", (click)="showDeal(deal)")
         ion-col.deal {{deal.name || '-'}}
-        ion-col.deal.email
-          div.email {{deal.contact?.email || '-'}}
-        ion-col.deal(*ngIf="isAllDeals()") {{getPipelineName(deal.stageId) || '-'}}
-        ion-col.deal(*ngIf="allStages") {{getStageName(deal.stageId) || '-'}}
+        ion-col.deal {{deal.email || '-'}}
+        ion-col.deal {{deal.pipline || '-'}}
+        ion-col.deal {{deal.stage || '-'}}
         ion-col.deal {{deal.value || '-'}}
-        ion-col.deal
-          img.owner-picture(src="{{ deal.owner?.avatarUrl }}", onError="this.src='../../assets/icon/settings/avatar.svg'")
-          span {{deal.owner?.name || '-'}}
+        ion-col.deal {{deal.owner || '-'}}
         .deal-end
           ion-icon.more(name="ios-more")

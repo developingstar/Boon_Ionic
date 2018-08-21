@@ -2,11 +2,11 @@ import { NgModule } from '@angular/core'
 import { IonicPageModule } from 'ionic-angular'
 import { InlineSVGModule } from 'ng-inline-svg'
 
-import { CommonComponentsModule } from '../common.components.module'
 import { NavModule } from '../nav.module'
 import { ShowTabsComponentsModule } from '../show-tabs/show-tabs.components.module'
 import { DealsShowPage } from './deals-show.page'
 import { DealsComponentsModule } from './deals.components.module'
+
 @NgModule({
   declarations: [DealsShowPage],
   entryComponents: [DealsShowPage],
@@ -15,8 +15,7 @@ import { DealsComponentsModule } from './deals.components.module'
     IonicPageModule.forChild(DealsShowPage),
     NavModule,
     DealsComponentsModule,
-    CommonComponentsModule,
     ShowTabsComponentsModule
   ]
 })
-export class DealsShowPageModule {}
+export class CrmPageModule {}

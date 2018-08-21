@@ -1,36 +1,49 @@
 nav-content
   nav-icons(right, currentPage="ContactPage")
 
+ion-header.nav-pipelines
+  ion-grid
+    ion-row
+      ion-col(col-auto)
+        span([ngClass]="{'active': (areAllContactsVisible | async)}", (click)="onPipelineChange(undefined)") All Contacts
+      ion-col(col-auto, *ngFor="let pipeline of (pipelines | async)")
+        span([ngClass]="{'active': (activePipelineId | async) == pipeline.id}", (click)="onPipelineChange(pipeline.id)") {{pipeline.name}}
+
 ion-content(padding)
   div.header-row
-    div.center-y
-      .title All Contacts
-      div.showing-total {{contactCount | async}} Total
-      div.sort
-        ion-label.sort-label Sort by:
-        ion-select(interface="popover", (ionChange)="sortSelected($event)", placeholder="Sort Condition")
-          ion-option(*ngFor="let sort of sortList", [value]="sort.value") {{sort.label}}
+    h2 {{pipelineName | async}}
     button.new-contact(ion-button, (click)="newContact()") New Contact
+
+  div.nav-stages([hidden]="areAllContactsVisible | async")
+    pipeline([stages]="stagesForActivePipeline | async", type="select", (select)="onStageChange($event)")
 
   ion-grid.table
     ion-row.header
       ion-col Name
-      ion-col.email Email
+      ion-col Email
+      ion-col(*ngIf="isStageColumnVisible | async") Stage
       ion-col Phone number
-      ion-col Created at
       ion-col Contact owner
-      ion-col.action
-        button(ion-button, small, (click)="loadPrevPage()", [disabled]="isPrevPageButtonDisabled | async")
-          ion-icon(name="md-arrow-dropleft")
-        button(ion-button, small, (click)="loadNextPage()", [disabled]="isNextPageButtonDisabled | async")
-          ion-icon(name="md-arrow-dropright")
+      ion-col Created at
     ion-row.contact(*ngFor="let contact of (contacts | async)", (click)="showContact(contact)")
       ion-col {{contact.name || "-"}}
-      ion-col.email {{contact.email || "-"}}
+      ion-col {{contact.email || "-"}}
+      ion-col(*ngIf="isStageColumnVisible | async") {{(stageForContact(contact) | async)?.name}}
       ion-col {{contact.phoneNumber || "-"}}
-      ion-col {{contact.insertedAt | date: 'dd MMM yyyy' || "-"}}
       ion-col {{contact.owner?.name || "-"}}
-      ion-col.action
-        div.dot
-        div.dot
-        div.dot
+      ion-col {{contact.insertedAt | date:'MM/dd hh:mm a' || "-"}}
+  ion-row.footer
+    ion-col.center-y
+      .showing-color Showing
+      .showing-from {{showingLow}}
+      .showing-color to
+      .showing-to {{showingHigh}}
+      .showing-color of
+      .showing-total {{contactCount | async}} contacts
+    ion-col(col-auto)
+      button(ion-button, small, (click)="loadPrevPage()", [disabled]="isPrevPageButtonDisabled | async")
+        ion-icon(name="ios-arrow-back-outline")
+        span Prev
+      button(ion-button, small, (click)="loadNextPage()", [disabled]="isNextPageButtonDisabled | async")
+        span Next
+        ion-icon(name="ios-arrow-forward-outline")

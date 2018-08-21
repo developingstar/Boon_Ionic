@@ -46,15 +46,6 @@ export class TeamMembersService {
       .map((response: TeamSettings.ITeamMember) => new User(response.data.user))
   }
 
-  public resetPasswordRequest(email: string): Observable<string> {
-    return this.http
-      .post(
-        `api/users/request-password-reset`,
-        JSON.stringify({ email: email })
-      )
-      .map((response: string) => response)
-  }
-
   public addTeamMemberImage(
     teamMemberId: number,
     imageForm: FormData

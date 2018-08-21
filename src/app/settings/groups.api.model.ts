@@ -1,7 +1,6 @@
 export interface IGroup {
   readonly id: number
   readonly name: string
-  readonly user_count: number
 }
 
 export interface IGroupResponse {

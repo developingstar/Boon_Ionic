@@ -15,16 +15,12 @@ export class JourneysService {
   constructor(private readonly http: HttpClient) {}
 
   journeys(
-    options: IHttpRequestOptions = blankHttpRequestOptions,
-    category: string = 'contact'
+    options: IHttpRequestOptions = blankHttpRequestOptions
   ): Observable<PaginatedCollection<Journey>> {
     return this.http
-      .get<API.IJourneysResponse>(
-        options.url || '/api/journeys?type=' + category,
-        {
-          params: options.params
-        }
-      )
+      .get<API.IJourneysResponse>(options.url || '/api/journeys', {
+        params: options.params
+      })
       .map((response) => ({
         count: 1,
         items: response.data.journeys.map((raw) => new Journey(raw)),
@@ -68,16 +64,5 @@ export class JourneysService {
     return this.http
       .post<API.IJourneyResponse>('/api/journeys', requestData)
       .map((response) => new Journey(response.data.journey))
-  }
-
-  deleteJourney(id: number): Observable<{
-    readonly data: {
-      readonly message: string
-    }
-  }> {
-    return this.http.delete(`/api/journeys/${id}`)
-      .map((response: { readonly data: { readonly message: string } }) => {
-        return response
-      })
   }
 }

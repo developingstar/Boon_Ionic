@@ -1,21 +1,18 @@
 import * as API from './journeys.api.model'
 
 export class Action {
-  id: number | undefined
-  tempId: string
+  readonly id: number | undefined
   readonly type: API.ActionType
-  data: API.ActionData
-  position: number | undefined
+  readonly data: API.ActionData
+  readonly position: number | undefined
   readonly journeyId: number
 
-  constructor(data: API.IAction, tempId?: string) {
+  constructor(data: API.IAction) {
     this.id = data.id
     this.type = data.type
     this.data = data.data
     this.position = data.position
     this.journeyId = data.journey_id
-
-    if (tempId) this.tempId = tempId
   }
 
   public toApiRepresentation(): API.IAction {
@@ -25,14 +22,6 @@ export class Action {
       journey_id: this.journeyId,
       position: this.position,
       type: this.type
-    }
-  }
-
-  public getId(): number | string {
-    if (this.id) {
-      return this.id
-    } else {
-      return this.tempId
     }
   }
 }

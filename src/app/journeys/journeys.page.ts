@@ -25,8 +25,6 @@ import { JourneysService } from './journeys.service'
 })
 export class JourneysPage implements OnInit, OnDestroy {
   readonly state: Observable<IState>
-  public selectedNavItem: string
-  public categoryType: string
   private readonly uiActions: Subject<UserAction> = new Subject()
   private readonly stateSubscription: Subscription
 
@@ -40,13 +38,10 @@ export class JourneysPage implements OnInit, OnDestroy {
     this.state = this.uiActions
       .mergeScan((state, action) => this.reduce(state, action), initialState)
       .shareReplay()
-    this.stateSubscription = this.state.subscribe((state) => {
-      this.categoryType = state.category
-    })
+    this.stateSubscription = this.state.subscribe()
   }
   ngOnInit(): void {
-    this.selectedNavItem = 'contact'
-    this.uiActions.next({ name: 'init', category: 'contact' })
+    this.uiActions.next({ name: 'init' })
   }
 
   ngOnDestroy(): void {
@@ -64,14 +59,13 @@ export class JourneysPage implements OnInit, OnDestroy {
   }
 
   public showJourney(journey: Journey): void {
-    this.navController.setRoot('JourneyBoardPage', { id: journey.id })
+    this.navController.setRoot('JourneyPage', { id: journey.id })
   }
 
   public openNewJourneyModal(event: Event): void {
-    const type = { type: this.categoryType }
     const modal = this.modalController.create(
       CreateJourneyModalComponent.name,
-      type,
+      {},
       { cssClass: 'create-journey-modal' }
     )
     modal.present({ ev: event })
@@ -80,10 +74,6 @@ export class JourneysPage implements OnInit, OnDestroy {
         this.showJourney(data.journey)
       }
     })
-  }
-
-  public type(): any {
-    return this.state.flatMap((state) => state.category)
   }
 
   public showActions(event: any, journey: Journey): void {
@@ -100,20 +90,6 @@ export class JourneysPage implements OnInit, OnDestroy {
         this.uiActions.next(data)
       }
     })
-  }
-
-  public setNavItem(item: string): void {
-    this.selectedNavItem = item
-    this.uiActions.next({ name: 'init', category: this.selectedNavItem })
-  }
-
-  get buttonName(): Observable<string> {
-    return this.state.flatMap(
-      (state) =>
-        state.category === 'contact'
-          ? Observable.of('New Contact Journey')
-          : Observable.of('New Deal Journey')
-    )
   }
 
   get isPrevPageButtonDisabled(): Observable<boolean> {
@@ -136,51 +112,33 @@ export class JourneysPage implements OnInit, OnDestroy {
     switch (action.name) {
       case 'init':
         return this.setLoading(state).concat(
-          this.getJourneys(state.requestOptions, action.category)
+          this.getJourneys(state.requestOptions)
         )
       case 'prev':
         return this.setLoading(state).concat(
-          this.getJourneys(
-            {
-              ...state.requestOptions,
-              url: state.journeys.prevPageLink
-            },
-            state.category
-          )
+          this.getJourneys({
+            ...state.requestOptions,
+            url: state.journeys.prevPageLink
+          })
         )
       case 'next':
         return this.setLoading(state).concat(
-          this.getJourneys(
-            {
-              ...state.requestOptions,
-              url: state.journeys.nextPageLink
-            },
-            state.category
-          )
+          this.getJourneys({
+            ...state.requestOptions,
+            url: state.journeys.nextPageLink
+          })
         )
       case 'publish_journey':
         return this.setLoading(state).concat(
           this.journeysService
             .publishJourney(action.journey.id)
-            .flatMap((journey) =>
-              this.getJourneys(state.requestOptions, state.category)
-            )
+            .flatMap((journey) => this.getJourneys(state.requestOptions))
         )
       case 'stop_journey':
         return this.setLoading(state).concat(
           this.journeysService
             .stopJourney(action.journey.id)
-            .flatMap((journey) =>
-              this.getJourneys(state.requestOptions, state.category)
-            )
-        )
-      case 'delete_journey':
-        return this.setLoading(state).concat(
-          this.journeysService
-            .deleteJourney(action.journey.id)
-            .flatMap((journey) =>
-              this.getJourneys(state.requestOptions, state.category)
-            )
+            .flatMap((journey) => this.getJourneys(state.requestOptions))
         )
     }
   }
@@ -189,18 +147,12 @@ export class JourneysPage implements OnInit, OnDestroy {
     return Observable.of({ ...state, isLoading: true })
   }
 
-  private getJourneys(
-    requestOptions: IHttpRequestOptions,
-    category: string = 'contact'
-  ): Observable<IState> {
-    return this.journeysService
-      .journeys(requestOptions, category)
-      .map((newJourneys) => ({
-        category: category,
-        isLoading: false,
-        journeys: newJourneys,
-        requestOptions: requestOptions
-      }))
+  private getJourneys(requestOptions: IHttpRequestOptions): Observable<IState> {
+    return this.journeysService.journeys(requestOptions).map((newJourneys) => ({
+      isLoading: false,
+      journeys: newJourneys,
+      requestOptions: requestOptions
+    }))
   }
 
   private async ionViewCanEnter(): Promise<boolean> {

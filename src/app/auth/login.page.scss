@@ -61,24 +61,6 @@ login-page {
       button {
         @extend .boon-button;
       }
-      .login {
-        display: flex;
-        flex-wrap: nowrap;
-        align-items: center;
-        width: 100%;
-        .label-comment {
-          display: flex;
-          height: 100%;
-          align-items: center;
-          width: 48%;
-          .signup {
-            padding-left: 5px;
-          }
-        }
-        .col {
-          width: 43%;
-        }
-      }
     }
   }
 }

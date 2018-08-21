@@ -1,1 +1,19 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 65 65"><defs><style>.cls-1{fill:none;clip-rule:evenodd;}.cls-2{clip-path:url(#clip-path);}.cls-3{fill:#78d096;}.cls-4{fill:#fff;opacity:0.8;}</style><clipPath id="clip-path"><path class="cls-1" d="M-927.38,439.09a4.14,4.14,0,0,0,0,5.86,4.14,4.14,0,0,0,5.86,0,4.16,4.16,0,0,0,0-5.86,4.16,4.16,0,0,0-5.86,0m4.75,4.75a2.57,2.57,0,0,1-3.64,0,2.57,2.57,0,0,1,0-3.64,2.58,2.58,0,0,1,3.64,0,2.58,2.58,0,0,1,0,3.64"/></clipPath></defs><title>Artboard 78</title><g id="Layer_3" data-name="Layer 3"><rect class="cls-3" width="65" height="65" rx="6.24" ry="6.24"/><path class="cls-4" d="M48.34,20.72a.93.93,0,0,0-.94-.3L17,28.67a.92.92,0,0,0-.67.85.9.9,0,0,0,.62.88L27.9,34,27,41.53a.9.9,0,0,0,1.43.83l3.74-2.8,3.25,4.74a.92.92,0,0,0,.75.39h.06A.9.9,0,0,0,37,44.2L48.44,21.7A.92.92,0,0,0,48.34,20.72Zm-29,8.88L43.49,23,28.61,32.68Zm10,5.65,2.09,3.07-2.68,2Zm6.85,7.37L33,38.06l-3-4.47L46,23.2Z"/></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" viewBox="0 0 34 34">
+    <defs>
+        <style>
+            .svg-icon-journey-action-send-email-1{fill:#ffd5e1;}.svg-icon-journey-action-send-email-1,.svg-icon-journey-action-send-email-2{stroke:#ff0a53;}.svg-icon-journey-action-send-email-2{fill:none;}
+        </style>
+    </defs>
+    <g id="Page-1">
+        <g id="Automation">
+            <g id="Trigger-object-Copy-10">
+                <g id="Group-13">
+                    <circle id="Oval-2" cx="17" cy="17" r="16.5" class="svg-icon-journey-action-send-email-1"/>
+                </g>
+            </g>
+        </g>
+    </g>
+    <path d="M12.46,24l.61-5.22L5.64,16.32a.09.09,0,0,1,0-.18l19.56-5.31a.1.1,0,0,1,.12.14L18,25.44a.1.1,0,0,1-.17,0L15.42,22l-2.81,2.1A.1.1,0,0,1,12.46,24Z" class="svg-icon-journey-action-send-email-2"/>
+    <line x1="13.07" x2="25.43" y1="18.78" y2="10.77" class="svg-icon-journey-action-send-email-2"/>
+    <line x1="15.42" x2="13.19" y1="21.99" y2="18.7" class="svg-icon-journey-action-send-email-2"/>
+</svg>

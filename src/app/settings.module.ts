@@ -6,11 +6,12 @@ import { GroupsService } from './settings/groups.service'
 import { IntegrationsService } from './settings/integrations.service'
 import { SettingsPageWithMenuComponent } from './settings/settings-page-with-menu.component'
 import { TeamMembersService } from './settings/team-members/team-members.service'
+import { PurescriptComponent } from './utils/purescript.component'
 
 @NgModule({
-  declarations: [SettingsPageWithMenuComponent],
+  declarations: [PurescriptComponent, SettingsPageWithMenuComponent],
   entryComponents: [],
-  exports: [SettingsPageWithMenuComponent],
+  exports: [PurescriptComponent, SettingsPageWithMenuComponent],
   imports: [IonicModule],
   providers: [
     IntegrationsService,

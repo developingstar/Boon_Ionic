@@ -21,9 +21,10 @@
       }
     }
     @include md {
-      padding: 5px 0;
+      padding: 8px 0;
     }
     &:not(.header) {
+      border-bottom: 1px $color-border solid;
       color: $color-text-primary;
       padding: 4px 0;
       &:last-of-type {

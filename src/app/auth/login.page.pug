@@ -19,10 +19,7 @@ ion-content(padding)
     ion-row
       ion-col
         hr
-    ion-row.login
-      div.label-comment
-        label No account?
-        a.signup((click)="goToSignup()") Sign up for a free trial!
-      ion-col
+    ion-row
+      ion-col(col-4, offset-8)
         button(ion-button, full, type="submit", [disabled]="!loginForm.form.valid")
           | Login

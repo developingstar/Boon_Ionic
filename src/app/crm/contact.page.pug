@@ -1,0 +1,68 @@
+nav-content
+  nav-icons(right, currentPage="ContactPage")
+
+ion-content(padding)
+  button#back-button(ion-button, clear, (click)="goBack()")
+    | < Back
+
+  div(*ngIf="contact | async; let contact")
+    h1 {{contact.name}}
+    button.contact-more-button(ion-button, clear, (click)="more($event)" )
+      .bullets
+    button.update-stage-button(ion-button, [disabled]="!canUpdateStage()", (click)="updateStage()") Update stage
+
+    pipeline([stages]="stages | async", type="progress", [currentStageId]="contact.stageId", (select)="onStageChange($event)")
+
+    .contact(*ngIf="formGroup | async; let form")
+      .base-fields
+        .fields-container
+          field(type="input", [form]="form", formField="firstName", label="First Name")
+          field(type="input", [form]="form", formField="lastName", label="Last Name")
+          field(type="input", [form]="form", formField="email", label="Email")
+          field(type="input", [form]="form", formField="phoneNumber", label="Phone Number")
+          field(type="select", [form]="form", formField="owner_id", label="Owner", [options]="owners | async")
+          div.date-wrapper
+            div.date-header  Created On
+            div.date {{ contact.insertedAt | date:'MM/dd/yy hh:mm:ss a' || "-" }}
+          div.date-wrapper
+            div.date-header  Last updated
+            div.date {{ contact.updatedAt | date:'MM/dd/yy hh:mm:ss a' || "-" }}
+
+        .buttons
+          div(*ngIf="editMode | async; else editButton")
+            button((click)="cancel()", ion-button, block, outline) Cancel
+            button((click)="save(form.value)", [disabled]="!form.valid", ion-button, block) Save
+          ng-template(#editButton)
+            button((click)="edit()", ion-button, block) Edit
+
+      hr
+
+      .custom-fields
+        h2 Details
+        field(*ngFor="let field of (fields | async)",
+              type="input",
+              [form]="form",
+              [formField]="field.id",
+              [label]="field.name")
+
+    ion-row.contact-comment
+      ion-col.note-activity(col-12, col-md-6)
+        div.note-navbar
+          div.nav-item([ngClass]="{'nav-item-active': selectedNavItem === 'activity'}", (click)="setNavItem('activity')") Activity
+          div.nav-item([ngClass]="{'nav-item-active': selectedNavItem === 'notes'}", (click)="setNavItem('notes')") Notes
+        div.note-panel(*ngIf="selectedNavItem === 'notes'")
+          div.notes-content
+            div.note-row(*ngFor="let note of (notesList | async)")
+              div.note-icon
+                img(src='../../assets/icon/note.svg')
+              div.note
+                div.note-content {{note.content}}
+                div.note-date {{note.date | date:'EEEE, LLL d, hh:mm a'}}
+
+          hr
+          div.sends-group
+            ion-input.note(type="text", placeholder="Enter Note…", [(ngModel)]='newNote')
+            div.send-button
+              img(src='../../assets/icon/add_note.png', (click)="addNote()", disabled)
+      ion-col.texting(col-12, col-md-6)
+

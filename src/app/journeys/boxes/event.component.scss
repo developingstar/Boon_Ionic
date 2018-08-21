@@ -1,23 +1,28 @@
 @import 'theme/shared-classes';
+
 event {
   display: inline-flex;
   flex-direction: column;
   justify-content: center;
   text-align: center;
   vertical-align: top;
-  height: 91px;
-  width: 120px;
-  border-radius: 6px;
-  background: #fff;
-  box-shadow: 0 0 12px 0 rgba(0, 0, 0, 0.11);
+
+  margin: 0 10px 10px 0;
+  height: 90px;
+  width: 110px;
   padding: 10px;
+
+  background-color: white;
+
   color: $color-text-secondary;
   font-size: 11px;
   text-transform: capitalize;
+
   .icon {
     width: 35px;
     margin: auto;
   }
+
   &.big {
     height: 100px;
     width: 120px;

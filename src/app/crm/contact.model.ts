@@ -1,4 +1,3 @@
-import * as moment from 'moment'
 import { User } from '../auth/user.model'
 import { ensureNumber } from '../utils/validators'
 import { Field } from './field.model'
@@ -14,8 +13,8 @@ export class Contact {
   readonly owner: User | null
   readonly phoneNumber: string
   readonly stageId: number
-  readonly insertedAt: string
-  readonly updatedAt: string
+  readonly insertedAt: Date
+  readonly updatedAt: Date
 
   constructor(data: Crm.API.IContact) {
     this.createdByServiceId = data.created_by_service_id
@@ -27,15 +26,10 @@ export class Contact {
     this.fields = data.fields.map((raw: Crm.API.IField) => new Field(raw))
     this.id = ensureNumber(data.id)
     this.phoneNumber = data.phone_number
-    this.stageId = data.stage_id
-    this.insertedAt = data.inserted_at
-      ? moment(data.inserted_at, moment.ISO_8601).format(
-          'DD MMM YYYY hh:mm:ss a'
-        )
-      : moment(new Date(), moment.ISO_8601).format('DD MMM YYYY hh:mm:ss a')
-    this.updatedAt = data.updated_at
-      ? moment(data.updated_at, moment.ISO_8601).format('dd  MM  yyyy hh mm ss')
-      : moment(new Date(), moment.ISO_8601).format('dd  MM  yyyy hh mm ss')
+    this.stageId = ensureNumber(data.stage_id)
+    this.insertedAt = this.formatDate(data.inserted_at)
+    this.updatedAt = this.formatDate(data.updated_at)
+
     if (data.owner) {
       this.owner = new User(data.owner)
     }

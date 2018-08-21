@@ -49,7 +49,6 @@ const allPages: Auth.IPageAccess = {
 
 const allNavs: Auth.INavAccess = {
   Automation: true,
-  Chat: true,
   Crm: true,
   Deals: true,
   Email: true,

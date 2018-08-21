@@ -1,16 +1,3 @@
-.notes-container()
-  .notes-list
-    .notes(*ngFor="let note of notes")
-      .note-row
-        .note-icon
-          img(src='../../assets/icon/note.svg')
-        .note-content-wrapper
-          .note-content {{note.content}}
-          .note-dates {{note.date | date:'EEEE, LLL d, hh:mm a'}}
-  hr
-  div.send-message-container(*ngIf="contact")
-    input.note(type="text", placeholder="Enter Note…", [(ngModel)]="newNote")
-    div.send-button
-      img(src='../../assets/icon/add_note.png', (click)="addNote()")
-
+div
+  | Notes Component Style me!
 

@@ -6,12 +6,14 @@ The project requires the following tools:
 
 * [Node](https://nodejs.org/en/)
 * [Yarn](https://yarnpkg.com)
+* [psc-package](https://github.com/purescript/psc-package/releases)
 * [Running backend application](https://git.ringseven.com/paul/marketing-automation-backend)
 
 1. Fetch dependencies:
 
    ```bash
    yarn install
+   npm install -g pulp bower
    ```
 
 1. Start the application locally:
@@ -213,6 +215,7 @@ described below.
 1. Make sure that tests and static analysis pass.
 1. Make sure that your branch is up-to-date with the base one (use `git rebase` if not and resolve conflicts if necessary).
 1. If you have used WIP, FIXUPs or any other „dirty” commits, make sure to rebase them and add a proper message to each.
+1. Follow [guidelines for writing commit messages](https://gist.github.com/smt116/df307ad726f69b40f205b0ac68badc96).
 
 ### After submitting merge request
 
@@ -220,3 +223,17 @@ described below.
 1. Wait for the code review from team members.
 1. Apply changes if necessary (you can add them as FIXUP commits to make the code review easier) and ping someone that the code is ready for another iteration.
 1. When the code is ready to merge, make sure to resolve WIP status, rebase FIXUP commits (if any) and rebase with the base branch (resolve conflicts if any).
+
+## Deployments
+
+The application is deployed as static files for [the backend](https://git.ringseven.com/paul/marketing-automation-backend). These static files are built using `beta` and `production` branches. Each Monday, the following procedure needs to be performed:
+
+1. `git checkout master`
+1. `git pull`
+1. `git checkout production`
+1. `git merge beta`
+1. `git push origin production`
+1. `git checkout beta`
+1. `git merge master`
+1. `git push origin beta`
+1. Notify #boon Slack channel that branches have been updated.

@@ -36,7 +36,7 @@ export class NavContentComponent implements AfterViewInit {
     // Since the nav component probably already went through the change detection cycle,
     // this update has to happen asynchronously.
     setTimeout(() => {
-      this.navService.contentUpdated.next([portals[0], portals[1], portals[2]])
+      this.navService.contentUpdated.next([portals[0], portals[1]])
       this.navService.navBarVisible.next(true)
     }, 0)
   }

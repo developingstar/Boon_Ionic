@@ -5,8 +5,6 @@
 app {
   &.app-root {
     .ion-page {
-      left: 59px;
-      width: calc(100vw - 59px);
       contain: initial;
       top: $nav-height-mobile;
       height: calc(100vh - #{$nav-height-mobile});
@@ -19,7 +17,7 @@ app {
     .content .scroll-content {
       padding: 8px;
       @include md {
-        padding: $content-padding 35px;
+        padding: $content-padding 64px;
       }
     }
     .loader {
@@ -32,7 +30,6 @@ app {
     }
   } //this will change the ugly yellow autofill highlight that browsers add
   input:-webkit-autofill {
-    box-shadow: 0 0 0 50px white inset;
     -webkit-box-shadow: 0 0 0 50px white inset;
   }
 }

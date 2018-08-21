@@ -31,7 +31,7 @@
 
 .boon-button.button-outline {
   background-color: transparent;
-  border: 1px solid $color-card-border;
+  border: 1px solid #d2d6e4;
   color: $color-primary;
 }
 
@@ -63,7 +63,7 @@
 
 .boon-select {
   @extend .boon-input;
-  height: 45px;
+  height: 40px;
 }
 
 .boon-invalid-select {

@@ -1,19 +1,31 @@
 @import 'theme/shared-classes';
 @import 'theme/style-guide';
 crm-page {
-  .title {
-    padding-left: 5px;
-    color: $color-text-primary;
-    font-size: 25px;
-    font-weight: 500;
-    letter-spacing: 0.17px;
+  .nav-pipelines {
+    background-color: #4c4953;
+    color: rgba(255, 255, 255, 0.41);
+    font-size: $font-size-name;
+    font-weight: $font-weight-headers;
+    padding: 0px 16px;
+    span {
+      cursor: pointer;
+      padding: 8px;
+      &.active {
+        color: #fff;
+      }
+    }
+    @include md {
+      padding: 12px 56px;
+      span {
+        padding: 8px 16px;
+      }
+    }
   }
   button.new-contact {
     @extend .boon-button;
     float: right;
-    margin-right: 5px;
+    margin-bottom: 10px;
     width: 180px;
-    border-radius: 4px !important;
   }
   .nav-stages {
     margin: 8px 0 16px 0;
@@ -23,79 +35,17 @@ crm-page {
     background-color: $color-content-background;
   }
   .content {
-    .header {
-      background: $color-content-background;
-    }
-  }
-  ion-row {
-    ion-col:first-child {
-      padding-left: 25px;
-    }
-    .action {
-      display: flex;
-      max-width: 100px;
-      align-items: center;
-      justify-content: flex-end;
-      padding-right: 14px;
-      button {
-        padding: 0;
-        border-radius: 4px;
-        justify-content: flex-end;
-        margin-bottom: 0;
-        box-shadow: none;
-        height: 24px;
-        width: 24px;
-        background: #fff !important;
-        color: $color-text-secondary !important;
-        font-size: 1.4em;
-        margin-left: 4px;
-        &:hover {
-          background: #d1d1d1;
-        }
-      }
-    }
-    .dot {
-      height: 4px;
-      width: 4px;
-      border-radius: 4px;
-      margin-right: 5px;
-      background: $color-text-secondary;
-    }
-  }
-  .header {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    color: $color-text-secondary;
-    font-size: 11px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1.57px;
-    padding: 0px;
-    margin-bottom: 5px;
-    ion-col {
-      display: flex;
-      align-items: flex-end;
-    }
-    ion-col.action {
-      padding: 0;
+    .table {
+      @extend .boon-table;
     }
   }
   ion-row.contact {
-    display: flex;
-    align-items: center;
-    background: white;
     cursor: pointer;
-    border-radius: 4px;
-    margin-bottom: 3px;
-    height: 44px;
   }
   .header-row {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
-    padding: 13px 0 12px 0px;
-
+    align-items: center;
     h2 {
       color: $color-primary;
       letter-spacing: 0.17px;
@@ -103,45 +53,15 @@ crm-page {
       font-size: 25px;
     }
   }
-  .showing-color {
-    font-size: 14px;
-    color: $color-text-secondary;
-  }
+
+  .showing-from,
+  .showing-to,
   .showing-total {
-    @extend .showing-color;
-    margin-left: 2rem;
-    margin-top: 7px;
+    padding: 0px 3px;
+    font-weight: $font-weight-headers;
   }
-  .sort {
-    display: none !important;
-    display: flex;
-    margin-left: 3rem;
 
-    ion-label {
-      text-align: right;
-      font-size: 14px;
-      max-width: 50px;
-      color: $color-text-secondary;
-    }
-
-    ion-select {
-      position: relative;
-      width: 300px;
-      padding-left: 10px;
-
-      .select-text {
-        font-size: 14px;
-      }
-
-      .select-icon {
-        margin-top: 4px;
-      }
-    }
-  }
-  .email {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 250px;
+  .showing-color {
+    color: $color-text-secondary;
   }
 }

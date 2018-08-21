@@ -1,12 +1,12 @@
 import { CommonModule } from '@angular/common'
 import { NgModule } from '@angular/core'
-import { FormsModule } from '@angular/forms'
 import { TabActivityComponent } from './tab-activity.component'
 import { TabDealsComponent } from './tab-deals.component'
 import { TabEmailComponent } from './tab-email.component'
 import { TabNotesComponent } from './tab-notes.component'
 import { TabSelectorComponent } from './tab-selector.component'
 import { TabTextComponent } from './tab-text.component'
+import { TabService } from './tab.service'
 
 @NgModule({
   declarations: [
@@ -25,7 +25,7 @@ import { TabTextComponent } from './tab-text.component'
     TabSelectorComponent,
     TabTextComponent
   ],
-  imports: [CommonModule, FormsModule],
-  providers: []
+  imports: [CommonModule],
+  providers: [TabService]
 })
 export class ShowTabsComponentsModule {}

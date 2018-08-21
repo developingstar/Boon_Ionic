@@ -5,30 +5,65 @@
 custom-fields-page {
   .header {
     @include settings-page-header;
+
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    padding-bottom: 5px;
   }
 
-  ion-list {
-    @include settings-page-item-list;
+  .boon-button {
+    color: white;
+    height: 36px;
+
+    &:hover {
+      background-color: lighten($color-primary, 7%);
+    }
+  }
+
+  .item-list {
+    .item {
+      @include arrow-right;
+
+      width: 690px;
+      min-height: 44px;
+      font-size: 14px;
+      line-height: 22px;
+
+      margin-left: 5px;
+      padding-top: 10px;
+      padding-left: 3px;
+
+      cursor: pointer;
+
+      border-bottom: 1px solid #dedede;
+
+      transition-duration: 0.3s;
+      transition-property: background-color;
+
+      &:hover {
+        background-color: $color-content-background;
+      }
+    }
   }
 
   form {
-    ion-input {
-      &.ng-invalid {
-        input.text-input {
-          border: 1px solid red;
-        }
-      }
+    padding: 5px;
 
-      input.text-input {
-        @extend .boon-input;
+    input {
+      @extend .boon-input;
+
+      margin: 13px;
+
+      &.invalid {
+        border: 1px solid red;
       }
     }
 
     .label {
-      @extend .boon-label;
+      @extend .boon-uppercase-label;
 
-      text-transform: uppercase;
-      letter-spacing: 1px;
+      font-size: 12px;
     }
   }
 

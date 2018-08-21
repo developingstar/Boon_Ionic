@@ -14,8 +14,6 @@ settings-page-with-menu(currentPage="GroupsPage")
           div
             div.group-title
               | {{group.name}}
-            div.group-members
-              | {{group.userCount}} Team Members
           div(inlineSVG="assets/icon/settings/arrow.svg")
   ion-grid(*ngIf="showForm | async")
     ion-row.groups-header

@@ -30,21 +30,4 @@
       justify-content: space-between;
     }
   }
-
-  ion-row {
-    .action {
-      display: flex;
-      max-width: 100px;
-      align-items: center;
-      justify-content: flex-end;
-      padding-right: 14px;
-    }
-    .dot {
-      height: 4px;
-      width: 4px;
-      border-radius: 4px;
-      margin-right: 5px;
-      background: $color-text-secondary;
-    }
-  }
 }

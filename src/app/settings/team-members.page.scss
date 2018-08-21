@@ -1,0 +1,133 @@
+@import 'theme/shared-classes';
+@import 'theme/style-guide';
+@import 'mixins.scss';
+
+team-members-page {
+  .header {
+    @include settings-page-header;
+
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    padding-bottom: 5px;
+  }
+
+  .boon-button {
+    color: white;
+    height: 36px;
+
+    &:hover {
+      background-color: lighten($color-primary, 7%);
+    }
+  }
+
+  .item-list {
+    .item {
+      background: #fcfcfd;
+      border-radius: 8px;
+      border: 1px solid $color-card-border;
+      cursor: pointer;
+      display: flex;
+      flex-direction: row;
+      padding: 16px 20px;
+      margin-bottom: 16px;
+
+      .item-avatar {
+        align-items: center;
+        display: flex;
+        justify-content: center;
+        margin-right: 20px;
+
+        img {
+          border-radius: 20px;
+          height: 40px;
+          width: 40px;
+        }
+      }
+
+      .item-details {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        justify-content: center;
+
+        h3,
+        h4 {
+          margin: 0;
+          font-size: 14px;
+        }
+
+        h3 {
+          color: #354052;
+        }
+
+        h4 {
+          color: #b4bac6;
+          margin-top: 4px;
+          padding: 0 0 2px 22px;
+
+          background-image: url('/assets/icon/twilio-logo-red.svg');
+          background-position: left center;
+          background-repeat: no-repeat;
+          background-size: 16px 16px;
+
+          &:empty {
+            display: none;
+          }
+        }
+      }
+    }
+  }
+
+  form {
+    padding: 5px;
+
+    input,
+    select,
+    img {
+      margin: 13px;
+    }
+
+    input,
+    select {
+      &.invalid {
+        border: 1px solid red;
+      }
+    }
+
+    input {
+      @extend .boon-input;
+    }
+
+    select {
+      @extend .boon-select;
+    }
+
+    .label {
+      @extend .boon-uppercase-label;
+
+      font-size: 12px;
+    }
+
+    .avatar {
+      display: block;
+      width: 120px;
+
+      border-radius: 60px;
+    }
+
+    .hidden {
+      display: none;
+    }
+  }
+
+  settings-page-with-menu ion-content.content.content-md {
+    .fixed-content,
+    .scroll-content {
+      @include md {
+        padding-left: 30px;
+        padding-right: 30px;
+      }
+    }
+  }
+}

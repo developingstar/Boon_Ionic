@@ -1,11 +1,18 @@
 import { NgModule } from '@angular/core'
 import { IonicModule } from 'ionic-angular'
 
-import { CommonComponentsModule } from '../common.components.module'
+import { FieldComponent } from './field.component'
+import { PipelineComponent } from './pipeline.component'
+import { ReactiveFormsDisabledDirective } from './reactive-forms-disabled.directive'
 
 @NgModule({
-  declarations: [],
+  declarations: [
+    FieldComponent,
+    PipelineComponent,
+    ReactiveFormsDisabledDirective
+  ],
   entryComponents: [],
-  imports: [IonicModule, CommonComponentsModule]
+  exports: [FieldComponent, PipelineComponent, ReactiveFormsDisabledDirective],
+  imports: [IonicModule]
 })
 export class CrmComponentsModule {}

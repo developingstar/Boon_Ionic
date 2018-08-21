@@ -1,33 +1,19 @@
 //- Use ngClass instead of ngIf so that the content can be always rendered.
 .nav-container([ngClass]="navClass | async")
-  .nav-logo([inlineSVG]="'assets/icon/boon.svg'", (click)="goToPage('CrmPage')")
+  .nav-logo([inlineSVG]="'assets/icon/boon.svg'", (click)="goToCrm()")
   .nav-center
     div([cdkPortalOutlet]="centerContent | async")
     div.search-bar
-      //- ion-auto-complete([dataProvider]='filterService', [options]="{ placeholder : 'Search contacts, deals, users' }", (itemSelected)="itemSelected($event)")
       img.search-icon(src='../../assets/icon/search-icon.png')
-      p-autoComplete.search-list([(ngModel)]="selectedItem", [suggestions]="results", (completeMethod)="search($event)", placeholder="Search contacts, deals, users", (ngModelChange)="itemSelected($event)", field="name")
+      p-autoComplete.search-list([(ngModel)]="selectedItem", [suggestions]="results", (completeMethod)="search($event)", placeholder="Search all contacts", (ngModelChange)="itemSelected($event)", field="name")
         ng-template(pTemplate="item", let-item)
-          div.search-item(*ngIf="item.id !== 0")
+          div.search-item
             div.group-name {{item.group_name}}
             div.item-name {{item.name}}
             div.item-comment {{item.comment}}
-          div.see_results(*ngIf="item.id === 0", (click)="gotoResultPage()")
-            span See all Results
-            ion-icon(name="md-arrow-round-forward")
-  button.nav-right((detectClick)="detectClick($event)")
-    span.avatar([inlineSVG]="'assets/icon/settings/avatar.svg'")
-    span.username(*ngIf="username | async") {{username | async}}
-    span.arrow.dropdown([inlineSVG]="'assets/icon/settings/down-arrow.svg'")
-    div.dropdown
-      div.dropdown-content(*ngIf="active")
-        .triangle
-        .bar
-        .popover
-          a.logout((click)="logout()") Sign Out
-  .nav-icons-left
-    div([cdkPortalOutlet]="iconsLeftContent | async")
-
+  .nav-right
+    div([cdkPortalOutlet]="rightContent | async")
+    span.username(*ngIf="username | async", (click)='logoutOn3()') Hello, {{username | async}}
 
 //- Extra spacing for the content that follows the nav bar. With this, the parent component
 //- doesn't have to juggle margins depending on the visibility state of the nav bar.

@@ -1,6 +1,7 @@
 import { Component, ViewEncapsulation } from '@angular/core'
 import { App } from 'ionic-angular'
 import { Observable } from 'rxjs'
+
 import { AuthService } from './../auth/auth.service'
 import { CurrentUserService } from './../auth/current-user.service'
 import { ContactFilterService } from './contact.filter.service'
@@ -21,12 +22,9 @@ export class NavComponent {
   readonly centerContent: Observable<NavContent>
   readonly navClass: Observable<string>
   readonly rightContent: Observable<NavContent>
-  readonly iconsLeftContent: Observable<NavContent>
   public logoutclicks: number = 0
-  public active: boolean
   selectedItem: any
   results: Crm.API.ISearchDropdownItem[]
-  query: string
 
   constructor(
     protected app: App,
@@ -36,10 +34,7 @@ export class NavComponent {
     navService: NavService
   ) {
     this.centerContent = navService.contentUpdated.map((portals) => portals[0])
-    this.iconsLeftContent = navService.contentUpdated.map(
-      (portals) => portals[1]
-    )
-    this.rightContent = navService.contentUpdated.map((portals) => portals[2])
+    this.rightContent = navService.contentUpdated.map((portals) => portals[1])
     this.navClass = navService.navBarVisible.map(
       (value) => (value ? 'visible' : 'hidden')
     )
@@ -59,27 +54,19 @@ export class NavComponent {
     return
   }
 
-  public goToPage(page: string): void {
+  public goToCrm(): void {
     const navHome = this.app.getRootNav()
-    navHome.setRoot(page)
+    navHome.setRoot('CrmPage')
   }
 
   public itemSelected(event: any): void {
     if (event.id) {
       const nav = this.app.getRootNav()
-      if (event.type === 'contact') {
-        nav.push('ContactShowPage', { id: event.id })
-      }
-    } else if (event.id === 0) {
-      this.selectedItem = {
-        id: 0,
-        name: this.query
-      }
+      nav.setRoot('ContactPage', { id: event.id })
     }
   }
 
   public search(event: any): void {
-    this.query = event.query
     this.filterService
       .getResults(event.query)
       .subscribe((results: Crm.API.ISearchDropdownItem[]) => {
@@ -89,29 +76,19 @@ export class NavComponent {
                 (result: Crm.API.ISearchDropdownItem, index: number) =>
                   index < 3
               )
-            : results.map((result: Crm.API.ISearchDropdownItem) => result)
-        if (this.results.length !== 0) {
-          this.results.push({
-            id: 0,
-            name: 'See all results'
-          })
-        }
+            : results.map(
+                (result: Crm.API.ISearchDropdownItem, index: number) => result
+              )
       })
   }
 
-  public logout(): void {
-    this.authService.logout()
-  }
-
-  detectClick(click: any): void {
-    if (this.active === true && click === true)
-      // tslint:disable-next-line:no-parameter-reassignment
-      click = false
-    this.active = click
-  }
-
-  public gotoResultPage(): void {
-    const navHome = this.app.getRootNav()
-    navHome.setRoot('SearchResultsPage', { query: this.query })
+  public logoutOn3(): void {
+    this.logoutclicks++
+    setTimeout(() => {
+      this.logoutclicks = 0
+    }, 1000)
+    if (this.logoutclicks === 3) {
+      this.authService.logout()
+    }
   }
 }

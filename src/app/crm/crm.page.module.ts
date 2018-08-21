@@ -2,8 +2,8 @@ import { NgModule } from '@angular/core'
 import { IonicPageModule } from 'ionic-angular'
 import { InlineSVGModule } from 'ng-inline-svg'
 
-import { CommonComponentsModule } from '../common.components.module'
 import { NavModule } from '../nav.module'
+import { CrmComponentsModule } from './crm.components.module'
 import { CrmPage } from './crm.page'
 
 @NgModule({
@@ -13,7 +13,7 @@ import { CrmPage } from './crm.page'
     InlineSVGModule,
     IonicPageModule.forChild(CrmPage),
     NavModule,
-    CommonComponentsModule
+    CrmComponentsModule
   ]
 })
 export class CrmPageModule {}

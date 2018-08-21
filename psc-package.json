@@ -1,0 +1,16 @@
+{
+  "name": "boon",
+  "set": "psc-0.12.0-20180704",
+  "source": "https://github.com/purescript/package-sets.git",
+  "depends": [
+    "affjax",
+    "console",
+    "effect",
+    "halogen",
+    "lists",
+    "prelude",
+    "psci-support",
+    "simple-json",
+    "test-unit"
+  ]
+}

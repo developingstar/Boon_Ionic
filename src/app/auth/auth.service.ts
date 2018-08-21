@@ -64,14 +64,4 @@ export class AuthService {
         return response
       })
   }
-
-  public createOrganization(
-    organization: Auth.API.ISignupOrganization
-  ): Observable<{ data: { message: string } }> {
-    return this.http
-      .post('/api/organizations', { data: { organization: organization } })
-      .map((response: { data: { message: string } }) => {
-        return response
-      })
-  }
 }

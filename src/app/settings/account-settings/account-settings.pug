@@ -21,22 +21,7 @@ settings-page-with-menu.settings-page([currentPage]="'AccountSettingsPage'")
             ion-input.user-name(formControlName="name", type="text")
           .form-row
             ion-label(stacked) Email
-            ion-input(formControlName="email", type="email")
+            ion-input(formControlName="email", type="email" )
           .form-row
             button.settings-button(ion-button, medium, type="submit")
               | update info
-        button.settings-button(ion-button, medium, (click)="resetPassword()") Reset Password
-        //- form([formGroup]="passwordForm", (ngSubmit)="resetPassword()").password-form
-        //-   .form-row
-        //-     ion-label(stacked) Current Password
-        //-     ion-input(formControlName="current_password", type="password")
-        //-   .form-row.password-row
-        //-     .password
-        //-       ion-label(stacked) New Password
-        //-       ion-input(formControlName="new_password", type="password" )
-        //-     .retype-password
-        //-       ion-label(stacked) Retype New Password
-        //-       ion-input(formControlName="password_repeat", type="password" )
-        //-   .form-row
-        //-     button.settings-button(ion-button, medium, type="submit")
-        //-       | change password

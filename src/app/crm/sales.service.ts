@@ -94,31 +94,6 @@ export class SalesService {
       )
   }
 
-  public createField(
-    field: Crm.API.IFieldDefinitionCreate
-  ): Observable<FieldDefinition> {
-    return this.http
-      .post(`/api/fields`, JSON.stringify({ field: field }))
-      .map(
-        (response: {
-          readonly data: { readonly field: Crm.API.IFieldDefinition }
-        }) => new FieldDefinition(response.data.field)
-      )
-  }
-
-  public updateField(
-    id: number,
-    field: Crm.API.IFieldDefinitionUpdate
-  ): Observable<FieldDefinition> {
-    return this.http
-      .patch(`/api/fields/${id}`, JSON.stringify({ field: field }))
-      .map(
-        (response: {
-          readonly data: { readonly field: Crm.API.IFieldDefinition }
-        }) => new FieldDefinition(response.data.field)
-      )
-  }
-
   public stage(id: number): Observable<Stage> {
     return this.http.get(`/api/stages/${id}`).map(
       (response: {
@@ -146,7 +121,7 @@ export class SalesService {
       )
   }
 
-  public pipelines(): Observable<Pipeline[]> {
+  public pipelines(): Observable<ReadonlyArray<Pipeline>> {
     return this.http
       .get('/api/pipelines')
       .map((response: Crm.API.IPipelinesResponse) =>
@@ -216,7 +191,9 @@ export class SalesService {
       )
   }
 
-  public notes(contactId: number | null = null): Observable<Note[]> {
+  public notes(
+    contactId: number | null = null
+  ): Observable<ReadonlyArray<Note>> {
     return this.http
       .get(`/api/contacts/${contactId}/notes`)
       .map((response: Crm.API.INotesResponse) =>

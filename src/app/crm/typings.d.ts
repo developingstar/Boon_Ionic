@@ -140,7 +140,6 @@ declare namespace Crm {
       readonly id: number
       readonly name: string
       readonly comment?: string
-      readonly type?: string
     }
   }
 }

@@ -22,7 +22,6 @@ export class IntegrationPage extends ReactivePage<IState, UserAction> {
   navSubscribe: any
   originalService: Service
   isChanged: boolean
-  readonly pattern: any = /^[0-9A-z-!$%^&*()_+|~=`{}\[\]";'<>?,.\/]{2,}:[0-9A-z-!$%^&*()_+|~=`{}\[\]";'<>?,.\/]{2,}?$/
 
   constructor(
     public navParams: NavParams,
@@ -45,26 +44,10 @@ export class IntegrationPage extends ReactivePage<IState, UserAction> {
   }
 
   public updateService(): void {
-    let isValidate = true
-    this.service.subscribe((service: Service) => {
-      if (service.name === 'twilio' && !this.pattern.test(service.token)) {
-        isValidate = false
-      }
-    })
-
-    if (isValidate) {
-      if (this.originalService) {
-        this.uiActions.next({ name: 'update_service' })
-      } else {
-        this.uiActions.next({ name: 'create_service' })
-      }
+    if (this.originalService) {
+      this.uiActions.next({ name: 'update_service' })
     } else {
-      showToast(
-        this.toastController,
-        'The token/secret provided does not match the required format of "token:secret"',
-        4000,
-        false
-      )
+      this.uiActions.next({ name: 'create_service' })
     }
   }
 

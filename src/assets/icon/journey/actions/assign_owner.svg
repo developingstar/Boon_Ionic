@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="Layer_1" data-name="Layer 1" viewBox="0 0 34 34">
+    <defs>
+        <style>
+            .svg-icon-journey-action-assign-owner-1{fill:#bedcfe;}.svg-icon-journey-action-assign-owner-1,.svg-icon-journey-action-assign-owner-2{stroke:#07f;}.svg-icon-journey-action-assign-owner-2{fill:none;stroke-miterlimit:10;}.svg-icon-journey-action-assign-owner-3{fill:#07f;}
+        </style>
+    </defs>
+    <g id="Page-1">
+        <g id="Automation">
+            <g id="Group-14">
+                <circle id="Oval-2" cx="17" cy="17" r="16.5" class="svg-icon-journey-action-assign-owner-1"/>
+            </g>
+        </g>
+    </g>
+    <path d="M19.89,25a4.55,4.55,0,0,0,1.65-.57,4.3,4.3,0,0,0,2.07-3.68" class="svg-icon-journey-action-assign-owner-2"/>
+    <path d="M23.63,15.21v-.73a6.83,6.83,0,0,0-1.77-4.67,6.13,6.13,0,0,0-4.54-1.95H16.7a6.14,6.14,0,0,0-4.54,2,6.83,6.83,0,0,0-1.77,4.67v.73" class="svg-icon-journey-action-assign-owner-2"/>
+    <path d="M11.42,15.21v5.52H10.19a2.05,2.05,0,0,1-2-2.05V17.26a2.05,2.05,0,0,1,2-2.05h1.23m1-1H10.19a3.06,3.06,0,0,0-3,3.05v1.42a3.06,3.06,0,0,0,3.05,3.05h2.23V14.21Z" class="svg-icon-journey-action-assign-owner-3"/>
+    <path d="M23.81,15.21a2.05,2.05,0,0,1,2.05,2.05v1.42a2.05,2.05,0,0,1-2.05,2.05H22.58V15.21h1.23m0-1H21.58v7.52h2.23a3.06,3.06,0,0,0,3.05-3.05V17.26a3.06,3.06,0,0,0-3.05-3.05Z" class="svg-icon-journey-action-assign-owner-3"/>
+    <path d="M18.57,23.4a1.37,1.37,0,1,1,0,2.74H16.29a1.37,1.37,0,0,1,0-2.74h2.28m0-1H16.29a2.37,2.37,0,0,0,0,4.74h2.28a2.37,2.37,0,1,0,0-4.74Z" class="svg-icon-journey-action-assign-owner-3"/>
+</svg>

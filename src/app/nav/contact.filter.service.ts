@@ -22,14 +22,12 @@ export class ContactFilterService {
                 return {
                   group_name: 'Contacts',
                   id: contactModel.id,
-                  name: name,
-                  type: 'contact'
+                  name: name
                 }
               } else {
                 return {
                   id: contactModel.id,
-                  name: name,
-                  type: 'contact'
+                  name: name
                 }
               }
             }
