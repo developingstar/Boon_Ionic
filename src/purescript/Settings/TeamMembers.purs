@@ -24,20 +24,22 @@ import Web.HTML.HTMLInputElement as HTMLInputElement
 import Web.XHR.FormData (EntryName(..))
 import Web.XHR.FormData as FormData
 
+type Form =
+  { avatar_url :: Maybe String
+  , email :: String
+  , name :: String
+  , password :: Maybe String
+  , phone_number :: Maybe String
+  , phone_numbers :: Array (Maybe String)
+  }
+
+data Mode
+  = Edit { id :: Int, role :: String }
+  | New
+
 data State
   = ListView { users :: Array User }
-  | NewUserView { user ::
-                  { avatar_url :: Maybe String
-                  , email :: String
-                  , name :: String
-                  , phone_number :: Maybe String
-                  , password :: Maybe String
-                  }
-                , phone_numbers :: Array (Maybe String)
-                }
-  | EditUserView { user :: User
-                 , phone_numbers :: Array (Maybe String)
-                 }
+  | FormView Form Mode
 
 data Query a
   = CreateUser a
@@ -45,7 +47,7 @@ data Query a
   | GoToListView a
   | GoToNewUserView a
   | UpdateAvatar Event a
-  | UpdateField (String -> State -> State) String a
+  | UpdateField (Form -> String -> Form) String a
   | UpdatePhoneNumber (Array (Maybe String)) Int a
   | UpdateUser a
 
@@ -64,24 +66,10 @@ itemList items =
   )
   |> HH.div [classList "item-list"]
 
-formView :: String
-            -> String
-            -> Boolean
-            -> forall r. { user ::
-                           { avatar_url :: Maybe String
-                           , email :: String
-                           , name :: String
-                           , phone_number :: Maybe String
-                           , password :: Maybe String
-                           | r
-                           }
-                         , phone_numbers :: Array (Maybe String)
-                         }
-            -> (Unit -> Query Unit)
-            -> HH.HTML Void (Query Unit)
-formView headerAction buttonAction hideAvatar state confirmQuery =
+formView :: String -> String -> Boolean -> Form -> (Unit -> Query Unit) -> HH.HTML Void (Query Unit)
+formView headerAction buttonAction hideAvatar form confirmQuery =
   let
-    isInvalid = String.null state.user.email || String.null state.user.name
+    isInvalid = String.null form.email || String.null form.name
     maybeQuery = if isInvalid then Nothing else Just confirmQuery in
   HH.div_
   [ HH.div [HP.class_ $ HH.ClassName "header"]
@@ -94,7 +82,7 @@ formView headerAction buttonAction hideAvatar state confirmQuery =
   , HH.form [HP.autocomplete false]
     [ HH.div [classIf hideAvatar "hidden"]
       [ HH.label [classList "label label-md"] [HH.text "Avatar"]
-      , HH.img [classList "avatar", HP.src $ fromMaybe "assets/icon/settings/avatar.svg" state.user.avatar_url]
+      , HH.img [classList "avatar", HP.src $ fromMaybe "assets/icon/settings/avatar.svg" form.avatar_url]
       , HH.input
         [ HP.type_ HP.InputFile
         , HP.accept $ MediaType ".png, .jpg, .jpeg"
@@ -103,64 +91,36 @@ formView headerAction buttonAction hideAvatar state confirmQuery =
       ]
     , HH.label [classList "label label-md"] [HH.text "E-mail"]
     , HH.input
-      [ classIf (String.null state.user.email) "invalid"
+      [ classIf (String.null form.email) "invalid"
       , HP.type_ HP.InputEmail
       , HP.autofocus true
-      , HE.onValueInput (HE.input $ UpdateField updateEmail)
-      , HP.value state.user.email
+      , HE.onValueInput (HE.input $ UpdateField (\form' val -> form' {email = val}))
+      , HP.value form.email
       ]
     , HH.label [classList "label label-md"] [HH.text "Name"]
     , HH.input
-      [ classIf (String.null state.user.name) "invalid"
+      [ classIf (String.null form.name) "invalid"
       , HP.type_ HP.InputText
-      , HE.onValueInput (HE.input $ UpdateField updateName)
-      , HP.value state.user.name
+      , HE.onValueInput (HE.input $ UpdateField (\form' val -> form' {name = val}))
+      , HP.value form.name
       ]
     , HH.label [classList "label label-md"] [HH.text "Password"]
     , HH.input
-      [ classIf (String.length (fromMaybe "" state.user.password) < 6 && String.length (fromMaybe "" state.user.password) > 0) "invalid"
+      [ classIf (String.length (fromMaybe "" form.password) < 6 && String.length (fromMaybe "" form.password) > 0) "invalid"
       , HP.type_ HP.InputPassword
-      , HE.onValueInput (HE.input $ UpdateField updatePassword)
-      , HP.value $ fromMaybe "" state.user.password
+      , HE.onValueInput (HE.input $ UpdateField (\form' val -> form' {password = Just val}))
+      , HP.value $ fromMaybe "" form.password
       ]
     , HH.label [classList "label label-md"] [HH.text "Phone number"]
-    , HH.select [ HE.onSelectedIndexChange (HE.input $ UpdatePhoneNumber state.phone_numbers)]
+    , HH.select [ HE.onSelectedIndexChange (HE.input $ UpdatePhoneNumber form.phone_numbers)]
       (map
         (\v -> HH.option
-                [HP.selected $ v == state.user.phone_number]
+                [HP.selected $ v == form.phone_number]
                 [HH.text $ fromMaybe "" v]
         )
-        state.phone_numbers)
+        form.phone_numbers)
     ]
   ]
-
-updateEmail :: String -> State -> State
-updateEmail value state =
-  case state of
-    ListView _ -> state
-    NewUserView internal -> NewUserView (internal { user { email = value } })
-    EditUserView internal -> EditUserView (internal { user { email = value } })
-
-updateName :: String -> State -> State
-updateName value state =
-  case state of
-    ListView _ -> state
-    NewUserView internal -> NewUserView (internal { user { name = value } })
-    EditUserView internal -> EditUserView (internal { user { name = value } })
-
-updatePassword :: String -> State -> State
-updatePassword value state =
-  case state of
-    ListView _ -> state
-    NewUserView internal -> NewUserView (internal { user { password = Just value } })
-    EditUserView internal -> EditUserView (internal { user { password = Just value } })
-
-updatePhoneNumber :: Maybe String -> State -> State
-updatePhoneNumber value state =
-  case state of
-    ListView _ -> state
-    NewUserView internal -> NewUserView (internal { user { phone_number = value } })
-    EditUserView internal -> EditUserView (internal { user { phone_number = value } })
 
 component :: H.Component HH.HTML Query Unit Unit Aff
 component =
@@ -185,52 +145,43 @@ component =
       ]
     , itemList state.users
     ]
-  render (NewUserView state) =
-    formView "New" "Create" true state CreateUser
-  render (EditUserView state) =
-    formView "Edit" "Update" false state UpdateUser
+  render (FormView form New) =
+    formView "New" "Create" true form CreateUser
+  render (FormView form (Edit _)) =
+    formView "Edit" "Update" false form UpdateUser
 
   eval :: forall a. Query a -> State -> H.ComponentDSL State Query Unit Aff a
-  eval (CreateUser next) state@(NewUserView { user:
-                                              { avatar_url
-                                              , email
-                                              , name
-                                              , phone_number
-                                              , password
-                                              }
-                                            }) =
-    whenRequestSuccessful (User.create avatar_url email name phone_number password) state next
+  eval (CreateUser next) state@(FormView form mode) =
+    whenRequestSuccessful (User.create form.avatar_url form.email form.name form.phone_number form.password) state next
   eval (CreateUser next) _ =
     pure next
   eval (GoToNewUserView next) _ = do
     response <- H.liftAff $ send PhoneNumber.getAll
     case response of
       Left _ -> pure unit
-      Right phone_numbers -> H.put $ NewUserView
-        { user:
-          { avatar_url: Nothing
-          , email: ""
-          , name: ""
-          , phone_number: Nothing
-          , password: Nothing
-          }
-        , phone_numbers:
-          phone_numbers
-          |> map(\o -> Just o.phone_number)
-          |> Array.cons Nothing
+      Right phone_numbers -> H.put $ FormView
+        { avatar_url: Nothing
+        , email: ""
+        , name: ""
+        , password: Nothing
+        , phone_number: Nothing
+        , phone_numbers: phone_numbers |> map(\o -> Just o.phone_number) |> Array.cons Nothing
         }
+        New
     pure next
   eval (GoToEditUserView user next) _ = do
     response <- H.liftAff $ send PhoneNumber.getAll
     case response of
       Left _ -> pure unit
-      Right phone_numbers -> H.put $ EditUserView
-        { user: user
-        , phone_numbers:
-          phone_numbers
-          |> map(\o -> Just o.phone_number)
-          |> Array.cons Nothing
+      Right phone_numbers -> H.put $ FormView
+        { avatar_url: user.avatar_url
+        , email: user.email
+        , name: user.name
+        , password: Nothing
+        , phone_number: user.phone_number
+        , phone_numbers: phone_numbers |> map(\o -> Just o.phone_number) |> Array.cons Nothing
         }
+        (Edit { id: user.id, role: user.role })
     pure next
   eval (GoToListView next) _ = do
     response <- H.liftAff $ send User.getAll
@@ -238,17 +189,25 @@ component =
       Left _ -> pure unit
       Right users -> H.put $ ListView { users: Array.sortWith (_.name >>> String.toLower) users }
     pure next
-  eval (UpdateField f value next) _ = do
-    H.modify_ $ f value
+  eval (UpdateField f value next) (FormView form mode) = do
+    H.put $ FormView (f form value) mode
     pure next
-  eval (UpdatePhoneNumber phoneNumbers index next) _ = do
-    H.modify_ $ Array.index phoneNumbers index |> fromMaybe Nothing |> updatePhoneNumber
+  eval (UpdateField f value next) _ =
     pure next
-  eval (UpdateUser next) state@(EditUserView {user}) =
+  eval (UpdatePhoneNumber phoneNumbers index next) (FormView form mode) = do
+    H.put $ Array.index phoneNumbers index
+      |> fromMaybe Nothing
+      |> (\pn -> FormView (form {phone_number = pn}) mode)
+    pure next
+  eval (UpdatePhoneNumber phoneNumbers index next) _ =
+    pure next
+  eval (UpdateUser next) state@(FormView form (Edit { id, role })) =
+    let user = toUser id role form in
     whenRequestSuccessful (User.update user) state next
   eval (UpdateUser next) _ =
     pure next
-  eval (UpdateAvatar event next) state@(EditUserView {user}) = do
+  eval (UpdateAvatar event next) state@(FormView form (Edit { id, role })) = do
+    let user = toUser id role form
     maybeFile <- liftEffect $ fileFromEvent event
     formData <- liftEffect $ FormData.new
     case maybeFile of
@@ -264,6 +223,10 @@ component =
   fileFromEvent event = do
     files <- maybe (pure Nothing) HTMLInputElement.files (target event >>= HTMLInputElement.fromEventTarget)
     pure $ files >>= (FileList.item 0)
+
+  toUser :: Int -> String -> Form -> User
+  toUser id role {avatar_url, email, name, password, phone_number} =
+    { role, phone_number, name, id, email, avatar_url, password }
 
   -- Goes to list view when the request is successful, otherwise shows a warning toast.
   whenRequestSuccessful :: forall a b c. RequestContent a => Request a b -> State -> c -> H.ComponentDSL State Query Unit Aff c
