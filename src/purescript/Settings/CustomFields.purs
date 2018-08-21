@@ -3,17 +3,17 @@ module Settings.CustomFields (component, Query) where
 import Boon.Common
 
 import Boon.Bridge (showToast, warning)
-import Boon.Elements (button, classIf, classList, itemList, onClick)
+import Boon.Elements (button, itemList)
 import Boon.Forms (inputGroup)
 import Data.Array as Array
 import Data.String as String
 import Halogen as H
 import Halogen.HTML as HH
-import Halogen.HTML.Events as HE
 import Halogen.HTML.Properties as HP
 import Model.Common (class RequestContent, Request, send, showErrors)
 import Model.Field (Field)
 import Model.Field as Field
+import Settings.Common (formHeader)
 
 data State
   = ListView { fields :: Array Field }
@@ -34,13 +34,7 @@ formView headerAction buttonAction value confirmQuery =
     isInvalid = String.null value
     maybeQuery = if isInvalid then Nothing else Just confirmQuery in
   HH.div_
-  [ HH.div [HP.class_ $ HH.ClassName "header"]
-    [ HH.div_
-      [ HH.a [classList "back-link", onClick GoToListView] [HH.text "< Back"]
-      , HH.h2_ [HH.text $ headerAction <> " Field"]
-      ]
-    , button maybeQuery $ buttonAction <> " Field"
-    ]
+  [ formHeader headerAction buttonAction "Field" GoToListView maybeQuery
   , HH.form [HP.autocomplete false] [inputGroup "Name" isInvalid HP.InputText UpdateName value]
   ]
 

@@ -16,6 +16,7 @@ import Model.Common (class RequestContent, Request, send, showErrors)
 import Model.PhoneNumber as PhoneNumber
 import Model.User (User)
 import Model.User as User
+import Settings.Common (formHeader)
 import Web.Event.Event (Event, target)
 import Web.File.File (File)
 import Web.File.FileList as FileList
@@ -77,13 +78,7 @@ formView headerAction buttonAction isCreate form confirmQuery =
     updatePassword = UpdateField \form' val -> form' {password = Just val}
     maybeQuery = if isInvalid then Nothing else Just confirmQuery in
   HH.div_
-  [ HH.div [HP.class_ $ HH.ClassName "header"]
-    [ HH.div_
-      [ HH.a [classList "back-link", onClick GoToListView] [HH.text "< Back"]
-      , HH.h2_ [HH.text $ headerAction <> " User"]
-      ]
-    , button maybeQuery $ buttonAction <> " User"
-    ]
+  [ formHeader headerAction buttonAction "User" GoToListView maybeQuery
   , HH.form [HP.autocomplete false]
     [ HH.div [classIf isCreate "hidden"]
       [ fileInputGroup "Avatar" (fromMaybe defaultAvatar form.avatar_url) UpdateAvatar ]
