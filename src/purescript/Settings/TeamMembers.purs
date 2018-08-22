@@ -119,8 +119,8 @@ component =
     formView "Edit" "Update" false form UpdateUser
 
   eval :: forall a. Query a -> State -> H.ComponentDSL State Query Unit Aff a
-  eval (CreateUser next) state@(FormView form mode) =
-    whenRequestSuccessful (User.create form.avatar_url form.email form.name form.phone_number form.password) state next
+  eval (CreateUser next) state@(FormView { email, name, phone_number } New) =
+    whenRequestSuccessful (User.create { email, name, phone_number }) state next
   eval (CreateUser next) _ =
     pure next
   eval (GoToNewUserView next) _ = do
