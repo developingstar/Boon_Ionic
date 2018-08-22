@@ -26,7 +26,8 @@ import Web.XHR.FormData (EntryName(..))
 import Web.XHR.FormData as FormData
 
 type Form =
-  { avatar_url :: Maybe String
+  { avatar_file :: Maybe File
+  , avatar_url :: Maybe String
   , email :: String
   , name :: String
   , password :: Maybe String
@@ -47,7 +48,7 @@ data Query a
   | GoToEditUserView User a
   | GoToListView a
   | GoToNewUserView a
-  | UpdateAvatar Event a
+  | SetAvatar Event a
   | UpdateField (Form -> String -> Form) String a
   | UpdatePhoneNumber (Array (Maybe String)) Int a
   | UpdateUser a
@@ -82,7 +83,7 @@ formView headerAction buttonAction isCreate form confirmQuery =
   [ formHeader headerAction buttonAction "User" GoToListView maybeQuery
   , HH.form [HP.autocomplete false]
     [ HH.div [classIf isCreate "hidden"]
-      [ fileInputGroup "Avatar" (fromMaybe defaultAvatar form.avatar_url) UpdateAvatar ]
+      [ fileInputGroup "Avatar" (fromMaybe defaultAvatar form.avatar_url) SetAvatar ]
     , inputGroup "E-mail" (String.null form.email) HP.InputEmail updateEmail form.email
     , inputGroup "Name" (String.null form.name) HP.InputText updateName form.name
     , HH.div [classIf isCreate "hidden"]
@@ -121,7 +122,7 @@ component =
 
   eval :: forall a. Query a -> State -> H.ComponentDSL State Query Unit Aff a
   eval (CreateUser next) state@(FormView { email, name, phone_number } New) =
-    whenRequestSuccessful (User.create { email, name, phone_number }) state next
+    whenRequestSuccessful (User.create { email, name, phone_number }) state next (GoToListView next)
   eval (CreateUser next) _ =
     pure next
   eval (GoToNewUserView next) _ = do
@@ -130,6 +131,7 @@ component =
       Left _ -> pure unit
       Right phone_numbers -> H.put $ FormView
         { avatar_url: Nothing
+        , avatar_file: Nothing
         , email: ""
         , name: ""
         , password: Nothing
@@ -145,6 +147,7 @@ component =
       Left _ -> pure unit
       Right phone_numbers -> H.put $ FormView
         { avatar_url: user.avatar_url
+        , avatar_file: Nothing
         , email: user.email
         , name: user.name
         , password: Nothing
@@ -171,22 +174,22 @@ component =
     pure next
   eval (UpdatePhoneNumber phoneNumbers index next) _ =
     pure next
-  eval (UpdateUser next) state@(FormView form (Edit { id, role })) =
+  eval (UpdateUser next) state@(FormView form@({avatar_file: Just file}) mode@(Edit {id, role})) = do
+    user <- pure $ toUser id role form
+    formData <- liftEffect $ FormData.new
+    _ <- liftEffect $ appendFile formData (EntryName "avatar") file
+    newState <- pure $ FormView (form {avatar_file = Nothing}) mode
+    whenRequestSuccessful (User.updateAvatar user formData) newState next (UpdateUser next)
+  eval (UpdateUser next) state@(FormView form (Edit {id, role})) =
     let user = toUser id role form in
-    whenRequestSuccessful (User.update user) state next
+    whenRequestSuccessful (User.update user) state next (GoToListView next)
   eval (UpdateUser next) _ =
     pure next
-  eval (UpdateAvatar event next) state@(FormView form (Edit { id, role })) = do
-    let user = toUser id role form
+  eval (SetAvatar event next) state@(FormView form mode) = do
     maybeFile <- liftEffect $ fileFromEvent event
-    formData <- liftEffect $ FormData.new
-    case maybeFile of
-      Just file -> do
-        _ <- liftEffect $ appendFile formData (EntryName "avatar") file
-        whenRequestSuccessful (User.updateAvatar user formData) state next
-      Nothing ->
-        pure next
-  eval (UpdateAvatar event next) _ =
+    H.put $ FormView (form {avatar_file = maybeFile}) mode
+    pure next
+  eval (SetAvatar event next) _ =
     pure next
 
   phoneNumbersAsSelectOptions :: Array PhoneNumber -> Array (Maybe String)
@@ -204,13 +207,12 @@ component =
   toUser id role {avatar_url, email, name, password, phone_number} =
     { role, phone_number, name, id, email, avatar_url, password }
 
-  -- Goes to list view when the request is successful, otherwise shows a warning toast.
-  whenRequestSuccessful :: forall a b c. RequestContent a => Request a b -> State -> c -> H.ComponentDSL State Query Unit Aff c
-  whenRequestSuccessful request state next = do
+  whenRequestSuccessful :: forall a b c. RequestContent a => Request a b -> State -> c -> Query c -> H.ComponentDSL State Query Unit Aff c
+  whenRequestSuccessful request state left right = do
     response <- H.liftAff $ send request
     case response of
       Left e -> do
         H.liftEffect $ showToast warning 2000 (showErrors e)
-        pure next
+        pure left
       Right _ ->
-        eval (GoToListView next) state
+        eval right state
