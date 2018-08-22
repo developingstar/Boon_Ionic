@@ -13,6 +13,7 @@ import Halogen as H
 import Halogen.HTML as HH
 import Halogen.HTML.Properties as HP
 import Model.Common (class RequestContent, Request, send, showErrors)
+import Model.PhoneNumber (PhoneNumber)
 import Model.PhoneNumber as PhoneNumber
 import Model.User (User)
 import Model.User as User
@@ -133,10 +134,11 @@ component =
         , name: ""
         , password: Nothing
         , phone_number: Nothing
-        , phone_numbers: phone_numbers |> map(\o -> Just o.phone_number) |> Array.cons Nothing
+        , phone_numbers: phoneNumbersAsSelectOptions phone_numbers
         }
         New
     pure next
+
   eval (GoToEditUserView user next) _ = do
     response <- H.liftAff $ send PhoneNumber.getAll
     case response of
@@ -147,7 +149,7 @@ component =
         , name: user.name
         , password: Nothing
         , phone_number: user.phone_number
-        , phone_numbers: phone_numbers |> map(\o -> Just o.phone_number) |> Array.cons Nothing
+        , phone_numbers: phoneNumbersAsSelectOptions phone_numbers
         }
         (Edit { id: user.id, role: user.role })
     pure next
@@ -186,6 +188,12 @@ component =
         pure next
   eval (UpdateAvatar event next) _ =
     pure next
+
+  phoneNumbersAsSelectOptions :: Array PhoneNumber -> Array (Maybe String)
+  phoneNumbersAsSelectOptions list =
+    list
+    |> map(\o -> Just o.phone_number)
+    |> Array.cons Nothing
 
   fileFromEvent :: Event -> Effect (Maybe File)
   fileFromEvent event = do
