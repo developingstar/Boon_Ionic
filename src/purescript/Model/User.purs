@@ -1,4 +1,4 @@
-module Model.User (User, getAll, create, update, updateAvatar) where
+module Model.User (NewUser, User, getAll, create, update, updateAvatar) where
 
 import Boon.Common
 
@@ -10,6 +10,12 @@ import Model.Common (Decoder, Request)
 import Simple.JSON (readJSON, writeJSON)
 import Web.XHR.FormData (FormData)
 
+
+type NewUser =
+  { phone_number :: Maybe String
+  , name :: String
+  , email :: String
+  }
 
 type User =
   { role :: String
@@ -37,17 +43,15 @@ getAll =
   , decoder: decodeMany
   }
 
-create :: Maybe String -> String -> String -> Maybe String -> Maybe String -> Request String Unit
-create avatar_url email name phone_number password =
+create :: NewUser -> Request String Unit
+create {email, name, phone_number} =
   { path: "/api/users"
   , method: POST
   , content: Just (writeJSON
     { user:
-      { avatar_url: toNullable avatar_url
-      , email
+      { email
       , name
       , phone_number: toNullable phone_number
-      , password
       }
     }
   )
@@ -55,18 +59,16 @@ create avatar_url email name phone_number password =
   }
 
 update :: User -> Request String Unit
-update user =
-  { path: "/api/users/" <> (show user.id)
+update {email, id, name, phone_number, role, password} =
+  { path: "/api/users/" <> (show id)
   , method: PATCH
   , content: Just (writeJSON
     { user:
-      { avatar_url: toNullable user.avatar_url
-      , email: user.email
-      , id: user.id
-      , name: user.name
-      , phone_number: toNullable user.phone_number
-      , role: user.role
-      , password: user.password
+      { email
+      , name
+      , phone_number: toNullable phone_number
+      , role
+      , password
       }
     }
   )
@@ -74,8 +76,8 @@ update user =
   }
 
 updateAvatar :: User -> FormData -> Request FormData Unit
-updateAvatar user formData =
-  { path: "/api/users/" <> (show user.id) <> "/avatar"
+updateAvatar {id} formData =
+  { path: "/api/users/" <> (show id) <> "/avatar"
   , method: POST
   , content: Just formData
   , decoder: const (Right unit)
