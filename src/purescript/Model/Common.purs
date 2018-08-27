@@ -1,6 +1,7 @@
 module Model.Common
   ( class RequestContent
   , Decoder
+  , Paginated
   , Request
   , handleRequest
   , headers
@@ -35,6 +36,17 @@ import Web.XHR.FormData (FormData)
 
 type Decoder a = String -> Either MultipleErrors a
 
+type Paginated a =
+  { data :: a
+  , links ::
+    { next :: Maybe String
+    , prev :: Maybe String
+    }
+  , metadata ::
+    { count :: Int
+    }
+  }
+
 type Request a b =
   { path :: AX.URL
   , method :: Method
@@ -63,13 +75,21 @@ type ServerError =
   , source :: Maybe { pointer :: String }
   }
 
+withApiBaseUrl :: AX.URL -> Effect AX.URL
+withApiBaseUrl url = do
+  case String.stripPrefix (String.Pattern "http") url of
+    Just _ -> pure $ url
+    Nothing -> do
+      base <- liftEffect apiBaseUrl
+      pure $ base <> url
+
 send :: forall a b. RequestContent a => Request a b -> Aff (Either MultipleErrors b)
 send request = do
-  base <- liftEffect apiBaseUrl
+  url <- liftEffect $ withApiBaseUrl request.path
   let content = map toAXRequest request.content
   let r =
         { method: Left request.method
-        , url: base <> request.path
+        , url: url
         , headers: headers request.content
         , content
         , username : Nothing
