@@ -2,6 +2,7 @@ module Model.Common
   ( class RequestContent
   , Decoder
   , Request
+  , handleRequest
   , headers
   , send
   , showErrors
@@ -11,7 +12,7 @@ module Model.Common
 
 import Boon.Common
 
-import Boon.Bridge (apiBaseUrl)
+import Boon.Bridge (apiBaseUrl, showToast, warning)
 import Control.Alt ((<|>))
 import Data.Array as Array
 import Data.HTTP.Method (Method)
@@ -21,6 +22,7 @@ import Data.MediaType.Common (applicationJSON)
 import Data.String as String
 import Effect.Class (liftEffect)
 import Foreign (ForeignError(..), MultipleErrors, renderForeignError)
+import Halogen as H
 import Network.HTTP.Affjax (AffjaxResponse)
 import Network.HTTP.Affjax as AX
 import Network.HTTP.Affjax.Request as AXRequest
@@ -76,6 +78,16 @@ send request = do
         }
   map (validateAndDecode request.decoder) (AX.affjax AXResponse.string r)
     <|> (pure $ Left $ singleError "Server is unreachable")
+
+handleRequest :: forall a m q r1 r2 s. RequestContent r1 => Request r1 r2 -> (r2 -> H.ComponentDSL s q m Aff a) -> H.ComponentDSL s q m Aff a -> H.ComponentDSL s q m Aff a
+handleRequest request succ fail = do
+  response <- H.liftAff $ send request
+  case response of
+    Left e -> do
+      H.liftEffect $ showToast warning 5000 (showErrors e)
+      fail
+    Right r ->
+      succ r
 
 showErrors :: MultipleErrors -> String
 showErrors errors =
