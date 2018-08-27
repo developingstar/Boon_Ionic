@@ -3,6 +3,7 @@ module Boon.Elements (
   , classIf
   , classList
   , itemList
+  , loader
   , onClick
   ) where
 
@@ -43,3 +44,7 @@ itemList items =
 onClick :: forall q r. (Unit -> q Unit) -> HP.IProp ( onClick :: MouseEvent | r ) (q Unit)
 onClick query =
   HE.onClick (HE.input_ query)
+
+loader :: forall p i. HH.HTML p i
+loader =
+  HH.div [ classList "loader" ] []
