@@ -2,6 +2,7 @@
 @import 'theme/variables';
 @import 'theme/mixins';
 @import 'theme/globals';
+
 app {
   &.app-root {
     .ion-page {
@@ -13,6 +14,7 @@ app {
         height: calc(100vh - #{$nav-height-large});
       }
     }
+
     .content .fixed-content,
     .content .scroll-content {
       padding: 8px;
@@ -20,15 +22,35 @@ app {
         padding: $content-padding 64px;
       }
     }
+
     .loader {
       position: absolute;
       right: 32px;
       bottom: 32px;
+
+      border: 1px solid $color-primary-lt;
+      border-top: 3px solid $color-primary;
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      animation: spin 1s linear infinite;
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
       * {
         stroke: $color-primary;
       }
     }
-  } //this will change the ugly yellow autofill highlight that browsers add
+  }
+
+  //this will change the ugly yellow autofill highlight that browsers add
   input:-webkit-autofill {
     -webkit-box-shadow: 0 0 0 50px white inset;
   }
