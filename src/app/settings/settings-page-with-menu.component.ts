@@ -19,6 +19,7 @@ interface IMenuEntry {
   selector: 'settings-page-with-menu',
   templateUrl: 'settings-page-with-menu.component.html'
 })
+
 export class SettingsPageWithMenuComponent {
   @Input() readonly currentPage: string
 
