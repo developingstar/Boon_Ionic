@@ -28,11 +28,17 @@ suite = do
   describe "create" do
     it "sends proper content" do
       quickCheck \(AlphaString s) ->
-        (User.create Nothing s s (Just s) (Just s)).content ===
-        Just (joinWith "" ["{\"user\":{\"phone_number\":\"", s, "\",\"password\":\"", s,"\",\"name\":\"", s, "\",\"email\":\"", s, "\",\"avatar_url\":null}}"])
+        (User.create { name: s
+                     , email: s
+                     , phone_number: Just s
+                     }).content ===
+        Just (joinWith "" ["{\"user\":{\"phone_number\":\"", s, "\",\"name\":\"", s, "\",\"email\":\"", s, "\"}}"])
     it "ignores the response" do
       Assert.equal
-        ((User.create Nothing "user@example.com" "Mark" Nothing Nothing).decoder "OK")
+        ((User.create { name: "John"
+                      , email: "john@example.com"
+                      , phone_number: Nothing
+                      }).decoder "OK")
         (Right unit)
 
   describe "update" do
@@ -46,7 +52,7 @@ suite = do
                       , avatar_url: Nothing
                       , password: Nothing
                       }).content ===
-        Just (joinWith "" ["{\"user\":{\"role\":\"admin\",\"phone_number\":\"+999100\",\"name\":\"", s, "\",\"id\":", show i, ",\"email\":\"john@example.com\",\"avatar_url\":null}}"])
+        Just (joinWith "" ["{\"user\":{\"role\":\"admin\",\"phone_number\":\"+999100\",\"name\":\"", s, "\",\"email\":\"john@example.com\"}}"])
     it "ignores the response" do
       Assert.equal
         ((User.update { role: "admin"
