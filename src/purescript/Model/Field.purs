@@ -1,4 +1,4 @@
-module Model.Field (Field, getAll, create, update) where
+module Model.Field (Field, FieldWithValue, getAll, create, update) where
 
 import Boon.Common
 import Data.HTTP.Method (Method(..))
@@ -11,6 +11,12 @@ import Simple.JSON (readJSON, writeJSON)
 type Field =
   { name :: String
   , id :: Int
+  }
+
+type FieldWithValue =
+  { name :: String
+  , id :: Int
+  , value :: String
   }
 
 

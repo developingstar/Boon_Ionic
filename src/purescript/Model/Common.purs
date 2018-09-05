@@ -3,8 +3,10 @@ module Model.Common
   , Decoder
   , Paginated
   , Request
+  , Resource(..)
   , handleRequest
   , headers
+  , loadResource
   , send
   , showErrors
   , toAXRequest
@@ -21,6 +23,7 @@ import Data.List.NonEmpty as List.NonEmpty
 import Data.Maybe (isNothing, maybe)
 import Data.MediaType.Common (applicationJSON)
 import Data.String as String
+import Effect.Aff.Class (class MonadAff)
 import Effect.Class (liftEffect)
 import Foreign (ForeignError(..), MultipleErrors, renderForeignError)
 import Halogen as H
@@ -75,13 +78,17 @@ type ServerError =
   , source :: Maybe { pointer :: String }
   }
 
-withApiBaseUrl :: AX.URL -> Effect AX.URL
-withApiBaseUrl url = do
-  case String.stripPrefix (String.Pattern "http") url of
-    Just _ -> pure $ url
-    Nothing -> do
-      base <- liftEffect apiBaseUrl
-      pure $ base <> url
+data Resource a
+  = Loading
+  | Loaded a
+  | Failed String
+
+loadResource :: forall a b. RequestContent a => Request a b -> Aff (Resource b)
+loadResource request = do
+  response <- send request
+  pure $ case response of
+    Left err -> Failed $ showErrors err
+    Right val -> Loaded val
 
 send :: forall a b. RequestContent a => Request a b -> Aff (Either MultipleErrors b)
 send request = do
@@ -99,7 +106,7 @@ send request = do
   map (validateAndDecode request.decoder) (AX.affjax AXResponse.string r)
     <|> (pure $ Left $ singleError "Server is unreachable")
 
-handleRequest :: forall a m q r1 r2 s. RequestContent r1 => Request r1 r2 -> (r2 -> H.ComponentDSL s q m Aff a) -> H.ComponentDSL s q m Aff a -> H.ComponentDSL s q m Aff a
+handleRequest :: forall r1 r2 s f g p o m a. MonadAff m => RequestContent r1 => Request r1 r2 -> (r2 -> H.HalogenM s f g p o m a) -> H.HalogenM s f g p o m a -> H.HalogenM s f g p o m a
 handleRequest request succ fail = do
   response <- H.liftAff $ send request
   case response of
@@ -158,3 +165,9 @@ decodeServerError s =
 singleError :: String -> MultipleErrors
 singleError msg =
   List.NonEmpty.singleton $ ForeignError msg
+
+withApiBaseUrl :: AX.URL -> Effect AX.URL
+withApiBaseUrl url = do
+  case String.stripPrefix (String.Pattern "http") url of
+    Just _ -> pure $ url
+    Nothing -> map (\base -> base <> url) apiBaseUrl
